@@ -1,0 +1,93 @@
+# EXP-011 — Persistent Form Variable Definition Retention (FX_FormVariableLab01)
+
+Status: **BLOCKED at T1 preflight — required Mongoose session not usable (expired).** The T1 read-only preflight proved the existing Designer Mongoose session is **expired** (`GetSessionInfo` → "Your session has expired.") and the Web Client (the surface that hosts the full-inventory Select Form dialog) is **logged out** (Tab 0 = "Logout Successful"). Per the T1 instruction, the run **STOPPED without attempting to restore the session** (no login, no Sign In/OK, no reauthentication, no logout, no browser restart, no session-establishing navigation). **No Form or variable was created; no Mongoose artifact was created, modified, or deleted.** `FX_FormVariableLab01` was **NOT created**.
+Date: 2026-10-03
+Mode: LEARNING MODE — T1 read-only preflight only. No mutation performed.
+Run: `R-20261003-023021-swqQ` (cycle 1, task T1).
+
+## Objective
+
+On one new User-scope classic BuildFromScratch Form `FX_FormVariableLab01`, create exactly one Form variable (`FX_PersistentTestVar`, `Global=False`, `Persistent=True`, design-time `Value=Seed-Persist-A`) using the previously observed Details > Variables surface, record its exact design-time definition, perform exactly one ordinary Designer Save to a clean state, verify the definition still exists immediately after Save, then close only the target Form tab and reopen the exact same User-scoped Form through a previously verified supported Designer reopen path. Verify the same variable definition is still present after reopen. This experiment concerns **design-time variable-definition retention only**; it makes no claim about runtime variable values, value persistence across executions, temporary-variable semantics, IDO-cache behavior, or durable storage provenance.
+
+In scope (T1 only): read-only preflight proving editing scope is User and the target Form name is absent before creation; capture screenshots/read-only diagnostics under `evidence/EXP-011/`; capture a read-only git/worktree baseline; create this record recording only objective/starting-state/preflight facts.
+
+Out of scope (all tasks): replaying/repairing EXP-004; testing `Persistent=False` behavior; any runtime variable-value persistence test (close/reopen, logout/login, execution); Regenerate Form or any second save mechanism; Unload All Global Form Objects / IDO-metadata unloading / cache-clearing / User Preferences; Caption/Description/component/collection/binding/validator/event/script/data-source/IDO/localized-String/FormSync experiments; Site/Group/Vendor Default scope; modification of any existing `FX_` artifact; creation/modification of recipes, AGENTS.md, environment files, or other experiment records; physical Forms-database provenance, direct database inspection/mutation, undocumented APIs, internal session manipulation.
+
+## Starting state / preflight facts (2026-10-03, T1)
+
+- Environment: Mongoose Web Client / Designer **2026.09.08**, Portal shell 2026.09.00, tenant `G6R8LJ9Q4E8C2Z8Y_DEM` (DEM badge), config group `G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT` (per `environments/current-environment.md` and the Designer page title `Infor Mongoose Application Development Framework (G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT)`). Signed-in user of record: `anton.ramos@3mworks.com.ph`, Mongoose role **Site Developer** (per `environments/current-environment.md`).
+- Browser state at preflight start (inspected first; **no login performed**): three tabs:
+  - **Tab 0: "Logout Successful"** at `https://mingle-portal.se1.inforcloudsuite.com/session/slo/signoutsuccess?tenantId=…` — the portal / Mongoose **Web Client** tab had been **logged out** (single-log-out success page). This is a change from the EXP-010-R2 final state (where Tab 0 was the signed-in Web Client). The Web Client — which hosts the full-inventory **Select Form** dialog used in all prior preflights — is therefore **not available** without re-authentication. (evidence `02`.)
+  - **Tab 1: stray dead tab** at the bare portal root `https://mingle-portal.se1.inforcloudsuite.com/` (empty title) — the long-standing EXP-006 T8 leftover; unchanged; not touched.
+  - **Tab 2 (current): Web Designer** at `WSWebClient/designer/default.aspx?…&MGForm=FX_FormPropertyLab12` — `FX_FormPropertyLab12` (the EXP-010-R2 target, left open/clean by that run) is **rendered**: one form tab (label `Form Property Caption Close Only Replay`), Properties Design group (Name `FX_FormPropertyLab12`, Caption `Form Property Caption Close Only Replay`, Version `User version for user <username>`, Device Type `Default`, Form Type `Normal`, Is Master `True`), status bar `[ ScopeType: User / ScopeName: <username> ]`, toolbar **clean** (Save / Regenerate Form disabled). **However, this is stale client-side state** — see the session-usability finding below. (evidence `01`, `03`.)
+- **Session usability (the T1 gate): NOT USABLE — EXPIRED.** A read-only in-page same-origin `fetch` to the Designer's own `AppApi/GetSessionInfo` endpoint (no navigation, reload, or reauthentication) returned HTTP 200 with application payload `Message: "Your session has expired."` (evidence `04`). The rendered form and status-bar scope text are stale artifacts of the expired session and are **not** evidence of a live session. This is the same idle-expiry condition documented in EXP-010-R2 (Designer session lapses during the idle gap between experiments).
+- **Editing scope (secondary; stale):** the Designer status bar displays `[ ScopeType: User / ScopeName: <username> ]`. Because the session is expired, this is a **stale rendered value**, not a live confirmation. No scope dialog was shown and no scope switch was possible (no live session). Recorded for completeness only.
+- **Target `FX_FormVariableLab01` absence: NOT PROVABLE in this preflight.** The supported full-inventory surface (the Web Client **Select Form** dialog) is unavailable because (a) the Web Client tab is logged out and (b) the Designer session is expired, so no live server-backed form store could be queried. The Designer's own **Form menu** (opened read-only) exposes only `Definition`, `Sign Out`, and a **client-cached recent-forms list** (`Form Property Caption Close Only Replay` [FX_FormPropertyLab12], `FX_FormPropertyLab11`, `FX_FormPropertyLab10`, `FX_FormPropertyLab09`, `Runtime Builder Selection`, `FX_FormPropertyLab08`, `FX_FormPropertyLab07`, `FX_FormPropertyLab06`, `FX_FormPropertyLab05`) — it has **no "Select Form" entry** and is not a complete inventory. `FX_FormVariableLab01` does not appear in that stale recent-forms list, but that is **not** a valid exact/case-insensitive absence proof and no total/`FX_` inventory count could be recorded. **No absence claim is made.**
+- No Mongoose artifact was created, modified, or deleted during this preflight. No User Preference was opened, changed, or saved. No unload/cache-clear command was invoked. No Form was opened, created, or saved. No Designer mutation was performed. No login, Sign In/OK, reauthentication, logout, browser restart, or session-establishing navigation was performed.
+
+## Preflight method (T1)
+
+1. Inspected repository state and references (read-only, not modified): `AGENTS.md`, `experiments/EXP-004-form-variable-fundamentals.md` (the prior form-variable finding — blocked, variables did not persist across close/reopen on both documented save paths), `experiments/EXP-010-*.md` / `EXP-010-R2-*.md` (record structure + the documented Designer idle-session-expiry behavior), `environments/current-environment.md`, `recipes/forms/create-basic-form.md` (existence confirmed; not re-read in depth this task).
+2. Inspected current browser state (3 tabs as above) — **no login performed**. Screenshot of the Designer tab (evidence `01`), the Web Client "Logout Successful" tab (evidence `02`), and a confirming Designer screenshot after closing the Form menu (evidence `03`).
+3. Opened the Designer **Form** menu (read-only; native click on the `Form` menu button) to inventory the Designer's own form surfaces and recent forms. Observed: `Definition`, `Sign Out`, and a client-cached recent-forms list (9 entries); **no "Select Form" entry**. Closed the menu with Escape. (No new server round-trip was triggered by opening the menu — the recent-forms list is client-cached; confirmed via the network request log, which showed no new request after the prior run's last request.)
+4. **Session-usability test (the decisive read-only diagnostic):** from the live Designer tab, performed an in-page same-origin `fetch` (credentials: include) to `GET …/WSWebClient/AppApi/GetSessionInfo`. Result: HTTP 200, body top-level keys `Success`/`Message`/`Payload`, `Message = "Your session has expired."` → **session EXPIRED / not usable**. Saved to evidence `04`. No navigation, reload, login, Sign In/OK, or reauthentication was performed.
+5. **STOPPED** per the T1 instruction ("if it is not already usable, STOP without attempting to restore it and report the blocker"). Did not attempt the EXP-006/EXP-010-R2 no-credential sign-in recovery, did not reload the Designer, did not touch the logged-out Web Client, and did not proceed to creation or inventory.
+6. Audited the worktree starting state (git status/log, see below).
+
+## T1 requirement-to-evidence mapping
+
+| # | T1 requirement | Result | Evidence |
+|---|---|---|---|
+| 1 | Inspect AGENTS.md, EXP-004, EXP-010/R2, environment, recipe as references (no modification) | **DONE** — all read; none modified | this file |
+| 2 | Inspect current browser/page state; record existing tabs/instances | **RECORDED** — 3 tabs (Web Client **logged out**; stray dead portal-root tab; Designer tab rendering stale `FX_FormPropertyLab12`, User-scope status bar, clean toolbar) | tab list; evidence `01`, `02`, `03` |
+| 3 | No login/Sign In-OK/reauth/logout/browser-restart/session-establishing navigation; no Designer close/launch; no unload; no User Preferences; no Form mutation | **HONORED** — none performed | this file; browser state unchanged |
+| 4 | Prove the existing Mongoose session is already usable; if not, STOP and report the blocker | **STOP — session NOT usable** — `GetSessionInfo` → "Your session has expired." | evidence `04`; this file |
+| 5 | Confirm active Designer editing scope is User (supported UI / read-only) | **STALE ONLY** — status bar displays `[ ScopeType: User / ScopeName: <username> ]`, but the session is expired so this is not a live confirmation; no live scope proof possible | evidence `01`, `03` |
+| 6 | Prove `FX_FormVariableLab01` absent (exact + case-insensitive) via the supported Select Form/inventory surface; record total/`FX_` counts | **NOT PROVABLE** — the full-inventory Select Form surface is in the logged-out Web Client; the Designer session is expired; no live store could be queried. No absence claim made; no counts recorded. | this file |
+| 7 | Capture initial repository/worktree baseline (AC-10) | **CAPTURED** — git branch `exp/EXP-011`, HEAD `6cef206`, clean worktree at start | "Repository / worktree starting state (T1)" below |
+| 8 | Create `evidence/EXP-011/` and the EXP-011 record; do NOT create the Form or variable | **DONE** — screenshots `01`–`03` + diagnostic `04`; this record; target **NOT** created | this file; `evidence/EXP-011/` |
+
+## Repository / worktree starting state (T1)
+
+- Worktree **is** a git repository: branch **`exp/EXP-011`**, HEAD **`6cef206`** (`Merge EXP-010-R2 (blocked)`); recent history: `a7acbc6 EXP-010-R2: blocked`, `44adeec Merge blocked completion review fix`, `0c2528f Allow blocked completion after specialist objection`, `59b405a Merge EXP-010 (accepted)`, `6d14d2b EXP-010: accepted`.
+- **Run boundary:** this run (`R-20261003-023021-swqQ`) started at **2026-10-03 02:30:21**.
+- **Worktree status at preflight start:** **clean** — `git status --porcelain` empty before this preflight wrote anything; after the preflight the only entry is `?? evidence/EXP-011/` (created by this preflight). No modified tracked files.
+- **New in this preflight (T1 window, 2026-10-03 ~02:34–02:37):** only `evidence/EXP-011/01…04` (3 screenshots + 1 diagnostic) and this record file.
+- **NOT modified by this preflight (all predate the run):** `AGENTS.md`, `opencode.json`, `README.md`, `environments/current-environment.md`, every file under `recipes/`, and all other `experiments/EXP-00x-*.md`. `claims/` empty (pre-existing).
+- **Conclusion:** worktree starting state is clean for EXP-011 purposes; no recipe, environment, AGENTS.md, or prior experiment file was modified by this preflight. EXP-011-attributable changes are confined to this record and `evidence/EXP-011/`.
+
+## Observations
+
+- **The Designer session had expired before this run** (idle gap since the EXP-010-R2 run). The Designer tab still *renders* `FX_FormPropertyLab12` with a User-scope status bar and a clean toolbar, but a live `GetSessionInfo` call reports the session as expired. **A rendered Designer is not proof of a live session** — the authoritative check is a live server round-trip (here, `GetSessionInfo`).
+- **The Web Client (Tab 0) is logged out** ("Logout Successful" SLO page). The full-inventory **Select Form** dialog lives in the Web Client, so the standard preflight inventory/absence surface is unavailable without re-authentication.
+- **The Designer's Form menu has no "Select Form" entry** (only `Definition`, `Sign Out`, and a client-cached recent-forms list). Therefore the Designer alone cannot supply a complete form inventory; the Web Client Select Form dialog is the supported full-inventory surface.
+- **Opening the Form menu did not trigger a server round-trip** (recent forms are client-cached) — so menu contents alone cannot be used to prove session liveness.
+- **No Mongoose artifact was created, modified, or deleted; no User Preference was opened/changed/saved; no unload was invoked; no form was opened/created/saved; no login/Sign In-OK/reauth/logout/browser-restart/session-establishing navigation was performed.**
+
+## Evidence (under `evidence/EXP-011/`)
+
+- `01-preflight-designer-state.png` — Designer tab at preflight start: `?MGForm=FX_FormPropertyLab12` (EXP-010-R2 leftover, rendered, stale), one form tab (`Form Property Caption Close Only Replay`), Properties Design group (Name `FX_FormPropertyL…`, Caption `Form Property Caption Close Only Replay`, Version `User version for us…`, Device Type `Default`, Form Type `Normal`, Is Master `True`), status bar `[ ScopeType: User / ScopeName: <username> ]`, toolbar clean (Save/Regenerate disabled).
+- `02-preflight-webclient-logout-successful.png` — Web Client tab (Tab 0) showing the portal **"Logout Successful"** SLO page — the Web Client is logged out.
+- `03-preflight-designer-state-confirmed.png` — Designer tab after closing the Form menu (stable; no modal dialog; menu closed).
+- `04-preflight-getsessioninfo-session-expired.md` — read-only `GetSessionInfo` diagnostic: HTTP 200, `Message = "Your session has expired."` → session expired / not usable.
+
+## Knowledge state (as of T1)
+
+- The existing Designer Mongoose session is **expired / not usable** at T1 start (`GetSessionInfo` → "Your session has expired."): **observed** (T1, live read-only server round-trip).
+- The Web Client (Tab 0) is **logged out** (SLO "Logout Successful" page): **observed** (T1).
+- A rendered Designer tab (form + scope status bar + clean toolbar) is **not** proof of a live session; a live server round-trip (`GetSessionInfo`) is required: **observed** (T1).
+- The Designer **Form menu** exposes `Definition`, `Sign Out`, and a client-cached recent-forms list, and has **no "Select Form" entry**; the full-inventory Select Form dialog is in the Web Client: **observed** (T1).
+- `FX_FormVariableLab01` absence: **unresolved** — could not be proven (no live session / no available Select Form surface). No claim made.
+- Designer editing scope is User: **unresolved as a live fact** — the status bar displays User but the session is expired, so this is a stale rendered value, not a live confirmation.
+- The EXP-011 **persistent-form-variable-definition-retention** procedure is **unverified** (not started; blocked at preflight).
+
+## Open questions / blockers
+
+- **BLOCKER (T1 gate):** the required Mongoose session is **not usable** — the Designer session is **expired** and the Web Client is **logged out**. Per the T1 instruction, the run **STOPPED without attempting to restore the session**. **No Form or variable was created.**
+- To resume, a usable session must be re-established **before** any mutation. Note the constraint tension: the T1 instruction prohibits login/Sign In-OK/reauthentication *within this run*, so session recovery (e.g., the EXP-006/EXP-010-R2 no-credential lightweight sign-in) would itself require an explicit operator decision and would likely make any subsequent run non-compliant with the no-reauthentication prohibition (as it did for EXP-010-R2, which was ruled BLOCKED for exactly this reason). **This should be resolved by the coordinator/operator before T2 is attempted.**
+- Once a usable session exists, T2 must re-run the full preflight guards (scope = User **live**, and `FX_FormVariableLab01` absent **exact + case-insensitive** via the live Select Form store, with total/`FX_` counts) before any creation.
+- Context for the eventual variable experiment: EXP-004 (blocked) found that form variables created via Details → Variables did **not** persist across close/reopen on either documented save path (ordinary Save and Regenerate Form), in the `Persistent=False` case. EXP-011 tests the `Persistent=True` (default) case. This is a distinct hypothesis and must not be assumed equivalent to the EXP-004 negative result.
+
+## T1 — Stopped here (per instruction, after the read-only preflight)
+
+Did **not** create `FX_FormVariableLab01` or `FX_PersistentTestVar` or any other Form/variable; did **not** edit any Form property; did **not** perform any Designer Save or Regenerate; did **not** invoke `Unload All Global Form Objects` or any other unload; did **not** open, change, or Save any User Preference; did **not** modify any existing `FX_` Form or non-`FX_` artifact; did **not** log in, Sign In/OK, reauthenticate, log out, restart the browser, or establish a new authentication session; did **not** close or launch any Designer tab/window; did **not** switch scope; did **not** navigate the logged-out Web Client. **Next task (T2) is BLOCKED** until a usable session is re-established and the coordinator/operator resolves the session-recovery constraint.

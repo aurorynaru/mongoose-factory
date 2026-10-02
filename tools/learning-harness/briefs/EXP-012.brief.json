@@ -1,0 +1,139 @@
+{
+  "experiment_id": "EXP-012",
+  "title": "EXP-012 — Persistent Form Variable Definition Retention With Approved Session Establishment",
+  "record_path": "experiments/EXP-012-persistent-form-variable-definition-retention-with.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Using one new User-scope classic BuildFromScratch Form, establish or confirm a usable Mongoose session before any artifact mutation, then create exactly one Form variable with Global=False and Persistent=True, record its exact visible design-time definition, perform exactly one ordinary Designer Save, verify the definition remains immediately after Save, close only the target Form tab, reopen the exact same User-scoped Form through a previously verified supported Designer reopen path, and verify the same design-time variable definition is still present. The result is limited strictly to design-time definition retention; it must not test or claim runtime value persistence, temporary-variable behavior, cache behavior, or physical storage provenance.",
+  "scope": {
+    "in_scope": [
+      "At the very beginning of the experiment, before any Mongoose artifact mutation, either confirm an already-live Mongoose session or establish one through the previously documented supported Mongoose/Web Client sign-in flow; do not expose credential values.",
+      "After session readiness is established, prove the session is live with an observable server-backed check and prove editing scope is User.",
+      "Prove FX_FormVariableLab02 is absent exact and case-insensitive before mutation through the live Select Form/inventory surface.",
+      "Create exactly one new User-scope classic BuildFromScratch Form named FX_FormVariableLab02 using the verified basic-form recipe with Save Template unchecked.",
+      "Open Details > Variables on FX_FormVariableLab02 and create exactly one Form variable named FX_PersistentRetentionVar.",
+      "Set Global=False, Persistent=True, and design-time Value=Seed-Persist-B, recording every visible variable-definition field before Save.",
+      "Perform exactly one ordinary Designer Save after variable creation and prove the Designer returns to a clean state.",
+      "Immediately re-read Details > Variables and compare all visible definition fields with the pre-Save baseline.",
+      "Close only FX_FormVariableLab02 using its ordinary Designer Form-tab close control and verify there is no unsaved-change prompt.",
+      "Reopen FX_FormVariableLab02 using a previously verified supported Designer reopen path such as Form-menu recent forms or Select Form, not a direct cold URL.",
+      "Prove the reopened version is the same User-scoped target using Name + ScopeType + ScopeName.",
+      "Reopen Details > Variables and compare the variable definition against the pre-Save baseline.",
+      "Capture screenshots and read-only diagnostics under evidence/EXP-012/ and update only the EXP-012 experiment record plus its evidence directory."
+    ],
+    "out_of_scope": [
+      "Replaying, repairing, changing, or promoting EXP-004 or EXP-011.",
+      "Treating EXP-012 as a replay of EXP-011; EXP-011 never reached the semantic operation.",
+      "Testing Persistent=False behavior or creating a comparison variable.",
+      "Executing Form logic to read, mutate, initialize, or otherwise test the runtime value of the variable.",
+      "Testing whether a persistent variable value survives executions, Form close/reopen, logout/login, application-session replacement, or any runtime lifecycle.",
+      "Testing temporary-variable semantics.",
+      "Regenerate Form or any second save mechanism.",
+      "Unload All Global Form Objects, deliberate IDO metadata unloading, cache-clearing experiments, or User Preferences.",
+      "Caption, Description, component, collection, binding, validator, event handler, script, data-source, IDO-definition, localized-String, or FormSync experiments.",
+      "Site, Group, or Vendor Default editing scope.",
+      "Modification of any existing FX_ artifact.",
+      "Creation or modification of reusable recipes, AGENTS.md, environment files, or other experiment records.",
+      "Physical Forms-database provenance, direct database inspection or mutation, undocumented APIs, or internal session manipulation.",
+      "Any claim that successful design-time recovery proves durable database storage, cache eviction, or runtime value persistence."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not create, modify, or delete any non-FX_ Mongoose artifact.",
+    "Do not modify any existing FX_ artifact.",
+    "Do not start another experiment or replay.",
+    "Do not modify production data or weaken security.",
+    "Do not read, print, log, screenshot, or otherwise expose credential values.",
+    "Session establishment is allowed only before the first Mongoose artifact mutation. Once FX_FormVariableLab02 creation begins, do not login, Sign In/OK, deliberately reauthenticate, logout, restart the browser, or deliberately replace the session; if the session expires after mutation begins, stop and record the blocker.",
+    "Do not use Regenerate Form and do not perform more than one ordinary Designer Save after variable creation.",
+    "Do not execute logic intended to read, modify, or prove runtime variable-value persistence.",
+    "Do not create a Persistent=False comparison variable.",
+    "Do not invoke Form > Definition > Unload All Global Form Objects or any deliberate cache/metadata-clear command.",
+    "Do not open, change, or save User Preferences.",
+    "Do not create components, handlers, scripts, validators, bindings, data sources, collections, IDOs, localized Strings, or FormSync artifacts.",
+    "Do not use direct cold ?MGForm= navigation to reopen the target.",
+    "Do not make any replay_verified classification; this is an original experiment."
+  ],
+  "prohibited_patterns": [
+    "\\b(regenerate\\s+form)\\b",
+    "\\bunload\\s+all\\s+global\\s+form\\s+objects\\b",
+    "\\b(user\\s+preferences?)\\b",
+    "\\b(create|add)\\b[^.\\n]{0,40}\\b(event handler|handler|script|validator|binding|data source|collection|IDO|localized string|FormSync)\\b",
+    "\\bpersistent\\s*=\\s*false\\b",
+    "\\b(runtime|execution)\\b[^.\\n]{0,60}\\b(variable|value)\\b",
+    "\\?MGForm=",
+    "\\b(replay_verified|replay-verified)\\b"
+  ],
+  "related_experiments": [
+    "EXP-002",
+    "EXP-002-R2",
+    "EXP-004",
+    "EXP-011"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_FormVariableLab02",
+    "artifacts": [
+      "FX_FormVariableLab02",
+      "FX_PersistentRetentionVar"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Before any Mongoose artifact mutation, evidence proves either the inherited session was already live or the supported session-establishment flow was completed; afterward a live server-backed check succeeds, the Web Client is usable, editing scope is User, and FX_FormVariableLab02 is absent exact and case-insensitive in the live inventory."
+    },
+    {
+      "id": "AC-2",
+      "description": "Exactly one new User-scope classic BuildFromScratch Form named FX_FormVariableLab02 exists after creation through the verified basic-form recipe with Save Template unchecked; creation and inventory evidence prove exactly one target."
+    },
+    {
+      "id": "AC-3",
+      "description": "Before Save, Details > Variables visibly contains exactly one experiment-created variable named FX_PersistentRetentionVar with Global=False, Persistent=True, and Value=Seed-Persist-B where Value is exposed; all visible definition fields are recorded as the comparison baseline."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly one ordinary Designer Save is performed after variable creation, no Regenerate Form or second Save occurs, and evidence proves the Designer returns to a clean state."
+    },
+    {
+      "id": "AC-5",
+      "description": "Immediately after the ordinary Save, Details > Variables still contains FX_PersistentRetentionVar and every visible recorded design-time definition field equals the AC-3 baseline."
+    },
+    {
+      "id": "AC-6",
+      "description": "FX_FormVariableLab02 is closed only through its ordinary Designer Form-tab close control, with no unsaved-change prompt and no explicit unload/cache/metadata-clear action."
+    },
+    {
+      "id": "AC-7",
+      "description": "FX_FormVariableLab02 is deliberately reopened through a previously verified supported Designer reopen path rather than direct cold URL navigation, and the loaded version is proven by Name + ScopeType + ScopeName to be the same User-scoped target."
+    },
+    {
+      "id": "AC-8",
+      "description": "After reopen, Details > Variables contains exactly the expected FX_PersistentRetentionVar definition and every recorded design-time definition field equals the AC-3 baseline."
+    },
+    {
+      "id": "AC-9",
+      "description": "The experiment record explicitly classifies the result only as observed design-time definition retention or non-retention for the tested Global=False/Persistent=True variable and makes no runtime-value-persistence, temporary-variable, cache, database-durability, or storage-provenance claim."
+    },
+    {
+      "id": "AC-10",
+      "description": "Final repository/worktree audit proves experiment-attributable changes are confined to the EXP-012 record and evidence/EXP-012/, with no recipe, AGENTS.md, environment, other experiment, existing FX_ artifact, or non-FX_ artifact modified."
+    },
+    {
+      "id": "AC-11",
+      "description": "Evidence and the experiment record prove that any session-establishment action occurred only before the first Mongoose artifact mutation; after FX_FormVariableLab02 creation began, no login, Sign In/OK, deliberate reauthentication, logout, browser restart, or deliberate session replacement occurred."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-012",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261003-023021-swqQ. Rationale: EXP-011 never reached the variable experiment: it stopped at preflight because the inherited Mongoose session was already expired and its reviewed boundaries prohibited restoring that session after run start. The smallest useful next step is a new experiment using a different, explicitly documented precondition: session establishment is permitted only at the beginning of the experiment, before any Mongoose artifact mutation, and the semantic experiment begins only after a live session, User editing scope, and target absence are proven. This preserves the intended variable-definition question without treating the blocked EXP-011 as a replay and without relaxing controls after mutation begins. It also directly follows the unresolved variable-definition work from EXP-004 while using the verified basic-form creation procedure."
+}
