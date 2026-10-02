@@ -1,0 +1,38 @@
+{
+  "name": "mongoose-learning-harness",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local controller that relays between OpenCode (worker) and two ChatGPT browser conversations (coordinator + Mongoose specialist GPT) for one explicitly selected Mongoose learning experiment.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "harness": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:unit": "vitest run test/controller.test.ts test/protocol.test.ts test/opencode.test.ts",
+    "test:browser": "vitest run test/browser",
+    "test:smoke": "node -e \"process.env.HARNESS_SMOKE='1'; require('child_process').execSync('npx vitest run test/smoke', {stdio: 'inherit', env: process.env})\"",
+    "dry-run": "node dist/cli.js dry-run",
+    "harness": "node dist/cli.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "commander": "^15.0.0",
+    "playwright": "^1.63.0",
+    "turndown": "^7.2.4",
+    "turndown-plugin-gfm": "^1.0.2",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^26.6.3",
+    "@types/turndown": "^5.0.6",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.3"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "experiment_id": "EXP-900",
+  "title": "Fixture Experiment (test only)",
+  "record_path": "experiments/EXP-900-fixture-experiment.md",
+  "reviewed": true,
+  "objective": "Create a fixture variable on FX_FixtureForm01 and verify it persists across close/reopen.",
+  "scope": {
+    "in_scope": [
+      "Form variable FX_FixtureVar on FX_FixtureForm01 (User scope)",
+      "Close/reopen persistence check"
+    ],
+    "out_of_scope": [
+      "bindings",
+      "IDOs",
+      "events",
+      "scripts",
+      "portals",
+      "EXP-901"
+    ]
+  },
+  "prohibited_actions": [
+    "Modifying any non-FX_ artifact",
+    "Starting another experiment"
+  ],
+  "prohibited_patterns": [
+    "\\b(create|add|write|attach)\\b[^.\\n]{0,40}\\b(event handler|script|IDO|binding)s?\\b"
+  ],
+  "related_experiments": [],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": "fixture"
+  },
+  "target": {
+    "form": "FX_FixtureForm01",
+    "artifacts": [
+      "FX_FixtureVar"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Variable present after save"
+    },
+    {
+      "id": "AC-2",
+      "description": "Variable present after close/reopen"
+    }
+  ],
+  "evidence_dir": "evidence/EXP-900",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": ""
+}

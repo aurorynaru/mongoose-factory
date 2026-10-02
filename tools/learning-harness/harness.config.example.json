@@ -1,0 +1,65 @@
+{
+  "$comment": "Copy to harness.config.json and adjust. Every key is optional; the values shown are the built-in defaults. Secrets are NEVER stored here: they are read from the environment variables named below.",
+  "factoryRoot": "C:\\AI\\mongoose-factory",
+  "dataDir": "data",
+  "mongooseBrowserProfile": "C:\\AI\\mongoose-playwright-profile",
+  "browser": {
+    "mode": "persistent",
+    "userDataDir": "C:\\AI\\learning-harness-chatgpt-profile",
+    "channel": "chrome",
+    "cdpUrl": "http://127.0.0.1:9223",
+    "baseUrl": "https://chatgpt.com",
+    "replyTimeoutMinutes": 25,
+    "submitConfirmSeconds": 30,
+    "stableMs": 3000,
+    "maxMessageChars": 30000,
+    "navigationTimeoutSeconds": 60
+  },
+  "opencode": {
+    "baseUrl": "http://127.0.0.1:4096",
+    "port": 4096,
+    "passwordEnv": "OPENCODE_SERVER_PASSWORD",
+    "executable": null,
+    "agent": null,
+    "model": null,
+    "taskTimeoutMinutes": 90,
+    "pollIntervalMs": 3000,
+    "noResponseGraceSeconds": 120,
+    "manageBackend": true,
+    "autoRestartOnFailure": true
+  },
+  "deepseek": {
+    "enabled": false,
+    "apiKeyEnv": "DEEPSEEK_API_KEY",
+    "baseUrl": "https://api.deepseek.com",
+    "model": "deepseek-chat",
+    "inputCostPerMTok": 0.27,
+    "outputCostPerMTok": 1.1,
+    "autoAcceptValidated": true,
+    "timeoutSeconds": 60
+  },
+  "protocol": {
+    "reaskOnInvalid": 1,
+    "pauseOnSpecialistAttachmentRequest": true,
+    "proposeNextOnComplete": true
+  },
+  "chats": {
+    "newCoordinatorPerRun": true,
+    "expectedModelLabel": {
+      "coordinator": null,
+      "specialist": null
+    },
+    "contextFile": "context/coordinator-context.md",
+    "maxDigestChars": 9000,
+    "maxContextChars": 14000
+  },
+  "limits": {
+    "maxCycles": 30,
+    "maxWorkerTasks": 12,
+    "maxSpecialistConsultations": 6,
+    "maxConsecutiveFailures": 3,
+    "maxDurationMinutes": 240,
+    "maxDeepseekCalls": 10,
+    "maxDeepseekCostUsd": 0.5
+  }
+}

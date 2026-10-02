@@ -1,0 +1,22 @@
+# --- never commit -----------------------------------------------------------
+# Harness runtime state: full ChatGPT conversation text, logs, backend PIDs
+tools/learning-harness/data/
+# Local harness configuration (machine-specific)
+tools/learning-harness/harness.config.json
+# Build output and dependencies
+tools/learning-harness/node_modules/
+tools/learning-harness/dist/
+# Playwright MCP page snapshots / console logs (hundreds of files that may contain page content)
+evidence/playwright/
+.playwright-mcp/
+# Secrets of any kind (the Mongoose secrets file lives OUTSIDE this folder; keep it that way)
+*.env
+.env
+.env.*
+*.pem
+*.key
+# OS / editor noise
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/

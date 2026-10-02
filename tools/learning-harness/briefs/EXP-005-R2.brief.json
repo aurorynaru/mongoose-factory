@@ -1,0 +1,135 @@
+{
+  "experiment_id": "EXP-005-R2",
+  "title": "EXP-005-R2 — Clean Replay: Literal Form Caption Persistence",
+  "record_path": "experiments/EXP-005-R2-clean-replay-literal-form-caption-persistence.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "In a fresh OpenCode worker context, create a new User-scope classic BuildFromScratch form named FX_FormPropertyLab02 using the verified basic-form recipe, change only its Form-level Caption to the literal value `Form Property Lab Replay`, save through the ordinary Designer Save operation, close the form, verify that the User Preference `Unload IDO Metadata with Forms` is not enabled, then invoke the documented Form > Definition > Unload Global Form Objects or Unload All Global Form Objects command as the required form-definition cache boundary. Reopen the exact form version identified by Form name + ScopeType=User + the same ScopeName/user ID and verify that Caption persisted while all recorded comparison properties remained unchanged. Record evidence and results only in experiments/EXP-005-R2-clean-replay-literal-form-caption-persistence.md and evidence/EXP-005-R2/.",
+  "scope": {
+    "in_scope": [
+      "Create FX_FormPropertyLab02 in User scope using recipes/forms/create-basic-form.md",
+      "Confirm before mutation that FX_FormPropertyLab02 does not already exist",
+      "Record Form name, ScopeType, ScopeName, Caption, Description, Version, Device Type, Form Type, and Is Master before the Caption edit",
+      "Change only the Form-level Caption to `Form Property Lab Replay`",
+      "Save using the ordinary supported Designer Save operation",
+      "Close the form or Designer after Save",
+      "Before unloading form objects, inspect the User Preference `Unload IDO Metadata with Forms` and record whether it is enabled or disabled without changing it",
+      "Proceed only if `Unload IDO Metadata with Forms` is not enabled",
+      "Invoke the documented Form > Definition > Unload Global Form Objects or Unload All Global Form Objects command as the required form-definition cache boundary",
+      "Reopen exactly FX_FormPropertyLab02 with ScopeType=User and the same ScopeName/user ID",
+      "Verify the persisted Caption and unchanged comparison properties after the documented cache unload",
+      "Capture screenshots or captured UI responses under evidence/EXP-005-R2/",
+      "Record the experiment only in experiments/EXP-005-R2-clean-replay-literal-form-caption-persistence.md"
+    ],
+    "out_of_scope": [
+      "EXP-004 continuation or any Form-variable persistence work",
+      "Global Object creation or modification",
+      "Component bindings or data sources",
+      "Adding components",
+      "Event handlers, validators, scripts, methods, or expressions",
+      "Translatable String-object creation or localization behavior",
+      "Changing any Form property other than Caption",
+      "Changing editing scope away from User",
+      "Editing FX_FormPropertyLab01",
+      "Editing any non-FX_ artifact",
+      "Direct database edits or manual metadata manipulation",
+      "Using undocumented internal events or APIs as the automation procedure",
+      "Changing the `Unload IDO Metadata with Forms` User Preference",
+      "Clearing IDO metadata as part of this replay",
+      "Using a new application session as a substitute for the documented form-object unload",
+      "Promoting a reusable Caption recipe unless every replay acceptance check passes"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not modify FX_FormPropertyLab01; create and use FX_FormPropertyLab02 for this replay",
+    "Do not create or modify Form variables or Global Objects",
+    "Do not add components, bindings, data sources, events, scripts, validators, or methods",
+    "Do not change Form-level properties other than Caption",
+    "Do not switch to Group, Site, or Vendor scope",
+    "Do not edit any non-FX_ artifact",
+    "Do not use direct database changes, manual metadata manipulation, or undocumented internal APIs to make the experiment pass",
+    "Do not change the `Unload IDO Metadata with Forms` preference",
+    "If `Unload IDO Metadata with Forms` is enabled, stop and mark the replay blocked before invoking Unload Global Form Objects or Unload All Global Form Objects",
+    "Do not clear the IDO metadata cache within this experiment",
+    "Do not treat a fresh Designer tab, fresh OpenCode context, browser restart, or new application session as satisfying the form-cache-boundary acceptance check",
+    "Do not claim replay verification if the documented form-object unload, exact Form version identity, or final persisted postcondition cannot be observed",
+    "Do not write results to any experiment record other than experiments/EXP-005-R2-clean-replay-literal-form-caption-persistence.md"
+  ],
+  "prohibited_patterns": [
+    "\\b(create|add|modify|edit|change|test|retry|continue)\\b[^.\\n]{0,50}\\b(form\\s+)?variables?\\b",
+    "\\b(create|add|modify|edit|change)\\b[^.\\n]{0,50}\\bglobal\\s+objects?\\b",
+    "\\b(create|add|modify|edit)\\b[^.\\n]{0,50}\\b(binding|data source|event handler|validator|script|method)s?\\b",
+    "\\b(group|site|vendor)\\s+scope\\b",
+    "\\b(direct|manual)\\b[^.\\n]{0,40}\\b(database|metadata)\\b[^.\\n]{0,40}\\b(edit|update|change|manipulat)",
+    "\\b(translatable|string object|localization)\\b[^.\\n]{0,50}\\b(create|add|modify|test|verify)\\b",
+    "\\bEXP-004\\b[^.\\n]{0,60}\\b(retry|continue|resume|workaround|test|modify)\\b",
+    "\\b(change|enable|disable|toggle|set)\\b[^.\\n]{0,50}\\bunload ido metadata with forms\\b",
+    "\\b(clear|flush|reset|discard)\\b[^.\\n]{0,40}\\bido metadata\\b"
+  ],
+  "related_experiments": [
+    "EXP-005",
+    "EXP-002",
+    "EXP-002-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_FormPropertyLab02",
+    "artifacts": [
+      "FX_FormPropertyLab02"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Pre-mutation evidence shows that FX_FormPropertyLab02 does not already exist and records the active editing identity as ScopeType=User with the current ScopeName/user ID."
+    },
+    {
+      "id": "AC-2",
+      "description": "FX_FormPropertyLab02 is created through the verified classic BuildFromScratch recipe, with no additional template or unrelated FX_ artifact created."
+    },
+    {
+      "id": "AC-3",
+      "description": "Before mutation, evidence records the fresh Form-level Name, Caption, Description, Version, Device Type, Form Type, and Is Master values without treating the observed initial Caption value as a universal Mongoose default."
+    },
+    {
+      "id": "AC-4",
+      "description": "Evidence immediately before Save shows Caption=`Form Property Lab Replay` and shows that the recorded comparison properties were not changed."
+    },
+    {
+      "id": "AC-5",
+      "description": "Ordinary Designer Save completes and the Designer returns to an observable clean saved state with no pending Caption edit."
+    },
+    {
+      "id": "AC-6",
+      "description": "Before any form-object unload, evidence shows the User Preference `Unload IDO Metadata with Forms` is not enabled. The preference is not changed during the replay. If it is enabled, the experiment stops and is recorded as blocked before performing the unload."
+    },
+    {
+      "id": "AC-7",
+      "description": "After Save and close, evidence shows the documented Form > Definition > Unload Global Form Objects or Unload All Global Form Objects operation was actually invoked. This documented unload is mandatory for the replay cache boundary; a new Designer tab, worker context, browser session, or application session alone does not satisfy this check."
+    },
+    {
+      "id": "AC-8",
+      "description": "The post-unload reopen is proven to target exactly FX_FormPropertyLab02 with ScopeType=User and the same recorded ScopeName/user ID."
+    },
+    {
+      "id": "AC-9",
+      "description": "In the reopened Designer after the documented form-object unload, Caption equals `Form Property Lab Replay`, while Name, Description, Version, Device Type, Form Type, and Is Master match the saved comparison state; screenshots or captured responses are stored under evidence/EXP-005-R2/."
+    },
+    {
+      "id": "AC-10",
+      "description": "The replay completes without rediscovering or changing the semantic Caption-edit procedure, without touching blocked or out-of-scope capabilities, and with the experiment record written only to experiments/EXP-005-R2-clean-replay-literal-form-caption-persistence.md."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-005-R2",
+  "replay_of": "EXP-005",
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261001-223809-guaE. Rationale: EXP-005 established an observed successful procedure for persisting a literal Form-level Caption, but the procedure is not yet replay-verified and its final reopen did not deliberately cross the documented Mongoose form-definition cache boundary. This replay keeps the mutation identical and minimal: one new FX_ form, one literal Caption edit, ordinary Designer Save, then the documented Unload Global Form Objects or Unload All Global Form Objects command before reopening the exact User-scope form version. A fresh OpenCode worker context still provides replay independence but is not treated as a substitute for the Mongoose cache unload. Because the documented unload can also clear IDO metadata when the User Preference `Unload IDO Metadata with Forms` is enabled, the replay must preflight that preference without changing it; if enabled, the experiment blocks rather than silently expanding scope. Auto-approved by autopilot 2026-10-01T15:42:08.112Z after specialist verdict \"supports\" (see data/autopilot/2026-10-01T15-39-18-647Z-PROPOSAL_RECHECK_1-reply.md)."
+}

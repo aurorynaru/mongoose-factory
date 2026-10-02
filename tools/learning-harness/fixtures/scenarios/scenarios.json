@@ -1,0 +1,539 @@
+{
+  "$comment": "Routing scenarios for `harness dry-run` and the automated tests. Replies use {{run_id}}, {{experiment_id}}, {{cycle_id}}, {{consultation_id}} placeholders filled from the harness header of the message they answer. Everything runs against fakes and a temporary copy of fixtures/factory.",
+  "shared": {
+    "complete": {
+      "action": "EXPERIMENT_COMPLETE",
+      "outcome": "accepted",
+      "reason": "AC-1 and AC-2 passed with evidence.",
+      "evidence_refs": [
+        "evidence/EXP-900/after-save.png",
+        "evidence/EXP-900/reopened.png"
+      ],
+      "acceptance_checks": [
+        {
+          "id": "AC-1",
+          "status": "passed",
+          "evidence_refs": [
+            "evidence/EXP-900/after-save.png"
+          ]
+        },
+        {
+          "id": "AC-2",
+          "status": "passed",
+          "evidence_refs": [
+            "evidence/EXP-900/reopened.png"
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "statement": "FX_FixtureVar persists across close/reopen",
+          "classification": "observed",
+          "evidence_refs": [
+            "evidence/EXP-900/reopened.png"
+          ]
+        }
+      ]
+    },
+    "workerOk": {
+      "status": "completed",
+      "text": "HARNESS REPORT\n- Actions: created FX_FixtureVar, saved, closed, reopened\n- Observations: variable present after reopen\n- Evidence: evidence/EXP-900/after-save.png, evidence/EXP-900/reopened.png\n- Knowledge state: observed",
+      "files": {
+        "evidence/EXP-900/after-save.png": "png-bytes",
+        "evidence/EXP-900/reopened.png": "png-bytes"
+      }
+    }
+  },
+  "scenarios": [
+    {
+      "name": "direct-worker-routing",
+      "description": "Kickoff -> SEND_TO_OPENCODE -> worker report -> EXPERIMENT_COMPLETE (accepted, evidence exists).",
+      "coordinator": [
+        {
+          "prose": "Start with the bounded creation step.",
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "first step",
+            "message": "Create FX_FixtureVar on FX_FixtureForm01, save, close/reopen, capture evidence."
+          }
+        },
+        {
+          "prose": "Evidence confirms both checks.",
+          "envelope": "$complete"
+        }
+      ],
+      "worker": [
+        "$workerOk"
+      ],
+      "expect": {
+        "status": "completed",
+        "outcome": "accepted",
+        "workerSubmissions": 1,
+        "coordinatorSubmissions": 2,
+        "specialistSubmissions": 0
+      }
+    },
+    {
+      "name": "specialist-consultation",
+      "description": "ASK_SPECIALIST -> specialist reply forwarded to coordinator -> SEND_TO_OPENCODE -> complete.",
+      "coordinator": [
+        {
+          "envelope": {
+            "action": "ASK_SPECIALIST",
+            "reason": "need product knowledge first",
+            "message": "Where are form variables edited in the Web Designer?"
+          }
+        },
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "specialist answered",
+            "message": "Use Details > Variables to create FX_FixtureVar, save, reopen, capture evidence."
+          }
+        },
+        {
+          "envelope": "$complete"
+        }
+      ],
+      "specialist": [
+        {
+          "prose": "OBSERVATIONS: none supplied yet.\nASSUMPTIONS: Details > Variables is the editor.\nVERIFICATION: create, save, reopen.",
+          "envelope": null,
+          "markdown": "OBSERVATIONS: none yet.\nASSUMPTIONS: Details > Variables.\n\n```json\n{\"protocol\": \"mongoose-harness/specialist-v1\", \"consultation_id\": \"{{consultation_id}}\", \"verdict\": \"informational\", \"required_verifications\": [\"reopen check\"]}\n```"
+        }
+      ],
+      "worker": [
+        "$workerOk"
+      ],
+      "expect": {
+        "status": "completed",
+        "outcome": "accepted",
+        "workerSubmissions": 1,
+        "coordinatorSubmissions": 3,
+        "specialistSubmissions": 1
+      }
+    },
+    {
+      "name": "invalid-response",
+      "description": "Coordinator replies without an envelope twice: one protocol correction, then pause with the raw reply preserved.",
+      "coordinator": [
+        "Sure, let's have OpenCode create the variable next.",
+        "I think we should continue with the variable."
+      ],
+      "expect": {
+        "status": "paused",
+        "pause_reason": "invalid_coordinator_response",
+        "coordinatorSubmissions": 2,
+        "workerSubmissions": 0
+      }
+    },
+    {
+      "name": "done-in-prose",
+      "description": "The word 'done' / 'complete' in prose never completes an experiment.",
+      "coordinator": [
+        "Done! The experiment is complete and everything passed.",
+        "Yes, done."
+      ],
+      "expect": {
+        "status": "paused",
+        "pause_reason": "invalid_coordinator_response",
+        "workerSubmissions": 0
+      }
+    },
+    {
+      "name": "wrong-identifiers",
+      "description": "Envelope for a different experiment is rejected, never routed.",
+      "coordinator": [
+        {
+          "envelope": {
+            "experiment_id": "EXP-901",
+            "action": "SEND_TO_OPENCODE",
+            "reason": "x",
+            "message": "Do something."
+          }
+        },
+        {
+          "envelope": {
+            "experiment_id": "EXP-901",
+            "action": "SEND_TO_OPENCODE",
+            "reason": "x",
+            "message": "Do something."
+          }
+        }
+      ],
+      "expect": {
+        "status": "paused",
+        "pause_reason": "invalid_coordinator_response",
+        "workerSubmissions": 0
+      }
+    },
+    {
+      "name": "scope-expansion",
+      "description": "Worker instruction that starts another experiment pauses for operator scope review.",
+      "coordinator": [
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "move on",
+            "message": "EXP-900 is fine; now start EXP-901 and create an IDO collection."
+          }
+        }
+      ],
+      "expect": {
+        "status": "paused",
+        "pause_reason": "review:scope",
+        "workerSubmissions": 0
+      }
+    },
+    {
+      "name": "prohibited-pattern",
+      "description": "Worker instruction matching a brief prohibited_pattern: one rewording request, then (still matching) pause for review.",
+      "coordinator": [
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "try events",
+            "message": "Add an event handler to FX_FixtureForm01 that sets the variable."
+          }
+        },
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "try events",
+            "message": "Add an event handler to FX_FixtureForm01 that sets the variable."
+          }
+        }
+      ],
+      "expect": {
+        "status": "paused",
+        "pause_reason": "review:scope",
+        "workerSubmissions": 0,
+        "coordinatorSubmissions": 2
+      }
+    },
+    {
+      "name": "missing-evidence",
+      "description": "EXPERIMENT_COMPLETE citing evidence files that do not exist pauses instead of completing.",
+      "coordinator": [
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "first step",
+            "message": "Create FX_FixtureVar, save, reopen."
+          }
+        },
+        {
+          "envelope": "$complete"
+        }
+      ],
+      "worker": [
+        {
+          "status": "completed",
+          "text": "HARNESS REPORT: created and saved; no screenshots taken."
+        }
+      ],
+      "expect": {
+        "status": "paused",
+        "pause_reason": "review:evidence_missing"
+      }
+    },
+    {
+      "name": "specialist-disagreement",
+      "description": "Specialist objects, coordinator declares completion anyway: pause with both replies preserved.",
+      "coordinator": [
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "first step",
+            "message": "Create FX_FixtureVar, save, reopen, capture evidence."
+          }
+        },
+        {
+          "envelope": {
+            "action": "ASK_SPECIALIST",
+            "reason": "sanity check",
+            "message": "Does this evidence prove persistence?"
+          }
+        },
+        {
+          "envelope": "$complete"
+        }
+      ],
+      "specialist": [
+        {
+          "markdown": "OBSERVATION: the reopen screenshot shows a cached designer instance.\n\n```json\n{\"protocol\": \"mongoose-harness/specialist-v1\", \"consultation_id\": \"{{consultation_id}}\", \"verdict\": \"objects\", \"required_verifications\": [\"full page reload\"]}\n```"
+        }
+      ],
+      "worker": [
+        "$workerOk"
+      ],
+      "expect": {
+        "status": "paused",
+        "pause_reason": "review:specialist_disagreement"
+      }
+    },
+    {
+      "name": "worker-failure",
+      "description": "OpenCode task fails; failure is reported to the coordinator, which retries; then completes.",
+      "coordinator": [
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "first",
+            "message": "Create FX_FixtureVar, save, reopen."
+          }
+        },
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "retry after inspection",
+            "message": "Inspect current state, then create FX_FixtureVar if absent, save, reopen."
+          }
+        },
+        {
+          "envelope": "$complete"
+        }
+      ],
+      "worker": [
+        {
+          "status": "failed",
+          "error": "APIError: provider connection reset"
+        },
+        "$workerOk"
+      ],
+      "expect": {
+        "status": "completed",
+        "outcome": "accepted",
+        "workerSubmissions": 2
+      }
+    },
+    {
+      "name": "consecutive-failure-limit",
+      "description": "Two consecutive worker failures with maxConsecutiveFailures=2 pause before reporting again.",
+      "limits": {
+        "maxConsecutiveFailures": 2
+      },
+      "coordinator": [
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "first",
+            "message": "Create FX_FixtureVar."
+          }
+        },
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "retry",
+            "message": "Inspect state, then create FX_FixtureVar."
+          }
+        }
+      ],
+      "worker": [
+        {
+          "status": "failed",
+          "error": "APIError: 1"
+        },
+        {
+          "status": "failed",
+          "error": "APIError: 2"
+        }
+      ],
+      "expect": {
+        "status": "paused",
+        "pause_reason": "limit:maxConsecutiveFailures",
+        "workerSubmissions": 2
+      }
+    },
+    {
+      "name": "worker-task-limit",
+      "description": "maxWorkerTasks=1: the second worker task is saved but not submitted; the run pauses.",
+      "limits": {
+        "maxWorkerTasks": 1
+      },
+      "coordinator": [
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "first",
+            "message": "Create FX_FixtureVar."
+          }
+        },
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "second",
+            "message": "Reopen and verify FX_FixtureVar."
+          }
+        }
+      ],
+      "worker": [
+        "$workerOk"
+      ],
+      "expect": {
+        "status": "paused",
+        "pause_reason": "limit:maxWorkerTasks",
+        "workerSubmissions": 1
+      }
+    },
+    {
+      "name": "fresh-session-handoff",
+      "description": "NEW_OPENCODE_SESSION saves a handoff, opens a second session, keeps counters, then completes.",
+      "coordinator": [
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "first",
+            "message": "Create FX_FixtureVar and save."
+          }
+        },
+        {
+          "envelope": {
+            "action": "NEW_OPENCODE_SESSION",
+            "reason": "worker context is getting long",
+            "message": "Reopen FX_FixtureForm01 and verify FX_FixtureVar persisted; capture evidence.",
+            "handoff": {
+              "completed_steps": [
+                "Created FX_FixtureVar",
+                "Saved"
+              ],
+              "observed_facts": [
+                "Save reported success"
+              ],
+              "unverified_hypotheses": [
+                "Variable persists"
+              ],
+              "unresolved_questions": [
+                "Does reopen show it?"
+              ],
+              "documentation_changes": [
+                "experiments/EXP-900-fixture-experiment.md"
+              ],
+              "next_permitted_action": "Close and reopen FX_FixtureForm01, inspect Variables, screenshot."
+            }
+          }
+        },
+        {
+          "envelope": "$complete"
+        }
+      ],
+      "worker": [
+        {
+          "status": "completed",
+          "text": "HARNESS REPORT: created and saved.",
+          "files": {
+            "evidence/EXP-900/after-save.png": "png"
+          }
+        },
+        "$workerOk"
+      ],
+      "expect": {
+        "status": "completed",
+        "outcome": "accepted",
+        "workerSubmissions": 2,
+        "sessions": 2
+      }
+    },
+    {
+      "name": "uncertain-submission",
+      "description": "Browser submission times out and acceptance cannot be confirmed: pause, never resubmit automatically.",
+      "coordinator": [
+        {
+          "submit": "uncertain_lost",
+          "envelope": {
+            "action": "PAUSE",
+            "reason": "unused"
+          }
+        }
+      ],
+      "expect": {
+        "status": "paused",
+        "pause_reason": "submission_uncertain",
+        "coordinatorSubmissions": 1
+      }
+    },
+    {
+      "name": "attachment-request",
+      "description": "Coordinator needs a screenshot the controller cannot upload: pause.",
+      "coordinator": [
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "need to see it",
+            "message": "Take a screenshot of the Variables tab.",
+            "requires_attachments": [
+              "evidence/EXP-900/01-before.png"
+            ]
+          }
+        }
+      ],
+      "expect": {
+        "status": "paused",
+        "pause_reason": "review:attachment_required",
+        "workerSubmissions": 0
+      }
+    },
+    {
+      "name": "replay-verified-outside-replay",
+      "description": "A replay_verified finding in a non-replay experiment is not accepted.",
+      "coordinator": [
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "x",
+            "message": "Reopen and verify FX_FixtureVar.",
+            "findings": [
+              {
+                "statement": "Procedure verified",
+                "classification": "replay_verified",
+                "evidence_refs": [
+                  "evidence/EXP-900/01-before.png"
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "expect": {
+        "status": "paused",
+        "pause_reason": "review:replay_verified_outside_replay_experiment",
+        "workerSubmissions": 0
+      }
+    },
+    {
+      "name": "scope-rephrase",
+      "description": "A harmless phrase trips an auto-review pattern; the coordinator rewords it once and the task proceeds.",
+      "coordinator": [
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "r",
+            "message": "Save the form, then write a script summary of what you changed."
+          }
+        },
+        {
+          "envelope": {
+            "action": "SEND_TO_OPENCODE",
+            "reason": "r",
+            "message": "Save the form, then report a short summary of what you changed."
+          }
+        },
+        {
+          "envelope": {
+            "action": "PAUSE",
+            "reason": "done for now"
+          }
+        }
+      ],
+      "worker": [
+        "$workerOk"
+      ],
+      "expect": {
+        "status": "paused",
+        "pause_reason": "coordinator_requested_pause",
+        "workerSubmissions": 1,
+        "coordinatorSubmissions": 3
+      }
+    }
+  ]
+}

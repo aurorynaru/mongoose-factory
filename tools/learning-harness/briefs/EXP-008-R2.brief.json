@@ -1,0 +1,127 @@
+{
+  "experiment_id": "EXP-008-R2",
+  "title": "EXP-008-R2 — Clean Replay: Form Description Persistence Across Close-Only Reopen",
+  "record_path": "experiments/EXP-008-R2-clean-replay-form-description-persistence-across-c.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Independently replay EXP-008 on one new User-scope classic BuildFromScratch Form, `FX_FormPropertyLab08`. Prove the target is initially absent and the current User Preference state matches the prerequisite observed in EXP-008; create exactly one target using the verified basic-form recipe; record its untouched Form-property baseline; change only Form-level Description to the literal value `Form Property Description Close Only Replay`; ordinary-save to a clean Designer state; close the target normally; without performing any explicit global-Form-object unload, reopen the exact same customized Form version identified by Form name + ScopeType + ScopeName; and verify that Description and all recorded comparison properties recover unchanged. Record close/reopen request observations only diagnostically and make no cache, IDO-metadata, or durable-storage inference. If all replay checks reproduce the EXP-008 semantic postconditions in the fresh worker context, classify this specific procedure as `replay_verified` for the tested environment and workflow only.",
+  "scope": {
+    "in_scope": [
+      "Read-only preflight of User editing scope, target absence, FX_ inventory count, and repository/worktree baseline",
+      "Read-only visible confirmation that `Unload IDO Metadata With Forms` is enabled; it must remain unchanged and unsaved",
+      "Create exactly one new User-scope classic BuildFromScratch Form named `FX_FormPropertyLab08` using the verified basic-form recipe",
+      "Record the untouched baseline for Description, Caption, Version, Device Type, Form Type, Is Master, ScopeType, and ScopeName",
+      "Change only Form-level Description to exactly `Form Property Description Close Only Replay`",
+      "Perform exactly one ordinary Designer Save and prove the Designer returns clean",
+      "Close `FX_FormPropertyLab08` normally from a clean state",
+      "Record passive close/reopen network observations, including whether any ClearCache-style request appears, as diagnostic evidence only",
+      "Prove before reopen that no explicit global-Form-object unload action occurred in EXP-008-R2",
+      "Reopen exactly `FX_FormPropertyLab08` through a supported Designer UI path and verify Form name + ScopeType + ScopeName match the baseline identity",
+      "Verify Description and all comparison properties recover unchanged and the Designer is clean",
+      "Perform a final read-only uniqueness, preference, no-unload, persisted-value, and repository-scope audit",
+      "Update only the EXP-008-R2 experiment record and evidence/EXP-008-R2/"
+    ],
+    "out_of_scope": [
+      "Form variables or any workaround for EXP-004",
+      "Caption edits",
+      "Components, collections, bindings, event handlers, scripts, validators, data sources, or IDO definitions",
+      "Site, Group, Vendor Default, or any scope-switching experiment",
+      "Changing `Unload IDO Metadata With Forms` or any other User Preference",
+      "Explicit global-Form-object unloading",
+      "Interpreting ClearCache-style traffic as a supported API contract or proof of IDO/cache semantics",
+      "Direct database edits, undocumented APIs, metadata hacks, or manual backend changes",
+      "Creating or modifying reusable recipes",
+      "Modification of any existing FX_ Form",
+      "Modification of any non-FX_ Mongoose artifact",
+      "Generalizing the result to other Form properties, scopes, users, tenants, versions, or storage layers"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Create, modify, delete, rename, or otherwise mutate any non-FX_ artifact",
+    "Create, modify, delete, rename, or otherwise mutate any existing FX_ Form",
+    "Start another experiment or investigate an unrelated topic",
+    "Modify production data or disable security",
+    "Read or print credential values",
+    "Change or save User Preferences",
+    "Perform any scope switch or Site Developer impersonation change",
+    "Edit any Form property other than Description on `FX_FormPropertyLab08`",
+    "Create variables, components, collections, bindings, event handlers, scripts, validators, data sources, or IDO metadata",
+    "Perform an explicit global-Form-object unload action",
+    "Call ClearCache-style endpoints directly or treat captured internal requests as supported APIs",
+    "Promote a reusable recipe as part of this replay",
+    "Claim replay verification unless every replay acceptance check passes with evidence"
+  ],
+  "prohibited_patterns": [
+    "\\bunload\\s+all\\s+global\\s+form\\s+objects\\b",
+    "\\b(create|add|edit|modify|delete)\\b[^.\\n]{0,50}\\b(variable|component|collection|binding|event handler|script|validator|data source|ido)s?\\b",
+    "\\b(scope switch|switch scope|impersonat(e|ion))\\b",
+    "\\b(edit|change|set|modify)\\b[^.\\n]{0,30}\\bcaption\\b",
+    "\\b(clearcache|designerSession\\/clearcache)\\b[^.\\n]{0,40}\\b(call|invoke|post|request|api)\\b"
+  ],
+  "related_experiments": [
+    "EXP-008",
+    "EXP-002",
+    "EXP-002-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_FormPropertyLab08",
+    "artifacts": [
+      "FX_FormPropertyLab08"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Before mutation, prove with UI/store evidence that `FX_FormPropertyLab08` is absent by exact and case-insensitive Form Name, confirm Designer editing scope is User, capture the current total/FX_/target inventory counts, and capture a repository/worktree baseline."
+    },
+    {
+      "id": "AC-2",
+      "description": "Through the supported visible Web Client User Preferences surface, prove `Unload IDO Metadata With Forms` is enabled, then close the preferences surface without changing or saving it. If the state is not authoritatively visible or is not enabled, stop before target creation and classify the replay as blocked rather than changing the preference."
+    },
+    {
+      "id": "AC-3",
+      "description": "Create exactly one User-scope classic BuildFromScratch Form named `FX_FormPropertyLab08` using the verified creation recipe; prove the inventory changes by exactly one target and record the untouched baseline for Description, Caption, Version, Device Type, Form Type, Is Master, ScopeType, and ScopeName."
+    },
+    {
+      "id": "AC-4",
+      "description": "Change only Form-level Description from its baseline to exactly `Form Property Description Close Only Replay`, perform exactly one ordinary Designer Save, prove the Designer is clean afterward, and prove Caption, Version, Device Type, Form Type, Is Master, ScopeType, and ScopeName remain equal to the AC-3 baseline."
+    },
+    {
+      "id": "AC-5",
+      "description": "From the clean saved state, close `FX_FormPropertyLab08` normally and prove it is no longer open with no unsaved-change prompt or unintended mutation. Record task-local close request observations diagnostically, including whether any ClearCache-style request is observed."
+    },
+    {
+      "id": "AC-6",
+      "description": "Before reopening, prove from the EXP-008-R2 record/evidence and current state that no explicit global-Form-object unload action was performed during the replay."
+    },
+    {
+      "id": "AC-7",
+      "description": "Reopen exactly `FX_FormPropertyLab08` through a supported Designer UI path and prove the loaded customized version matches the AC-3 identity by Form name, ScopeType=User, and the same ScopeName."
+    },
+    {
+      "id": "AC-8",
+      "description": "After the close-only reopen, prove Description equals exactly `Form Property Description Close Only Replay`; Caption, Version, Device Type, Form Type, Is Master, ScopeType, and ScopeName all equal the AC-3 baseline; and the Designer is clean. Record reopen request observations only diagnostically."
+    },
+    {
+      "id": "AC-9",
+      "description": "Perform a final read-only audit proving exactly one `FX_FormPropertyLab08` exists, the AC-8 values remain intact, `Unload IDO Metadata With Forms` remains enabled and unchanged, no explicit global-Form-object unload occurred, and experiment-attributable repository changes are confined to the EXP-008-R2 record plus `evidence/EXP-008-R2/`."
+    },
+    {
+      "id": "AC-10",
+      "description": "If AC-1 through AC-9 pass in this independent replay, classify the EXP-008 close-only Description-recovery procedure as `replay_verified` only for the tested User-scope Mongoose 2026.09.08 workflow. Explicitly state that the replay does not establish IDO-metadata trigger behavior, internal cache semantics, Forms-database persistence, other Form properties/scopes, cross-user or cross-environment behavior, or a supported ClearCache API contract."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-008-R2",
+  "replay_of": "EXP-008",
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261002-165426-GuWm. Rationale: EXP-008 completed successfully but established the close-only Description-recovery procedure only once, so its result is still `observed`. The project learning pattern explicitly prefers a fresh clean replay before promotion to `replay_verified`. Replaying the same narrow User-scope workflow on one new FX_ Form is therefore the smallest next step and avoids introducing a new Form property, scope, cache mechanism, component type, or blocked topic. The replay should preserve the material EXP-008 conditions: User editing scope, `Unload IDO Metadata With Forms` visibly observed enabled and left unchanged, ordinary Save to clean, ordinary close, no explicit global-Form-object unload, supported UI reopen of the same scoped version, and comparison against the untouched property baseline."
+}

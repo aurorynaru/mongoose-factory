@@ -1,0 +1,67 @@
+{
+  "experiment_id": "EXP-004",
+  "title": "EXP-004 — Form Variable Fundamentals",
+  "record_path": "experiments/EXP-004-form-variable-fundamentals.md",
+  "reviewed": true,
+  "objective": "Learn how to create a **Form-scoped variable** in the Mongoose Web Designer and verify that its definition metadata persists across a close/reopen boundary.",
+  "scope": {
+    "in_scope": [
+      "Inspect FX_VariableLab01 in Web Designer -> Details -> Variables (Form/Global, Persistent/Temporary categories)",
+      "Create or edit ONLY the form variable FX_TestValueVar on FX_VariableLab01 (Persistent=False, Value=Seed-A), Save, close/reopen, verify",
+      "Record findings and evidence in experiments/EXP-004-form-variable-fundamentals.md and evidence/EXP-004/"
+    ],
+    "out_of_scope": [
+      "runtime variable behavior",
+      "component bindings",
+      "scripts",
+      "events",
+      "IDOs/collections",
+      "validators",
+      "`Persistent=True` / `Global=True` variants",
+      "EXP-004-R2",
+      "EXP-005"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Recreating or deleting FX_VariableLab01",
+    "Using Edit -> Variable (Global Objects editor) to create or change variables",
+    "Creating global variables / global objects",
+    "Starting any other experiment or replay (EXP-004-R2, EXP-005, ...)",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values"
+  ],
+  "prohibited_patterns": [
+    "\\b(create|add|write|attach|bind)\\b[^.\\n]{0,40}\\b(event handler|script|IDO|binding|collection)s?\\b",
+    "\\b(recreate|delete|rebuild)\\b[^.\\n]{0,30}\\bFX_VariableLab01\\b",
+    "\\bEdit\\s*(->|→|>)\\s*Variable\\b[^.\\n]{0,60}\\b(create|new|add)\\b"
+  ],
+  "related_experiments": [],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": "Record status when drafted: blocked (persistence failure — reproducible, 2/2 attempts)"
+  },
+  "target": {
+    "form": "FX_VariableLab01",
+    "artifacts": ["FX_TestValueVar"]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "After Save, FX_TestValueVar exists as a FORM variable on FX_VariableLab01 with Global=False, Persistent=False, Value=Seed-A (screenshot in evidence/EXP-004/)"
+    },
+    {
+      "id": "AC-2",
+      "description": "After closing and reopening FX_VariableLab01, FX_TestValueVar is still present with the same properties, exactly one instance (screenshot in evidence/EXP-004/)"
+    },
+    {
+      "id": "AC-3",
+      "description": "No new global objects were created: Global Objects list/count unchanged (screenshot or recorded count in evidence/EXP-004/ or the experiment record)"
+    }
+  ],
+  "evidence_dir": "evidence/EXP-004",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Continuation of the blocked EXP-004 after the specialist's corrected guidance (Details -> Variables, not Edit -> Variable). If the Temporary Form Variables area does not exist or persistence still fails, the expected outcome is 'blocked' with evidence, not a workaround."
+}

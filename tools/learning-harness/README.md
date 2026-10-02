@@ -1,0 +1,335 @@
+# Mongoose learning harness
+
+Automates the manual relay loop of the Mongoose learning workflow for **one explicitly
+selected experiment at a time**:
+
+```
+            ┌──────────────── harness (this tool, Node/TypeScript) ────────────────┐
+ OpenCode   │ submit task ─► wait ─► collect report + evidence diff                │
+ (worker,   │        ▲                                   │                        │
+ Mongoose   │        │ SEND_TO_OPENCODE / NEW_OPENCODE_SESSION                     ▼ │
+ browser)   │   route decision ◄── validate envelope ◄── ChatGPT Tab 1 (coordinator)│
+            │                                            ▲         │ ASK_SPECIALIST│
+            │                                            └─ Tab 2 (your Mongoose GPT)│
+            └──────────────────────────────────────────────────────────────────────┘
+```
+
+- **Tab 1 (coordinator)** and **Tab 2 (your custom Mongoose GPT)** stay exactly what they are. The
+  harness types into them through a visible browser, like you do. It never uses ChatGPT backend
+  endpoints, never reads tokens, never touches the GPT's configuration, never types credentials.
+- **OpenCode** is driven through its local HTTP API (`opencode serve`), verified against the installed
+  **1.18.33** (`GET /doc`). The harness owns ChatGPT; OpenCode keeps owning the Mongoose browser.
+- **Routing is deterministic**: Tab 1 ends each reply with a JSON *decision envelope*
+  ([protocol/coordinator-protocol.md](protocol/coordinator-protocol.md)). DeepSeek is an optional,
+  off-by-default interpreter for replies that miss the envelope; its output is heavily vetted.
+- **No local model** is loaded by the controller.
+
+## Verified vs. not verified
+
+| Area | Status |
+|---|---|
+| State machine, routing, limits, handoff, recovery, scope/completion guards | Verified by 49 controller tests (fakes; includes the 16 `dry-run` scenarios) and a cross-process CLI smoke |
+| Protocol parsing, evidence-path safety, DeepSeek guard rails, redaction | Verified by unit tests |
+| OpenCode adapter (`prompt_async` with our `messageID`, reconciliation, permissions/questions, errors) | Verified against a mock of the 1.18.33 API **and** against a real `opencode serve` 1.18.33 (smoke test; `noReply` only, no model call) |
+| PowerShell backend scripts (start / health / restart / stop, ownership, port conflicts) | Verified against real `opencode serve` processes (smoke test, scratch directory) |
+| Playwright ChatGPT adapter logic (locators, completion waiting, reply scoping, nonce reconciliation, login / rate-limit / error / missing-conversation detection) | Verified against a **fixture page** that imitates ChatGPT's DOM hooks (headless Chrome) |
+| Selectors against **live chatgpt.com** | **NOT verified** — needs your signed-in session. Run `harness doctor` after `harness setup` |
+| Full live loop with your coordinator, your GPT and a real Mongoose task | **NOT run** (no live experiment was started during implementation) |
+| Harness backend started inside `C:\AI\mongoose-factory` (loads your `opencode.json`, Playwright MCP, TabbyAPI model) | **NOT run** — first happens on your first `start` or `harness backend start` |
+
+## Install / build
+
+```powershell
+cd C:\AI\mongoose-factory\tools\learning-harness
+npm ci            # dependencies from package-lock.json
+npm run build     # compiles src/ -> dist/
+Copy-Item harness.config.example.json harness.config.json   # already done once; edit as needed
+```
+
+Run commands with `.\harness.ps1 <command>` (or `node dist\cli.js <command>`).
+Requires Node ≥ 20 (you have 24.11.1), Google Chrome (used via Playwright's `chrome` channel),
+PowerShell 7 or Windows PowerShell 5.1.
+
+## First-time setup
+
+1. **Pick the ChatGPT profile location** (`browser.userDataDir`, default
+   `C:\AI\learning-harness-chatgpt-profile`). It must differ from OpenCode's Mongoose profile
+   (`C:\AI\mongoose-playwright-profile`) and must be outside the factory folder, so the OpenCode
+   worker cannot read your ChatGPT cookies. The config loader refuses anything else.
+2. **Sign in once in a normal Chrome** (not driven by Playwright):
+   ```powershell
+   .\harness.ps1 login
+   ```
+   Sign in to ChatGPT in the window that opens, then close it. Signing in inside the
+   Playwright-launched window can fail with "Route Error (400 Invalid content type …)".
+3. **Identify the two conversations**:
+   ```powershell
+   .\harness.ps1 setup
+   ```
+   A Chrome window opens with the dedicated profile. Sign in to ChatGPT **manually**. Open your
+   coordinator conversation in one tab and a conversation with your Mongoose GPT in another (both must
+   already exist, i.e. the URL contains `/c/...`; send any first message manually if needed). Press
+   Enter and pick the tab numbers. The harness stores each role by **conversation id** (and the GPT id
+   for Tab 2), validates both pages, and sends nothing. Tab order never matters afterwards.
+   Non-interactive alternative: `.\harness.ps1 setup --coordinator-url <url> --specialist-url <url>`.
+3. **Check everything** (never submits a prompt):
+   ```powershell
+   .\harness.ps1 doctor           # add --no-browser to skip opening Chrome, --mcp for MCP status
+   ```
+4. **Select the experiment explicitly** with a reviewed brief:
+   ```powershell
+   .\harness.ps1 brief init EXP-004     # drafts briefs\EXP-004.brief.json from the record
+   notepad briefs\EXP-004.brief.json    # fill in scope, acceptance_checks, prohibited_patterns; set "reviewed": true
+   .\harness.ps1 brief check EXP-004
+   ```
+   A draft for EXP-004 has already been generated from the current record (status **blocked**). It is
+   **unreviewed** and contains TODOs, so `start` refuses it until you edit it. The harness never picks
+   the next experiment itself.
+5. (Optional) Prime Tab 1 yourself: `.\harness.ps1 protocol coordinator` prints the exact protocol
+   text. The kickoff message of every run includes it anyway.
+
+### The brief (what the run may do)
+
+| Field | Purpose |
+|---|---|
+| `experiment_id`, `record_path` | The one experiment this run serves (`EXP-004`, `experiments/EXP-004-….md`) |
+| `objective`, `scope.in_scope`, `scope.out_of_scope`, `prohibited_actions` | Sent to Tab 1 in the kickoff and prepended to **every** OpenCode task |
+| `prohibited_patterns` | Case-insensitive regexes; a worker instruction matching one pauses for review (e.g. `\b(add|create)\b[^.\n]{0,40}\b(event handler|script|IDO)s?\b`) |
+| `related_experiments` | Other experiment IDs a worker instruction may mention. Any other `EXP-###` pauses for review |
+| `environment.editing_scope`, `target.form`, `target.artifacts`, `evidence_dir` | Context for the worker and the handoff |
+| `acceptance_checks` | `accepted` completion requires **every** check `passed` with existing evidence files |
+| `replay_of` | Set only for replay experiments; required before any finding may be `replay_verified` |
+| `initial_instruction` | Optional first OpenCode task; otherwise Tab 1 decides the first step |
+
+## Running
+
+```powershell
+.\harness.ps1 start EXP-004      # foreground; Ctrl+C = graceful pause, twice = exit (state is checkpointed)
+.\harness.ps1 status             # --watch to refresh, --json for machine output
+.\harness.ps1 pause              # from another terminal: nothing new is sent; in-flight state kept
+.\harness.ps1 resume             # reconciles pending submissions first, then continues
+.\harness.ps1 stop               # ends the run permanently; --abort-worker also aborts the OpenCode task
+.\harness.ps1 dry-run            # all routing scenarios on fakes; no ChatGPT, OpenCode or Mongoose
+```
+
+`start` does, in order: validate the brief, start (or reuse) the harness-owned OpenCode backend on
+127.0.0.1:4096, open the harness browser, confirm both conversations are ready, create the run, then
+loop:
+
+1. Kickoff to Tab 1: protocol, brief, current record status, limits.
+2. Tab 1 envelope → `SEND_TO_OPENCODE`: task = bounded preamble + instruction → OpenCode session.
+3. Wait for OpenCode to finish. Pending permission or question requests pause the run; the harness never auto-approves.
+4. Report to Tab 1: the worker's text plus the files added or modified under `evidence/<EXP>`, `experiments/`, `recipes/`, `environments/` and `claims/` during the task.
+5. `ASK_SPECIALIST` → question + latest worker observations → Tab 2 → its complete reply → Tab 1.
+6. `NEW_OPENCODE_SESSION` → handoff saved (file + DB) **before** the session is created → new session
+   gets handoff + preamble + task. Counters, limits and failure history carry over.
+7. `EXPERIMENT_COMPLETE` → validated (see below) → run `completed` with outcome `accepted`/`blocked`.
+   The harness does **not** edit experiment records; that stays the worker's job, as today.
+8. `PAUSE` → run pauses; on `resume`, Tab 1 is told the operator resumed.
+
+Every transition is checkpointed in SQLite before the next external action.
+
+### Fresh chats, with memory from disk
+
+Long ChatGPT conversations lose or distort early details. The harness therefore treats **files** as
+the memory, and starts chats fresh:
+
+- **Every run starts in a NEW coordinator chat** (`chats.newCoordinatorPerRun`, default on). The harness
+  opens chatgpt.com, sends the kickoff as the first message, and registers the new conversation. The
+  old chat stays in ChatGPT.
+- **Every kickoff and proposal request** includes:
+  - **Experiment records from disk:** status and Result section of every `experiments\*.md` (the current
+    experiment in more detail), plus recipe statuses.
+  - **Project context** from `context\coordinator-context.md`, but **only after you approve it**.
+- **One-time context save** from your old, long chat:
+  ```powershell
+  .\harness.ps1 context save      # asks the CURRENT coordinator chat for a handoff summary
+  notepad context\coordinator-context.md   # remove anything wrong or unverified
+  .\harness.ps1 context approve   # from now on it is sent to fresh chats
+  .\harness.ps1 context show      # exactly what fresh chats receive
+  ```
+- **New chats on request:**
+  - `.\harness.ps1 chat new specialist`: the next consultation opens a new chat with your Mongoose GPT.
+  - `.\harness.ps1 chat new coordinator`: the next coordinator message (including `harness next`) opens
+    a new chat.
+  - `chat use <role> <url>` registers a specific chat; `chat show` lists the current ones.
+- **Model check:** `chats.expectedModelLabel` (e.g. `"High"`) must appear in the visible model selector
+  (it shows the effort, e.g. "Thinking effort High") before anything is sent; otherwise the run
+  pauses with `browser:model_mismatch`. The harness never changes the model itself. Pick GPT 5.6 Sol
+  / High once by hand; ChatGPT uses the last-used model for new chats. The model *name* is not visible
+  without opening the picker, so only the label is checked.
+- **Automatic model/effort selection:** `chats.desiredModel` (e.g. `GPT-5.6 Sol` / `High`) with
+  `chats.autoSelectModel: true`. In every new chat, and whenever the label is off, the harness opens
+  the model menu, picks the model, moves the Power slider with the arrow keys, verifies both and closes
+  the menu. If that can't be confirmed, nothing is sent and the run pauses (`browser:model_mismatch`).
+  Verified live on 2026-10-01.
+- If the first message of a new chat can't be confirmed, the run pauses; it never opens a second
+  chat on its own. Find the chat in the ChatGPT sidebar and `chat use` it, or `resume --approve resubmit`.
+
+### Autopilot: several experiments unattended
+
+```powershell
+.\harness.ps1 autopilot on --experiments 3   # allow up to 3 further experiments
+.\harness.ps1 autopilot status
+.\harness.ps1 autopilot off
+.\harness.ps1 autopilot next                 # run the cycle now for the latest completed run
+```
+
+After each **completed** run (all in NEW chats, memory only from disk;
+prompts in [protocol/autopilot-protocol.md](protocol/autopilot-protocol.md)):
+
+1. **Coordinator updates the context document** from the current context file, the records digest
+   and the finished experiment's full record.
+2. **Mongoose GPT reviews the findings**: corrections plus a verdict.
+3. **Coordinator finalizes the document.** It becomes `context\coordinator-context.md`; the previous
+   version goes to `context\history\`.
+4. **Coordinator proposes the next experiment**, with the usual deterministic proposal checks.
+5. **Mongoose GPT sanity-checks the proposal.** Only `"supports"` auto-approves the brief, and the next
+   run starts.
+
+**Stops** (everything stays on disk; you continue by hand or with `autopilot next`):
+- the experiment count is used up;
+- any run pauses instead of completing;
+- 2 blocked experiments in a row;
+- the specialist verdict is not `supports`;
+- any invalid or missing reply;
+- a model/effort mismatch in a new chat.
+
+Every request and reply is saved in `data\autopilot\`.
+
+### After a run: the next experiment
+
+When a run **completes** (accepted or blocked), the harness asks Tab 1 for exactly one next
+experiment ([protocol/proposal-protocol.md](protocol/proposal-protocol.md)). It validates the
+proposal, then saves it as an **unreviewed** draft brief in `briefs\<EXP-ID>.brief.json` and prints
+it. It never starts the experiment by itself. Validation requires a new ID or a correctly named
+replay, FX_ targets only, valid patterns and observable acceptance checks. The standard prohibitions
+are always added. If the proposal is unusable, Tab 1 gets one correction request; otherwise nothing
+is saved. Every request and reply is kept in `data\proposals\`.
+
+```powershell
+.\harness.ps1 brief show EXP-005             # read it (edit the JSON if you want changes)
+.\harness.ps1 brief approve EXP-005 --start  # shows it again, asks you to type "yes", then starts
+.\harness.ps1 next                           # ask for a proposal again (e.g. after a failure); --force overwrites a draft
+```
+
+A new experiment's brief has `"new_record": true`: the record file doesn't exist yet, and the kickoff
+tells Tab 1 that the worker must create it. Turn the automatic request off with
+`"protocol": {"proposeNextOnComplete": false}`.
+
+### Resume options (each approves only the specific pending item)
+
+| Option | Use when |
+|---|---|
+| `--approve scope` | Paused `review:scope` and the flagged instruction is actually within scope |
+| `--approve attachment` | Paused because a reply asked for a file/screenshot and you accept continuing without it (or you pasted it manually) |
+| `--approve candidate` | Paused with a DeepSeek-interpreted candidate you have checked (`data\runs\<run>\decisions\`) |
+| `--approve resubmit` | Paused `submission_uncertain`, you checked the conversation, and the message is really not there |
+| `--limit maxWorkerTasks=20` | Paused `limit:*` and you want to continue |
+| `--reask ["note"]` | Ask Tab 1 to reconsider its last (rejected / disputed) reply |
+| `--reload-brief` | You edited the brief (same experiment only) |
+
+### Four different "reset" operations
+
+| Operation | How | What it does NOT do |
+|---|---|---|
+| Fresh OpenCode **conversation** | Tab 1 returns `NEW_OPENCODE_SESSION` with a `handoff` | Does not restart the backend, reset the Mongoose browser, the Designer, or any limit |
+| Restart the OpenCode **backend** | `.\harness.ps1 backend restart` (or automatic after a backend failure, max 3 per run) | Only touches the harness-owned process (PID + exe + start time + port must match). Ends its MCP children, including the Mongoose browser it launched. Sessions survive; an in-flight task is lost and reported as a failure |
+| Reconnect the **Mongoose browser** | Not a controller operation. OpenCode's Playwright MCP owns it; a backend restart gives a fresh MCP on next use. Tab 1 can instruct the worker explicitly | The harness never drives Mongoose itself |
+| Fresh Mongoose **Designer / cache boundary** | Only by an explicit worker instruction (close/reopen, full reload…), decided by Tab 1 | Never implied by any of the above |
+
+## Safety properties (enforced in code)
+
+- **One run, one experiment**: `start` refuses while another run is running/paused; a run can never
+  switch experiments; a completed run never starts anything else. A lease ensures one controller.
+- **One task at a time**: exactly one pending operation per run (worker task *or* browser submission).
+- **Untrusted input**: every envelope is schema-validated; `run_id`, `experiment_id` and `cycle_id` must
+  match the message it answers; worker-bound text is scanned for foreign experiment IDs and prohibited
+  patterns; evidence paths must be relative, inside the factory, existing and non-empty.
+- **Completion** needs a validated envelope, all brief acceptance checks `passed` with existing
+  evidence (or, for `blocked`, a `failed` check with evidence), at least one completed worker report
+  in the run, and no `objects`/`insufficient_evidence` verdict as the latest specialist answer.
+  The word "done" means nothing.
+- **Knowledge classes** (`observed`, `candidate_procedure`, `replay_verified`, `unresolved`) are
+  recorded per finding. `replay_verified` is refused outside a replay experiment or without evidence.
+  Mapping to AGENTS.md: observed→observed, candidate_procedure→observed (proposed recipe),
+  replay_verified→verified, unresolved→unverified.
+- **No duplicate forwarding**: each browser message carries a nonce (`[HARNESS nonce=H-…]`); each OpenCode
+  task has a pre-assigned `messageID`. Before any (re)submission the harness checks whether the other
+  side already has it. A browser submission whose acceptance cannot be confirmed pauses
+  (`submission_uncertain`) and is only resent after `--approve resubmit`. An OpenCode submission is
+  resent (same `messageID`) only when the server verifiably does not have it. Each received assistant
+  message id is forwarded at most once.
+- **No arbitrary commands**: PowerShell scripts take fixed parameters from the config only; text from
+  ChatGPT/DeepSeek is only ever *message content* for the next hop.
+- **Secrets**: `OPENCODE_SERVER_PASSWORD` and `DEEPSEEK_API_KEY` come from the environment, are
+  registered for redaction in all logs, and never go into prompts.
+
+## Optional: DeepSeek interpreter
+
+Off by default. Enable with `"deepseek": {"enabled": true}` and set `DEEPSEEK_API_KEY`. It is called
+only when Tab 1's reply has no valid envelope. A candidate is used only if the instruction is
+quoted **verbatim** from the reply, the action is explicit in the reply, evidence refs appear in the reply,
+confidence is `high`, and it passes the same validation as a normal envelope. `EXPERIMENT_COMPLETE`
+and `NEW_OPENCODE_SESSION` are never accepted from interpretation. Calls/cost count against
+`maxDeepseekCalls` / `maxDeepseekCostUsd` (cost is estimated from the configured per-token prices).
+
+## Optional: attach to a Chrome you started (`browser.mode = "cdp"`)
+
+```powershell
+.\scripts\Start-HarnessChrome.ps1 -Port 9223 -UserDataDir C:\AI\learning-harness-chatgpt-profile
+```
+This starts a separate Chrome with DevTools bound to **127.0.0.1** and a dedicated profile (it refuses
+your normal Chrome profile and the Mongoose profile). Set `"browser": {"mode": "cdp", "cdpUrl":
+"http://127.0.0.1:9223"}`. The window then survives between harness commands. Anything on this machine
+that can reach that port can control that browser: close it when not in use. Arbitrary existing
+Chrome windows cannot be attached to without starting Chrome this way.
+
+## Files
+
+```
+tools/learning-harness/
+  src/                      controller (TypeScript)
+    controller/machine.ts   durable state machine
+    adapters/chatgpt/       Playwright adapter; selectors.ts holds ALL ChatGPT DOM knowledge
+    adapters/opencode/      HTTP client + worker adapter (1.18.33 API)
+    protocol/               envelope schema, validation, prompts, DeepSeek adapter
+    store.ts                SQLite (better-sqlite3, WAL)
+  protocol/*.md             coordinator / specialist / worker texts (sent verbatim between markers)
+  scripts/*.ps1             backend start / health / restart / stop, optional CDP Chrome
+  briefs/                   experiment briefs (one per experiment)
+  fixtures/                 fixture factory, brief, scenarios, fake ChatGPT page
+  test/                     vitest suites (controller, protocol, opencode, browser, smoke)
+  data/                     runtime state (git-ignored)
+    harness.sqlite          runs, operations, inbound, decisions, findings, failures, sessions, handoffs
+    logs/harness.jsonl      structured log (secrets redacted)
+    runs/<run-id>/          per-run evidence: brief.json, events.jsonl, messages/ (everything sent),
+                            inbound/ (every reply, verbatim), worker/ (transcripts), handoffs/,
+                            decisions/, screenshots/ (browser problems), completion.json
+    backend/                backend-state.json (owned PID) + OpenCode stdout/stderr logs
+```
+
+## Tests
+
+```powershell
+npm test                 # everything except the real-process smoke test
+npm run test:smoke       # starts/stops real `opencode serve` on ports 4196/4197 in a temp dir
+.\harness.ps1 dry-run    # routing scenarios, human-readable
+```
+
+## Known limitations
+
+- ChatGPT selectors are unverified against the live site until you run `doctor` after `setup`. They
+  live in `src/adapters/chatgpt/selectors.ts` for quick repair (see TROUBLESHOOTING.md).
+- The harness cannot upload files or screenshots to ChatGPT; such requests pause the run.
+- Very long messages are clipped to `browser.maxMessageChars` with a pointer to the full text in
+  `data/runs/...`; Tab 1/Tab 2 cannot open that path, so the clip is stated explicitly.
+- The worker report is whatever OpenCode's model writes; the harness adds the deterministic list of
+  changed files but cannot verify the prose.
+- Your OpenCode config allows the worker any shell command (`"bash": {"*": "allow"}`). The worker can
+  read (or damage) files inside the factory, including `tools/learning-harness/data`. The harness does
+  not change `opencode.json`.
+- If your interactive OpenCode (TUI) has the Mongoose browser open, the harness backend's Playwright MCP
+  cannot open the same profile. Close that browser first (`doctor` warns about other OpenCode PIDs).
+- Specialist upload-request detection is a heuristic. The specialist verdict is optional; if Tab 2 omits
+  its JSON block, the verdict is `unknown` and does not block completion.

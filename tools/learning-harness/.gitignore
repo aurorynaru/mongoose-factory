@@ -1,0 +1,6 @@
+node_modules/
+dist/
+# runtime state, run evidence, logs and backend PID files (may contain conversation text)
+data/
+# local config (copy from harness.config.example.json)
+harness.config.json
