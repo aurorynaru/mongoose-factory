@@ -136,7 +136,9 @@ export function completionProblems(env: Envelope, ctx: ValidationContext): strin
   const briefChecks = ctx.brief.acceptance_checks;
   if (briefChecks.length === 0) out.push("brief_has_no_acceptance_checks");
   if (ctx.completedWorkerReports === 0) out.push("no_completed_worker_report_in_run");
-  if (ctx.latestSpecialistVerdict === "objects" || ctx.latestSpecialistVerdict === "insufficient_evidence") {
+  // An objection must prevent acceptance, but it can be the reason a run is
+  // honestly completed as blocked with a failed check and evidence.
+  if (env.outcome === "accepted" && (ctx.latestSpecialistVerdict === "objects" || ctx.latestSpecialistVerdict === "insufficient_evidence")) {
     out.push(`specialist_disagreement:${ctx.latestSpecialistVerdict}`);
   }
 
