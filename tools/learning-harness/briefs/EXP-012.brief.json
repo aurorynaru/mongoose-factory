@@ -3,7 +3,7 @@
   "title": "EXP-012 — Persistent Form Variable Definition Retention With Approved Session Establishment",
   "record_path": "experiments/EXP-012-persistent-form-variable-definition-retention-with.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Using one new User-scope classic BuildFromScratch Form, establish or confirm a usable Mongoose session before any artifact mutation, then create exactly one Form variable with Global=False and Persistent=True, record its exact visible design-time definition, perform exactly one ordinary Designer Save, verify the definition remains immediately after Save, close only the target Form tab, reopen the exact same User-scoped Form through a previously verified supported Designer reopen path, and verify the same design-time variable definition is still present. The result is limited strictly to design-time definition retention; it must not test or claim runtime value persistence, temporary-variable behavior, cache behavior, or physical storage provenance.",
   "scope": {
     "in_scope": [
