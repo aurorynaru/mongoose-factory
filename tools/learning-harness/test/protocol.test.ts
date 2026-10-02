@@ -9,7 +9,7 @@ import { ConfigSchema, configProblems } from "../src/config.js";
 import { extractEnvelope, extractSpecialistEnvelope, fencedBlocks } from "../src/protocol/envelope.js";
 import { DeepSeekInterpreter, vetCandidate } from "../src/protocol/interpreter.js";
 import { clip, header, parseHeader } from "../src/protocol/prompts.js";
-import { asksForUpload, checkEvidenceRef, scopeViolations } from "../src/protocol/validate.js";
+import { asksForUpload, checkEvidenceRef, completionProblems, scopeViolations } from "../src/protocol/validate.js";
 import { fixtureBrief } from "../src/testing/scenario.js";
 import { opencodeMessageId } from "../src/util/ids.js";
 import { redact, registerSecret } from "../src/util/log.js";
@@ -49,6 +49,17 @@ describe("envelope extraction", () => {
 
 describe("validation helpers", () => {
   const b = fixtureBrief().brief;
+  it("allows evidence-backed blocked completion after a specialist objection while still reviewing acceptance", () => {
+    const root = mkdtempSync(join(tmpdir(), "specialist-gate-"));
+    mkdirSync(join(root, "evidence"));
+    writeFileSync(join(root, "evidence", "sign-in.png"), "screenshot");
+    const ctx = { brief: b, factoryRoot: root, completedWorkerReports: 1, latestSpecialistVerdict: "objects" };
+    const blocked = extractEnvelope(env({ action: "EXPERIMENT_COMPLETE", outcome: "blocked", evidence_refs: ["evidence/sign-in.png"], acceptance_checks: [{ id: "AC-5", status: "failed", evidence_refs: ["evidence/sign-in.png"] }] }));
+    expect(blocked.status).toBe("found");
+    if (blocked.status !== "found") return;
+    expect(completionProblems(blocked.value, ctx)).toEqual([]);
+    expect(completionProblems({ ...blocked.value, outcome: "accepted" }, ctx)).toContain("specialist_disagreement:objects");
+  });
   it("flags foreign experiment ids and prohibited patterns, allows own id", () => {
     expect(scopeViolations("Continue EXP-900 step 3.", b)).toEqual([]);
     expect(scopeViolations("Now start EXP-901.", b)).toEqual(["foreign_experiment:EXP-901"]);
