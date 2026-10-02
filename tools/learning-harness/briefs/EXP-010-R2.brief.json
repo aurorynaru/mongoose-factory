@@ -1,0 +1,137 @@
+{
+  "experiment_id": "EXP-010-R2",
+  "title": "EXP-010-R2 — Clean Replay: Form Caption Recovery Across Ordinary Web Designer Close/Reopen",
+  "record_path": "experiments/EXP-010-R2-clean-replay-form-caption-recovery-across-ordinary.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "On a new User-scope classic BuildFromScratch Form named FX_FormPropertyLab12, independently replay the EXP-010 procedure: prove the target absent, create exactly one target using the verified basic-form recipe with Save Template unchecked, record the untouched Form-property baseline, change only the Form-level Caption to exactly `Form Property Caption Close Only Replay`, perform exactly one ordinary Designer Save to a demonstrably clean state, close the target through its ordinary Web Designer Form-tab close control, deliberately reopen the exact same User-scoped version through a previously verified supported Designer reopen path, and verify that the Caption recovers unchanged while every recorded comparison property remains equal to baseline. Record screenshots/read-only diagnostics sufficient to prove all semantic postconditions and confine repository changes to this experiment record and evidence directory.",
+  "scope": {
+    "in_scope": [
+      "Read-only preflight confirming current editing scope is User.",
+      "Read-only proof that FX_FormPropertyLab12 is absent before mutation, including exact and case-insensitive checks where available.",
+      "Create exactly one new User-scope classic BuildFromScratch Form FX_FormPropertyLab12 using recipes/forms/create-basic-form.md with Save Template unchecked.",
+      "Record untouched baseline values for Name, Caption, Description, Version, Device Type, Form Type, Is Master, ScopeType, and ScopeName.",
+      "Change only the Form-level Caption to exactly `Form Property Caption Close Only Replay`.",
+      "Perform exactly one ordinary Web Designer Save and prove the Designer returned to a clean state.",
+      "Close FX_FormPropertyLab12 using its ordinary Web Designer Form-tab close control and verify no unsaved-change prompt appears.",
+      "Deliberately reopen the exact same scoped Form using a previously verified supported Designer path: Form-menu recent-forms or Select Form.",
+      "After reopen, verify identity using Name + ScopeType + ScopeName rather than relying only on visible MRU text.",
+      "Verify Caption and every recorded comparison property against the pre-edit baseline.",
+      "Capture screenshots and read-only diagnostics under evidence/EXP-010-R2/.",
+      "Update only the EXP-010-R2 experiment record and evidence/EXP-010-R2/."
+    ],
+    "out_of_scope": [
+      "Replaying, repairing, or working around EXP-005-R2.",
+      "Any attempt to disable, enable, change, or Save `Unload IDO Metadata With Forms`.",
+      "Any claim about whether `Unload IDO Metadata With Forms` is enabled, disabled, effective, or triggered during this replay unless merely observed read-only and explicitly required by an acceptance check.",
+      "Invoking `Form > Definition > Unload All Global Form Objects` or any other deliberate cache-clear or metadata-clear command.",
+      "Proving or inferring Form/global-object cache eviction, IDO-metadata unloading or non-unloading, durable Forms-database persistence, physical database rows, write paths, authentication-session identity, Mongoose application-session identity, IDO Runtime-session identity, or backend Designer-session identity.",
+      "Closing the whole Web Designer browser tab/window or launching a new Designer tab/window.",
+      "Logout/login, deliberate reauthentication, browser restart, or OS restart.",
+      "Description edits.",
+      "Variables, components, collections, bindings, handlers, scripts, validators, data sources, IDO definitions, localized or translatable Strings, or FormSync operations.",
+      "Site, Group, or Vendor Default scope.",
+      "Modification of FX_FormPropertyLab01 through FX_FormPropertyLab11 or any other pre-existing FX_ artifact.",
+      "Modification of any non-FX_ Mongoose artifact.",
+      "Creation or modification of reusable recipes, AGENTS.md, environment files, or other experiment records.",
+      "Direct database changes, undocumented APIs, unsupported internal session manipulation, or direct cold `?MGForm=` navigation.",
+      "Promoting any Select Form Caption/Name presentation difference into a fallback mechanism or product contract."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not invoke Unload All Global Form Objects.",
+    "Do not open, change, or Save User Preferences unless a later operator-approved revision explicitly adds a read-only preference check.",
+    "Do not change editing scope from User.",
+    "Do not modify any existing FX_FormPropertyLab01 through FX_FormPropertyLab11 artifact.",
+    "Do not modify any non-FX_ artifact.",
+    "Do not perform more than one ordinary Designer Save for the Caption mutation.",
+    "Do not close the whole Web Designer browser tab/window.",
+    "Do not launch a new Web Designer tab/window.",
+    "Do not log out, log in, or deliberately reauthenticate.",
+    "Do not reload the Designer page as the reopen mechanism.",
+    "Do not reopen the target by constructing or navigating directly to a cold `?MGForm=` URL.",
+    "Do not infer cache, IDO-metadata, database-storage, or backend-session semantics from Caption recovery.",
+    "Do not rely solely on recent-forms visible text to prove target identity; verify Name + ScopeType + ScopeName after opening.",
+    "Do not create or modify recipes."
+  ],
+  "prohibited_patterns": [
+    "\\bunload\\s+all\\s+global\\s+form\\s+objects\\b",
+    "\\b(clear|flush|invalidate)\\b[^.\\n]{0,50}\\b(cache|metadata)\\b",
+    "\\b(user\\s+preferences?)\\b[^.\\n]{0,60}\\b(change|toggle|enable|disable|save|modify)\\b",
+    "\\b(log\\s*out|logout|log\\s*in|login|reauthenticate|reauthentication)\\b",
+    "\\b(browser|web\\s+designer)\\b[^.\\n]{0,50}\\b(restart|new\\s+(tab|window)|close\\s+(tab|window))\\b",
+    "\\?MGForm\\s*=",
+    "\\b(create|add|modify|edit|delete)\\b[^.\\n]{0,50}\\b(component|variable|collection|binding|event\\s+handler|handler|script|validator|data\\s+source|IDO|FormSync|string)s?\\b",
+    "\\b(site|group|vendor)\\b[^.\\n]{0,30}\\bscope\\b",
+    "\\b(create|modify|update|edit|promote)\\b[^.\\n]{0,50}\\brecipe\\b",
+    "\\b(database|SQL|table|row)\\b[^.\\n]{0,50}\\b(update|insert|delete|modify|write)\\b"
+  ],
+  "related_experiments": [
+    "EXP-010",
+    "EXP-008",
+    "EXP-008-R2",
+    "EXP-006",
+    "EXP-006-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_FormPropertyLab12",
+    "artifacts": [
+      "FX_FormPropertyLab12"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Before any mutation, prove editing scope is User and prove FX_FormPropertyLab12 is absent from the available Form inventory with 0 exact and 0 case-insensitive matches; capture evidence."
+    },
+    {
+      "id": "AC-2",
+      "description": "Create exactly one new User-scope classic BuildFromScratch Form named FX_FormPropertyLab12 using the verified basic-form recipe with Save Template unchecked; prove exactly one target exists after creation and no pre-existing FX_ artifact was modified."
+    },
+    {
+      "id": "AC-3",
+      "description": "Before editing Caption, record and evidence the untouched baseline for Name, Caption, Description, Version, Device Type, Form Type, Is Master, ScopeType, and ScopeName, and prove the target is open and clean."
+    },
+    {
+      "id": "AC-4",
+      "description": "Change only the Form-level Caption to exactly `Form Property Caption Close Only Replay`, perform exactly one ordinary Designer Save, and prove the Designer is clean afterward with Caption equal to the literal target value and every other recorded comparison property unchanged from AC-3."
+    },
+    {
+      "id": "AC-5",
+      "description": "Immediately before close, re-verify the exact User-scoped target is open and clean with the expected Caption, and establish from the controlled action record that no explicit global-object unload, cache-clear, metadata-clear, User Preferences mutation, scope change, logout/login, whole-Designer close, or new Designer launch has occurred."
+    },
+    {
+      "id": "AC-6",
+      "description": "Close FX_FormPropertyLab12 through its ordinary Web Designer Form-tab close control; prove the target tab is no longer open and that no unsaved-change prompt occurred."
+    },
+    {
+      "id": "AC-7",
+      "description": "Deliberately reopen FX_FormPropertyLab12 through a previously verified supported Designer path, preferably Form-menu recent-forms when the exact target is unambiguous or Select Form with the intended row explicitly selected; prove no direct cold URL navigation, whole-page reload, explicit unload, or new Designer launch was used."
+    },
+    {
+      "id": "AC-8",
+      "description": "After reopen, prove the loaded version is FX_FormPropertyLab12 with ScopeType=User and the same ScopeName recorded in AC-3; prove Caption recovered unchanged as `Form Property Caption Close Only Replay`, every other comparison property equals the AC-3 baseline, and the Designer is clean."
+    },
+    {
+      "id": "AC-9",
+      "description": "Perform a final read-only audit proving exactly one case-insensitive FX_FormPropertyLab12 exists, the target remains open and clean with the recovered Caption and comparison values intact, and the experiment action record contains exactly one Caption Save and no explicit unload or prohibited lifecycle action."
+    },
+    {
+      "id": "AC-10",
+      "description": "Prove repository/worktree changes attributable to this experiment are confined to the EXP-010-R2 record and evidence/EXP-010-R2/; no recipe, AGENTS.md, environment file, other experiment record, or unrelated project file is modified."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-010-R2",
+  "replay_of": "EXP-010",
+  "initial_instruction": "Execute a clean independent replay of EXP-010 on FX_FormPropertyLab12 only. Start with read-only state inspection and absence proof before any mutation. Follow the verified basic-form creation recipe, record the untouched baseline, change only Caption to `Form Property Caption Close Only Replay`, ordinary-save exactly once to clean, ordinary-close the Form tab, deliberately reopen the exact same User-scoped version through a supported Designer path, and verify Name + ScopeType + ScopeName plus Caption and every baseline property. This experiment tests only UI-level Caption recovery across the ordinary same-Designer Form-tab close/reopen boundary. Do not invoke or manipulate unload/cache/metadata controls, User Preferences, authentication, whole-Designer lifecycle, other scopes, other object classes, or stronger persistence/session boundaries.",
+  "notes": "Proposed by the coordinator after run R-20261002-234238-Dv2r. Rationale: EXP-010 successfully established, at observed level only, that a User-scope Form Caption recovered unchanged after exactly one ordinary Save, ordinary Web Designer Form-tab close, and deliberate reopen through a supported Designer path. The smallest useful next step is a clean independent replay on a new FX_ target. This directly follows the project's candidate -> observed -> replay-verified learning model without touching the blocked EXP-005-R2 path or introducing a new capability. A successful replay would justify replay_verified status only for Caption recovery across this same weak ordinary same-Designer Form-tab close/reopen UI boundary; it would not establish cache eviction, IDO-metadata behavior, Forms-database provenance, authentication/session durability, or stronger lifecycle boundaries. Auto-approved by autopilot 2026-10-02T16:38:41.261Z after specialist verdict \"supports\" (see data/autopilot/2026-10-02T16-27-43-283Z-PROPOSAL_CHECK-reply.md)."
+}
