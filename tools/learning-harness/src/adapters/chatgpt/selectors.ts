@@ -19,7 +19,15 @@
 export const SELECTORS = {
   composer: {
     roleNames: [/^(ask chatgpt|message|chat with|ask anything|send a message)/i],
-    css: ["#prompt-textarea", "div[contenteditable='true'][role='textbox']", "textarea[name='prompt-textarea']"],
+    css: [
+      "#prompt-textarea",
+      "[role='textbox'][aria-label^='Ask ChatGPT' i]",
+      "[role='textbox'][aria-label^='Message' i]",
+      "[role='textbox'][aria-label^='Chat with' i]",
+      "[role='textbox'][aria-label^='Ask anything' i]",
+      "[role='textbox'][aria-label^='Send a message' i]",
+      "textarea[name='prompt-textarea']",
+    ],
   },
   sendButton: {
     roleNames: [/^send( prompt| message)?$/i],
@@ -95,7 +103,6 @@ export function snapshotArgs() {
     turn: SELECTORS.turn,
     turnDone: [...SELECTORS.turnDone],
     stop: [...SELECTORS.stopButton.css],
-    composer: [...SELECTORS.composer.css],
     login: [...SELECTORS.login],
     loginText: SELECTORS.loginText.source,
     challenge: [...SELECTORS.challenge],
@@ -113,7 +120,7 @@ type Args = ReturnType<typeof snapshotArgs>;
  * assistant HTML normalised so code blocks become <pre data-lang><code>text</code></pre> using the
  * rendered innerText (preserves line breaks even for highlighted/virtualised code views).
  */
-export function pageSnapshot(a: Args): DomSnapshot {
+export function pageSnapshot(a: Args & { composerElement: HTMLElement | SVGElement | null }): DomSnapshot {
   const visible = (el: Element | null): boolean => {
     if (!el) return false;
     const r = (el as HTMLElement).getBoundingClientRect();
@@ -184,7 +191,7 @@ export function pageSnapshot(a: Args): DomSnapshot {
     };
   });
 
-  const composer = any(a.composer);
+  const composer = a.composerElement;
   // Only text OUTSIDE conversation messages counts for page-level banners (a reply quoting
   // "you've reached our limit" must not look like a rate limit).
   let bodyText = document.body?.innerText ?? "";
@@ -207,7 +214,7 @@ export function pageSnapshot(a: Args): DomSnapshot {
     messages,
     streaming: !!any(a.stop),
     composerPresent: !!composer,
-    composerText: composer ? ((composer as HTMLElement).innerText ?? (composer as HTMLTextAreaElement).value ?? "") : "",
+    composerText: composer ? (composer instanceof HTMLTextAreaElement || composer instanceof HTMLInputElement ? composer.value : (composer as HTMLElement).innerText ?? "") : "",
     loginVisible,
     challengeVisible,
     rateLimited: rl ? rl[0] : null,
