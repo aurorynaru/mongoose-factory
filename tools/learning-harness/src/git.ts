@@ -91,9 +91,18 @@ export type GitResult = { ok: true; detail: string } | { ok: false; detail: stri
 export async function prepareRunBranch(git: Git, cfg: GitCfg, experimentId: string): Promise<GitResult & { branch?: string }> {
   if (!(await git.isRepo())) return { ok: false, detail: "the factory folder is not a git repository (see README: git setup)" };
   const dirty = (await git.changes()).filter((p) => !isDev(p));
-  if (dirty.length) return { ok: false, detail: `uncommitted changes in the factory repo; commit or finalize them first: ${dirty.slice(0, 8).join(", ")}${dirty.length > 8 ? " …" : ""}` };
+  const harnessOwn = dirty.filter((p) => DEV_ALLOWED.some((d) => p.startsWith(d)));
+  const other = dirty.filter((p) => !harnessOwn.includes(p));
+  if (other.length) return { ok: false, detail: `uncommitted changes in the factory repo; commit or finalize them first: ${other.slice(0, 8).join(", ")}${other.length > 8 ? " …" : ""}` };
+  const remote = cfg.push && (await git.hasRemote(cfg.remote));
   await git.run(["checkout", cfg.mainBranch]);
-  if (cfg.push && (await git.hasRemote(cfg.remote))) await git.run(["pull", "--ff-only", cfg.remote, cfg.mainBranch]);
+  if (remote) await git.run(["pull", "--ff-only", cfg.remote, cfg.mainBranch]);
+  // Context/brief updates made between runs (autopilot, `harness next`) belong on main before branching.
+  if (harnessOwn.length) {
+    await git.run(["add", "-A", "--", ...harnessOwn]);
+    await git.run(["commit", "-m", "harness: context/briefs update", "-m", `Before ${experimentId}. Committed automatically by the learning harness.`]);
+    if (remote) await git.run(["push", cfg.remote, cfg.mainBranch]);
+  }
   let branch = branchName(experimentId);
   if (await git.branchExists(branch)) branch = `${branch}-${Date.now().toString(36)}`;
   await git.run(["checkout", "-b", branch]);

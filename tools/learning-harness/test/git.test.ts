@@ -82,6 +82,17 @@ describe("per-experiment branch flow (real git)", () => {
     t.store.close();
   });
 
+  it("commits pending harness context/brief updates to main before branching", async () => {
+    const t = setup();
+    write(t.repo, "tools/learning-harness/context/coordinator-context.md", "ctx");
+    write(t.repo, "tools/learning-harness/briefs/EXP-011.brief.json", "{}");
+    const r = await prepareRunBranch(t.git, t.cfg, "EXP-011");
+    expect(r).toMatchObject({ ok: true, branch: "exp/EXP-011" });
+    expect(t.g(t.repo, "log", "--oneline", "-1", "main")).toContain("harness: context/briefs update");
+    expect(t.g(t.origin, "log", "--oneline", "-1", "main")).toContain("harness: context/briefs update");
+    t.store.close();
+  });
+
   it("does not commit or merge when files outside the allowed paths changed", async () => {
     const t = setup();
     await prepareRunBranch(t.git, t.cfg, "EXP-010");
