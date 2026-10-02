@@ -57,7 +57,15 @@ export class ChatGptAdapter implements ChatPort {
   }
 
   async snapshot(page: Page): Promise<DomSnapshot> {
-    return page.evaluate(pageSnapshot, snapshotArgs());
+    // Read the same semantic-first target used for typing. A canvas document can
+    // contain another visible textbox before the actual chat composer.
+    const composer = await this.resolve(page, SELECTORS.composer, "textbox");
+    const composerElement = await composer?.elementHandle() ?? null;
+    try {
+      return await page.evaluate(pageSnapshot, { ...snapshotArgs(), composerElement });
+    } finally {
+      await composerElement?.dispose();
+    }
   }
 
   /** Resolve the page for a role by conversation identity (never by tab index); open it if needed. */

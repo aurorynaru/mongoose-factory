@@ -87,6 +87,44 @@ describe(`ChatGPT adapter against the fixture DOM (${dom})`, () => {
     expect(await a.findSubmission("coordinator", "H-zzz999")).toMatchObject({ reliable: true, found: false });
   });
 
+  it("reads and submits the chat composer when a document editor is visible first", async () => {
+    const a = adapter("normal");
+    await a.checkReady("coordinator");
+    const page = context.pages()[0];
+    await page.evaluate(() => {
+      const editor = document.createElement("div");
+      editor.contentEditable = "true";
+      editor.setAttribute("role", "textbox");
+      editor.setAttribute("aria-label", "Start writing");
+      editor.textContent = "Context document must remain unchanged";
+      document.body.prepend(editor);
+    });
+    const text = msg("H-editor123") + "\n" + "Long proposal content\n".repeat(2500);
+    const composer = page.getByRole("textbox", { name: dom === "v2" ? "Ask ChatGPT" : "Message the fixture", exact: true });
+    await composer.fill(text);
+    expect((await a.snapshot(page)).composerText.replace(/\s+/g, "")).toBe(text.replace(/\s+/g, ""));
+    expect((await a.submit("coordinator", text, "H-editor123")).status).toBe("accepted");
+    expect(await page.getByRole("textbox", { name: "Start writing", exact: true }).innerText()).toBe("Context document must remain unchanged");
+    expect((await a.snapshot(page)).composerText).toBe("");
+  });
+
+  it("does not treat a document editor alone as a chat composer", async () => {
+    const a = adapter("normal");
+    await a.checkReady("coordinator");
+    const page = context.pages()[0];
+    await page.evaluate(() => {
+      document.getElementById("composer-wrap")!.remove();
+      const editor = document.createElement("div");
+      editor.contentEditable = "true";
+      editor.setAttribute("role", "textbox");
+      editor.setAttribute("aria-label", "Start writing");
+      editor.textContent = "Context document";
+      document.body.prepend(editor);
+    });
+    expect(await a.checkReady("coordinator")).toMatchObject({ ok: false, problem: "composer_missing" });
+    expect((await a.snapshot(page)).composerText).toBe("");
+  });
+
   it("resolves roles by conversation identity, not tab order", async () => {
     const a = adapter("normal");
     await a.checkReady("specialist"); // opened first
