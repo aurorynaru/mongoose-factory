@@ -1,0 +1,132 @@
+{
+  "experiment_id": "EXP-010",
+  "title": "EXP-010 — Form Caption Recovery Across Ordinary Web Designer Close/Reopen",
+  "record_path": "experiments/EXP-010-form-caption-recovery-across-ordinary-web-designer.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "Create exactly one new User-scope classic BuildFromScratch Form `FX_FormPropertyLab11`, record its untouched Form-property baseline, change only its Form-level Caption to the literal value `Form Property Caption Close Only`, ordinary-save exactly once to a demonstrably clean state, close the target through its ordinary Web Designer Form-tab close control, deliberately reopen the exact same User-scoped version through a previously verified supported Designer reopen path, and verify that the Caption recovers unchanged while all recorded comparison properties remain equal to baseline. Establish only UI-level Caption recovery across this ordinary Form-tab close/reopen boundary; do not infer Forms-database provenance, Form/global-object cache eviction, IDO-metadata unloading or non-unloading, or any stronger lifecycle/session boundary.",
+  "scope": {
+    "in_scope": [
+      "Read-only preflight confirming Web Designer editing scope is User and `FX_FormPropertyLab11` is absent.",
+      "Create exactly one new User-scope classic BuildFromScratch Form `FX_FormPropertyLab11` using the verified `recipes/forms/create-basic-form.md` procedure with Save Template unchecked.",
+      "Record untouched baseline values for Name, Caption, Description, Version, Device Type, Form Type, Is Master, ScopeType, and ScopeName.",
+      "Change only Form-level Caption from its baseline value to exactly `Form Property Caption Close Only`.",
+      "Perform exactly one ordinary Web Designer Save after the Caption edit and prove the Designer returns to a clean state.",
+      "Close only `FX_FormPropertyLab11` through its ordinary Designer Form-tab close control.",
+      "Reopen `FX_FormPropertyLab11` through a previously verified supported Designer path such as Form-menu recent forms or Select Form, explicitly selecting the intended record if Select Form is used.",
+      "Verify the reopened version by Name + ScopeType + ScopeName and compare Caption plus every recorded baseline property.",
+      "Capture screenshots and any diagnostic captured responses needed to prove the semantic postconditions under `evidence/EXP-010/`.",
+      "Update only the EXP-010 experiment record and its evidence directory."
+    ],
+    "out_of_scope": [
+      "Replaying or repairing EXP-005-R2 or satisfying its disabled-preference prerequisite.",
+      "Any claim about whether `Unload IDO Metadata With Forms` is enabled, disabled, effective, or triggered during this experiment.",
+      "Proving or inferring IDO-metadata unloading or non-unloading, Form/global-object cache eviction, Forms-database storage provenance, or backend/session behavior.",
+      "Invoking `Form > Definition > Unload All Global Form Objects` or any other deliberate cache/metadata-clear command.",
+      "Opening, changing, or saving User Preferences.",
+      "Closing the whole Web Designer browser tab/window, launching a new Designer tab/window, logout/login, deliberate reauthentication, browser restart, or OS restart.",
+      "Description edits, variables, components, collections, bindings, handlers, scripts, validators, data sources, IDO definitions, localized Strings, or FormSync operations.",
+      "Site, Group, or Vendor Default scope.",
+      "Modification of any existing `FX_FormPropertyLab01` through `FX_FormPropertyLab10` artifact or any non-`FX_` artifact.",
+      "Creation or modification of reusable recipes, `AGENTS.md`, environment files, or other experiment records.",
+      "Direct database changes, undocumented APIs, unsupported internal session manipulation, or direct cold `?MGForm=` target navigation."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not invoke `Unload All Global Form Objects` or any other explicit metadata/cache-clear command.",
+    "Do not open, change, or save User Preferences.",
+    "Do not modify Caption on any Form except `FX_FormPropertyLab11`.",
+    "Do not change Description or any comparison property on the target.",
+    "Do not create more than one new Form.",
+    "Do not perform more than one ordinary Designer Save after the Caption edit.",
+    "Do not Regenerate Form.",
+    "Do not close the entire Designer browser tab/window or launch another Designer.",
+    "Do not log out, log in, deliberately reauthenticate, restart the browser, or restart the OS.",
+    "Do not modify existing FX_ artifacts or any non-FX_ artifact.",
+    "Do not create or modify variables, components, event handlers, scripts, collections, bindings, validators, data sources, IDOs, localized Strings, or FormSync objects.",
+    "Do not modify recipes, `AGENTS.md`, environment files, or records belonging to other experiments.",
+    "Do not use direct database edits, undocumented APIs, direct cold target-Form URLs, or metadata hacks."
+  ],
+  "prohibited_patterns": [
+    "\\bunload all global form objects\\b",
+    "\\buser preferences\\b[^.\\n]{0,80}\\b(change|toggle|set|save|disable|enable|edit)\\b",
+    "\\b(regenerate form|regenerate)\\b",
+    "\\b(log\\s*out|logout|log\\s*in|login|reauthenticate|slo)\\b",
+    "\\b(close|quit)\\b[^.\\n]{0,50}\\b(designer|browser|window|tab)\\b",
+    "\\b(launch|open|start)\\b[^.\\n]{0,50}\\b(new|another)\\b[^.\\n]{0,30}\\bdesigner\\b",
+    "\\b(create|add|edit|modify|delete)\\b[^.\\n]{0,50}\\b(variable|component|collection|binding|event handler|script|validator|ido|localized string|formsync)\\b",
+    "\\b(database|sql)\\b[^.\\n]{0,40}\\b(update|insert|delete|alter|write|modify)\\b",
+    "\\?MGForm=FX_FormPropertyLab11",
+    "\\b(create|modify|update|promote)\\b[^.\\n]{0,50}\\b(recipe|AGENTS\\.md|environment file)\\b"
+  ],
+  "related_experiments": [
+    "EXP-005",
+    "EXP-005-R2",
+    "EXP-008",
+    "EXP-008-R2",
+    "EXP-009",
+    "EXP-009-R2",
+    "EXP-002-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_FormPropertyLab11",
+    "artifacts": [
+      "FX_FormPropertyLab11"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Preflight evidence proves editing scope is User and `FX_FormPropertyLab11` is absent before mutation, with no existing exact or case-insensitive target record."
+    },
+    {
+      "id": "AC-2",
+      "description": "Exactly one new User-scope classic BuildFromScratch Form named `FX_FormPropertyLab11` exists after creation, created with Save Template unchecked; evidence shows exactly one target record."
+    },
+    {
+      "id": "AC-3",
+      "description": "Before the Caption edit, evidence records the untouched target baseline for Name, Caption, Description, Version, Device Type, Form Type, Is Master, ScopeType, and ScopeName, and the target is clean."
+    },
+    {
+      "id": "AC-4",
+      "description": "Only Form-level Caption changes to exactly `Form Property Caption Close Only`; after exactly one ordinary Designer Save, evidence shows the Designer clean and every recorded comparison property unchanged from AC-3."
+    },
+    {
+      "id": "AC-5",
+      "description": "The target is closed through its ordinary Designer Form-tab close control with no unsaved-change prompt, and evidence proves `FX_FormPropertyLab11` is no longer open while the Designer itself remains open."
+    },
+    {
+      "id": "AC-6",
+      "description": "The controlled action record proves no explicit `Unload All Global Form Objects` or other deliberate metadata/cache-clear command was invoked and no User Preference was opened, changed, or saved; this check makes no claim about automatic IDO-metadata behavior."
+    },
+    {
+      "id": "AC-7",
+      "description": "The target is deliberately reopened through a previously verified supported Designer reopen path, and evidence proves the loaded scoped version is exactly Name=`FX_FormPropertyLab11`, ScopeType=`User`, with the same ScopeName recorded at baseline."
+    },
+    {
+      "id": "AC-8",
+      "description": "After reopen, Form-level Caption equals exactly `Form Property Caption Close Only`, and Description, Version, Device Type, Form Type, Is Master, ScopeType, ScopeName, and Name all equal their AC-3 baseline values."
+    },
+    {
+      "id": "AC-9",
+      "description": "Final read-only evidence shows the reopened target remains clean and exactly one `FX_FormPropertyLab11` exists; no additional Save, Regenerate, explicit unload, preference mutation, or unrelated Mongoose mutation occurred."
+    },
+    {
+      "id": "AC-10",
+      "description": "Repository/worktree audit proves EXP-010-attributable changes are confined to the EXP-010 record and `evidence/EXP-010/`; no recipe, environment file, `AGENTS.md`, other experiment record, or unrelated project file was changed."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-010",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261002-225512-23P8. Rationale: This is the smallest useful next step after EXP-009-R2. Literal User-scope Caption recovery was observed in EXP-005 but never became replay-verified because EXP-005-R2 was blocked by an experiment-specific prerequisite requiring `Unload IDO Metadata With Forms` to be disabled. Separately, EXP-008/R2 has now replay-verified the ordinary Designer Form-tab close/reopen boundary for Description. EXP-010 therefore asks a narrower, differently framed question: whether a literal Caption recovers across the already-tested ordinary Form-tab close/reopen sequence, without attempting to isolate or make claims about IDO-metadata behavior. This is not a workaround for EXP-005-R2's failed prerequisite and is not a replay of that blocked experiment; it is a new UI-recovery experiment with no preference-state gate and no cache-semantics claim. Auto-approved by autopilot 2026-10-02T15:42:28.575Z after specialist verdict \"supports\" (see data/autopilot/2026-10-02T15-28-56-109Z-PROPOSAL_CHECK-reply.md)."
+}
