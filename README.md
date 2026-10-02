@@ -33,34 +33,35 @@ artifacts, evidence for every claim. The rules for the agents are in [AGENTS.md]
 
 ## Repository layout
 
-| Path | Contents |
-|---|---|
-| [AGENTS.md](AGENTS.md) | Rules for the worker: learning mode, safety, evidence, knowledge states |
-| [experiments/](experiments) | One record per experiment (`EXP-NNN-…md`): objective, method, observations, verification, result |
-| [evidence/](evidence) | Screenshots and captured responses per experiment (`evidence/EXP-NNN/`) |
-| [recipes/](recipes) | Reusable procedures, with their knowledge state (observed / verified) |
-| [environments/](environments) | What is known about the target Mongoose environment |
-| [claims/](claims) | Reserved for knowledge claims |
-| [opencode.json](opencode.json) | OpenCode worker config: local model provider, Playwright MCP, permissions |
-| [tools/learning-harness/](tools/learning-harness) | The harness (TypeScript), its protocols, experiment briefs and coordinator context |
+| Path                                              | Contents                                                                                         |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [AGENTS.md](AGENTS.md)                            | Rules for the worker: learning mode, safety, evidence, knowledge states                          |
+| [experiments/](experiments)                       | One record per experiment (`EXP-NNN-…md`): objective, method, observations, verification, result |
+| [evidence/](evidence)                             | Screenshots and captured responses per experiment (`evidence/EXP-NNN/`)                          |
+| [recipes/](recipes)                               | Reusable procedures, with their knowledge state (observed / verified)                            |
+| [environments/](environments)                     | What is known about the target Mongoose environment                                              |
+| [claims/](claims)                                 | Reserved for knowledge claims                                                                    |
+| [opencode.json](opencode.json)                    | OpenCode worker config: local model provider, Playwright MCP, permissions                        |
+| [tools/learning-harness/](tools/learning-harness) | The harness (TypeScript), its protocols, experiment briefs and coordinator context               |
 
 Knowledge states follow AGENTS.md:
+
 - **observed:** one successful execution.
 - **verified:** a clean replay (`EXP-NNN-R2`) in a fresh worker session.
 - Blocked experiments keep their negative findings; they are knowledge too.
 
 ## Requirements
 
-| Component | Used for | Notes |
-|---|---|---|
-| Windows 10/11 | Everything | PowerShell 7 or Windows PowerShell 5.1 |
-| Node.js ≥ 20 | Harness, OpenCode, Playwright MCP | Developed with 24.x |
-| Git | Repository, per-experiment branches | Git Credential Manager handles GitHub sign-in |
-| [OpenCode](https://opencode.ai) | Worker agent | Tested with 1.18.33 (`opencode serve` HTTP API) |
-| TabbyAPI + a local model | Worker's model | `opencode.json` expects `http://127.0.0.1:5000/v1` and `TABBY_API_KEY` in the environment; a 24 GB GPU (e.g. RTX 3090) for the 27B EXL3 model |
-| Google Chrome | Harness browser (ChatGPT) and Playwright | |
-| ChatGPT account | Coordinator chat and the custom Mongoose GPT | Uses your normal plan's usage limits (no API credits) |
-| Access to an Infor Mongoose environment | The thing being learned | Credentials stay in a secrets file **outside** this repo, used only by Playwright MCP |
+| Component                               | Used for                                     | Notes                                                                                                                                         |
+| --------------------------------------- | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Windows 10/11                           | Everything                                   | PowerShell 7 or Windows PowerShell 5.1                                                                                                        |
+| Node.js ≥ 20                            | Harness, OpenCode, Playwright MCP            | Developed with 24.x                                                                                                                           |
+| Git                                     | Repository, per-experiment branches          | Git Credential Manager handles GitHub sign-in                                                                                                 |
+| [OpenCode](https://opencode.ai)         | Worker agent                                 | Tested with 1.18.33 (`opencode serve` HTTP API)                                                                                               |
+| TabbyAPI + a local model                | Worker's model                               | `opencode.json` expects `http://127.0.0.1:5000/v1` and `TABBY_API_KEY` in the environment; a 24 GB GPU (e.g. RTX 3090) for the 27B EXL3 model |
+| Google Chrome                           | Harness browser (ChatGPT) and Playwright     |                                                                                                                                               |
+| ChatGPT account                         | Coordinator chat and the custom Mongoose GPT | Uses your normal plan's usage limits (no API credits)                                                                                         |
+| Access to an Infor Mongoose environment | The thing being learned                      | Credentials stay in a secrets file **outside** this repo, used only by Playwright MCP                                                         |
 
 Optional: a DeepSeek API key, for interpreting coordinator replies that miss their JSON block (off by default).
 
@@ -117,6 +118,7 @@ Playwright browser profile.
 ## Git workflow
 
 Each experiment gets its own branch, `exp/EXP-NNN`.
+
 - **When it completes**, the harness commits that experiment's record and evidence, any recipe and
   environment updates, and the harness context/briefs. It pushes the branch, merges it into `main`
   with a merge commit, and pushes `main`. Blocked experiments are merged as well.
@@ -130,7 +132,3 @@ Each experiment gets its own branch, `exp/EXP-NNN`.
 .\harness.ps1 git status
 .\harness.ps1 git finalize     # retry commit/merge after fixing a problem
 ```
-
-This repository is **private**. It contains environment details (tenant, user, screenshots of the
-portal). Never commit credentials; the `.gitignore` excludes the harness runtime data, local config
-and Playwright snapshots.
