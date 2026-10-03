@@ -18,6 +18,7 @@ import { protocolBlock } from "./protocol/prompts.js";
 import { setup } from "./setup.js";
 import { controllerAlive, renderStatus } from "./status.js";
 import type { RunRow } from "./store.js";
+import { registerShadowCommands } from "./shadow/cli.js";
 
 const program = new Command();
 program.name("harness").description("Mongoose learning-workflow harness: OpenCode worker <-> ChatGPT coordinator (Tab 1) <-> Mongoose GPT (Tab 2)").option("-c, --config <file>", "config file (default: harness.config.json next to package.json)").option("-v, --verbose", "debug output");
@@ -560,6 +561,8 @@ program
     if (!file) throw new Error("coordinator | specialist | worker");
     console.log(protocolBlock(a.paths.protocolDir, file));
   });
+
+registerShadowCommands(program);
 
 program.parseAsync().catch((e: Error) => {
   console.error(`error: ${e.message}`);

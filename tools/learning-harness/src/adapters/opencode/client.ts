@@ -26,10 +26,13 @@ export interface OcMessage {
     time: { created: number; completed?: number };
     error?: { name?: string; data?: { message?: string } } & Record<string, unknown>;
     finish?: string;
+    providerID?: string;
+    modelID?: string;
+    model?: { providerID: string; modelID: string };
     cost?: number;
     tokens?: { input?: number; output?: number; reasoning?: number };
   };
-  parts: Array<{ id: string; type: string; text?: string; synthetic?: boolean; tool?: string; state?: { status?: string; input?: Record<string, unknown>; output?: unknown; error?: string } }>;
+  parts: Array<{ id: string; type: string; text?: string; synthetic?: boolean; tool?: string; mime?: string; url?: string; state?: { status?: string; input?: Record<string, unknown>; output?: unknown; error?: string; attachments?: Array<{ mime: string; url: string }> } }>;
 }
 
 export type OcStatus = { type: "idle" } | { type: "busy" } | { type: "retry"; attempt: number; message: string; next: number };

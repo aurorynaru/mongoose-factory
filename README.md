@@ -98,6 +98,9 @@ Copy-Item harness.config.example.json harness.config.json   # then adjust paths/
 
 To switch between Strata and TabbyAPI, see [Use Strata for the OpenCode worker](tools/learning-harness/README.md#use-strata-for-the-opencode-worker).
 
+To compare their decisions on archived work without executing browser actions, use
+[shadow testing](tools/learning-harness/README.md#shadow-testing-compare-strata-and-tabbyapi-on-saved-work).
+
 ### Run experiments
 
 ```powershell
