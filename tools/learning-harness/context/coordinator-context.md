@@ -1,8 +1,8 @@
 <!-- harness-context reviewed: true -->
-<!-- updated by autopilot after EXP-010-R2 (R-20261003-003850-ldL7); specialist findings verdict: supports; 2026-10-02T18:28:04.187Z -->
-<!-- finalized after specialist review of EXP-010-R2 (R-20261003-003850-ldL7); specialist verdict: supports; 2026-10-03 --> <!-- EXP-009 + EXP-009-R2 establish replay-verified UI-level Description recovery across a newly launched Web Designer tab/window within the same continuously usable authenticated Web Client UI context. Storage provenance, cache eviction, IDO-metadata unloading, authentication-session identity, and backend/server-session identity remain unverified. --> <!-- EXP-010 establishes observed UI-level Caption recovery across ordinary Web Designer Form-tab close/reopen. EXP-010-R2 reproduced the semantic Caption behavior but is BLOCKED/non-accepted and cannot supply replay verification because an after-run-start Mongoose Sign In/OK session-establishment action violated the experiment's no-login/no-deliberate-reauthentication prohibition. -->
+<!-- updated by autopilot after EXP-014 (R-20261003-215618-zZRS); specialist findings verdict: supports; 2026-10-03T14:46:53.433Z -->
+<!-- finalized after specialist review of EXP-014 (R-20261003-215618-zZRS); specialist verdict: supports; 2026-10-03 --> <!-- EXP-014 establishes an observed negative UI-level result: a Global=False, Persistent=True Form-variable definition remained visible and unchanged in the current Designer immediately after a successful ordinary Save request, but the reopened User-scoped Form showed zero variables after one clean ordinary Designer Form-tab close/reopen in the same live session. This does NOT establish that the definition was serialized by Save. --> <!-- Documented Mongoose behavior supports Global=False, Persistent=True Form variables as a normal construct. Persistent governs runtime VALUE lifetime, not whether the design-time variable definition is saved as Form metadata. Therefore EXP-014 is an unresolved anomaly, not expected Persistent-variable behavior. --> <!-- EXP-014 is BLOCKED because AC-8 failed. The prescribed harness procedure executed end-to-end, but no variable recipe or product-level failure mechanism is proven. -->
 
-# 1\. Project and workflow
+# 1. Project and workflow
 
 The project is an autonomous **Infor Mongoose factory** being built in C:\\AI\\mongoose-factory. Its long-term goal is to take a natural-language request, optionally with reference images, and reliably build Mongoose Forms/portal-related artifacts using browser automation and a growing body of verified procedures and recipes.
 
@@ -17,7 +17,7 @@ Preferred learning pattern:
 ```text
 specialist guidance if needed
 → controlled EXP-N browser experiment
-→ observed procedure if successful
+→ observed procedure/result
 → fresh OpenCode session
 → EXP-N-R2 clean replay
 → replay-verified only if semantic postconditions reproduce
@@ -25,15 +25,15 @@ specialist guidance if needed
 
 The **observed → replay-verified** distinction is a factory/harness quality rule, not an Infor-defined validation level.
 
-A replay stopped because one of its own prerequisites or prohibitions cannot be satisfied is **blocked**, not evidence that the underlying procedure failed.
+A replay stopped because one of its own prerequisites or prohibitions cannot be satisfied is **blocked**, not evidence that the underlying product behavior failed.
 
 A semantically successful execution that violates a global experiment prohibition is **non-accepted** and cannot promote knowledge to replay-verified.
 
-“Fresh worker context” / “independent execution” means independent at the harness/OpenCode-session level. It does not imply replication across another user, tenant, configuration, environment, product version, browser process, authentication state, Mongoose application session, IDO Runtime session or server-side Designer session unless those boundaries are explicitly tested.
+A negative hypothesis result can also cause an experiment to be classified blocked when an acceptance criterion fails. EXP-014 is **BLOCKED because AC-8 failed**, even though the prescribed harness sequence itself executed end-to-end.
 
-The harness/controller automates this coordination. Future coordinator replies must follow its protocol and experiment boundaries.
+“Fresh worker context” / “independent execution” means independent at the harness/OpenCode-session level. It does not imply replication across another user, tenant, configuration, environment, product version, browser process, authentication state, Mongoose application session, IDO Runtime session or server-side Designer session unless explicitly tested.
 
-# 2\. Environment facts that matter
+# 2. Environment facts that matter
 
 Current proven environment:
 
@@ -43,27 +43,26 @@ Current proven environment:
 -   Demo configuration: **G6R8LJ9Q4E8C2Z8Y\_MONGOOSE\_DEM\_DEFAULT**
 -   Editing permission: **Site Developer**
 -   Factory experiments currently use explicitly confirmed **User-scope** versions.
--   For factory reopen verification, the intended customized Form version is distinguished by **Form name + ScopeType + ScopeName**. This is appropriate for the tested factory/FormSync-style identity check; do not treat the tuple as a universal primary key for every Mongoose subsystem.
--   User, Group and Site are customized versions; Vendor Default is the base/vendor version. Documented precedence is User → Group → Site → Vendor.
+-   For reopen verification, identify the intended customized Form using **Form name + ScopeType + ScopeName**. This is appropriate for the tested FormSync-style version identity check; it is not asserted as a universal primary key.
+-   User, Group and Site are customized versions; Vendor Default is the base/vendor version. Documented precedence is **User → Group → Site → Vendor Default**.
 -   Current learning lane is classic **BuildFromScratch** Forms.
 -   Browser automation uses Playwright MCP through OpenCode.
 
-Environment/browser observations, not generic Mongoose contracts:
+Environment/browser observations:
 
 -   Web Client normally runs inside the Portal iframe; Web Designer opens separately.
 -   Numeric Ext JS IDs drift between sessions.
 -   Synthetic DOM clicks can fail to trigger Ext handlers; native Playwright interactions have been more reliable.
--   Hidden Ext windows/components can remain cached off-screen; DOM existence does not prove visible UI.
+-   Hidden Ext components can remain cached off-screen; DOM existence does not prove visible UI.
 -   Direct cold ?MGForm=... navigation has been unreliable.
 -   Bare portal-root navigation has produced HTTP 403 Missing Authentication Token.
 -   Designer **Form-menu recent-forms** and **Select Form** are tested reopen paths.
--   EXP-010 and blocked EXP-010-R2 both observed recent-forms reopening the intended target without direct cold URL navigation.
 -   Closing a clean Designer Form tab can produce no prompt.
--   Designer View preferences and Web Client User Preferences are different surfaces.
 -   Frame-scoped locators/native element interaction are safer than raw-coordinate interaction inside the Portal iframe.
--   EXP-010-R2 encountered a Designer-session-expiry condition after run start. A no-credential Mongoose Sign In/OK action restored access, but that action counted as deliberate session establishment/reauthentication under the harness acceptance rule and invalidated the replay.
+-   EXP-010-R2 showed that a post-start Sign In/OK action can restore access while still invalidating an experiment whose rules prohibit reauthentication.
+-   EXP-014 established portal/Web Client/Designer sessions **before mutation**, then performed creation, Save, close and reopen without later login, Sign In/OK, deliberate reauthentication, browser restart or session replacement.
 
-The exact explicit-unload command observed in 2026.09.08 is:
+The explicit global-object unload command observed in 2026.09.08 is:
 
 ```text
 Form
@@ -71,51 +70,43 @@ Form
 → Unload All Global Form Objects
 ```
 
-Successful deliberate unload experiments were accompanied by successful /DesignerSession/ClearCache traffic. This is **diagnostic browser/network evidence only**, not a supported automation/API contract.
+Successful deliberate unload experiments were accompanied by /DesignerSession/ClearCache traffic. This is **diagnostic browser/network evidence only**, not a supported automation/API contract.
 
-The user's **Unload IDO Metadata With Forms** preference was observed enabled in EXP-005-R2, EXP-006/R2, EXP-007/R2 and EXP-008/R2-related checks. EXP-009-R2, EXP-010 and EXP-010-R2 did not independently establish its actual state.
+The **Unload IDO Metadata With Forms** preference was observed enabled in EXP-005-R2, EXP-006/R2, EXP-007/R2 and EXP-008/R2-related checks. Later close-only experiments did not independently establish its actual state.
 
-Current adjacent Infor documentation gives two relevant formulations for that preference:
+Form/global-object cache and IDO-metadata cache are distinct concepts. For the EXP-014 missing-variable anomaly, **Form/global-object handling is the more directly relevant cache dimension** because the missing object is part of the Form definition. IDO-metadata unloading remains a separate diagnostic dimension and should not be assumed to explain the missing variable definition by itself.
 
--   Web Client preference documentation says IDO metadata unloads **when Forms are closed**.
--   Development/cache documentation associates the option with discarding IDO metadata when **Unload All Global Form Objects** is performed.
+For factory terminology:
 
-These formulations do not establish the exact behavior of a **2026.09.08 Web Designer Form-tab ×** action. Therefore EXP-008/010 close-only experiments must not be treated as isolated from IDO-metadata unloading when preference state is enabled or unknown.
+-   **close-only** = ordinary Designer Form-tab close/reopen with no explicit Unload All Global Form Objects.
+-   **weak persistence boundary** = ordinary close/reopen; this is harness terminology, not a storage/durability guarantee.
+-   **new Web Designer client instance** = a newly launched/rendered Designer browser tab/window only; it does not prove a new authentication/application/IDO Runtime/backend session.
 
-Other relevant documented facts:
+## Documented Form-variable baseline
 
--   Closed Forms/global objects can remain in memory and later be reopened from cache.
--   **Unload All Global Form Objects** removes cached Form/global-object information and can also clear IDO metadata when the relevant preference is enabled.
--   Form/global-object cache and IDO-metadata cache are distinct concepts.
--   After changing Site Developer editing scope/impersonation, previously loaded Forms can represent the prior scope; clear Forms/global objects before trusting the newly displayed scoped version.
+Adjacent Infor 2026.08/2026.10 documentation is being used as the product-level baseline for the tested 2026.09.08 environment; exact implementation behavior in 2026.09.08 remains subject to browser evidence.
 
-Documentation is principally adjacent **2026.x/2026.10** material, not identical to tested **2026.09.08**. Exact target-version behavior requires target-environment evidence.
+Documented behavior indicates:
 
-Product architecture describes Forms/global objects and customized versions as residing in the **Forms Database**. For factory purposes this means the logical Forms metadata repository; it does not imply a physically separate SQL database. Experiments have not established a particular physical database, row or write path responsible for recovery.
+-   Global=False, Persistent=True is a supported Form-variable configuration.
+-   **Persistent** governs the lifetime of the variable's **runtime value**, including persistence across Form executions.
+-   **Global** governs visibility/scope.
+-   Persistent and temporary Form-variable **definitions are design-time Form metadata**; Persistent=True is not a switch that determines whether the definition itself belongs to the Form definition.
+-   Persistent variable definitions appear in supported Form-definition representations such as PersistentVariables().
 
-For factory terminology, **close-only** means:
+Therefore disappearance of an explicitly defined variable after Save or reopen is **anomalous relative to documented capability**. It must not be explained merely by Persistent=False, Persistent=True, or normal Form close semantics.
 
-```text
-ordinary Web Designer Form-tab close/reopen
-with NO explicit
-Form → Definition → Unload All Global Form Objects
-```
+Current recovery/retention observations:
 
-It does **not** mean no automatic IDO-metadata unloading or other internal cache processing occurred.
+-   **Caption + explicit unload:** replay-verified, EXP-006 + R2.
+-   **Description + explicit unload:** replay-verified, EXP-007 + R2.
+-   **Description + ordinary close/reopen:** replay-verified, EXP-008 + R2.
+-   **Description + newly launched Designer:** replay-verified at UI-recovery level only, EXP-009 + R2.
+-   **Caption + ordinary close/reopen:** observed, EXP-010; EXP-010-R2 corroborated semantics but is non-accepted.
+-   **Persistent=True variable immediately after ordinary Save:** EXP-013 and EXP-014 both observed the definition still visible and unchanged in the still-open Designer after a successful Save request. This **does not prove serialization/persistence into the saved Form definition**.
+-   **Persistent=True variable after ordinary close/reopen:** EXP-014 observed **zero variables** after reopen.
 
-For factory terminology, ordinary close/reopen is called a **weak persistence boundary**. This is harness terminology, not a Mongoose storage/durability guarantee.
-
-For factory terminology, **new Web Designer client instance** means only a newly launched/rendered Designer browser tab/window after the old Designer tab/window was closed. It does not prove a new JavaScript runtime, authentication context, Mongoose application session, IDO Runtime session or server-side Designer session.
-
-Current recovery results:
-
--   **Caption + explicit unload:** replay-verified, EXP-006 + EXP-006-R2.
--   **Description + explicit unload:** replay-verified, EXP-007 + EXP-007-R2.
--   **Description + ordinary Designer Form-tab close/reopen:** replay-verified, EXP-008 + EXP-008-R2.
--   **Description + newly launched Designer from still-usable authenticated Web Client:** replay-verified at UI-recovery level, EXP-009 + EXP-009-R2.
--   **Caption + ordinary Designer Form-tab close/reopen:** observed only, EXP-010. EXP-010-R2 supplies corroborating observation but **not replay verification**.
-
-# 3\. Decisions and rules established so far
+# 3. Decisions and rules established so far
 
 Permanent factory knowledge follows:
 
@@ -130,33 +121,27 @@ Core rules:
 -   Modify only factory-owned FX\_ artifacts; never alter unrelated/non-FX\_ artifacts.
 -   Never weaken security or expose credentials.
 -   Keep each experiment limited to one new capability.
--   Read current state before retrying; never blindly repeat a mutation after interruption.
--   Record blockers, failures and corrections as well as successes.
+-   Read current state before retrying; never blindly repeat a mutation.
+-   Record blockers, failures, negative findings and corrections.
 -   Evidence should prove semantic state transitions, not every click.
--   A screenshot proves only the rendered state at that moment.
--   Editing permission and editing scope are separate concepts.
+-   A screenshot proves only rendered state at that moment.
+-   Editing permission and editing scope are separate.
 -   For scoped reopen checks, verify **Name + ScopeType + ScopeName**.
 -   Version identity and storage provenance are different questions.
--   Treat specialist/documentation guidance as candidate knowledge for exact target behavior until target-environment evidence establishes it.
--   Do not generalize beyond the environment, property/object class, scope and lifecycle boundary actually replayed.
--   After editing Form metadata, ordinary-save to clean before applying the experiment's close/unload/reopen boundary.
--   Do not invent undocumented APIs, direct DB edits or metadata hacks.
--   If an experiment defines a prerequisite or prohibition, obey it even if another route appears technically harmless.
--   A post-start login, Sign In/OK session establishment or equivalent deliberate reauthentication invalidates a run whose scope prohibits it, even if no credentials are entered and later semantic checks succeed.
--   Re-verifying guards after an environmental interruption does not retroactively restore run compliance.
--   Do not change **Unload IDO Metadata With Forms** merely to satisfy an experiment unless separately approved.
--   Form/global-object cache and IDO-metadata cache are separate acceptance dimensions.
--   Ordinary Form-tab close/reopen is a weak harness UI/recovery boundary; even replay verification across it does not establish durable-storage provenance or cache eviction.
--   Absence of an explicit unload command does not prove absence of automatic/internal IDO-metadata unloading.
--   If an experiment intends to prove anything about IDO-cache behavior, preference state must be an explicit precondition and instrumentation must distinguish Form/global-object unloading from IDO-metadata unloading.
--   Distinguish Web Client Form close, Designer Form-tab close, whole Designer tab/window lifecycle, explicit global-object unload, and authentication/session-establishment events.
--   A newly opened Designer does not establish a new authentication, application, IDO Runtime or backend/server session without independent evidence.
--   Stronger session-boundary experiments require an observable session identifier, explicit logout/login or session replacement, or equivalent server-side evidence; UI continuity alone is insufficient.
--   Caption and Description are separate metadata fields; neither proves that all Form metadata recovers.
--   Other Form attributes and subordinate objects require separate evidence.
--   No reusable Description-recovery or Caption-recovery lifecycle recipe has been promoted.
--   Ext IDs, store indexes, model IDs, internal request paths and component structures are diagnostic observations, not durable recipe dependencies.
--   Do not assume visible MRU/recent-forms text is always the internal Form name; verify scoped identity after opening.
+-   Do not generalize beyond the property/object class, scope and lifecycle boundary actually tested.
+-   Treat internal request paths, Ext IDs, store indexes, model IDs and numeric codes as diagnostic observations only.
+-   If an experiment defines a prerequisite or prohibition, obey it even if another route seems technically harmless.
+-   A prohibited post-start login/Sign In/OK action invalidates that run even if semantic checks subsequently succeed.
+-   Do not change preferences/cache settings merely to make an experiment pass unless separately approved.
+-   Ordinary close/reopen does not prove database durability, cache eviction or storage provenance.
+-   A newly launched Designer does not establish a new backend/session boundary without independent evidence.
+-   Caption, Description and Form-variable definitions are separate metadata classes.
+-   **Persistent is a runtime-value-lifetime property, not evidence of design-time definition persistence.**
+-   Persistent=True versus Persistent=False observations must not be interpreted as proving causation by the Persistent setting without a controlled test.
+-   Successful SaveChanges plus immediate client-side visibility is **not sufficient proof that a variable definition was serialized into the saved Form definition**.
+-   Runtime variable-value semantics are distinct from design-time variable-definition retention.
+-   No reusable Form-variable recipe has been promoted.
+-   If cache behavior becomes the subject, prioritize Form/global-object cache instrumentation for variable-definition issues; instrument IDO metadata separately.
 -   Repository audits must distinguish experiment-attributable changes from harness/runtime/operator tooling changes.
 
 Established experiment status:
@@ -164,28 +149,32 @@ Established experiment status:
 -   **EXP-005-R2:** blocked.
 -   **EXP-006 + R2:** Caption + explicit unload — **replay-verified**.
 -   **EXP-007 + R2:** Description + explicit unload — **replay-verified**.
--   **EXP-008 + R2:** Description + ordinary Designer Form-tab close/reopen — **replay-verified**.
+-   **EXP-008 + R2:** Description + ordinary close/reopen — **replay-verified**.
 -   **EXP-009 + R2:** Description + newly launched Designer — **replay-verified at UI-recovery level only**.
--   **EXP-010:** Caption + ordinary Designer Form-tab close/reopen — **observed only**.
--   **EXP-010-R2:** **BLOCKED/non-accepted**; semantic Caption recovery reproduced, but the Sign In/OK session-establishment action violated the no-login/no-deliberate-reauthentication prohibition.
+-   **EXP-010:** Caption + ordinary close/reopen — **observed only**.
+-   **EXP-010-R2:** **BLOCKED/non-accepted** due prohibited post-start reauthentication.
+-   **EXP-011:** **BLOCKED at preflight**; expired session, no mutation.
+-   **EXP-012:** **BLOCKED after variable creation but before Save** due session expiry; retention unresolved.
+-   **EXP-013:** **BLOCKED/non-accepted** because required post-creation live inventory proof became unavailable; immediate post-Save client-side visibility of the Persistent=True definition was nevertheless observed.
+-   **EXP-014:** **BLOCKED because AC-8 failed**; the prescribed harness procedure executed end-to-end, but the variable definition was absent after close/reopen. Nothing from EXP-014 is replay-verified.
 
-Current naming conventions:
+Naming conventions:
 
 ```text
 Forms:       FX_<Purpose>
 Components:  FX_<SemanticPurpose><MongooseType>
-Variables:   FX_<Purpose>Var   (candidate from EXP-004; no verified variable recipe)
+Variables:   FX_<Purpose>Var   (candidate convention; no verified variable recipe)
 ```
 
-# 4\. Lessons learned and pitfalls per experiment
+# 4. Lessons learned and pitfalls per experiment
 
 **EXP-001 — Environment fingerprint**
 
-Established browser architecture, versions, User-scope behavior and core navigation. Editing permission and editing scope are distinct.
+Established architecture, versions, User-scope behavior and core navigation.
 
 **EXP-002 / EXP-002-R2 — Basic Form creation**
 
-Verified recipes/forms/create-basic-form.md:
+Verified:
 
 ```text
 Web Designer
@@ -198,117 +187,120 @@ Web Designer
 → Finish
 ```
 
-Finish persisted the blank Form immediately; R2 reproduced creation independently.
-
 **EXP-003 / EXP-003-R2 — Component Fundamentals**
 
-Verified component add/configure procedures for Static, Edit and Button. Generated IDs/codes/internal traffic are not contracts.
+Static, Edit and Button add/configure procedures are replay-verified.
 
 **EXP-004 — Form Variable Fundamentals**
 
-Details → Variables is the tested design-time path. The tested definition FX\_TestValueVar used **Global=False, Persistent=False, Value=Seed-A**. Its **design-time definition disappeared** after ordinary Save **2/2** and Regenerate Form **1/1**: **3/3 observations**.
+Details → Variables is the tested design-time path. FX\_TestValueVar, Global=False, Persistent=False, Value=Seed-A, disappeared after ordinary Save **2/2** and Regenerate **1/1**: **3/3 observed negatives**.
 
-This does **not** establish generic “Form-variable persistence failure.” Mongoose distinguishes the existence/definition of a variable from the lifetime of its runtime value, and supports both temporary/nonpersistent and persistent variables. The precise unresolved issue is:
+This remains anomalous relative to documented Mongoose capability. Persistent=False means the runtime **value** is temporary; it does not explain why an explicitly defined design-time variable definition disappears after Save. No general variable-persistence conclusion is established.
 
-**design-time Form-variable definition retention/save behavior for the tested Global=False, Persistent=False variable.**
+**EXP-005 through EXP-010-R2 — Form metadata lifecycle**
 
-No conclusion has been established about:
+Caption and Description recovery was progressively tested across ordinary close/reopen, explicit unload and newly launched Designer boundaries. These results must not be generalized to subordinate Form-variable definitions.
 
--   Persistent=True, Global=False definition retention,
--   persistent variable runtime-value retention across executions,
--   documented temporary-variable runtime-value loss on Form close.
+**EXP-011 — Persistent=True attempt 1**
 
-No variable recipe is verified.
+Targeted FX\_FormVariableLab01 / FX\_PersistentTestVar. Blocked during preflight because the session expired. No Form or variable was created.
 
-**EXP-005 / EXP-005-R2 — Caption close/reopen**
+**EXP-012 — Persistent=True attempt 2**
 
-EXP-005 observed Caption recovery. R2 was blocked because its isolation criteria required the IDO-metadata preference disabled while it was enabled and changing it was prohibited. This was not a Caption failure.
+FX\_FormVariableLab02 and exactly one FX\_PersistentRetentionVar (Global=False, Persistent=True, Value=Seed-Persist-B) were established, but session expiry occurred before the required ordinary Save. No retention conclusion.
 
-**EXP-006 / EXP-006-R2 — Caption across explicit unload**
+**EXP-013 — Immediate Save isolation**
 
-Caption-only edit → Save-to-clean → explicit unload → exact User-scoped reopen recovered Caption and comparison properties. **Replay-verified**.
+FX\_FormVariableLab03 / FX\_ImmediateSaveRetentionVar (Global=False, Persistent=True, Value=Seed-Save-C) remained visible and unchanged in the current Designer immediately after exactly one successful ordinary Save request. No close/reopen occurred. This **does not prove that Save serialized the definition**. The experiment remained blocked/non-accepted because required post-creation inventory proof became unavailable.
 
-**EXP-007 / EXP-007-R2 — Description across explicit unload**
+**EXP-014 — Persistent=True variable across ordinary close/reopen**
 
-Description-only equivalent reproduced. **Replay-verified**. One accidental Delete prompt from lingering menu state was cancelled; no deletion occurred.
+FX\_FormVariableLab04 was created exactly once at User scope. FX\_CloseReopenRetentionVar had baseline:
 
-**EXP-008 / EXP-008-R2 — Description across ordinary close/reopen**
+```text
+Name:        FX_CloseReopenRetentionVar
+Description: empty
+Value:       Seed-Close-D
+Persistent:  True
+Global:      False
+```
 
-Description recovery after Save-to-clean → ordinary Form-tab close → supported reopen reproduced independently. **Replay-verified** for this weak UI boundary only. IDO-cache behavior was not isolated.
+Exactly one ordinary Save request succeeded. The variable remained visible and unchanged in the still-open Designer immediately afterward.
 
-**EXP-009 / EXP-009-R2 — Description across newly launched Designer**
+The clean Form was then closed exactly once without a prompt and reopened exactly once through recent forms as the intended User-scoped Form.
 
-Description recovered after closing the Designer tab/window and launching a new Designer from the still-usable authenticated Web Client. **Replay-verified at UI-recovery level only**. Authentication/backend/cache/session boundaries remain unproven.
+After reopen:
 
-**EXP-010 — Caption across ordinary close/reopen**
+-   Details → Variables contained **zero variable rows**.
+-   Page-wide search found no FX\_CloseReopenRetentionVar.
+-   Browser diagnostics for the reopened Form-definition load carried no variable payload.
+-   The negative state persisted through the final read-only audit.
+-   No repair, second Save, second reopen, reauthentication, preference action, global-object unload, cache-clear operation or runtime execution occurred.
 
-FX\_FormPropertyLab11; Caption-only edit; one Save-to-clean; ordinary Form-tab close; recent-forms reopen; exact User-scoped identity and comparison properties recovered. All AC-1…AC-10 passed. **Observed only**, pending a valid clean replay.
+This establishes only the following:
 
-**EXP-010-R2 — attempted clean Caption replay**
+> In this execution, the variable definition was visible before Save and immediately after a successful Save request, but was not present in the reopened Designer UI after one ordinary close/reopen.
 
-FX\_FormPropertyLab12 was proven absent, created exactly once, given an untouched baseline, changed only in Caption, saved once to clean, closed normally without an unsaved-change prompt, reopened through recent forms, and recovered the Caption unchanged with comparison properties equal to baseline.
+It does **not** establish whether the definition was ever serialized into the saved Form definition.
 
-However, an expired Designer session was re-established after run start using Mongoose Sign In/OK. The operator ruled this a violation of the global no-login/no-deliberate-reauthentication prohibition. AC-5 and AC-9 therefore fail on run-compliance grounds. The run is **BLOCKED/non-accepted**.
+The behavior conflicts with documented Mongoose Form-variable capability and therefore remains an **unresolved anomaly**, with possible explanations including save/serialization behavior, Web Designer defect, release-specific behavior, Form/global-object caching, or an unobserved prerequisite. None of those explanations is yet proven.
 
-Its successful mutation/save/close/reopen result is retained only as **corroborating observed evidence**, not replay verification. This blocked classification is a **harness acceptance decision**, not a claim that Mongoose Caption recovery failed.
+# 5. Negative findings / blocked topics and why
 
-# 5\. Negative findings / blocked topics and why
+-   EXP-004 observed explicitly defined Persistent=False variables disappearing after Save/Regenerate. This is anomalous, not expected temporary-runtime-value behavior.
+-   EXP-013 and EXP-014 observed Persistent=True definitions remaining visible immediately after successful Save requests, but neither established serialization into saved Form metadata.
+-   EXP-014 observed the Persistent=True definition absent after ordinary close/reopen.
+-   The contrast between Persistent=False and Persistent=True observations does **not** establish causation by the Persistent flag.
+-   EXP-011/012 were interrupted by session expiry and cannot support lifecycle conclusions.
+-   EXP-013 did not meet all acceptance requirements.
+-   EXP-014 is a single original negative close/reopen execution and is not replay-verified.
+-   The fact that the reopen load diagnostics contained no variable payload is useful diagnostic evidence only; internal response shape/endpoints are not treated as supported Mongoose APIs.
+-   No experiment establishes runtime persistent-variable value behavior.
+-   No experiment yet establishes whether the EXP-014 ordinary Save actually serialized FX\_CloseReopenRetentionVar.
+-   No experiment establishes physical Forms-store rows/write paths, database durability or cache eviction.
+-   IDO-metadata unloading remains a separate dimension and is not currently the leading explanation for loss of a Form-variable definition.
+-   No Form-variable lifecycle recipe is verified.
 
--   **Form-variable design-time definition retention remains unresolved** for the tested Global=False, Persistent=False variable.
--   EXP-004 does **not** establish behavior for Persistent=True definitions or persistent runtime values.
--   **EXP-005-R2 remains blocked**, not failed.
--   **EXP-010-R2 remains blocked because of experiment compliance**, not because Caption recovery failed.
--   Credential-free/SSO-backed Sign In/OK can still count as deliberate session establishment for a run that prohibits reauthentication.
--   No experiment proves the physical storage row/write path responsible for recovered Form metadata.
--   Ordinary Form close/reopen does not prove Form/global-object cache eviction.
--   No close-only experiment proves IDO metadata did or did not unload.
--   EXP-009/R2 does not prove a new auth session, Mongoose application session, IDO Runtime session, backend Designer session or JavaScript runtime.
--   Logout/login, browser restart, OS restart and stronger server/session boundaries remain untested.
--   Site, Group and Vendor-scope equivalents remain unverified.
--   Caption/Description results do not generalize to other Form properties, components, variables, bindings, handlers, validators, scripts, collections or object classes.
--   No reusable lifecycle recovery recipe has been promoted from EXP-006–EXP-010.
+# 6. Open questions and sensible next directions
 
-# 6\. Open questions and sensible next directions
+The central unresolved question is now:
 
-Highest-priority unresolved items:
+**Did the ordinary Save actually serialize FX\_CloseReopenRetentionVar into the saved Form definition, or did the variable remain only in the current Designer state before disappearing at reload?**
 
-1.  **Caption close-only replay:** run a compliant independent replay of EXP-010 with the required authenticated/session state already valid before run start and no post-start login, Sign In/OK session establishment or deliberate reauthentication.
+Priority verification order:
+
+1.  **Verify saved Form-definition serialization independently.** Use a supported independent representation of the Form definition—such as FormSync comparison/export/pseudo-code or another supported representation that exposes variable definitions—to determine whether FX\_CloseReopenRetentionVar exists after Save. A SaveChanges success response plus immediate Designer visibility is insufficient.
     
-2.  **Form-variable definition behavior:** separately test whether a Global=False, Persistent=True variable **definition** survives Designer Save/Regenerate. Do not mix this with runtime-value lifetime testing.
+2.  **Run a read-only positive control in 2026.09.08.** Open a known existing Form that contains persistent Form variables and confirm that Details → Variables reloads them correctly. This can help distinguish a general Designer reload/display issue from a save-specific problem with factory-created variables.
     
-3.  **Form-variable runtime semantics:** after definition retention is understood, separately test:
+3.  **Cleanly replay EXP-014 in a fresh worker context.** Reproduction would establish reproducibility of the anomaly. It would still not explain its cause or make the result consistent with documented expected behavior.
     
-    -   whether a persistent Form variable's **value** survives close/reopen/execution boundaries as documented;
-    -   whether a temporary/nonpersistent Form variable's **runtime value** disappears on the documented lifecycle boundary.
+4.  **If cache investigation is needed, investigate Form/global-object cache first.** Establish and instrument that lifecycle directly. Keep IDO-metadata unloading separately instrumented rather than treating it as the primary metadata class for this failure.
     
-    Keep definition existence and runtime-value lifetime as separate acceptance questions.
-    
-4.  **IDO-metadata semantics:** if IDO-cache behavior matters, explicitly establish **Unload IDO Metadata With Forms** preference state as a precondition and instrument IDO-metadata unloading separately from Form/global-object unloading. Current EXP-008/010 recovery experiments do not answer this.
-    
-5.  **Storage/cache provenance:** determine separately if stronger proof is actually required. Current UI-recovery results do not establish physical storage provenance or cache eviction.
-    
-6.  **Stronger lifecycle boundaries:** any future claim about a fresh authentication, Mongoose application, IDO Runtime or server-side Designer session needs an observable session identifier, explicit session replacement/logout-login, or equivalent server-side evidence.
-    
-7.  **Additional metadata/scopes/object classes:** test one property, scope or object type at a time; do not generalize Caption/Description findings.
+5.  Keep **runtime value persistence** separate from **design-time definition serialization/recovery**. Runtime Persistent semantics should receive their own experiment only after design-time definition behavior is understood.
     
 
 Current knowledge state:
 
-| Capability / question | Status |
+| Capability / claim | State |
 | --- | --- |
-| Basic User-scope BuildFromScratch Form creation | **replay-verified** |
-| Static/Edit/Button component fundamentals | **replay-verified** |
-| Design-time Form-variable definition retention for tested Global=False/Persistent=False variable | **unresolved** |
-| Persistent=True Form-variable definition retention | **unverified** |
-| Persistent Form-variable runtime-value lifetime | **unverified** |
-| Temporary Form-variable runtime-value lifecycle | **unverified in target environment** |
-| Caption recovery after explicit unload | **replay-verified** |
-| Description recovery after explicit unload | **replay-verified** |
-| Description recovery after ordinary Form-tab close/reopen | **replay-verified** |
-| Description recovery after newly launched Designer UI | **replay-verified at UI-recovery level** |
-| Caption recovery after ordinary Form-tab close/reopen | **observed only — EXP-010; EXP-010-R2 corroborates but is blocked** |
-| Physical Forms-database/write provenance | **unverified** |
-| Form/global-object cache eviction on ordinary close | **unverified** |
-| IDO-metadata unload/non-unload on ordinary Designer close | **unverified** |
-| Authentication/application/IDO Runtime/backend session boundaries | **unverified** |
-| Other scopes, Form properties and subordinate object classes | **unverified** |
+| Basic BuildFromScratch Form creation | replay-verified |
+| Static/Edit/Button component fundamentals | replay-verified |
+| Caption recovery across explicit unload | replay-verified |
+| Description recovery across explicit unload | replay-verified |
+| Description recovery across ordinary close/reopen | replay-verified |
+| Description recovery across newly launched Designer | replay-verified at UI-recovery level |
+| Caption recovery across ordinary close/reopen | observed only |
+| Global=False, Persistent=True supported as Form-variable configuration | documented product baseline; exact 2026.09.08 implementation details remain subject to evidence |
+| Persistent governs runtime value lifetime, not definition persistence | documented product baseline |
+| Persistent=True variable visible unchanged immediately after successful ordinary Save | observed in EXP-013 and EXP-014 |
+| Persistent=True variable actually serialized by those Saves | **unverified** |
+| Persistent=True variable present after ordinary close/reopen | observed negative in EXP-014 only |
+| Persistent=False explicit variable definition after Save | observed anomalous negative in EXP-004 |
+| Known existing persistent-variable Form reload positive control | unverified |
+| Runtime persistent-variable value behavior | unverified |
+| Variable lifecycle recipe | unverified |
+| Form/global-object cache role in variable anomaly | unverified |
+| IDO-metadata role in variable anomaly | unverified; separate and lower-priority diagnostic dimension |
+| Storage provenance / physical persistence path | unverified |
+| Strong authentication/backend-session persistence | unverified |

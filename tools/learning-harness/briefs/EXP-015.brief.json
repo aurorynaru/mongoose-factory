@@ -1,0 +1,135 @@
+{
+  "experiment_id": "EXP-015",
+  "title": "EXP-015 — Verify Form Variable Serialization After Ordinary Save",
+  "record_path": "experiments/EXP-015-verify-form-variable-serialization-after-ordinary-.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "Create one new User-scope classic BuildFromScratch Form named FX_FormVariableLab05, add exactly one Form variable named FX_SerializationProbeVar with Global=False, Persistent=True, and Value=Seed-Serialize-E, record its complete visible design-time definition, perform exactly one ordinary Designer Save, and then inspect the saved Form through a supported independent Form-definition representation that exposes Form-variable metadata. Determine whether the saved representation contains the exact variable definition. After that serialization evidence is captured, perform one ordinary clean Form-tab close/reopen and compare the reopened Details > Variables state with both the pre-Save baseline and the independent saved-definition evidence. The experiment must distinguish 'never serialized by Save' from 'serialized but not recovered after reopen' without using direct database access, undocumented APIs, cache manipulation, or runtime variable execution.",
+  "scope": {
+    "in_scope": [
+      "Establish or confirm a supported live Mongoose/Web Client session before the first mutation, without exposing credential values",
+      "Confirm Designer editing scope is User",
+      "Prove FX_FormVariableLab05 is absent exact and case-insensitive before creation",
+      "Create exactly one User-scope classic BuildFromScratch Form FX_FormVariableLab05 using the verified basic-form recipe with Save Template unchecked",
+      "Create exactly one Form variable FX_SerializationProbeVar with Global=False, Persistent=True, and Value=Seed-Serialize-E",
+      "Record every visible variable-definition field before Save",
+      "Perform exactly one ordinary Designer Save and prove the Designer returns to a clean state",
+      "Re-read the variable immediately after Save only as a client-side observation",
+      "Use a supported independent Form-definition representation, such as FormSync comparison, export, or pseudo-code, to inspect whether FX_SerializationProbeVar is serialized in the saved Form definition",
+      "Capture the relevant supported representation showing either the exact variable definition or its demonstrated absence",
+      "After serialization evidence is captured, close the clean target Form exactly once through the ordinary Designer Form-tab close control",
+      "Reopen exactly the same User-scoped Form through a supported Designer reopen path and inspect Details > Variables",
+      "Compare reopened UI state against both the pre-Save baseline and the independently inspected saved Form definition",
+      "Record browser screenshots, supported Form-definition evidence, controlled-action audit, and repository/worktree audit under evidence/EXP-015/"
+    ],
+    "out_of_scope": [
+      "Replaying, repairing, or modifying EXP-004, EXP-011, EXP-012, EXP-013, or EXP-014",
+      "Treating EXP-015 as EXP-014-R2",
+      "Runtime variable value initialization, mutation, retrieval, execution, or runtime Persistent semantics",
+      "Persistent=False, Global=True, temporary-variable comparison, or a second variable",
+      "Changing Caption, Description, components, collections, bindings, validators, handlers, scripts, data sources, IDOs, localized Strings, portals, Runtime Builder, or Responsive Form Builder",
+      "Explicit global-object unload, cache clear, metadata unload, or changing Unload IDO Metadata With Forms",
+      "Logout/login, session replacement, browser restart, or newly launched Designer as the tested persistence boundary after mutation begins",
+      "Direct database inspection or mutation",
+      "Undocumented APIs or reverse-engineered internal request payloads as authoritative persistence evidence",
+      "Modification of any existing FX_ Form",
+      "Modification of any non-FX_ Mongoose artifact",
+      "Promotion of a variable recipe from a single execution",
+      "Claims about physical Forms-database rows, cache eviction, storage provenance, or runtime-value persistence"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not modify any existing Form or artifact",
+    "Do not create or modify any non-FX_-prefixed Mongoose artifact",
+    "Do not perform any second Save, Regenerate Form, Save As, alternate save path, or automatic repair Save",
+    "Do not close or reopen the target Form until the independent saved-definition serialization evidence has been captured",
+    "Do not invoke Unload All Global Form Objects or any cache-clearing operation",
+    "Do not change User Preferences or Unload IDO Metadata With Forms",
+    "Do not execute the Form or test runtime variable values",
+    "Do not use direct SQL/database access",
+    "Do not treat Designer client-side visibility immediately after Save as proof of serialization",
+    "Do not infer serialization from SaveChanges HTTP success alone",
+    "Do not invent a FormSync/export/pseudo-code route if the supported representation cannot be located; stop and record the blocker instead",
+    "After Form creation begins, do not login, click Sign In/OK, deliberately reauthenticate, logout, restart the browser, or replace the session"
+  ],
+  "prohibited_patterns": [
+    "\\b(regenerate|save\\s+as)\\b",
+    "\\bunload\\s+all\\s+global\\s+form\\s+objects\\b",
+    "\\b(clear|flush|reset)\\b[^.\\n]{0,40}\\b(cache|metadata)\\b",
+    "\\bunload\\s+ido\\s+metadata\\s+with\\s+forms\\b[^.\\n]{0,40}\\b(change|toggle|enable|disable|save)\\b",
+    "\\b(runtime|execute|launch|run)\\b[^.\\n]{0,40}\\b(form|variable|value)\\b",
+    "\\b(sql|database|db)\\b[^.\\n]{0,40}\\b(query|select|insert|update|delete|inspect|modify)\\b",
+    "\\b(create|add|modify|edit|delete)\\b[^.\\n]{0,60}\\b(non[- ]?fx_|existing\\s+form|existing\\s+artifact)\\b",
+    "\\b(login|log\\s*in|sign\\s*in|reauthenticate|reauthentication|logout|log\\s*out|restart\\s+browser|replace\\s+session)\\b",
+    "\\b(create|add)\\b[^.\\n]{0,40}\\b(event handler|script)s?\\b"
+  ],
+  "related_experiments": [
+    "EXP-004",
+    "EXP-013",
+    "EXP-014",
+    "EXP-002",
+    "EXP-002-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_FormVariableLab05",
+    "artifacts": [
+      "FX_FormVariableLab05",
+      "FX_SerializationProbeVar"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Before mutation, evidence proves a live server-backed Mongoose workflow, User editing scope, and zero exact/case-insensitive Name matches for FX_FormVariableLab05."
+    },
+    {
+      "id": "AC-2",
+      "description": "Evidence proves exactly one User-scope classic BuildFromScratch FX_FormVariableLab05 was created using Save Template unchecked and is open clean before variable creation."
+    },
+    {
+      "id": "AC-3",
+      "description": "Before Save, Details > Variables visibly contains exactly one FX_SerializationProbeVar and captured evidence records all visible definition fields, including Global=False, Persistent=True, and Value=Seed-Serialize-E."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly one ordinary Designer Save succeeds, the Designer returns to a demonstrably clean state, and the same variable remains visibly unchanged immediately afterward; this check is explicitly classified as client-side visibility only, not persistence proof."
+    },
+    {
+      "id": "AC-5",
+      "description": "Before any Form close/reopen, a supported independent saved-Form representation is captured and proves either (a) FX_SerializationProbeVar is present with matching defining values in the serialized Form definition, or (b) it is demonstrably absent from that representation. If no supported independent representation can be reached, the experiment stops blocked rather than substituting internal APIs or client state."
+    },
+    {
+      "id": "AC-6",
+      "description": "After AC-5 evidence is captured, the clean target Form is closed exactly once through the ordinary Designer Form-tab close control with no unsaved-change prompt."
+    },
+    {
+      "id": "AC-7",
+      "description": "The Form is reopened exactly once through a supported Designer reopen path, and evidence proves Name=FX_FormVariableLab05 plus ScopeType=User and the same ScopeName as baseline."
+    },
+    {
+      "id": "AC-8",
+      "description": "Post-reopen Details > Variables is captured and compared against the pre-Save baseline and AC-5 saved-definition evidence, allowing an observable classification of 'serialized and recovered', 'serialized but not recovered', or 'not shown serialized before close'. No causal mechanism is inferred."
+    },
+    {
+      "id": "AC-9",
+      "description": "Controlled-action audit proves exactly one ordinary Save, one close, one reopen, no Regenerate/Save As, no cache/global-object/IDO-metadata action, no runtime execution, and no login/Sign In-OK/deliberate reauthentication/session replacement after Form creation began."
+    },
+    {
+      "id": "AC-10",
+      "description": "Repository/worktree evidence shows experiment-attributable changes are confined to the EXP-015 record and evidence/EXP-015/, with no recipe, AGENTS.md, environment, other experiment, existing FX_, or non-FX_ artifact modified."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-015",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261003-215618-zZRS. Rationale: EXP-013 and EXP-014 both showed a Global=False, Persistent=True variable remaining visible and unchanged in the still-open Designer immediately after a successful ordinary Save request, while EXP-014 then showed zero variables after close/reopen. The missing fact is whether ordinary Save ever serialized the variable definition into the saved Form metadata. This experiment uses a new FX_ Form and a supported independent Form-definition representation, such as FormSync comparison/export/pseudo-code where available, to isolate serialization before introducing another close/reopen boundary. This is a new documented diagnostic approach, not a replay or repair of blocked EXP-014. Auto-approved by autopilot 2026-10-03T14:50:57.407Z after specialist verdict \"supports\" (see data/autopilot/2026-10-03T14-35-13-401Z-PROPOSAL_CHECK-reply.md)."
+}
