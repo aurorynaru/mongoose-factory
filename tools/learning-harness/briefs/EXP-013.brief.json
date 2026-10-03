@@ -3,7 +3,7 @@
   "title": "EXP-013 — Immediate Form Variable Definition Retention Across One Ordinary Save",
   "record_path": "experiments/EXP-013-immediate-form-variable-definition-retention-acros.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Using one new User-scope classic BuildFromScratch Form, establish or confirm a live Mongoose session before mutation, prove the new target is absent, create exactly one Form variable named FX_ImmediateSaveRetentionVar with Global=False, Persistent=True, and Value=Seed-Save-C, record every visible definition field, perform exactly one ordinary Designer Save, and immediately verify whether the same design-time definition remains unchanged after Save. The experiment ends after the immediate post-Save comparison and does not test Form close/reopen, runtime value persistence, cache behavior, session replacement, or storage provenance.",
   "scope": {
     "in_scope": [
