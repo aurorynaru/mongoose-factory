@@ -3,7 +3,7 @@
   "title": "EXP-014 — Form Variable Definition Recovery Across Ordinary Designer Close/Reopen",
   "record_path": "experiments/EXP-014-form-variable-definition-recovery-across-ordinary-.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Using one new User-scope classic BuildFromScratch Form named FX_FormVariableLab04, establish all preconditions, create exactly one Form variable named FX_CloseReopenRetentionVar with Global=False, Persistent=True, and Value=Seed-Close-D, record every visible design-time definition field, perform exactly one ordinary Designer Save, verify the definition immediately after Save, then close the clean Form through the ordinary Designer Form-tab close control and reopen the same User-scoped Form through the supported recent-forms path. Compare every recorded visible variable-definition field after reopen to the saved baseline. This experiment tests only UI-level recovery of the design-time variable definition across that ordinary Form-tab close/reopen boundary.",
   "scope": {
     "in_scope": [
