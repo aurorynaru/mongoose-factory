@@ -36,6 +36,42 @@
           }
         }
       }
+    },
+    "strata": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Local Strata Coder IQ1_M",
+
+      "options": {
+        "baseURL": "http://127.0.0.1:8080/v1"
+      },
+
+      "models": {
+        "qwen3.8-flash-next-coder-iq1_m": {
+          "name": "Qwen3.8 Flash Next Coder IQ1_M (Strata)",
+
+          "options": {
+            "reasoningEffort": "none"
+          },
+
+          "reasoning": true,
+          "tool_call": true,
+          "attachment": true,
+
+          "interleaved": {
+            "field": "reasoning_content"
+          },
+
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+
+          "limit": {
+            "context": 196608,
+            "output": 32768
+          }
+        }
+      }
     }
   },
 

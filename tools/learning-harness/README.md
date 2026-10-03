@@ -103,6 +103,31 @@ PowerShell 7 or Windows PowerShell 5.1.
 
 ## Running
 
+### Use Strata for the OpenCode worker
+
+The project `opencode.json` includes `strata/qwen3.8-flash-next-coder-iq1_m` at
+`http://127.0.0.1:8080/v1`. It leaves TabbyAPI as OpenCode's default. Start the installed Strata
+server in a separate terminal, then check that OpenCode sees the model:
+
+```powershell
+& C:\AI\Strata\run-coder-iq1_m.bat
+# In another terminal, from C:\AI\mongoose-factory:
+opencode models strata
+opencode run -m strata/qwen3.8-flash-next-coder-iq1_m "Reply with READY"
+```
+
+The Strata model is configured with `reasoningEffort: none` for OpenCode tool use. In a live smoke
+test, the default thinking mode spent the entire 32,000-token output allowance thinking without
+calling a requested tool; with this option, OpenCode called its Bash tool and returned the result.
+This setting applies only to this OpenCode model entry, not to Strata's other clients.
+
+To use Strata for a **new harness run**, set `opencode.model` in `harness.config.json` to
+`{"providerID":"strata","modelID":"qwen3.8-flash-next-coder-iq1_m"}`. Do this between runs and
+restart the harness-owned OpenCode backend with `.\harness.ps1 backend restart` if it is already
+running. The harness sends this model on every worker task, including tasks in new OpenCode sessions.
+Set `opencode.model` back to `null` to use the project default TabbyAPI model again. Keep only the
+model being tested loaded on the 24 GB GPU; the Strata configuration uses about 23 GB of VRAM.
+
 ```powershell
 .\harness.ps1 start EXP-004      # foreground; Ctrl+C = graceful pause, twice = exit (state is checkpointed)
 .\harness.ps1 status             # --watch to refresh, --json for machine output

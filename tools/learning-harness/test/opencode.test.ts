@@ -62,11 +62,11 @@ beforeEach(async () => {
 });
 afterEach(() => new Promise<void>((r) => server.close(() => r())));
 
-const worker = (password?: string) =>
+const worker = (password?: string, model: { providerID: string; modelID: string } | null = null) =>
   new OpenCodeWorker({
     client: new OpenCodeClient({ baseUrl: base, directory: "C:\\AI\\mongoose-factory", password, timeoutMs: 2000 }),
     agent: null,
-    model: null,
+    model,
     pollIntervalMs: 10,
     noResponseGraceMs: 300,
     log: new MemoryLogger(),
@@ -92,6 +92,15 @@ describe("OpenCode worker adapter (mock server)", () => {
     expect(prompt.auth).toBe("Basic " + Buffer.from("opencode:pw123").toString("base64"));
     expect(await w.findMessage(sid, mid)).toBe("present");
     expect(await w.findMessage(sid, "msg_000000000000doesnotexist")).toBe("absent");
+  });
+
+  it("sends the configured Strata model with a worker task", async () => {
+    const model = { providerID: "strata", modelID: "qwen3.8-flash-next-coder-iq1_m" };
+    const w = worker(undefined, model);
+    const mid = w.newMessageId();
+    expect(await w.submit("ses_mock1", mid, "read-only check")).toEqual({ status: "accepted" });
+    const prompt = st.requests.find((r) => r.url.includes("prompt_async"))!;
+    expect(prompt.body).toMatchObject({ messageID: mid, model });
   });
 
   it("returns uncertain (not failed) when the connection drops during submission", async () => {
