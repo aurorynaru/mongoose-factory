@@ -105,9 +105,10 @@ PowerShell 7 or Windows PowerShell 5.1.
 
 ### Use Strata for the OpenCode worker
 
-The project `opencode.json` includes `strata/qwen3.8-flash-next-coder-iq1_m` at
-`http://127.0.0.1:8080/v1`. It leaves TabbyAPI as OpenCode's default. Start the installed Strata
-server in a separate terminal, then check that OpenCode sees the model:
+The project `opencode.json` selects `strata/qwen3.8-flash-next-coder-iq1_m` at
+`http://127.0.0.1:8080/v1` as OpenCode's default. The harness config also selects that model
+explicitly for every worker task. Start the installed Strata server in a separate terminal before
+starting a harness run, then check that OpenCode sees the model:
 
 ```powershell
 & C:\AI\Strata\run-coder-iq1_m.bat
@@ -121,12 +122,13 @@ test, the default thinking mode spent the entire 32,000-token output allowance t
 calling a requested tool; with this option, OpenCode called its Bash tool and returned the result.
 This setting applies only to this OpenCode model entry, not to Strata's other clients.
 
-To use Strata for a **new harness run**, set `opencode.model` in `harness.config.json` to
-`{"providerID":"strata","modelID":"qwen3.8-flash-next-coder-iq1_m"}`. Do this between runs and
-restart the harness-owned OpenCode backend with `.\harness.ps1 backend restart` if it is already
-running. The harness sends this model on every worker task, including tasks in new OpenCode sessions.
-Set `opencode.model` back to `null` to use the project default TabbyAPI model again. Keep only the
-model being tested loaded on the 24 GB GPU; the Strata configuration uses about 23 GB of VRAM.
+For an existing `harness.config.json`, set `opencode.model` to
+`{"providerID":"strata","modelID":"qwen3.8-flash-next-coder-iq1_m"}`; the example config already
+has this setting. Change it between runs, and restart the harness-owned OpenCode backend with
+`.\harness.ps1 backend restart` if it is already running. To return to Qwen, select
+`{"providerID":"tabby","modelID":"Qwen3.8-27B-EXL3-4.00bpw"}` in `harness.config.json` and change
+the top-level `model` in `opencode.json` to `tabby/Qwen3.8-27B-EXL3-4.00bpw`. Keep only the model
+being used loaded on the 24 GB GPU; the Strata configuration uses about 23 GB of VRAM.
 
 ```powershell
 .\harness.ps1 start EXP-004      # foreground; Ctrl+C = graceful pause, twice = exit (state is checkpointed)

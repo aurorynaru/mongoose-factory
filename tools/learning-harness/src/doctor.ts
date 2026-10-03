@@ -80,16 +80,26 @@ export async function doctor(app: App, opts: { browser: boolean; mcp: boolean })
   console.log("== OpenCode");
   const cli = await new Promise<string>((res) => exec("opencode --version", { timeout: 20000, windowsHide: true }, (e, out) => res(e ? `error: ${e.message}` : out.trim())));
   line(cli.startsWith("error") ? "FAIL" : "OK", "opencode CLI", cli);
-  // opencode.json may reference environment variables ({env:NAME}); the harness-started backend
-  // inherits the harness's environment, so they must be set in the shell that runs the harness.
+  // The backend inherits this shell's environment. Only placeholders used by the selected
+  // provider (or by shared OpenCode settings) are required for this worker configuration.
   try {
     const ocText = readFileSync(join(paths.factoryRoot, "opencode.json"), "utf8");
+    const oc = JSON.parse(ocText) as { model?: string; provider?: Record<string, { models?: Record<string, unknown> }> };
+    const defaultModel = typeof oc.model === "string" ? oc.model : "";
+    const slash = defaultModel.indexOf("/");
+    const selected = config.opencode.model ?? (slash > 0 ? { providerID: defaultModel.slice(0, slash), modelID: defaultModel.slice(slash + 1) } : null);
+    const provider = selected ? oc.provider?.[selected.providerID] : null;
+    if (selected && !provider?.models?.[selected.modelID]) line("FAIL", "OpenCode worker model", `${selected.providerID}/${selected.modelID} is not defined in opencode.json`);
+    else if (selected) line("OK", "OpenCode worker model", `${selected.providerID}/${selected.modelID}`);
+    const requiredText = JSON.stringify(selected ? { ...oc, provider: { [selected.providerID]: provider } } : oc);
+    const requiredNames = new Set([...requiredText.matchAll(/\{env:([A-Za-z_][A-Za-z0-9_]*)\}/g)].map((m) => m[1]));
     const names = [...new Set([...ocText.matchAll(/\{env:([A-Za-z_][A-Za-z0-9_]*)\}/g)].map((m) => m[1]))];
     for (const n of names) {
-      line(process.env[n] ? "OK" : "FAIL", `env ${n}`, process.env[n] ? "set (referenced by opencode.json)" : `NOT set in this shell, but opencode.json uses {env:${n}}. Set it ($env:${n} = '...'), then: harness backend restart`);
+      const required = requiredNames.has(n);
+      line(process.env[n] ? "OK" : required ? "FAIL" : "INFO", `env ${n}`, process.env[n] ? "set" : required ? `NOT set in this shell, but the selected OpenCode worker uses {env:${n}}. Set it ($env:${n} = '...'), then: harness backend restart` : "not set (only used by an inactive provider)");
     }
-  } catch {
-    /* opencode.json missing is reported above */
+  } catch (e) {
+    line("FAIL", "opencode.json", (e as Error).message);
   }
   const bh = await app.backend.health();
   const others = (bh.otherOpenCodePids as number[] | undefined) ?? [];

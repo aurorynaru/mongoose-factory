@@ -1,5 +1,5 @@
 {
-  "$comment": "Copy to harness.config.json and adjust. Every key is optional; the values shown are the built-in defaults. Secrets are NEVER stored here: they are read from the environment variables named below.",
+  "$comment": "Copy to harness.config.json and adjust. Every key is optional; this example selects the local Strata worker. Secrets are NEVER stored here: they are read from the environment variables named below.",
   "factoryRoot": "C:\\AI\\mongoose-factory",
   "dataDir": "data",
   "mongooseBrowserProfile": "C:\\AI\\mongoose-playwright-profile",
@@ -21,7 +21,7 @@
     "passwordEnv": "OPENCODE_SERVER_PASSWORD",
     "executable": null,
     "agent": null,
-    "model": null,
+    "model": {"providerID": "strata", "modelID": "qwen3.8-flash-next-coder-iq1_m"},
     "taskTimeoutMinutes": 90,
     "pollIntervalMs": 3000,
     "noResponseGraceSeconds": 120,
