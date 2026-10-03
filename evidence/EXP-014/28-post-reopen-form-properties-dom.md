@@ -1,0 +1,62 @@
+[
+  [
+    "Design",
+    "",
+    ""
+  ],
+  [
+    "Name",
+    "FX_FormVariableLab04",
+    ""
+  ],
+  [
+    "Description",
+    "",
+    ""
+  ],
+  [
+    "Caption",
+    "",
+    ""
+  ],
+  [
+    "Version",
+    "User version for user <secret>SECRET_MONGOOSE_USERNAME</secret>",
+    ""
+  ],
+  [
+    "Device Type",
+    "Default",
+    ""
+  ],
+  [
+    "Form Type",
+    "Normal",
+    ""
+  ],
+  [
+    "Is Master",
+    "True",
+    ""
+  ],
+  [
+    "Appearance",
+    "",
+    ""
+  ],
+  [
+    "Behavior",
+    "",
+    ""
+  ],
+  [
+    "Help",
+    "",
+    ""
+  ],
+  [
+    "Layout",
+    "",
+    ""
+  ]
+]

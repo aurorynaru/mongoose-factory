@@ -1,0 +1,37 @@
+[
+  [
+    "General",
+    "",
+    ""
+  ],
+  [
+    "Name",
+    "FX_CloseReopenRetentionVar",
+    ""
+  ],
+  [
+    "Description",
+    "",
+    ""
+  ],
+  [
+    "Value",
+    "Seed-Close-D",
+    ""
+  ],
+  [
+    "Persistent",
+    "True",
+    ""
+  ],
+  [
+    "Global",
+    "False",
+    ""
+  ],
+  [
+    "Version",
+    "User version for user <secret>SECRET_MONGOOSE_USERNAME</secret>",
+    ""
+  ]
+]
