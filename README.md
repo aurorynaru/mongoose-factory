@@ -20,7 +20,7 @@ artifacts, evidence for every claim. The rules for the agents are in [AGENTS.md]
                  └────────────────────────────────────────────────────────────────────┘
 ```
 
-- **OpenCode worker:** a local model (Qwen via TabbyAPI) drives the Mongoose browser through
+- **OpenCode worker:** a local model (Strata Coder or Qwen via TabbyAPI) drives the Mongoose browser through
   Playwright MCP, writes experiment records and evidence, and follows the experiment's scope.
 - **Coordinator:** a ChatGPT chat that decides the next bounded step and when an experiment is done.
 - **Mongoose specialist:** a custom GPT that answers product questions and reviews findings and plans.
@@ -58,7 +58,7 @@ Knowledge states follow AGENTS.md:
 | Node.js ≥ 20                            | Harness, OpenCode, Playwright MCP            | Developed with 24.x                                                                                                                           |
 | Git                                     | Repository, per-experiment branches          | Git Credential Manager handles GitHub sign-in                                                                                                 |
 | [OpenCode](https://opencode.ai)         | Worker agent                                 | Tested with 1.18.33 (`opencode serve` HTTP API)                                                                                               |
-| TabbyAPI + a local model                | Worker's model                               | `opencode.json` expects `http://127.0.0.1:5000/v1` and `TABBY_API_KEY` in the environment; a 24 GB GPU (e.g. RTX 3090) for the 27B EXL3 model |
+| Strata or TabbyAPI + a local model      | Worker's model                               | Strata is selected by default at `127.0.0.1:8080`; TabbyAPI remains configured at `127.0.0.1:5000` and needs `TABBY_API_KEY` when selected |
 | Google Chrome                           | Harness browser (ChatGPT) and Playwright     |                                                                                                                                               |
 | ChatGPT account                         | Coordinator chat and the custom Mongoose GPT | Uses your normal plan's usage limits (no API credits)                                                                                         |
 | Access to an Infor Mongoose environment | The thing being learned                      | Credentials stay in a secrets file **outside** this repo, used only by Playwright MCP                                                         |
@@ -89,12 +89,14 @@ Copy-Item harness.config.example.json harness.config.json   # then adjust paths/
 ### Every session
 
 ```powershell
-# 1. start TabbyAPI (your usual way)
-# 2. in the harness folder:
-$env:TABBY_API_KEY = '<your TabbyAPI key>'
+# 1. start the selected model server if it is not already running (Strata by default)
+& C:\AI\Strata\run-coder-iq1_m.bat
+# 2. in another terminal, in the harness folder:
 .\scripts\Start-HarnessChrome.ps1 -Port 9223 -UserDataDir C:\AI\learning-harness-chatgpt-profile
 .\harness.ps1 doctor
 ```
+
+To switch between Strata and TabbyAPI, see [Use Strata for the OpenCode worker](tools/learning-harness/README.md#use-strata-for-the-opencode-worker).
 
 ### Run experiments
 

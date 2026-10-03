@@ -125,10 +125,18 @@ This setting applies only to this OpenCode model entry, not to Strata's other cl
 For an existing `harness.config.json`, set `opencode.model` to
 `{"providerID":"strata","modelID":"qwen3.8-flash-next-coder-iq1_m"}`; the example config already
 has this setting. Change it between runs, and restart the harness-owned OpenCode backend with
-`.\harness.ps1 backend restart` if it is already running. To return to Qwen, select
-`{"providerID":"tabby","modelID":"Qwen3.8-27B-EXL3-4.00bpw"}` in `harness.config.json` and change
-the top-level `model` in `opencode.json` to `tabby/Qwen3.8-27B-EXL3-4.00bpw`. Keep only the model
-being used loaded on the 24 GB GPU; the Strata configuration uses about 23 GB of VRAM.
+`.\harness.ps1 backend restart` if it is already running. You do not need a second `opencode.json`
+to switch models: both providers are already defined in the same file.
+
+To return to Qwen, stop Strata, start `C:\AI\tabbyAPI\start.bat` and load the 27B EXL3 model using
+your usual TabbyAPI workflow. Set `TABBY_API_KEY` in the shell that runs the harness. In
+`harness.config.json`, select
+`{"providerID":"tabby","modelID":"Qwen3.8-27B-EXL3-4.00bpw"}`; for OpenCode's interactive
+default, change the top-level `model` in `opencode.json` to `tabby/Qwen3.8-27B-EXL3-4.00bpw`.
+Restart the harness-owned OpenCode backend between runs. For just one OpenCode CLI task, use
+`opencode run -m tabby/Qwen3.8-27B-EXL3-4.00bpw "<task>"` instead of changing the default.
+Keep only the model being used loaded on the 24 GB GPU; the Strata configuration uses about 23 GB
+of VRAM.
 
 ```powershell
 .\harness.ps1 start EXP-004      # foreground; Ctrl+C = graceful pause, twice = exit (state is checkpointed)
