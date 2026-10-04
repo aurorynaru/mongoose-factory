@@ -1,0 +1,105 @@
+{
+  "experiment_id": "EXP-016",
+  "title": "EXP-016 — Discover Supported Saved-Form Variable Metadata Representation",
+  "record_path": "experiments/EXP-016-discover-supported-saved-form-variable-metadata-re.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "Using the existing factory-owned User-scope Form FX_FormVariableLab05, establish a supported live Mongoose session and, without modifying the Form, locate and inspect exactly one supported independent saved-Form definition representation such as FormSync comparison, supported export, pseudo-code, or another documented Mongoose definition view. Prove that the representation identifies the intended User-scoped Form and exposes the Form-variable metadata surface needed to determine whether a saved definition contains variable definitions. Record the exact supported UI route and visible metadata structure. Do not create, edit, Save, regenerate, execute, unload, or otherwise mutate any Mongoose artifact. If no supported representation exposing Form-variable metadata can be located, stop the experiment as blocked rather than using internal APIs, SQL, reverse-engineered payloads, or Designer client state as a substitute.",
+  "scope": {
+    "in_scope": [
+      "Establish or confirm a supported live Mongoose/Web Client session before read-only inspection, without exposing credential values",
+      "Confirm Designer editing scope is User",
+      "Confirm exactly one existing FX_FormVariableLab05 is present and identify its User-scoped version by Name, ScopeType, and ScopeName",
+      "Open FX_FormVariableLab05 read-only through a supported Designer path if needed",
+      "Locate exactly one supported independent saved-Form definition representation through visible/documented Mongoose UI",
+      "Prefer FormSync comparison, supported export, pseudo-code, or another supported definition representation",
+      "Capture the exact supported navigation route used to reach the representation",
+      "Prove the representation is for FX_FormVariableLab05 and the intended User-scoped version",
+      "Determine whether the representation visibly exposes Form-variable metadata or a variable-definition section such as PersistentVariables()/equivalent",
+      "Capture screenshots or supported exported evidence showing the representation and its variable-metadata surface",
+      "Record a read-only controlled-action audit and repository/worktree audit under evidence/EXP-016/"
+    ],
+    "out_of_scope": [
+      "Replaying, repairing, completing, or modifying EXP-015",
+      "Creating a new Form",
+      "Creating, editing, deleting, or renaming any Form variable",
+      "Determining whether FX_SerializationProbeVar was serialized in EXP-015",
+      "Testing variable persistence across Save, close/reopen, unload, or runtime execution",
+      "Changing Caption, Description, components, collections, bindings, validators, handlers, scripts, data sources, IDOs, localized Strings, portals, Runtime Builder, or Responsive Form Builder",
+      "Form/global-object cache experiments",
+      "IDO-metadata cache experiments",
+      "Database/storage provenance",
+      "Runtime variable values or Persistent runtime semantics",
+      "Promoting a Form-variable creation or persistence recipe"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not create, modify, delete, rename, Save, Save As, or Regenerate any Mongoose Form or artifact",
+    "Do not create, edit, delete, or rename any Form variable",
+    "Do not execute or preview the target Form for runtime variable testing",
+    "Do not invoke Unload All Global Form Objects, ClearCache, metadata unload, or any cache-clearing action",
+    "Do not change User Preferences or Unload IDO Metadata With Forms",
+    "Do not use direct SQL or database access",
+    "Do not use undocumented APIs, reverse-engineered internal request payloads, Ext internal stores, or network request bodies as authoritative saved-definition evidence",
+    "Do not infer saved-definition contents from Details > Variables client state or SaveChanges history",
+    "Do not modify any existing FX_ artifact or any non-FX_ artifact",
+    "Do not invent a FormSync/export/pseudo-code route if a supported route cannot be located; record the blocker instead",
+    "Do not expose, print, log, or screenshot credential values"
+  ],
+  "prohibited_patterns": [
+    "\\b(save as|regenerate|save changes|ordinary save)\\b",
+    "\\b(create|add|edit|delete|rename|modify)\\b[^.\\n]{0,60}\\b(variable|form variable)s?\\b",
+    "\\b(unload all global form objects|clearcache|clear cache|unload ido metadata)\\b",
+    "\\b(sql|database query|direct database|reverse[- ]engineer|undocumented api)\\b",
+    "\\b(run|execute|preview)\\b[^.\\n]{0,40}\\b(form|variable)\\b"
+  ],
+  "related_experiments": [
+    "EXP-014",
+    "EXP-015"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_FormVariableLab05",
+    "artifacts": [
+      "FX_FormVariableLab05"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Evidence proves a live server-backed Mongoose workflow and User editing scope before inspection; any required session establishment occurred before the read-only Form-definition investigation and no credential value was exposed."
+    },
+    {
+      "id": "AC-2",
+      "description": "Evidence proves exactly one existing FX_FormVariableLab05 is identified and the inspected version has Name=FX_FormVariableLab05, ScopeType=User, and a captured ScopeName."
+    },
+    {
+      "id": "AC-3",
+      "description": "Evidence captures a supported visible/documented Mongoose navigation path to exactly one independent saved-Form definition representation such as FormSync comparison, supported export, pseudo-code, or equivalent; no internal/undocumented API is substituted."
+    },
+    {
+      "id": "AC-4",
+      "description": "The independent representation visibly identifies FX_FormVariableLab05 and exposes a Form-variable metadata surface or variable-definition section sufficient in principle to determine whether a saved Form contains variable definitions. The visible field/section names are recorded. If no such supported representation can be reached, this check fails and the experiment is blocked."
+    },
+    {
+      "id": "AC-5",
+      "description": "Controlled-action evidence proves the experiment was read-only: no Form/variable mutation, no Save/Save As/Regenerate, no runtime execution, no global-object/cache/IDO-metadata unload, and no User Preference change."
+    },
+    {
+      "id": "AC-6",
+      "description": "Repository/worktree evidence proves experiment-attributable changes are confined to the EXP-016 record and evidence/EXP-016/, with no recipe, AGENTS.md, environment, other experiment, existing FX_, or non-FX_ artifact modified."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-016",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261003-225106-WR9O. Rationale: EXP-015 was blocked by session loss before the variable-definition and Save stages, so immediately repeating that experiment would risk another long run without first proving the critical independent-inspection prerequisite. The smallest useful next step is a separate read-only experiment that establishes a supported Mongoose route for inspecting a saved Form definition independently of the live Designer Details > Variables client state. This is a different documented approach rather than a workaround for EXP-015: it does not attempt to complete, repair, or reinterpret EXP-015, and it performs no Form-variable mutation. If a supported FormSync, export, pseudo-code, or equivalent representation can be reached and shown to expose Form-variable metadata, a later serialization experiment can use that already-observed route immediately after its single Save."
+}
