@@ -1,5 +1,34 @@
 # Shadow testing implementation
 
+## Context-budget settings update — 2026-10-04
+
+- Updated the Strata model in `opencode.json`: output cap 32,768 → 16,384 tokens. Tabby model
+  limits are unchanged. Automatic compaction and pruning remain enabled; the shared compaction
+  buffer increased from 24,000 to 48,000 tokens.
+- Enabled `fit_max_tokens: true` in the installed Strata configuration at
+  `C:\AI\Strata\strata-coder-iq1_m.json`. The original local configuration is backed up beside it.
+  This setting shortens a reply allowance to the space left after the rendered prompt; it does
+  not truncate the prompt or increase the context size. The server must restart to load it.
+- No application dependencies, controller behavior, experiment limits or Mongoose artifacts
+  were changed. The update uses existing OpenCode and Strata configuration options.
+- The change addresses repeated API rejections such as 165,620 prompt tokens + 32,000 requested
+  reply tokens exceeding the 196,608-token engine context. With a 16,384-token reply cap that
+  example fits, including Strata's 8-token safety margin.
+- Validation passed: parsed both JSON configurations and asserted the intended limits/options,
+  unchanged Tabby limit, and preservation of Strata's existing configuration fields. The logged
+  failed prompt with the new reply cap and 8-token margin totals 182,012 of 196,608 tokens.
+  `npm run build` and `git diff --check` passed. No tests were added for this settings-only
+  update; live effectiveness must be checked after server restart.
+- At implementation time EXP-016 was paused on worker timeout with OpenCode still busy. No
+  worker was aborted, no server was restarted, and no run was resumed by this settings update.
+  EXP-016 is read-only and permits establishing a live session; reconnect/re-inspect through
+  the existing coordinator workflow after restart. Persistence experiments that forbid session
+  replacement require a different recovery decision.
+- QA should confirm the next OpenCode request asks for at most 16,384 output tokens, observe
+  compaction before saturation, and confirm Strata fits any oversized reply allowance while
+  preserving the prompt. Unrelated UI formatting and automatic token-budget adaptation in the
+  harness are deferred. Output-cap changes do not change shadow-run `--max-tokens` settings.
+
 Implemented on `feat/shadow-testing`, based on the existing Strata/OpenCode integration branch.
 
 ## Functionality and architecture

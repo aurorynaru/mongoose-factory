@@ -68,7 +68,7 @@
 
           "limit": {
             "context": 196608,
-            "output": 32768
+            "output": 16384
           }
         }
       }
@@ -113,6 +113,6 @@
   "compaction": {
     "auto": true,
     "prune": true,
-    "reserved": 24000
+    "reserved": 48000
   }
 }
