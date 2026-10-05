@@ -3,7 +3,7 @@
   "title": "EXP-010-R3 — Clean Replay: Form Caption Recovery Across Ordinary Close/Reopen",
   "record_path": "experiments/EXP-010-R3-clean-replay-form-caption-recovery-across-ordinary.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Independently replay the EXP-010 Form-level Caption recovery procedure on one new User-scoped classic BuildFromScratch Form. Starting from an already-live usable Mongoose session, prove the target absent, create exactly one Form, record its untouched Form-property baseline, change only the Form-level Caption to a controlled replay value, perform exactly one ordinary Designer Save to clean, close the Form through its ordinary Form-tab control, reopen it through the supported Designer Form-menu recent-forms path in the same Designer/session context, and verify the Caption and all recorded comparison properties recover unchanged. This experiment concerns only Form-level Caption metadata; it does not test Button/component Caption editing or explain persistence mechanisms.",
   "scope": {
     "in_scope": [
