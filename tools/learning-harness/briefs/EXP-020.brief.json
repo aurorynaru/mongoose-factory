@@ -72,7 +72,9 @@
     "EXP-003-R2",
     "EXP-018",
     "EXP-019",
-    "EXP-019-R2"
+    "EXP-019-R2",
+    "EXP-002",
+    "EXP-002-R2"
   ],
   "environment": {
     "record": "environments/current-environment.md",
@@ -122,5 +124,5 @@
   "evidence_dir": "evidence/EXP-020",
   "replay_of": null,
   "initial_instruction": null,
-  "notes": "Proposed after run R-20261005-213313-uTgv; revised on 2026-10-05 after operator-provided specialist review supports with required corrections (briefs/EXP-020.specialist-review.md). EXP-003/EXP-003-R2 already established Button Caption recovery across full-page reload/reopen; the new question is specifically ordinary Web Designer Form-tab close followed by Form-menu recent-forms reopen, without page reload or explicit unload, in the same Designer/session context. Assumption: earlier component runs did not already test this exact boundary. EXP-019-R2 replay-verified only the selection prefix through the empty first wizard page; the basic-form creation suffix is separately verified. Their end-to-end composition remains an assumption until observed here. Baseline follows all required setup including naming, so only the subsequent Caption mutation is isolated. The specialist corrections are applied; operator approval remains pending and autopilot is off."
+  "notes": "Proposed after run R-20261005-213313-uTgv; revised on 2026-10-05 after operator-provided specialist review supports with required corrections (briefs/EXP-020.specialist-review.md). EXP-003/EXP-003-R2 already established Button Caption recovery across full-page reload/reopen; the new question is specifically ordinary Web Designer Form-tab close followed by Form-menu recent-forms reopen, without page reload or explicit unload, in the same Designer/session context. Assumption: earlier component runs did not already test this exact boundary. EXP-019-R2 replay-verified only the selection prefix through the empty first wizard page; the basic-form creation suffix is separately verified. Their end-to-end composition remains an assumption until observed here. Baseline follows all required setup including naming, so only the subsequent Caption mutation is isolated. The specialist corrections are applied; operator approval remains pending and autopilot is off. Dependency correction on 2026-10-05: allow reference to EXP-002 and EXP-002-R2 as source evidence for the already authorized basic-form procedure and prerequisite inventory inspection. This permits consultation only, not execution of those experiments or modification of their artifacts/records; all EXP-020 mutation, evidence, and recovery boundaries remain unchanged."
 }
