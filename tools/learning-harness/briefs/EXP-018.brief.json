@@ -1,0 +1,114 @@
+{
+  "experiment_id": "EXP-018",
+  "title": "EXP-018 — Button Caption Recovery Across Ordinary Close/Reopen",
+  "record_path": "experiments/EXP-018-button-caption-recovery-across-ordinary-close-reop.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "Create exactly one new User-scoped classic BuildFromScratch Form named FX_ComponentPropertyLab01, add exactly one Button component named FX_PersistButton using the verified component procedure, set only its Caption to the controlled literal `Component Persistence Button`, ordinary-save the Form to a demonstrably clean state, close the Form through the supported Designer Form-tab close action, reopen the same User-scoped Form through the supported Form-menu recent-forms path, and verify that the exact Button identity and Caption are recovered unchanged. Record decisive visible evidence before Save and after reopen. This experiment tests only Button Caption recovery across this ordinary close/reopen path; it does not investigate FormSync, Form variables, global-object unload, backend durability, or cache semantics.",
+  "scope": {
+    "in_scope": [
+      "Read-only preflight confirming a live usable Mongoose session, User editing scope, and absence of FX_ComponentPropertyLab01",
+      "Create exactly one User-scoped classic BuildFromScratch Form FX_ComponentPropertyLab01 using the verified basic-form recipe",
+      "Add exactly one Button component FX_PersistButton using the verified component procedure",
+      "Set only FX_PersistButton Caption to exactly `Component Persistence Button`",
+      "Perform exactly one ordinary Designer Save after the controlled component-property edit",
+      "Close FX_ComponentPropertyLab01 through its ordinary Designer Form-tab close control",
+      "Reopen FX_ComponentPropertyLab01 through the supported Designer Form-menu recent-forms path",
+      "Capture visible Designer evidence under evidence/EXP-018/ proving target Form identity, component identity, Caption value, clean state, and post-reopen recovery"
+    ],
+    "out_of_scope": [
+      "EXP-017 FormSync View-output semantics or rendered-grid identity work",
+      "FormSync Script, Pseudo Code, Export, Import, Compare, or generated SQL",
+      "Form-variable creation, persistence, serialization, runtime values, or Details > Variables",
+      "Caption or Description changes at the Form level",
+      "Global Form-object unload, IDO metadata unload, cache-clearing experiments, or User Preference changes",
+      "New Web Designer client-instance testing",
+      "Database durability, internal cache behavior, request-path semantics, or backend/session-boundary conclusions",
+      "Any Group, Site, or Vendor Default scope",
+      "Any non-FX_ artifact mutation"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not touch or alter FX_FormVariableLab05 or any existing FX_ Form/component",
+    "Do not use FormSync or attempt to continue EXP-017 by another mechanism",
+    "Do not create or edit Form variables",
+    "Do not invoke Unload All Global Form Objects or change Unload IDO Metadata With Forms",
+    "Do not use hidden/off-screen controls, synthetic DOM state changes, Ext internal stores as mutation mechanisms, internal APIs, direct SQL, or reverse-engineered payloads",
+    "Do not Regenerate Form; use one ordinary Designer Save only",
+    "Do not use direct cold ?MGForm navigation for the reopen; use the supported Form-menu recent-forms path",
+    "Do not add event handlers, scripts, validators, data bindings, IDO collections, or additional components",
+    "Do not deliberately login, reauthenticate, logout, restart the browser, or replace the application/session after the first artifact mutation; if the browser becomes unusable, use at most one fresh snapshot and one corrected inspection, then record a blocker",
+    "Do not promote a successful close/reopen result into a claim about Forms-database durability, cache eviction, or other component types/properties"
+  ],
+  "prohibited_patterns": [
+    "\\bformsync\\b",
+    "\\b(pseudo[ -]?code|generate sql|script tab)\\b",
+    "\\b(form variable|persistent variable|temporary variable|details\\s*>\\s*variables)\\b",
+    "\\bunload\\s+all\\s+global\\s+form\\s+objects\\b",
+    "\\bunload\\s+ido\\s+metadata\\b",
+    "\\bregenerate\\s+form\\b",
+    "\\b(create|add)\\b[^.\\n]{0,40}\\b(event handler|script|validator)s?\\b",
+    "\\b(sql|internal api|ext internal|reverse[- ]engineer)\\b[^.\\n]{0,40}\\b(update|insert|delete|mutat|write|execute)\\w*\\b"
+  ],
+  "related_experiments": [
+    "EXP-003",
+    "EXP-003-R2",
+    "EXP-008",
+    "EXP-008-R2",
+    "EXP-017"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_ComponentPropertyLab01",
+    "artifacts": [
+      "FX_ComponentPropertyLab01",
+      "FX_PersistButton"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Preflight visibly establishes a usable Mongoose/Designer session and User editing scope, and proves FX_ComponentPropertyLab01 is absent before creation using the supported Select Form inventory/filter with an appropriate positive control; preserve screenshot evidence."
+    },
+    {
+      "id": "AC-2",
+      "description": "Exactly one User-scoped classic BuildFromScratch Form FX_ComponentPropertyLab01 exists after creation, is open in Designer, and is clean before component mutation; capture visible Form identity/scope evidence."
+    },
+    {
+      "id": "AC-3",
+      "description": "Exactly one Button component named FX_PersistButton is present on FX_ComponentPropertyLab01, and before Save the supported visible Designer property surface shows Caption exactly `Component Persistence Button`; capture one decisive screenshot that visibly identifies both the target Form/component and literal Caption."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly one ordinary Designer Save is performed after the controlled Caption edit, after which Designer is demonstrably clean and a visible re-read still shows FX_PersistButton Caption exactly `Component Persistence Button`; no other component/Form property is intentionally changed."
+    },
+    {
+      "id": "AC-5",
+      "description": "FX_ComponentPropertyLab01 closes through its ordinary Form-tab close control with no unsaved-change prompt and is no longer open in Designer; capture the post-close visible state."
+    },
+    {
+      "id": "AC-6",
+      "description": "The same FX_ComponentPropertyLab01 is reopened through the supported Form-menu recent-forms path and its scoped identity is visibly/reliably verified as the intended User version."
+    },
+    {
+      "id": "AC-7",
+      "description": "After reopen, selecting FX_PersistButton on the supported visible Designer surface shows the exact component name and Caption `Component Persistence Button`, with Designer clean. Capture decisive screenshot evidence that visibly ties the recovered Caption to FX_PersistButton on FX_ComponentPropertyLab01."
+    },
+    {
+      "id": "AC-8",
+      "description": "Final read-only audit proves exactly one case-insensitive FX_ComponentPropertyLab01 exists, no extra component was created, no prohibited unload/FormSync/Form-variable action occurred, and repository changes are confined to the EXP-018 record plus evidence/EXP-018/. The worker summary must classify any successful result only as observed for this Button Caption + ordinary close/reopen path and state the non-claims."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-018",
+  "replay_of": null,
+  "initial_instruction": "Begin with one fresh read-only browser snapshot and repository baseline. If the live Mongoose state or target-absence prerequisite is unclear, perform only one corrected read-only inspection; if still unresolved, record the blocker and stop. Once prerequisites pass, follow the verified basic-Form and Button-component procedures literally, change only the controlled Button Caption, ordinary-save once, close normally, reopen through Form-menu recent forms, and collect the decisive pre-Save and post-reopen visible evidence before doing any ancillary audit.",
+  "notes": "Proposed by the coordinator after run R-20261005-193415-DfGB. Rationale: EXP-017 is blocked on a FormSync evidence prerequisite, so the next experiment should not work around that blocker. The smallest independent step that advances factory capability is to extend the already replay-verified basic Form/component procedures into one controlled component-metadata lifecycle check. Button creation/configuration is already replay-verified by EXP-003/EXP-003-R2, while ordinary Designer close/reopen recovery is replay-verified for Form-level Description by EXP-008/EXP-008-R2. Testing one literal Button Caption therefore combines two established procedures while introducing only one new question: whether one explicitly configured component property is recovered unchanged after an ordinary Save and close/reopen. Auto-approved by autopilot 2026-10-05T12:15:06.993Z after specialist verdict \"supports\" (see data/autopilot/2026-10-05T12-04-10-303Z-PROPOSAL_CHECK-reply.md)."
+}

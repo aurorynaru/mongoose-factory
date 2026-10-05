@@ -1,8 +1,8 @@
 <!-- harness-context reviewed: true -->
-<!-- updated by autopilot after EXP-016-R2 (R-20261005-181911-K73K); specialist findings verdict: objects; 2026-10-05T11:30:53.364Z -->
-<!-- finalized after specialist review of EXP-016-R2 (R-20261005-181911-K73K); specialist verdict: objects --> <!-- EXP-016-R2 independently reproduced FormSync Script generation for the selected User-scoped FX\_FormVariableLab05 in a fresh worker execution. The specific Output=View → visible temporary page semantic path is NOT replay-verified because the underlying View input was changed programmatically/off-screen and Generate produced a browser ZIP instead of cited visible View-page evidence. Generic Variables/FormID SQL remains insufficient proof of any specific Form-variable definition. -->
+<!-- updated by autopilot after EXP-017 (R-20261005-193415-DfGB); specialist findings verdict: objects; 2026-10-05T12:11:13.303Z -->
+<!-- finalized after specialist review of EXP-017 (R-20261005-193415-DfGB); specialist verdict: objects. EXP-017 final outcome: BLOCKED at AC-2 rendered exact-name prerequisite; View/Generate not tested. Exact target identity was available through accessibility/snapshot evidence but was not established through the experiment's required fully rendered evidence. -->
 
-# 1\. Project and workflow
+# 1. Project and workflow
 
 The project is an autonomous **Infor Mongoose factory** being built in C:\\AI\\mongoose-factory. Its long-term goal is to take a natural-language request, optionally with reference images, and reliably build Mongoose Forms/portal-related artifacts using browser automation and a growing body of verified procedures and recipes.
 
@@ -29,7 +29,7 @@ A run stopped because prerequisites or prohibitions cannot be satisfied is **blo
 
 “Fresh worker context” means independent at the harness/OpenCode-session level. It does not establish independence across browser, authentication, application, IDO Runtime, backend, tenant, configuration or product sessions unless explicitly tested.
 
-# 2\. Environment facts that matter
+# 2. Environment facts that matter
 
 Current proven environment:
 
@@ -50,7 +50,9 @@ Environment/browser observations:
 -   Web Client normally runs in the Portal iframe; Web Designer opens separately.
 -   Numeric Ext JS IDs drift between sessions.
 -   Synthetic/low-level DOM manipulation may fail to invoke Ext handlers; native/frame-scoped Playwright interaction has generally been more reliable.
--   Hidden/off-screen Ext controls may remain in the DOM. DOM existence or an HTML checked property does **not** by itself prove visible UI or processed application state.
+-   Hidden/off-screen Ext controls may remain in the DOM. DOM existence, accessibility checked state, or an HTML checked property does **not** by itself prove rendered UI state or the application state Mongoose would process.
+-   In EXP-017, the underlying HTML/accessibility input associated with View was positioned off-screen at left:-9000px; worker-reported rendering showed Save selected while accessibility state reported View checked. This is an environment observation only. It does **not** establish which state FormSync would consume on Generate.
+-   Whether the visible View affordance can be activated by a supported rendered interaction was **not established in EXP-017**, because the experiment stopped earlier at AC-2.
 -   Direct cold ?MGForm=... navigation has been unreliable.
 -   Bare portal-root navigation has produced HTTP 403 Missing Authentication Token.
 -   Designer recent-forms and Select Form are tested reopen paths.
@@ -58,7 +60,7 @@ Environment/browser observations:
 -   A post-start Sign In/OK action may restore access but invalidates experiments that prohibit reauthentication.
 -   EXP-014 completed creation, Save, close and reopen without later reauthentication/session replacement.
 -   In EXP-016, navigating away from FormSync reset its working state in that browser/session. This is an execution observation, not generalized product behavior.
--   EXP-016-R2 confirmed an inherited live Web Client session rather than establishing a new authentication/browser/application session. Its independence is therefore at fresh-worker level only.
+-   EXP-016-R2 and EXP-017 inherited live Web Client state; neither established a new authentication/application/backend session.
 
 Explicit global-object unload route:
 
@@ -87,10 +89,12 @@ Documented behavior indicates:
 -   Global=False, Persistent=True is supported.
 -   **Persistent** governs runtime **value** lifetime.
 -   **Global** governs visibility/scope.
--   Persistent and temporary Form-variable **definitions are design-time Form metadata**.
--   Current documentation shows persistent Form variables represented under structures such as PersistentVariables().
+-   Form-level/global and persistent/temporary are independent attributes.
+-   An **explicitly designed** Form-variable definition is Form metadata.
+-   Current documentation shows persistent Form variables represented in Form definitions under structures such as PersistentVariables().
+-   A temporary/nonpersistent runtime variable does **not necessarily require a separately pre-created design-time definition**; the framework can create some nonpersistent variables when referenced.
 
-Therefore disappearance of an explicitly defined variable after Save/reopen remains anomalous relative to documented capability.
+Therefore disappearance after Save/reopen of a variable that was **explicitly created as a Form definition** remains anomalous relative to documented capability, without implying that every temporary runtime variable must itself have persistent design-time metadata.
 
 Current lifecycle observations:
 
@@ -101,12 +105,14 @@ Current lifecycle observations:
 -   Caption + ordinary close/reopen: **observed only**.
 -   Persistent=True variable immediately after Save: EXP-013/014 **observed visible**, but serialization not proven.
 -   Persistent=True variable after ordinary close/reopen: EXP-014 **observed absent**.
--   FormSync Script generation for one selected User-scoped customized Form: **replay-verified by EXP-016 + EXP-016-R2**.
--   The specific **Output=View → visible temporary representation page** behavior remains **unverified in EXP-016-R2**.
+-   FormSync Script generation for one exact selected User-scoped customized Form: **replay-verified by EXP-016 + EXP-016-R2**.
+-   Specific **Output=View → visible Form/temporary display page** behavior remains **unverified** in the target environment. EXP-017 did not reach View selection or Generate.
 
-FormSync SQL scripting is documented as generating definitions of customized objects from a selected **Source Forms database**. Its logical provenance is therefore Forms-database-oriented rather than merely current Designer client state. The generated artifact is an **executable customization-definition SQL script**; generation was non-mutating with respect to the inspected Source Form, but the SQL itself is not intrinsically read-only.
+In the tested/export FormSync workflow, the selected **Source configuration** supplied the Forms-database definitions. Product FormSync also permits SQL-script generation against custom objects selected from a **Source or Target configuration**. The broader conclusion remains that generated definition scripts derive from Forms-database metadata rather than merely current Designer client state.
 
-# 3\. Decisions and rules established so far
+The generated SQL is executable customization-definition SQL. Generating it was non-mutating with respect to the inspected Source Form, but the SQL itself is not intrinsically read-only.
+
+# 3. Decisions and rules established so far
 
 Permanent knowledge progression:
 
@@ -125,28 +131,32 @@ Core rules:
 -   Record blockers, failures, negative findings and corrections.
 -   Evidence should prove semantic state transitions, not every click.
 -   A screenshot proves only rendered state at that moment.
+-   Accessibility/DOM state and visibly rendered UI are separate evidence modalities when they disagree.
+-   If an acceptance criterion explicitly requires **visible-rendered proof**, hidden DOM/accessibility text cannot silently substitute for it.
 -   Editing permission and editing scope are separate.
--   Verify scoped objects using **Name + ScopeType + ScopeName**.
+-   Verify customized-object identity using **Name + ScopeType + ScopeName**.
 -   Version identity and storage/serialization provenance are different questions.
 -   Do not generalize across metadata classes, scopes or lifecycle boundaries.
 -   Treat internal request paths, Ext IDs/stores, model IDs, numeric ScopeType values, generated SQL table/column names and statement layout as implementation details, not stable automation contracts.
 -   If an experiment defines a prerequisite/prohibition, obey it even when another route appears harmless.
+-   Do not manipulate hidden controls merely to force an experiment to pass.
 -   Do not change preferences/cache settings merely to force an experiment to pass.
 -   Ordinary close/reopen does not prove physical database durability, cache eviction or commit boundaries.
 -   Caption, Description and Form-variable definitions are separate metadata classes.
--   **Persistent is a runtime-value-lifetime property, not evidence of design-time definition persistence.**
+-   **Persistent is a runtime-value-lifetime property, not proof of design-time definition persistence.**
 -   Persistent=True versus Persistent=False observations must not be interpreted as causal without a controlled test.
 -   Immediate client-side visibility after Save is insufficient proof that a variable definition was serialized.
 -   Runtime-value semantics and variable-definition retention are separate.
 -   No reusable Form-variable creation/persistence recipe has been promoted.
--   FormSync Script and Pseudo Code are **alternative supported representations with different purposes/formats**; do not treat them as equivalent.
+-   FormSync Script and Pseudo Code are alternative supported representations with different purposes/formats; do not treat them as equivalent.
 -   FormSync **Script generation for an exact selected User-scoped Form** is replay-verified.
--   Do **not** promote the EXP-016-R2 DOM observation View checked / Save unchecked into proof that FormSync semantically processed View mode. The View control was off-screen and changed programmatically.
--   Current documentation describes **View** as displaying generated output temporarily and **Save** as file output. In EXP-016-R2, the worker observed the underlying View input checked but Generate produced a browser-download ZIP. **The semantic reason is unresolved.**
--   The exact Script-tab configuration in EXP-016-R2 is incomplete because the visible/semantic state of **Script form license** was not recorded. The generated \_LIC.SQL file makes this relevant.
--   Generic generated-SQL handling such as DELETE FROM Variables WHERE FormID = @FormID is **not proof that a specific variable exists or was serialized**.
--   Positive serialization evidence for a controlled variable must contain variable-specific data, at minimum its controlled identity/name and preferably definition/value fields.
--   Negative serialization evidence requires first establishing that the selected representation/settings expose a known-present variable; absence of a name alone is otherwise inconclusive.
+-   Do **not** promote EXP-016-R2's programmatically changed off-screen View input into proof that FormSync semantically processed View.
+-   Current documentation distinguishes **Save** as file/download output and **View** as displaying output on a Form page/temporary display page. Target-environment behavior still requires evidence.
+-   For a future View test, a stronger pre-Generate semantic checkpoint is: **View visibly selected + primary Filename control visibly disabled** before Generate.
+-   A strong postcondition discriminator is: **View → visible Form/display page** versus **Save → downloadable/file output**, potentially bundled in a ZIP when multiple outputs are produced.
+-   Generic generated SQL such as DELETE FROM Variables WHERE FormID = @FormID is **not proof that a specific named variable exists or was serialized**.
+-   Positive serialization evidence must contain variable-specific data, at minimum its controlled identity/name and preferably definition/value fields.
+-   Negative serialization evidence first requires establishing that the chosen representation/settings expose a known-present variable; absence alone is otherwise inconclusive.
 
 Experiment status:
 
@@ -162,8 +172,9 @@ Experiment status:
 -   **EXP-013:** blocked/non-accepted; immediate post-Save variable visibility nevertheless observed.
 -   **EXP-014:** blocked because AC-8 failed; variable absent after reopen.
 -   **EXP-015:** blocked before intended independent serialization investigation completed.
--   **EXP-016:** final investigation established an observed FormSync Script-generation route.
--   **EXP-016-R2:** worker record reports AC-1..AC-7 PASS, but specialist review found the AC-5 **Output=View visible-representation semantic claim insufficiently evidenced**. Accepted conclusion: **FormSync Script generation route replay-verified; Output=View destination semantics unresolved.**
+-   **EXP-016:** FormSync Script-generation route observed.
+-   **EXP-016-R2:** Script-generation route replay-verified; Output=View semantics unresolved.
+-   **EXP-017:** **BLOCKED — AC-2 rendered exact-name prerequisite not satisfied; View selection and Generate not tested.**
 
 Naming conventions:
 
@@ -173,7 +184,7 @@ Components:  FX_<SemanticPurpose><MongooseType>
 Variables:   FX_<Purpose>Var   (candidate convention)
 ```
 
-# 4\. Lessons learned and pitfalls per experiment
+# 4. Lessons learned and pitfalls per experiment
 
 **EXP-001 — Environment fingerprint**
 
@@ -217,17 +228,15 @@ Created FX\_FormVariableLab05 for a controlled saved-definition serialization in
 
 **EXP-016 / EXP-016-R2 — FormSync SQL definition-script generation**
 
-The supported route now reproduced across original observation and clean replay is:
+The reproduced route is:
 
 ```text
 Runtime FormSync
-→ select intended configuration as Source
-→ Utilities
+→ select intended configuration
 → Filter
-→ Filter Configuration = Source
+→ Filter Configuration = Source in the tested workflow
 → Scope Type = User
-→ select exact User/ScopeName where practical
-   OR verify returned row's User/Group Name explicitly
+→ select/verify exact User/ScopeName
 → Refresh List
 → Deselect All
 → verify Name + ScopeType + ScopeName
@@ -236,117 +245,132 @@ Runtime FormSync
 → Generate
 ```
 
-EXP-016-R2 isolated exactly one FX\_FormVariableLab05 row and generated FormSync SQL identifying the Form by name, ScopeType=3/User and ScopeName.
+EXP-016-R2 isolated one FX\_FormVariableLab05 version and generated SQL identifying the Form by name, ScopeType=3/User and ScopeName.
 
 Authoritative captured SQL paths:
 
 -   evidence/EXP-016-R2/script/FS\_20261005\_102224.SQL
 -   evidence/EXP-016-R2/script-t4/FS\_20261005\_102224.SQL
 
-The SQL was **captured twice**. Do not call these “two independent generations” unless separate Generate/download evidence or distinct generation metadata is preserved; both captured files use the same filename.
+The SQL was captured twice. Do not call these “two independent generations” unless separate Generate/download evidence or distinct generation metadata is preserved; both use the same filename.
 
-The SQL contains DELETE FROM Variables WHERE FormID = @FormID. This proves that the generated definition script contains variable-related metadata handling, but **does not prove that FX\_FormVariableLab05 contained any specific saved Form variable**.
+DELETE FROM Variables WHERE FormID = @FormID proves only that generated Form-definition SQL generically handles variable-related metadata. It does **not** prove that FX\_FormVariableLab05 contained any particular saved variable.
 
-Relevant identity/filter evidence includes:
-
--   evidence/EXP-016-R2/03-filter-source-user-scope-list-refreshed.png
--   evidence/EXP-016-R2/04-filter-only-fxformvariablelab05-included.png
--   evidence/EXP-016-R2/07-t3-ac3-filter-configuration-source-dem-selected.png
--   evidence/EXP-016-R2/08-t3-script-state-restored-view-single-inc.png
-
-However, 08-t3-script-state-restored-view-single-inc.png requires **manual visual inspection** before making any claim about rendered Script-tab Output state. The worker reported the actual HTML View input as checked and Save unchecked, but the View radio was positioned off-screen and changed programmatically. That is browser-DOM evidence, not proof the Ext application semantically processed View mode.
-
-After Generate, Playwright received a ZIP containing:
+EXP-016-R2's Generate produced a ZIP containing:
 
 -   FS\_20261005\_102224.SQL
 -   FS\_20261005\_102224\_LIC.SQL
 
-This outcome is more consistent with documented file-output behavior than with documented View behavior, but **do not infer that Save was actually selected**. Possible explanations include Ext/application-state mismatch, 2026.09.08 web-client behavior or another implementation detail.
+That outcome is more consistent with documented Save/file-output behavior than documented View behavior, but it does **not** prove what Output state FormSync internally processed.
 
-The post-Generate screenshot numbered **09** in evidence/EXP-016-R2/ must be manually inspected to determine whether a temporary FormSync View page actually appeared. Its exact basename is unavailable in the supplied context and must not be invented.
+**EXP-017 — Visible FormSync View Output Semantics**
 
-The visible/semantic **Script form license** checkbox state was not recorded. Because \_LIC.SQL was generated, this is a missing part of the exact Script-tab configuration.
+Final experiment status:
 
-No Mongoose Form artifact was created, modified, Saved, Regenerated, executed or applied during EXP-016-R2. Generating the SQL was non-mutating with respect to the Source Form. The generated SQL itself is executable and could mutate a destination Forms database if later run.
+**BLOCKED — AC-2 rendered exact-name prerequisite not satisfied; View/Generate not tested.**
 
-# 5\. Negative findings / blocked topics and why
+T1 historically established a live inherited FormSync session without reauthentication. Exact target identity was established through accessibility/snapshot evidence:
 
--   EXP-004 variable definitions disappeared after Save/Regenerate in all tested executions.
--   EXP-011/012 were interrupted by session expiry.
--   EXP-013 did not satisfy every required acceptance proof.
--   EXP-014 showed post-reopen variable absence while pre-close serialization remained unknown.
--   EXP-015 lost the required session before its serialization investigation completed.
--   EXP-016 initially failed to locate a suitable definition representation through ordinary Form/Export surfaces; later FormSync investigation resolved that discovery blocker.
--   Form > Definition was observed as an action submenu, not a saved-definition metadata view.
--   Form > Export to File was observed as collection-data export, not saved-Form definition export.
--   Pseudo Code Generate remained disabled in EXP-016; its cause remains unknown.
--   EXP-016-R2 did **not** establish documented Output=View semantics because no accepted evidence yet proves the temporary visible View page appeared.
--   The Script form license state in EXP-016-R2 is unresolved.
--   The generic Variables/FormID SQL references remain insufficient evidence for a specific saved variable.
--   No known-present controlled variable has yet established the exact variable-specific SQL pattern needed for reliable positive/negative serialization classification.
--   No runtime variable-value persistence experiment has succeeded.
--   No Form-variable creation/persistence lifecycle recipe is replay-verified.
--   Physical DB durability, transaction/commit boundaries, cache eviction and backend-session independence remain unverified.
+-   Name = FX\_FormVariableLab05
+-   Object Type = Form
+-   Scope Type = User
+-   User/Group Name = current user
 
-# 6\. Open questions and sensible next directions
+However, the experiment required the complete identity to be established through **visible-rendered evidence** before proceeding. The rendered Object Name cell remained truncated as FX\_FormVariabl...; therefore accessibility identity did not satisfy AC-2.
 
-Primary unresolved product question:
+Worker-reported Script-tab rendering from:
 
-> Why can a supported Form-variable definition appear before and immediately after Save yet disappear after ordinary close/reopen?
+-   evidence/EXP-017/00-preflight-formsync-live.png
 
-The FormSync **Script-generation** route itself has now reproduced in a fresh worker context, so another generic replay is unnecessary. However, the Output destination semantics from EXP-016-R2 require cleanup before claiming a verified Output=View procedure.
+was:
 
-Required verification for the EXP-016-R2 evidence boundary:
+-   Script form license checked.
+-   Generate enabled.
+-   Save visibly selected.
+-   View visibly unselected.
+-   Accessibility state simultaneously reported View checked.
+-   Underlying View input positioned off-screen at left:-9000px.
 
-1.  Manually inspect evidence/EXP-016-R2/08-t3-script-state-restored-view-single-inc.png for what is actually rendered on the Script tab.
-2.  Manually inspect the post-Generate screenshot numbered 09 in evidence/EXP-016-R2/ and determine whether a temporary View page visibly appeared.
-3.  Record the visible/semantic **Script form license** state.
-4.  If retaining any claim of multiple independent Generate operations, preserve distinct Generate/download evidence or distinct generated metadata.
+The image was not independently supplied to the specialist for direct inspection, so these remain **worker-reported browser observations**. They do not establish which Output state Mongoose application logic would consume.
 
-The highest-value subsequent controlled variable experiment is to establish **variable-specific serialization evidence**. After creation and Save of a fresh controlled variable, inspect the FormSync-generated definition script before close/reopen and compare that with later Designer recovery.
+Importantly, the off-screen native input does **not** prove that the visible View affordance cannot be activated. EXP-017 never performed that decisive supported rendered-selection test because it stopped at AC-2.
 
-Positive serialization requires unmistakable variable-specific data. If a controlled name is absent, do **not** classify that alone as serialization failure until a known-present variable has demonstrated that this FormSync Script configuration normally emits that variable-specific information.
+Rendered-row investigation:
 
-Still unresolved:
+-   evidence/EXP-017/04-hover-name-cell-tooltip-check.png
+-   evidence/EXP-017/05-grid-hover-tooltip-check.png
+-   evidence/EXP-017/06-hover-inc-cell-tooltip-check.png
+-   evidence/EXP-017/07-hover-usergroup-cell-tooltip-check.png
 
--   Whether EXP-014's variable was ever serialized.
--   Whether EXP-015's probe variable was serialized.
--   The variable-specific FormSync SQL pattern for a known-present Form variable.
--   Whether disappearance occurs during Save, reload/reconstruction, cache handling or another lifecycle stage.
--   Why FormSync Pseudo Code Generate remained disabled.
--   Exact Output=View behavior in this 2026.09.08 web-client execution.
--   Runtime-value persistence semantics in this environment.
--   Effects of explicit global-object unload versus close-only for variables.
--   Stronger browser/auth/application/backend-session boundaries.
--   Behavior across other scopes/Form types.
+No native tooltip was worker-reported for the **tested hovered cells in this FormSync instance/layout**. 04-hover-name-cell-tooltip-check.png must not be used as same-row target proof because its hover landed on the adjacent row. 06 and 07 were the corrected same-row checks.
 
-Do not infer causation from Persistent=True versus Persistent=False without a controlled comparison.
+Scrollbar evidence:
 
-# 7\. Current knowledge state
+-   evidence/EXP-017/08-grid-container-scrollbar-check.png
+-   evidence/EXP-017/09-grid-main-container-scrollbar-check.png
 
-| Capability / finding | State |
+The worker reported no horizontal scrollbar visibly rendered in the **inspected containers in that state/layout**; only the relevant vertical scrollbar was visible. This is not a product-wide rule about FormSync grids.
+
+A Playwright drag that failed to target the column-resizer is a **tooling limitation**, not a Mongoose finding.
+
+Because the required complete rendered identity could not be established using the approved mechanisms, the experiment correctly stopped before touching Script Output controls or Generate.
+
+# 5. Negative findings / blocked topics and why
+
+-   Form-variable definition serialization remains unproven.
+-   EXP-004 showed repeated disappearance of an explicitly designed temporary variable, but Persistent=False causality is unproven.
+-   EXP-014 showed a Persistent=True definition absent after close/reopen, but whether Save serialized it remains unresolved.
+-   EXP-011/012/015 were interrupted or blocked before decisive serialization evidence.
+-   EXP-016/R2 generated Form-definition SQL, but generic Variables handling does not identify a controlled variable.
+-   EXP-016-R2 did not prove Output=View semantics.
+-   EXP-017 also did **not** prove or disprove Output=View semantics; it never selected View or invoked Generate.
+-   EXP-017's AC-2 failure is a **factory evidence-condition failure**, not a demonstrated Mongoose product limitation.
+-   EXP-017 establishes only that, in the inspected Web Client/grid state, the approved rendered mechanisms did not expose the complete target name.
+-   The underlying View input being off-screen does not establish that the visible View affordance is unusable.
+-   EXP-017's T1 Script form license state applies only to that inherited state and does not retroactively prove EXP-016-R2's Script-tab configuration.
+-   No runtime-value persistence conclusion has been established.
+-   Physical Forms-database durability, exact write paths, cache eviction, backend/session independence and stronger logout/restart boundaries remain unverified.
+-   No reusable Form-variable persistence recipe exists.
+
+# 6. Open questions and sensible next directions
+
+1.  **Form-variable serialization:** obtain variable-specific saved-definition evidence without inferring from generic FormSync SQL.
+2.  **Positive control:** prove that a chosen representation/settings combination exposes a known-present controlled variable before treating absence as negative serialization evidence.
+3.  **FormSync View semantics:** perform a dedicated supported rendered test. Before Generate, require **View visibly selected + primary Filename visibly disabled**. After Generate, require a visible Form/display page rather than file/download output.
+4.  **Rendered FormSync identity:** determine whether a supported rendered interaction can expose the complete **Name + ScopeType + ScopeName** tuple in this Web Client/grid presentation. EXP-017 ruled out only the approved mechanisms it actually tested.
+5.  **Manual EXP-017 evidence audit:** before promoting the worker-reported rendering details further, directly inspect:
+    -   evidence/EXP-017/00-preflight-formsync-live.png
+    -   evidence/EXP-017/06-hover-inc-cell-tooltip-check.png
+    -   evidence/EXP-017/07-hover-usergroup-cell-tooltip-check.png
+    -   evidence/EXP-017/09-grid-main-container-scrollbar-check.png
+6.  **Lifecycle boundaries:** stronger browser/application/backend/session boundaries remain to be tested separately from close-only Designer recovery.
+7.  **Cache/IDO behavior:** explicit global-object unload and IDO-metadata unload remain separate mechanisms requiring controlled evidence.
+8.  Continue expanding to additional metadata classes/scopes only without conflating unresolved Form-variable provenance with already replay-verified Form/component procedures.
+
+# 7. Current knowledge state
+
+| Capability / claim | State |
 | --- | --- |
-| BuildFromScratch Form creation | **Replay-verified** |
-| Static/Edit/Button fundamentals | **Replay-verified** |
-| Caption + explicit unload | **Replay-verified** |
-| Description + explicit unload | **Replay-verified** |
-| Description + close/reopen | **Replay-verified** |
-| Description + new Designer UI recovery | **Replay-verified, UI-level only** |
-| Caption + close/reopen | **Observed** |
-| Persistent=True variable visible immediately after Save | **Observed** |
-| Persistent=True variable absent after close/reopen | **Observed negative, EXP-014 only** |
-| Persistent=False variable retention after Save/Regenerate | **Observed negative, EXP-004 only** |
-| FormSync Script generation for exact selected User-scoped Form | **Replay-verified, EXP-016 + EXP-016-R2** |
-| FormSync filtering/isolation to exact User-scoped target | **Replay-verified** |
-| Generated SQL identifies target Form by Name + ScopeType + ScopeName | **Replay-verified** |
-| Generated SQL contains generic Variables/FormID handling | **Replay-verified observation; not variable-specific proof** |
-| Output=View → visible temporary page | **Unverified / unresolved in EXP-016-R2** |
-| EXP-016-R2 DOM input reporting View checked / Save unchecked | **Observed DOM state only; semantic application state unresolved** |
-| EXP-016-R2 Script form license state | **Unverified** |
-| Two independent Script Generate executions in EXP-016-R2 | **Unverified; SQL only documented as captured twice** |
-| Pseudo Code Persistent Variables category | **Observed UI surface; Generate unresolved** |
-| Specific Form-variable serialization | **Unverified** |
-| Runtime variable-value persistence | **Unverified** |
-| Reusable Form-variable lifecycle recipe | **Unverified** |
-| Storage provenance / DB durability / cache eviction | **Unverified** |
-| Strong backend/session-independent persistence | **Unverified** |
+| Environment fingerprint / User-scope workflow | **observed** |
+| BuildFromScratch Form creation | **replay-verified** |
+| Static/Edit/Button component procedures | **replay-verified** |
+| Caption + explicit unload | **replay-verified** |
+| Description + explicit unload | **replay-verified** |
+| Description + ordinary close/reopen | **replay-verified** |
+| Description + new Designer recovery | **replay-verified at UI-recovery level** |
+| Caption + ordinary close/reopen | **observed** |
+| Explicit Form-variable creation through Details → Variables | **observed** |
+| Persistent=True variable immediately visible after Save | **observed only** |
+| Persistent=True variable absent after close/reopen | **observed negative; serialization unknown** |
+| FormSync Script generation for exact selected User-scoped Form | **replay-verified** |
+| Tested FormSync Source-workflow script derives from Forms-definition metadata | **observed/replay-supported** |
+| FormSync may script selected custom objects from Source or Target configuration | **documented product behavior; target variants not experimentally generalized** |
+| Specific Form variable serialized into generated representation | **unverified** |
+| FormSync Output=View → visible Form/temporary display page in 2026.09.08 target | **unverified** |
+| EXP-017 target exact identity via accessibility/snapshot | **observed** |
+| EXP-017 target exact identity via required fully rendered evidence | **blocked / not established** |
+| EXP-017 visible View activation | **not tested** |
+| EXP-017 View/Generate behavior | **not tested** |
+| EXP-017 tooltip result | **observed negative for tested cells/layout only; worker-reported visual evidence** |
+| EXP-017 horizontal-scrollbar result | **observed negative for inspected containers/layout only; worker-reported visual evidence** |
+| Form-variable persistence recipe | **not promoted** |
