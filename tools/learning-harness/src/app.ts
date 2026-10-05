@@ -92,6 +92,7 @@ export async function liveController(app: App, currentRun: () => string | null):
     noResponseGraceMs: config.opencode.noResponseGraceSeconds * 1000,
     maxSnapshotRefFailures: config.opencode.maxSnapshotRefFailures,
     maxRepeatedBrowserReads: config.opencode.maxRepeatedBrowserReads,
+    maxRepeatedShellCalls: config.opencode.maxRepeatedShellCalls,
     log: app.log,
     restartOwned: async () => {
       if (!config.opencode.manageBackend) return false;

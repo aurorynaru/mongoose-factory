@@ -27,6 +27,7 @@
     "noResponseGraceSeconds": 120,
     "maxSnapshotRefFailures": 6,
     "maxRepeatedBrowserReads": 6,
+    "maxRepeatedShellCalls": 6,
     "autoRecoverInspectionLoops": true,
     "manageBackend": true,
     "autoRestartOnFailure": true

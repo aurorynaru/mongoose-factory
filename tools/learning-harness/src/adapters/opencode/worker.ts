@@ -2,7 +2,8 @@ import type { LogSink } from "../../util/log.js";
 import { opencodeMessageId } from "../../util/ids.js";
 import type { Presence, WorkerPort, WorkerResult } from "../types.js";
 import { OpenCodeClient, OpenCodeHttpError, type OcMessage } from "./client.js";
-import { inspectionLoop, repeatedBrowserReads } from "./inspection-loop.js";
+import { inspectionLoop, repeatedBrowserReads, repeatedShellCalls } from "./inspection-loop.js";
+import { taskScope } from "./task-scope.js";
 
 export interface OpenCodeWorkerOptions {
   client: OpenCodeClient;
@@ -12,6 +13,7 @@ export interface OpenCodeWorkerOptions {
   noResponseGraceMs: number;
   maxSnapshotRefFailures?: number;
   maxRepeatedBrowserReads?: number;
+  maxRepeatedShellCalls?: number;
   log: LogSink;
   /** Restarts only the harness-owned backend (via the fixed PowerShell script). */
   restartOwned?: () => Promise<boolean>;
@@ -26,6 +28,8 @@ export function transcriptOf(msgs: OcMessage[]): string {
     .map((m) => {
       const body = m.parts
         .map((p) => {
+          if (p.type === "compaction") return `[${p.auto ? "automatic" : "manual"} compaction]`;
+          if (p.type === "text" && p.synthetic) return "[synthetic continuation]";
           if (p.type === "text" && p.text && !p.synthetic) return p.text;
           if (p.type === "tool") {
             const input = p.state?.input ? JSON.stringify(p.state.input).slice(0, 300) : "";
@@ -35,7 +39,7 @@ export function transcriptOf(msgs: OcMessage[]): string {
         })
         .filter(Boolean)
         .join("\n");
-      return `### ${m.info.role} ${m.info.id}\n${body}`;
+      return `### ${m.info.role} ${m.info.id}${m.info.summary ? " (compaction summary; not a verified report)" : ""}\n${body}`;
     })
     .join("\n\n");
 }
@@ -129,17 +133,25 @@ export class OpenCodeWorker implements WorkerPort {
           lastRetryMsg = st.message;
           this.o.log.log("warn", "worker.provider_retry", { sessionId, attempt: st.attempt, message: st.message });
         }
-        if (st.type !== "idle" && ((this.o.maxSnapshotRefFailures ?? 6) > 0 || (this.o.maxRepeatedBrowserReads ?? 6) > 0)) {
+        if (st.type !== "idle" && ((this.o.maxSnapshotRefFailures ?? 6) > 0 || (this.o.maxRepeatedBrowserReads ?? 6) > 0 || (this.o.maxRepeatedShellCalls ?? 6) > 0)) {
           let msgs = (await this.o.client.listMessages(sessionId, 64)) ?? [];
-          let replies = msgs.filter((m) => m.info.role === "assistant" && m.info.parentID === messageId);
+          // The root and compaction chain can be older than the bounded tail.
+          let scope = taskScope(msgs, messageId);
+          if (!scope.found) {
+            msgs = (await this.o.client.listMessages(sessionId)) ?? [];
+            scope = taskScope(msgs, messageId);
+          }
+          let replies = scope.replies;
           const detect = (history: OcMessage[]) => inspectionLoop(history, this.o.maxSnapshotRefFailures ?? 6)
-            ?? repeatedBrowserReads(history, this.o.maxRepeatedBrowserReads ?? 6);
-          let detail = detect(replies);
+            ?? repeatedBrowserReads(history, this.o.maxRepeatedBrowserReads ?? 6)
+            ?? repeatedShellCalls(history, this.o.maxRepeatedShellCalls ?? 6);
+          let detail = scope.superseded ? null : detect(replies);
           if (detail) {
             // Preserve the whole bounded task, and recheck for recovery/in-flight tools.
             msgs = (await this.o.client.listMessages(sessionId)) ?? msgs;
-            replies = msgs.filter((m) => m.info.role === "assistant" && m.info.parentID === messageId);
-            detail = detect(replies);
+            scope = taskScope(msgs, messageId);
+            replies = scope.replies;
+            detail = scope.superseded ? null : detect(replies);
           }
           if (detail && !opts.shouldStop()) {
             // Recheck activity before interrupting: the task could have finished during inspection.
@@ -156,11 +168,10 @@ export class OpenCodeWorker implements WorkerPort {
                 }
               }
               this.o.log.log("warn", "worker.inspection_loop", { sessionId, messageId, detail, aborted });
-              const user = msgs.find((m) => m.info.id === messageId);
               return {
                 status: "stalled", detail, aborted,
-                text: replies.flatMap((r) => r.parts.filter((p) => p.type === "text" && !p.synthetic).map((p) => p.text ?? "")).filter(Boolean).join("\n\n"),
-                transcript: transcriptOf(user ? [user, ...replies] : replies),
+                text: replies.filter((r) => !r.info.summary).flatMap((r) => r.parts.filter((p) => p.type === "text" && !p.synthetic).map((p) => p.text ?? "")).filter(Boolean).join("\n\n"),
+                transcript: transcriptOf(scope.history),
                 assistantMessageIds: replies.map((r) => r.info.id),
               };
             }
@@ -168,17 +179,16 @@ export class OpenCodeWorker implements WorkerPort {
         }
         if (st.type === "idle") {
           const msgs = (await this.o.client.listMessages(sessionId)) ?? [];
-          const userIdx = msgs.findIndex((m) => m.info.id === messageId);
-          const replies = msgs.filter((m) => m.info.role === "assistant" && m.info.parentID === messageId);
-          const last = replies[replies.length - 1];
-          if (userIdx >= 0 && last && (last.info.time.completed || last.info.error)) {
-            const scope = [msgs[userIdx], ...replies];
-            const transcript = transcriptOf(scope);
-            const text = replies
-              .map((r) => r.parts.filter((p) => p.type === "text" && p.text && !p.synthetic).map((p) => p.text).join("\n"))
-              .filter(Boolean)
-              .join("\n\n");
-            const ids = replies.map((r) => r.info.id);
+          const scope = taskScope(msgs, messageId);
+          const replies = scope.replies;
+          const last = scope.terminal;
+          const transcript = transcriptOf(scope.history);
+          const text = replies.filter((r) => !r.info.summary)
+            .map((r) => r.parts.filter((p) => p.type === "text" && p.text && !p.synthetic).map((p) => p.text).join("\n"))
+            .filter(Boolean)
+            .join("\n\n");
+          const ids = replies.map((r) => r.info.id);
+          if (scope.found && last) {
             if (last.info.error) {
               const err = last.info.error;
               return { status: "failed", error: `${err.name ?? "Error"}: ${err.data?.message ?? JSON.stringify(err).slice(0, 300)}`, text, transcript, assistantMessageIds: ids };
@@ -187,11 +197,11 @@ export class OpenCodeWorker implements WorkerPort {
             const tokens = replies.reduce((a, r) => a + (r.info.tokens?.input ?? 0) + (r.info.tokens?.output ?? 0), 0);
             return { status: "completed", text, transcript, assistantMessageIds: ids, touchedFiles: touchedFilesOf(replies), cost, tokens };
           }
-          if (userIdx < 0 && Date.now() - start > this.o.noResponseGraceMs) {
+          if (!scope.found && Date.now() - start > this.o.noResponseGraceMs) {
             return { status: "failed", error: "submitted message not present in session", text: "", transcript: "", assistantMessageIds: [] };
           }
-          if (userIdx >= 0 && !last && Date.now() - start > this.o.noResponseGraceMs) {
-            return { status: "failed", error: "session idle but no assistant reply to the task", text: "", transcript: transcriptOf([msgs[userIdx]]), assistantMessageIds: [] };
+          if (scope.found && !last && Date.now() - start > this.o.noResponseGraceMs) {
+            return { status: "failed", error: "session idle but no terminal assistant reply to the task (including automatic compaction continuations)", text, transcript, assistantMessageIds: ids };
           }
         }
       } catch (e) {

@@ -85,6 +85,9 @@ Recovery and context:
 - A worker failure/interrupt may leave partial changes. Inspect current state and
   existing evidence before retrying any mutation. A fresh worker session changes
   conversation history only; it does not restore login or reset browser state/limits.
+- Repeated shell commands are also monitored. Do not replay commands or authorize
+  module installation as a workaround; a printed "done" is not a verified result.
+  Automatic compaction summaries are context only, not verified worker reports.
 - Keep tasks small and preserve concise checkpoints. Use NEW_OPENCODE_SESSION when
   context growth/repeated context errors make continuation unreliable, with the
   required handoff including current browser state in observed_facts. Do not use

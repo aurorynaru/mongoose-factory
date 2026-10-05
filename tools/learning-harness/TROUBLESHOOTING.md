@@ -97,6 +97,20 @@ contents from the top page can fail or return nothing; retrying the same script
 does not establish the target's absence. Use current frame-aware accessibility
 refs and honor any no-JavaScript restriction instead.
 
+A third check detects six identical completed `bash`, `shell`, or `powershell`
+calls with identical results, including empty output. Changed commands/results,
+missing output, other tools, and pending/running calls prevent detection. A command
+printing "done" does not prove OCR or module loading succeeded. Do not replay it
+or install modules as recovery; inspect the allowed postcondition and report the
+blocker. Shell calls may already have changed files or application state.
+
+Automatic OpenCode compaction can move replies under new user message IDs. The
+harness follows the automatic compaction/summary/synthetic-continuation chain to
+retain tool calls, partial output, final reports, and errors. A finished summary
+is not task completion and is not included as verified worker report text. Manual
+prompts/compaction end tracking ownership. An interrupted continuation is forwarded
+as a task failure on `resume`; the original task is not resubmitted.
+
 Partial text and the tool transcript are saved under `data/runs/<run>/`. After
 an interrupt confirmed idle, the failure counts against the normal failure budget.
 By default the first loop in a run is forwarded to the coordinator automatically
@@ -114,12 +128,14 @@ permission/question answer is performed.
 
 `opencode.maxSnapshotRefFailures` in `harness.config.json` defaults to `6`; allowed
 values are `0` through `24`, with `0` disabling this monitor. Polling uses a bounded
-64-message tail; full task history is fetched when a loop is suspected or the task
-finishes. The monitor applies only while a harness controller is running.
+64-message tail; full task history is fetched when the original message/compaction
+chain is outside that tail, a loop is suspected, or the task finishes. The monitor
+applies only while a harness controller is running.
 
 `opencode.maxRepeatedBrowserReads` has the same range and default, independently
-controlling identical-result monitoring. Set both thresholds to `0` to disable
-both checks. `opencode.autoRecoverInspectionLoops` defaults to `true`; set it to
+controlling identical-result monitoring. `opencode.maxRepeatedShellCalls` has the
+same range/default and controls shell monitoring. Set all three thresholds to `0`
+to disable loop monitoring. `opencode.autoRecoverInspectionLoops` defaults to `true`; set it to
 `false` for manual review on the first loop. Exact repetition detection is a
 heuristic: a legitimate poll can return an unchanged value repeatedly. Use a
 bounded wait or choose an appropriate threshold for such workflows. Varied

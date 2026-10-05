@@ -1,6 +1,28 @@
 import type { OcMessage } from "./client.js";
 import { createHash } from "node:crypto";
 
+/** Observe finished shell calls; never execute/replay commands as recovery. */
+export function repeatedShellCalls(replies: OcMessage[], maxCalls: number): string | null {
+  if (maxCalls <= 0) return null;
+  const tools = replies.flatMap((m) => m.parts.filter((p) => p.type === "tool"));
+  if (tools.some((p) => p.state?.status === "running" || p.state?.status === "pending")) return null;
+  let fingerprint = "";
+  let repeats = 0;
+  let name = "";
+  for (const p of tools.slice(-24)) {
+    if (!/^(?:bash|shell|powershell)$/.test(p.tool ?? "") || p.state?.status !== "completed" || p.state.output === undefined) {
+      fingerprint = ""; repeats = 0; continue;
+    }
+    const current = createHash("sha256").update(JSON.stringify([p.tool, p.state.input, p.state.output])).digest("hex");
+    repeats = current === fingerprint ? repeats + 1 : 1;
+    fingerprint = current;
+    name = p.tool!;
+  }
+  return repeats >= maxCalls
+    ? `${name} repeated identical arguments and returned the same result ${repeats} consecutive times without another tool or a changed result. Successful execution does not prove progress. Do not replay the command: it may already have had side effects. Preserve partial results, verify the intended postcondition through one permitted inspection, and report a blocker if unresolved. Do not install modules or expand recovery beyond the experiment's scope.`
+    : null;
+}
+
 /** Exact repetition only; different results or intervening tools are progress. */
 export function repeatedBrowserReads(replies: OcMessage[], maxReads: number): string | null {
   if (maxReads <= 0) return null;

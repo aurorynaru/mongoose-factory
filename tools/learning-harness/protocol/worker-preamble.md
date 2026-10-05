@@ -34,6 +34,11 @@ Browser recovery:
   Inspect the correct visible frame with fresh accessibility refs; top-page access
   to an iframe may be unavailable. Respect a no-JavaScript restriction even for
   read-only evaluation. Stop after one corrected inspection if still unclear.
+- The same stop rule applies to repeated shell commands returning identical output.
+  A printed "done" is not proof that a module loaded or OCR succeeded. Do not keep
+  retrying commands, install modules, or expand task scope to repair tooling. Check
+  the permitted postcondition once, then report the blocker. Commands interrupted
+  after partial execution must not be replayed without checking their effects.
 
 Context and evidence:
 - Keep reads/output bounded; save long results under this experiment's evidence

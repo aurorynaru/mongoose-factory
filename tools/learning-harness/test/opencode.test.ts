@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { OpenCodeClient } from "../src/adapters/opencode/client.js";
 import { OpenCodeWorker } from "../src/adapters/opencode/worker.js";
 import { MemoryLogger } from "../src/util/log.js";
-import { inspectionLoop, repeatedBrowserReads } from "../src/adapters/opencode/inspection-loop.js";
+import { inspectionLoop, repeatedBrowserReads, repeatedShellCalls } from "../src/adapters/opencode/inspection-loop.js";
 import type { OcMessage } from "../src/adapters/opencode/client.js";
 import { ConfigSchema } from "../src/config.js";
 
@@ -73,7 +73,7 @@ beforeEach(async () => {
 });
 afterEach(() => new Promise<void>((r) => server.close(() => r())));
 
-const worker = (password?: string, model: { providerID: string; modelID: string } | null = null, maxSnapshotRefFailures?: number, maxRepeatedBrowserReads?: number) =>
+const worker = (password?: string, model: { providerID: string; modelID: string } | null = null, maxSnapshotRefFailures?: number, maxRepeatedBrowserReads?: number, maxRepeatedShellCalls?: number) =>
   new OpenCodeWorker({
     client: new OpenCodeClient({ baseUrl: base, directory: "C:\\AI\\mongoose-factory", password, timeoutMs: 2000 }),
     agent: null,
@@ -82,6 +82,7 @@ const worker = (password?: string, model: { providerID: string; modelID: string 
     noResponseGraceMs: 300,
     maxSnapshotRefFailures,
     maxRepeatedBrowserReads,
+    maxRepeatedShellCalls,
     log: new MemoryLogger(),
   });
 
@@ -117,6 +118,53 @@ function evaluateReads(parentID: string, count = 6, output = '### Result\n"none"
     } }],
   }));
 }
+
+function shellCalls(parentID: string, count = 6): OcMessage[] {
+  return Array.from({ length: count }, (_, n) => ({
+    info: { id: `msg_shell${n}`, sessionID: "ses_mock1", role: "assistant" as const, parentID, time: { created: 2, completed: 3 }, finish: "tool-calls" },
+    parts: [{ id: `prt_shell${n}`, type: "tool", tool: "bash", state: {
+      status: "completed", input: { command: "pwsh -NoProfile -Command 'Add-Module missing.dll'; Write-Output done" }, output: "done\r\n",
+    } }],
+  }));
+}
+
+function compaction(): OcMessage[] {
+  return [
+    { info: { id: "msg_compact", sessionID: "ses_mock1", role: "user", time: { created: 4 } }, parts: [{ id: "p_compact", type: "compaction", auto: true }] },
+    { info: { id: "msg_summary", sessionID: "ses_mock1", role: "assistant", parentID: "msg_compact", time: { created: 5, completed: 6 }, summary: true, finish: "stop" }, parts: [{ id: "p_summary", type: "text", text: "SUMMARY IS NOT A VERIFIED WORKER REPORT" }] },
+    { info: { id: "msg_continue", sessionID: "ses_mock1", role: "user", time: { created: 7 } }, parts: [{ id: "p_continue", type: "text", synthetic: true, text: "Continue if you have next steps" }] },
+  ];
+}
+
+describe("repeated shell-call guard", () => {
+  it("detects identical completed commands, including empty output; supports disabling", () => {
+    expect(repeatedShellCalls(shellCalls("msg_task"), 6)).toContain("Do not replay the command");
+    expect(repeatedShellCalls(shellCalls("msg_task", 5), 6)).toBeNull();
+    expect(repeatedShellCalls(shellCalls("msg_task"), 0)).toBeNull();
+    const empty = shellCalls("msg_task");
+    for (const m of empty) m.parts[0].state!.output = "";
+    expect(repeatedShellCalls(empty, 6)).toContain("6 consecutive times");
+    expect(ConfigSchema.parse({}).opencode.maxRepeatedShellCalls).toBe(6);
+    expect(ConfigSchema.safeParse({ opencode: { maxRepeatedShellCalls: 25 } }).success).toBe(false);
+  });
+
+  it("resets on changed commands/results or other tools and defers in-flight calls", () => {
+    const changed = shellCalls("msg_task");
+    changed.at(-1)!.parts[0].state!.input = { command: "different command" };
+    expect(repeatedShellCalls(changed, 6)).toBeNull();
+    changed.at(-1)!.parts[0].state!.input = shellCalls("msg_task")[0].parts[0].state!.input;
+    changed.at(-1)!.parts[0].state!.output = "different result";
+    expect(repeatedShellCalls(changed, 6)).toBeNull();
+    expect(repeatedShellCalls([...shellCalls("msg_task"), snapshot("msg_fresh", "msg_task"), ...shellCalls("msg_task", 1)], 6)).toBeNull();
+    delete changed.at(-1)!.parts[0].state!.output;
+    expect(repeatedShellCalls(changed, 6)).toBeNull();
+    for (const status of ["running", "pending"]) {
+      const active = shellCalls("msg_task", 1)[0];
+      active.parts[0].state!.status = status;
+      expect(repeatedShellCalls([...shellCalls("msg_task"), active], 6)).toBeNull();
+    }
+  });
+});
 
 describe("repeated browser-result guard", () => {
   it("detects successful repeated evaluate calls returning none or any other identical result", () => {
@@ -194,6 +242,82 @@ describe("snapshot missing-reference guard", () => {
 });
 
 describe("OpenCode worker adapter (mock server)", () => {
+  it("tracks long compacted tasks, interrupts their shell loop, and preserves both sides of compaction", async () => {
+    const w = worker(undefined, null, 0, 0); // Shell guard is independent.
+    const mid = w.newMessageId();
+    await w.submit("ses_mock1", mid, "Place exactly one Button; do not Save or replay placement");
+    st.messages.push(assistant("msg_prefix", mid, "Button placed; baseline unresolved", { finish: "tool-calls" }), ...compaction(), ...shellCalls("msg_continue", 70));
+    st.status = { ses_mock1: { type: "busy" }, ses_other: { type: "busy" } };
+    const r = await w.waitForCompletion("ses_mock1", mid, { timeoutMs: 5000, shouldStop: () => false });
+    expect(r).toMatchObject({ status: "stalled", aborted: true });
+    if (r.status === "stalled") {
+      expect(r.detail).toContain("bash repeated identical arguments");
+      expect(r.text).toContain("Button placed; baseline unresolved");
+      expect(r.text).not.toContain("SUMMARY IS NOT");
+      expect(r.transcript).toContain("[automatic compaction]");
+      expect(r.transcript).toContain("[tool bash completed]");
+      expect(r.assistantMessageIds).toContain("msg_summary");
+      expect(r.assistantMessageIds).toContain("msg_shell69");
+    }
+    expect(st.requests.filter((q) => q.url.includes("prompt_async"))).toHaveLength(1);
+    expect(st.requests.filter((q) => q.url.includes("/abort"))).toHaveLength(1);
+    expect(st.status.ses_other).toEqual({ type: "busy" });
+  });
+
+  it("returns a continuation abort as failure instead of declaring the pre-compaction prefix completed", async () => {
+    const w = worker();
+    const mid = w.newMessageId();
+    await w.submit("ses_mock1", mid, "bounded task");
+    st.messages.push(assistant("msg_prefix", mid, "Button already placed", { finish: "tool-calls" }), ...compaction(), assistant("msg_aborted", "msg_continue", "Partial baseline", { error: { name: "MessageAbortedError" } }));
+    const r = await w.waitForCompletion("ses_mock1", mid, { timeoutMs: 5000, shouldStop: () => false });
+    expect(r.status).toBe("failed");
+    if (r.status === "failed") {
+      expect(r.error).toContain("MessageAbortedError");
+      expect(r.text).toContain("Button already placed");
+      expect(r.text).toContain("Partial baseline");
+      expect(r.text).not.toContain("SUMMARY IS NOT");
+      expect(r.transcript).toContain("msg_continue");
+    }
+    expect(st.requests.filter((q) => q.method === "POST")).toHaveLength(1);
+  });
+
+  it("includes continuation reports, touched files, and usage on successful completion", async () => {
+    const w = worker();
+    const mid = w.newMessageId();
+    await w.submit("ses_mock1", mid, "bounded task");
+    st.messages.push(assistant("msg_prefix", mid, "Partial observations", { finish: "tool-calls" }), ...compaction(), assistant("msg_final", "msg_continue", "HARNESS REPORT final", { finish: "stop" }));
+    st.messages.at(-1)!.parts[1].state = { status: "completed", input: { filePath: "evidence/EXP-020/final.png" } };
+    const r = await w.waitForCompletion("ses_mock1", mid, { timeoutMs: 5000, shouldStop: () => false });
+    expect(r).toMatchObject({ status: "completed", cost: 0.02, tokens: 30, touchedFiles: ["evidence/EXP-004/28-new.png", "evidence/EXP-020/final.png"] });
+    if (r.status === "completed") {
+      expect(r.text).toContain("HARNESS REPORT final");
+      expect(r.text).not.toContain("SUMMARY IS NOT");
+    }
+  });
+
+  it("does not treat a summary, a pending continuation, or pre-compaction tool calls as completion", async () => {
+    for (const cutoff of [1, 2, 3]) {
+      st.messages = [];
+      const w = worker();
+      const mid = w.newMessageId();
+      await w.submit("ses_mock1", mid, "bounded task");
+      st.messages.push(assistant("msg_prefix", mid, "Partial observations", { finish: "tool-calls" }), ...compaction().slice(0, cutoff));
+      const r = await w.waitForCompletion("ses_mock1", mid, { timeoutMs: 5000, shouldStop: () => false });
+      expect(r.status).toBe("failed");
+      if (r.status === "failed") expect(r.text).toContain("Partial observations");
+    }
+  });
+
+  it("never interrupts a later manual task when the old task loop remains in history", async () => {
+    const w = worker();
+    const mid = w.newMessageId();
+    await w.submit("ses_mock1", mid, "old task");
+    st.messages.push(...shellCalls(mid), { info: { id: "msg_manual", sessionID: "ses_mock1", role: "user", time: { created: 10 } }, parts: [{ type: "text", text: "manual task" }] }, ...shellCalls("msg_manual"));
+    st.status = { ses_mock1: { type: "busy" } };
+    expect((await w.waitForCompletion("ses_mock1", mid, { timeoutMs: 50, shouldStop: () => false })).status).toBe("timeout");
+    expect(st.requests.some((q) => q.url.includes("/abort"))).toBe(false);
+  });
+
   it("interrupts repeated successful evaluate results without replaying the script", async () => {
     const w = worker(undefined, null, 0); // The new guard works independently of stale-reference checks.
     const mid = w.newMessageId();
@@ -231,7 +355,7 @@ describe("OpenCode worker adapter (mock server)", () => {
   });
 
   it("can disable monitoring without changing normal busy-task handling", async () => {
-    const w = worker(undefined, null, 0, 0);
+    const w = worker(undefined, null, 0, 0, 0);
     const mid = w.newMessageId();
     await w.submit("ses_mock1", mid, "task");
     st.messages.push(...staleLoop(mid));

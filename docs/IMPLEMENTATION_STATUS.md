@@ -1,5 +1,48 @@
 # Implementation status
 
+## Compaction task tracking and repeated shell calls (2026-10-05)
+
+- Implemented in isolated branch `fix/compaction-shell-loop-guard` while EXP-020
+  remained operator-paused. No live browser actions, prompts, aborts, backend/model
+  restarts, or experiment/evidence modifications were performed by the fix.
+- New pure task-scope helper follows the original worker request through OpenCode's
+  automatic compaction, completed summary, and synthetic continuation messages.
+  Real user requests/manual compaction end ownership. Both busy loop monitoring
+  and idle completion use the same scope; fetch full history if the root/chain is
+  outside the 64-message tail. Continuation errors are failures, and summaries or
+  unfinished continuations cannot complete a task. Summary text stays labeled in
+  transcripts as context and is excluded from worker report output.
+- New `opencode.maxRepeatedShellCalls` defaults to 6 (0 disables; maximum 24).
+  Detect identical completed bash/shell/powershell arguments and output, including
+  empty output. Changed arguments/results, other tools, missing output, and any
+  in-flight task tool prevent interruption. Detection observes finished commands;
+  it never replays them or certifies their postconditions. Reuses the existing
+  one-per-run coordinator recovery allowance, failure limits, and idle confirmation.
+- Updated config/example/app wiring, worker/client types, controller recovery text,
+  AGENTS, worker/coordinator protocols, README, and troubleshooting. No dependencies,
+  token settings, schema migrations, or additional recovery allowances were added.
+- Added 11 regression tests covering shell repetition/reset/in-flight handling,
+  long compacted tasks, abort reconciliation, continued reports/files/usage, incomplete
+  summaries/continuations, repeated compactions, manual task boundaries, and foreign
+  sessions. Existing controller recovery and disable-monitoring tests also pass.
+- Validation: typecheck/build passed; focused adapter/scope/controller suites passed
+  89 tests; full suite passed 198 tests with 5 skipped (11 files passed, 1 skipped).
+  All 17 offline dry-run scenarios and `git diff --check` passed.
+- Read-only validation against actual EXP-020 T6 recovered 159 assistant replies
+  across one automatic compaction and detected the recorded shell loop at reply 26.
+  Adapter reconciliation with a GET-only HTTP wrapper returned MessageAbortedError,
+  preserving 532 characters of partial output and a 57,340-character transcript.
+  No live operation was resumed; the pending task and paused run remain intact.
+- Limits: exact repetition is a heuristic and can stop legitimate unchanged polls;
+  vary legitimate work or use bounded wait tools/tune thresholds. Different commands,
+  changing results, child sessions, and unrecognized future compaction formats are
+  outside detection. Full-history fetches can be large. The existing polling/abort
+  race remains; no guard guarantees model compliance or successful recovery.
+- QA should check that resuming interrupted T6 forwards failure/partial observations
+  to the coordinator, which must inspect the already-placed Button before any
+  further mutation. Live recovery, Mongoose persistence, model replacement, and
+  automatic permission/question answers were intentionally deferred.
+
 ## Repeated-result detection and bounded automatic recovery (2026-10-05)
 
 - Implemented in an isolated `feat/bounded-browser-loop-recovery` worktree while

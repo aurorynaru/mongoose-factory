@@ -281,7 +281,10 @@ The harness also monitors busy worker tasks for the observed stale-ref loop:
 `opencode.maxSnapshotRefFailures` defaults to `6` failures for the same target in
 the last 24 tool calls (`0` disables). `opencode.maxRepeatedBrowserReads` also
 defaults to `6`: consecutive snapshot/evaluate calls with identical arguments and
-results, including successful "none" results (`0` disables this check). Pending
+results, including successful "none" results (`0` disables this check).
+`opencode.maxRepeatedShellCalls` defaults to `6` identical completed `bash`, `shell`,
+or `powershell` calls and results (`0` disables). Printed "done" or empty output
+does not establish progress; commands are never replayed as recovery. Pending
 or running tools defer interruption. It requests an interrupt of that session
 and preserves partial output. With `opencode.autoRecoverInspectionLoops: true`
 (default), the first confirmed interruption per run is forwarded to the coordinator
@@ -291,6 +294,13 @@ The original task/script is not automatically replayed, and the browser is not
 restarted. `status` shows the one-per-run recovery allowance used. See
 [Troubleshooting](TROUBLESHOOTING.md#repeated-browser-snapshots--stale-references)
 for the detection boundaries and safe recovery.
+
+Worker tracking follows automatic compaction → summary → synthetic continuation
+messages as part of the original task. Summaries stay in the saved transcript as
+context, and are excluded from worker report text. A continuation error/interruption
+is a task failure; an unfinished continuation or a summary alone is not completion.
+Real user prompts and manual compaction end ownership, so the harness will not
+interrupt a later manual task because of an earlier loop.
 
 | Option | Use when |
 |---|---|

@@ -129,6 +129,12 @@ capture one fresh page snapshot without a target and use only its current
 references. Verify that the inspected tab/panel is selected and visible; hidden
 panels or URL text alone do not establish the active Form and scope.
 
+Repeated identical shell commands are also a loop. A printed "done" does not prove
+that a module loaded or OCR succeeded. Do not install modules or expand scope to
+repair tooling during an experiment. Preserve partial results, inspect the allowed
+postcondition once, then report a blocker. Never replay an interrupted command
+without checking whether it already had effects.
+
 Do not alternate the same failing reads indefinitely. If one fresh inspection
 and one corrected attempt still cannot establish the required state, preserve
 the observations and report the blocker. Never reload, navigate, save, or

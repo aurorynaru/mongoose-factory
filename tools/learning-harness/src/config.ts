@@ -49,6 +49,8 @@ export const ConfigSchema = z.object({
       maxSnapshotRefFailures: z.number().int().min(0).max(24).default(6),
       /** Consecutive identical snapshot/evaluate arguments and results; 0 disables. */
       maxRepeatedBrowserReads: z.number().int().min(0).max(24).default(6),
+      /** Consecutive identical completed shell arguments/results; 0 disables. */
+      maxRepeatedShellCalls: z.number().int().min(0).max(24).default(6),
       /** Permit one coordinator-directed inspection recovery per run, within normal budgets. */
       autoRecoverInspectionLoops: z.boolean().default(true),
       manageBackend: z.boolean().default(true),
