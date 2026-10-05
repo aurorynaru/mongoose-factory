@@ -2,6 +2,7 @@ import type { LogSink } from "../../util/log.js";
 import { opencodeMessageId } from "../../util/ids.js";
 import type { Presence, WorkerPort, WorkerResult } from "../types.js";
 import { OpenCodeClient, OpenCodeHttpError, type OcMessage } from "./client.js";
+import { inspectionLoop } from "./inspection-loop.js";
 
 export interface OpenCodeWorkerOptions {
   client: OpenCodeClient;
@@ -9,6 +10,7 @@ export interface OpenCodeWorkerOptions {
   model: { providerID: string; modelID: string } | null;
   pollIntervalMs: number;
   noResponseGraceMs: number;
+  maxSnapshotRefFailures?: number;
   log: LogSink;
   /** Restarts only the harness-owned backend (via the fixed PowerShell script). */
   restartOwned?: () => Promise<boolean>;
@@ -125,6 +127,41 @@ export class OpenCodeWorker implements WorkerPort {
         if (st.type === "retry" && st.message !== lastRetryMsg) {
           lastRetryMsg = st.message;
           this.o.log.log("warn", "worker.provider_retry", { sessionId, attempt: st.attempt, message: st.message });
+        }
+        if (st.type !== "idle" && (this.o.maxSnapshotRefFailures ?? 6) > 0) {
+          let msgs = (await this.o.client.listMessages(sessionId, 64)) ?? [];
+          let replies = msgs.filter((m) => m.info.role === "assistant" && m.info.parentID === messageId);
+          let detail = inspectionLoop(replies, this.o.maxSnapshotRefFailures ?? 6);
+          if (detail) {
+            // Preserve the whole bounded task, and recheck for recovery/in-flight tools.
+            msgs = (await this.o.client.listMessages(sessionId)) ?? msgs;
+            replies = msgs.filter((m) => m.info.role === "assistant" && m.info.parentID === messageId);
+            detail = inspectionLoop(replies, this.o.maxSnapshotRefFailures ?? 6);
+          }
+          if (detail && !opts.shouldStop()) {
+            // Recheck activity before interrupting: the task could have finished during inspection.
+            const current = (await this.o.client.status())?.[sessionId];
+            if (current && current.type !== "idle") {
+              let aborted = false;
+              if (await this.abort(sessionId)) {
+                for (let check = 0; check < 5; check++) {
+                  try {
+                    const after = (await this.o.client.status())?.[sessionId];
+                    if (!after || after.type === "idle") { aborted = true; break; }
+                  } catch { break; } // Do not assume an acknowledgement means the worker stopped.
+                  await this.sleep(this.o.pollIntervalMs);
+                }
+              }
+              this.o.log.log("warn", "worker.inspection_loop", { sessionId, messageId, detail, aborted });
+              const user = msgs.find((m) => m.info.id === messageId);
+              return {
+                status: "stalled", detail, aborted,
+                text: replies.flatMap((r) => r.parts.filter((p) => p.type === "text" && !p.synthetic).map((p) => p.text ?? "")).filter(Boolean).join("\n\n"),
+                transcript: transcriptOf(user ? [user, ...replies] : replies),
+                assistantMessageIds: replies.map((r) => r.info.id),
+              };
+            }
+          }
         }
         if (st.type === "idle") {
           const msgs = (await this.o.client.listMessages(sessionId)) ?? [];

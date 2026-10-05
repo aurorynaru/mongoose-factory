@@ -20,6 +20,12 @@ Please:
    small, safe, observable check. Do not propose work outside the stated experiment.
 4. If you cannot answer without a screenshot or file, say which one; the controller
    cannot upload files and will pause for the operator.
+5. For decisive evidence, state the claim it supports and its limits. Filenames,
+   heading-only crops, hidden contents, and generic SQL table handling do not prove
+   particular saved variable definitions. Do not treat uninspected images as seen.
+6. Keep recovery checks bounded: one fresh snapshot and one corrected inspection,
+   then a blocker if still unclear. Respect remaining task limits and forbidden
+   lifecycle operations; a fresh session does not reset the browser or restore login.
 End your reply with one fenced ```json block:
 {"protocol": "mongoose-harness/specialist-v1", "consultation_id": "<from header>",
  "verdict": "supports | objects | insufficient_evidence | informational",

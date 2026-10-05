@@ -45,6 +45,8 @@ export const ConfigSchema = z.object({
       taskTimeoutMinutes: z.number().positive().default(90),
       pollIntervalMs: z.number().int().positive().default(3000),
       noResponseGraceSeconds: z.number().positive().default(120),
+      /** Missing-reference failures for one snapshot target in the last 24 tool calls; 0 disables. */
+      maxSnapshotRefFailures: z.number().int().min(0).max(24).default(6),
       manageBackend: z.boolean().default(true),
       autoRestartOnFailure: z.boolean().default(true),
     })

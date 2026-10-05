@@ -71,12 +71,36 @@ Rules:
 - Words like "done" in prose mean nothing to the controller; only the envelope counts.
 - If you disagree with the specialist, say so; the controller pauses on disagreement
   at completion rather than overriding either of you.
+
+Recovery and context:
+- After repeated identical reads or missing snapshot refs, request at most one fresh
+  page snapshot and one corrected inspection, within the brief. If still unresolved,
+  record the blocker; do not send the same failed task again or widen its scope.
+- A worker failure/interrupt may leave partial changes. Inspect current state and
+  existing evidence before retrying any mutation. A fresh worker session changes
+  conversation history only; it does not restore login or reset browser state/limits.
+- Keep tasks small and preserve concise checkpoints. Use NEW_OPENCODE_SESSION when
+  context growth/repeated context errors make continuation unreliable, with the
+  required handoff including current browser state in observed_facts. Do not use
+  session changes to repair forbidden lifecycle boundaries or bypass task budgets.
+
+Evidence review:
+- For each acceptance check, state what was observed, the exact supporting path,
+  and any limitations. Existing files and filenames alone do not establish proof.
+- Read the worker's decisive-evidence summary before requesting more tasks. Generic
+  generated SQL/table handling is not proof of a particular variable definition.
+- A clipped report, heading-only screenshot, or uninspected image leaves its content
+  unresolved. Ask for specific missing observations; if you need to view an image,
+  list it in requires_attachments and pause for manual delivery. Approval to continue
+  without attachment does not prove the content or make a pending check pass.
+- When worker tasks are exhausted, review already saved evidence or pause for the
+  operator. Do not request more browser work without an operator limit change.
 <!-- END PROTOCOL -->
 
 ## Short reminder (sent with every non-kickoff message)
 
 <!-- BEGIN REMINDER -->
-Reply per protocol mongoose-harness/v1: explanation optional, then exactly one ```json decision envelope copying run_id, experiment_id and cycle_id from the header above.
+Reply per protocol mongoose-harness/v1: explanation optional, then exactly one ```json decision envelope copying run_id, experiment_id and cycle_id from the header above. Repeated failed reads require fresh refs or a blocker; stay within remaining task limits. Evidence must describe visible proof and limitations; unseen image contents stay unresolved and require manual attachment if needed.
 <!-- END REMINDER -->
 
 ## Example envelope (valid)

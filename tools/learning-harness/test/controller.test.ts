@@ -228,6 +228,40 @@ describe("ambiguous browser submission timeout", () => {
 });
 
 describe("OpenCode task failure", () => {
+  it("saves an interrupted inspection loop, pauses, and forwards its failure only on resume", async () => {
+    const h = track(harness({ coordinator: [SEND("inspect target"), { envelope: { action: "PAUSE", reason: "reviewed blocker" } }], worker: [
+      { status: "stalled", aborted: true, detail: "Repeated missing snapshot refs", text: "Scope unresolved", transcript: "snapshot ERROR: Ref stale not found" },
+    ] }));
+    let run = await h.controller.run(h.controller.createRun(fixtureBrief()).id);
+    expect(run.pause_reason).toBe("worker_inspection_loop");
+    expect(run.state).toBe("COORDINATOR_PENDING");
+    expect(run.counters.totalFailures).toBe(1);
+    expect(h.chat.submissions).toHaveLength(1);
+    expect(readFileSync(join(h.runsDir, run.id, "worker/T1-transcript.md"), "utf8")).toContain("Ref stale");
+    run = await h.controller.run(run.id);
+    expect(h.worker.submissions).toHaveLength(1);
+    const failure = h.chat.submissions.find((s) => kindOf(s.text) === "WORKER_FAILURE")!;
+    expect(failure.text).toContain("Repeated missing snapshot refs");
+    expect(failure.text).toContain("Scope unresolved");
+    expect(run.pause_reason).toBe("coordinator_requested_pause");
+  });
+
+  it("retains the accepted operation and evidence when interruption could not be confirmed", async () => {
+    const h = track(harness({ coordinator: [SEND("inspect target"), { envelope: { action: "PAUSE", reason: "reviewed" } }], worker: [
+      { status: "stalled", aborted: false, detail: "Snapshot loop", transcript: "partial inspection transcript" }, WORKER_OK,
+    ] }));
+    let run = await h.controller.run(h.controller.createRun(fixtureBrief()).id);
+    expect(run.pause_reason).toBe("worker_inspection_loop");
+    expect(run.pause_detail).toContain("could not confirm");
+    expect(run.state).toBe("WORKER_PENDING");
+    expect(h.store.getOp(run.pending_op_id!)!.status).toBe("accepted");
+    expect(run.counters.totalFailures).toBe(0);
+    expect(readFileSync(join(h.runsDir, run.id, "worker/T1-loop-transcript.md"), "utf8")).toContain("partial inspection");
+    run = await h.controller.run(run.id);
+    expect(h.worker.submissions).toHaveLength(1);
+    expect(run.pause_reason).toBe("coordinator_requested_pause");
+  });
+
   it("reports failure to the coordinator, counts it, and resets the streak after a success", async () => {
     const h = track(harness({ coordinator: [SEND("t1"), SEND("t2"), { envelope: { action: "PAUSE", reason: "p" } }], worker: [{ status: "failed", error: "APIError: boom" }, WORKER_OK] }));
     const run = await h.controller.run(h.controller.createRun(fixtureBrief()).id);

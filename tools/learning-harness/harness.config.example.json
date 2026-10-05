@@ -25,6 +25,7 @@
     "taskTimeoutMinutes": 90,
     "pollIntervalMs": 3000,
     "noResponseGraceSeconds": 120,
+    "maxSnapshotRefFailures": 6,
     "manageBackend": true,
     "autoRestartOnFailure": true
   },

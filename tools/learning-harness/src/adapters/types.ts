@@ -63,6 +63,7 @@ export type Presence = "present" | "absent" | "unknown";
 export type WorkerResult =
   | { status: "completed"; text: string; transcript: string; assistantMessageIds: string[]; touchedFiles: string[]; cost: number; tokens: number }
   | { status: "failed"; error: string; text: string; transcript: string; assistantMessageIds: string[] }
+  | { status: "stalled"; detail: string; aborted: boolean; text: string; transcript: string; assistantMessageIds: string[] }
   | { status: "blocked"; kind: "permission" | "question"; detail: string }
   | { status: "timeout"; detail: string }
   | { status: "interrupted" }

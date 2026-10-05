@@ -124,6 +124,33 @@ Prefer:
 
 Do not rely on fixed coordinates unless there is no semantic alternative.
 
+Browser snapshot references are temporary. After a "Ref ... not found" error,
+capture one fresh page snapshot without a target and use only its current
+references. Verify that the inspected tab/panel is selected and visible; hidden
+panels or URL text alone do not establish the active Form and scope.
+
+Do not alternate the same failing reads indefinitely. If one fresh inspection
+and one corrected attempt still cannot establish the required state, preserve
+the observations and report the blocker. Never reload, navigate, save, or
+close/reopen as a recovery step unless the current experiment permits it.
+
+## Context and handoffs
+
+Keep browser reads focused on the information needed for the current step.
+Avoid repeatedly dumping the entire DOM, large tool outputs, or old transcripts.
+Write long results to the experiment's evidence directory and report the exact
+relevant observations with their file paths; omissions must be explicit.
+
+Before a context failure or session change, preserve a concise checkpoint:
+completed steps, target identity and scope, current visible browser state,
+evidence paths, unresolved questions, and the next permitted action. Ask the
+coordinator for a fresh worker session when needed. A fresh session does not
+reset the browser, restore authentication, or expand experiment limits.
+
+An output cap applies per response. Split large edits into small operations.
+If output ends prematurely, inspect the actual result before retrying; do not
+claim that an unfinished tool call or report completed successfully.
+
 ## Evidence capture
 
 For learning experiments, preserve screenshots for important visual states.
@@ -152,6 +179,17 @@ evidence/EXP-002/reopened-form.png
 Do not take screenshots for every trivial click.
 
 The experiment Markdown should reference the relevant evidence files.
+
+Inspect saved screenshots for usable content before citing them. Ensure important
+captures show the relevant identity, scope, control labels, and result. A crop
+showing only a heading is insufficient to establish its hidden contents.
+
+For each decisive screenshot, record a short explanation of what is visibly
+shown and what remains unproven. Filenames, successful tool calls, and generated
+output headers alone are not proof of the requested postcondition. Summarize
+decisive evidence in the final worker report before the task ends. If a reviewer
+needs to see an image, provide its exact path and request manual attachment;
+do not replace visual inspection with a guessed description.
 
 ## Recovery
 

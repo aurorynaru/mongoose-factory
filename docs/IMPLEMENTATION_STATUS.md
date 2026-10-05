@@ -1,4 +1,57 @@
-# Shadow testing implementation
+# Implementation status
+
+## Learning recovery, context, and evidence guardrails (2026-10-05)
+
+- Implemented on `feat/learning-recovery-guardrails` after EXP-016-R2 completed
+  blocked. Expanded the existing AGENTS and worker/coordinator/specialist,
+  autopilot, and proposal instructions; no separate generic skill collection.
+- Browser recovery now requires one fresh untargeted snapshot and one corrected
+  inspection, then a blocker if unresolved. Hidden panels, stale refs, and URL
+  text alone cannot establish active target/scope. Existing experiment boundaries
+  still govern navigation, lifecycle operations, and mutations.
+- Context guidance requires focused reads, explicit omissions, small edits, and
+  concise checkpoints/handoffs. New conversations do not reset browser state,
+  restore authentication, or reset budgets. No model/token settings changed.
+- Evidence guidance requires useful screenshot framing, visible proof plus
+  limitations per decisive capture, and a concise final worker report. Cropped,
+  unseen, or generic SQL contents cannot establish specific variable definitions.
+  Manual attachment/reask recovery is documented; automatic upload is deferred.
+- Added a narrowly scoped worker monitor using existing OpenCode HTTP endpoints:
+  poll a 64-message tail while busy, inspect only assistant replies to the current
+  task, and detect six missing-reference failures for one snapshot target among
+  the last 24 tool calls. Fresh untargeted snapshots or another successful tool
+  reset the count. It defers when polled history contains pending/running tools.
+  `opencode.maxSnapshotRefFailures` defaults to 6 (0 disables; maximum 24).
+- On detection, fetch full task history, recheck recovery/activity, request an
+  interrupt of only that worker session, and verify idle before reporting it as
+  stopped. The controller saves partial text/transcript, counts a confirmed
+  interruption as a failure, and pauses with `worker_inspection_loop`. Resume
+  forwards that failure to the coordinator without resubmitting the old task.
+  If idle cannot be confirmed, retain the accepted operation and pause for manual
+  interruption. No backend/browser restart or question/permission approval.
+- Important runtime files: `src/adapters/opencode/inspection-loop.ts`, `worker.ts`,
+  `client.ts`, `src/controller/machine.ts`, adapter types, config, and app wiring
+  under `tools/learning-harness/`. No dependencies added or database migrations.
+- Added 10 meaningful tests in OpenCode/controller suites: alternating refs with
+  successful cell reads, thresholds, reset/recovery, bounded history, unrelated
+  errors/previous tasks, in-flight tools, disabling, scoped interruption, idle
+  confirmation failure, saved partial output, and resume without duplicate tasks.
+- Validation: `npm run typecheck` and `npm run build` passed; focused suites
+  passed 67 tests before the final disable test; full `npm test` passed 177 tests
+  with 5 skipped (10 files passed, 1 skipped). All 17 offline `harness dry-run`
+  scenarios and `git diff --check` passed.
+- Read-only validation against installed OpenCode 1.18.34 confirmed message-tail
+  `limit` and boolean abort response schemas. The archived EXP-016-R2 T1 trace
+  (`msg_10b93153e001PfNaMHHroDttL7`, 458 assistant replies) triggered the pure
+  detector at assistant reply 116 / tool call 118. Tail ordering matched the last
+  64 messages of the full archive. No archived or live proposed actions executed.
+- Limits: this is not a general progress detector; valid but repetitive reads,
+  other error types, and child-session loops are not automatically stopped. It
+  operates only while the harness controller runs. API polling cannot eliminate
+  races between observing tool state and requesting interruption. Context/evidence
+  instructions guide models but cannot guarantee compliance or factual correctness.
+  QA should observe the guard and evidence framing in the next permitted run;
+  production Mongoose operations and automatic task-budget changes remain deferred.
 
 ## Context-budget settings update — 2026-10-04
 

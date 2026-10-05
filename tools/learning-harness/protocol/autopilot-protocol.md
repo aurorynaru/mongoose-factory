@@ -15,6 +15,10 @@ relevant sections (lessons, negative findings, rules, open questions); remove no
 true; mark anything not proven by evidence as (unverified). Keep observations, candidate procedures,
 replay-verified results and unresolved items clearly distinguished. Do not invent details. Output only
 the document in Markdown (no JSON block), at most ~2500 words.
+Preserve exact evidence paths and the limits of each decisive observation. A saved
+image's filename, heading-only crop, or uninspected contents do not prove a claim.
+Carry forward browser recovery lessons and concise checkpoints; do not turn a
+blocked lifecycle test or generic generated SQL into a verified variable procedure.
 <!-- END CONTEXT_UPDATE -->
 
 ## 2. Specialist: confirm the findings
@@ -27,6 +31,9 @@ and the record of the experiment that just finished in an Infor Mongoose learnin
    overstated or misleading, with the correction.
 2. Do not "correct" environment observations that only browser evidence can establish; mark them as such.
 3. List important missing points.
+4. Distinguish visible evidence from the worker's interpretation; unresolved or
+   cropped/unseen content stays unresolved. Generic SQL handling does not prove
+   a particular variable definition. Name any image needed for manual inspection.
 Separate OBSERVATIONS from your ASSUMPTIONS. List only specific issues; do not rewrite the document.
 End with one ```json block:
 {"protocol": "mongoose-harness/specialist-v1", "consultation_id": "<from header>",
@@ -52,6 +59,9 @@ controlled learning experiment below. It will start automatically only if you su
 2. Is the scope narrow and safe (one new capability, FX_ artifacts only, User scope)?
 3. Are the acceptance checks observable and sufficient to prove the postcondition?
 4. Is anything technically wrong for Mongoose 2026.x Web Designer?
+5. Can the worker capture and summarize decisive identity/scope/result evidence
+   within its task budget, with safe recovery bounded to a fresh snapshot and one
+   corrected inspection? No recovery may cross a forbidden lifecycle boundary.
 Separate OBSERVATIONS from ASSUMPTIONS. End with one ```json block:
 {"protocol": "mongoose-harness/specialist-v1", "consultation_id": "<from header>",
  "verdict": "supports | objects | insufficient_evidence | informational", "required_verifications": []}

@@ -808,6 +808,18 @@ export class Controller {
           return this.pause(run, `worker_blocked:${res.kind}`, `OpenCode is waiting for a ${res.kind} answer: ${res.detail}. Answer it with 'opencode attach ${this.d.config.opencode.baseUrl}' (session ${op.session_id}), then run 'harness resume'. The harness never auto-approves.`);
         case "timeout":
           return this.pause(run, "worker_timeout", `${res.detail}. The task may still be running in session ${op.session_id}. 'harness resume' keeps waiting; 'harness stop --abort-worker' aborts it.`);
+        case "stalled": {
+          if (!res.aborted) {
+            const transcript = this.write(run.id, `worker/${op.purpose}-loop-transcript.md`, res.transcript);
+            store.updateOp(op.id, { meta: { ...op.meta, inspectionLoop: res.detail, transcript } });
+            return this.pause(run, "worker_inspection_loop", `${res.detail} The harness could not confirm the worker stopped. Attach with 'opencode attach ${this.d.config.opencode.baseUrl} -s ${op.session_id}', interrupt it and wait until idle, then 'harness resume'. Partial transcript: ${transcript}.`);
+          }
+          store.tx(() => {
+            store.updateOp(op.id, { status: "failed", error: res.detail });
+            this.workerFailed(run, op, `Browser inspection loop interrupted: ${res.detail}`, res.text, res.transcript, res.assistantMessageIds);
+          });
+          return this.pause(store.getRun(run.id)!, "worker_inspection_loop", `${res.detail} The worker session was interrupted and confirmed idle; its partial output is saved. Review it, then 'harness resume' forwards the failure to the coordinator without resubmitting the old task. The browser and backend were not restarted.`);
+        }
         case "backend_unavailable": {
           await this.tryRestart(run, res.detail);
           const cur = store.getRun(run.id)!;

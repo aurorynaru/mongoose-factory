@@ -271,6 +271,20 @@ tells Tab 1 that the worker must create it. Turn the automatic request off with
 
 ### Resume options (each approves only the specific pending item)
 
+Worker tasks include browser recovery, bounded context, and evidence review rules
+from `protocol/worker-preamble.md`; coordinator and specialist protocols use the
+same rules. Missing snapshot refs require a fresh untargeted snapshot and one
+corrected inspection, then a blocker if unresolved. Decisive screenshots must be
+summarized with visible proof and limitations; unseen/cropped content stays unknown.
+
+The harness also monitors busy worker tasks for the observed stale-ref loop:
+`opencode.maxSnapshotRefFailures` defaults to `6` failures for the same target in
+the last 24 tool calls (`0` disables). It requests an interrupt of that session,
+preserves partial output, and pauses as `worker_inspection_loop`. It does not
+restart the browser or automatically retry the task. See
+[Troubleshooting](TROUBLESHOOTING.md#repeated-browser-snapshots--stale-references)
+for the detection boundaries and safe recovery.
+
 | Option | Use when |
 |---|---|
 | `--approve scope` | Paused `review:scope` and the flagged instruction is actually within scope |

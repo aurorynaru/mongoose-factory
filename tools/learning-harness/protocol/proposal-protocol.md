@@ -19,6 +19,10 @@ Guidelines:
   explicitly propose a different, documented approach as a new experiment.
 - Acceptance checks must be observable postconditions that the worker can prove with screenshots or
   captured responses under evidence/<EXP-ID>/.
+- Plan decisive evidence early: captures must visibly identify the target/scope and result,
+  with a concise worker summary of proof and limitations. Do not depend on hidden image content,
+  filenames, or a final report that cannot fit the task/output budget. Keep browser recovery to
+  one fresh snapshot and one corrected inspection, then a blocker; never widen scope to recover.
 - prohibited_patterns are case-insensitive regular expressions; a worker instruction matching one is
   held for operator review. Use them for topics this experiment must not touch.
 

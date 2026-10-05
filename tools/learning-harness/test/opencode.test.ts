@@ -4,6 +4,9 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { OpenCodeClient } from "../src/adapters/opencode/client.js";
 import { OpenCodeWorker } from "../src/adapters/opencode/worker.js";
 import { MemoryLogger } from "../src/util/log.js";
+import { inspectionLoop } from "../src/adapters/opencode/inspection-loop.js";
+import type { OcMessage } from "../src/adapters/opencode/client.js";
+import { ConfigSchema } from "../src/config.js";
 
 /**
  * Mock of the OpenCode 1.18.33 endpoints the worker uses. Response shapes follow the OpenAPI
@@ -16,6 +19,7 @@ interface MockState {
   questions: Array<Record<string, unknown>>;
   requests: Array<{ method: string; url: string; auth?: string; body?: unknown }>;
   failPrompt?: boolean;
+  abortMode?: "idle" | "busy" | "reject";
 }
 
 let server: Server;
@@ -54,7 +58,14 @@ beforeEach(async () => {
       const hit = st.messages.find((x) => x.info.id === m![2]);
       return hit ? send(res, 200, hit) : send(res, 404, { name: "NotFoundError", data: { message: `Message not found: ${m[2]}` } });
     }
-    if (/^\/session\/ses_\w+\/message$/.test(p)) return send(res, 200, st.messages);
+    if (/^\/session\/ses_\w+\/message$/.test(p)) {
+      const limit = url.searchParams.get("limit");
+      return send(res, 200, limit ? st.messages.slice(-Number(limit)) : st.messages);
+    }
+    if (/^\/session\/ses_\w+\/abort$/.test(p) && req.method === "POST") {
+      if (!st.abortMode || st.abortMode === "idle") delete st.status[p.split("/")[2]];
+      return send(res, 200, st.abortMode !== "reject");
+    }
     send(res, 404, { name: "NotFound" });
   });
   await new Promise<void>((r) => server.listen(0, "127.0.0.1", r));
@@ -62,13 +73,14 @@ beforeEach(async () => {
 });
 afterEach(() => new Promise<void>((r) => server.close(() => r())));
 
-const worker = (password?: string, model: { providerID: string; modelID: string } | null = null) =>
+const worker = (password?: string, model: { providerID: string; modelID: string } | null = null, maxSnapshotRefFailures?: number) =>
   new OpenCodeWorker({
     client: new OpenCodeClient({ baseUrl: base, directory: "C:\\AI\\mongoose-factory", password, timeoutMs: 2000 }),
     agent: null,
     model,
     pollIntervalMs: 10,
     noResponseGraceMs: 300,
+    maxSnapshotRefFailures,
     log: new MemoryLogger(),
   });
 
@@ -80,7 +92,110 @@ const assistant = (id: string, parentID: string, text: string, extra: Record<str
   ],
 });
 
+const snapshot = (id: string, parentID: string, target?: string, missing = false): OcMessage => ({
+  info: { id, sessionID: "ses_mock1", role: "assistant", parentID, time: { created: 2, completed: 3 } },
+  parts: [{ id: `prt_${id}`, type: "tool", tool: "playwright_browser_snapshot", state: {
+    status: missing ? "error" : "completed", input: target ? { depth: 4, target } : {},
+    ...(missing ? { error: `### Error\nError: Ref ${target} not found in the current page snapshot. Try capturing new snapshot.` } : {}),
+  } }],
+});
+
+function staleLoop(parentID: string, cycles = 6): OcMessage[] {
+  return Array.from({ length: cycles }, (_, n) => [
+    snapshot(`msg_${n}a`, parentID, "f3e1307"),
+    snapshot(`msg_${n}b`, parentID, "f3e1309", true),
+    snapshot(`msg_${n}c`, parentID, "f3e1311", true),
+  ]).flat();
+}
+
+describe("snapshot missing-reference guard", () => {
+  it("detects alternating failed refs despite a successful cell-only read", () => {
+    expect(inspectionLoop(staleLoop("msg_task"), 6)).toContain("f3e1309");
+    expect(inspectionLoop(staleLoop("msg_task", 5), 6)).toBeNull();
+    expect(inspectionLoop(staleLoop("msg_task"), 0)).toBeNull();
+    expect(ConfigSchema.parse({}).opencode.maxSnapshotRefFailures).toBe(6);
+    expect(ConfigSchema.safeParse({ opencode: { maxSnapshotRefFailures: 25 } }).success).toBe(false);
+  });
+
+  it("permits recovery via a fresh snapshot or a different successful tool", () => {
+    const old = staleLoop("msg_task");
+    expect(inspectionLoop([...old, snapshot("msg_fresh", "msg_task"), ...staleLoop("msg_task", 1)], 6)).toBeNull();
+    expect(inspectionLoop([...old, assistant("msg_read", "msg_task", "read state"), ...staleLoop("msg_task", 1)], 6)).toBeNull();
+  });
+
+  it("does not stop repeated valid reads, unrelated errors, or stale failures outside the window", () => {
+    const valid = Array.from({ length: 25 }, (_, n) => snapshot(`msg_v${n}`, "msg_task", "valid"));
+    expect(inspectionLoop(valid, 6)).toBeNull();
+    expect(inspectionLoop([...staleLoop("msg_task"), ...valid], 6)).toBeNull();
+    const errors = staleLoop("msg_task");
+    for (const m of errors) if (m.parts[0].state?.status === "error") m.parts[0].state.error = "Timeout waiting for page";
+    expect(inspectionLoop(errors, 6)).toBeNull();
+  });
+
+  it("defers interruption whenever a tool is still running or pending", () => {
+    for (const status of ["running", "pending"]) {
+      const active = snapshot("msg_active", "msg_task");
+      active.parts[0].tool = "playwright_browser_click";
+      active.parts[0].state!.status = status;
+      expect(inspectionLoop([...staleLoop("msg_task"), active], 6)).toBeNull();
+    }
+  });
+});
+
 describe("OpenCode worker adapter (mock server)", () => {
+  it("interrupts only the looping task's session, confirms idle, and retains partial output", async () => {
+    const w = worker();
+    const mid = w.newMessageId();
+    await w.submit("ses_mock1", mid, "bounded task");
+    st.messages.push(assistant("msg_note", mid, "Target scope still unresolved"), ...staleLoop(mid));
+    st.status = { ses_mock1: { type: "busy" }, ses_other: { type: "busy" } };
+    const r = await w.waitForCompletion("ses_mock1", mid, { timeoutMs: 5000, shouldStop: () => false });
+    expect(r).toMatchObject({ status: "stalled", aborted: true });
+    if (r.status === "stalled") {
+      expect(r.text).toContain("Target scope still unresolved");
+      expect(r.transcript).toContain("bounded task");
+      expect(r.transcript).toContain("Ref f3e1309 not found");
+    }
+    expect(st.requests.filter((q) => q.url.includes("/abort"))).toHaveLength(1);
+    expect(st.requests.find((q) => q.url.includes("/abort"))!.url).toContain("/session/ses_mock1/abort");
+    expect(st.requests.some((q) => q.url.includes("limit=64"))).toBe(true);
+    expect(st.requests.filter((q) => q.url.includes("prompt_async"))).toHaveLength(1);
+    expect(st.status.ses_other).toEqual({ type: "busy" });
+  });
+
+  it("can disable monitoring without changing normal busy-task handling", async () => {
+    const w = worker(undefined, null, 0);
+    const mid = w.newMessageId();
+    await w.submit("ses_mock1", mid, "task");
+    st.messages.push(...staleLoop(mid));
+    st.status = { ses_mock1: { type: "busy" } };
+    expect((await w.waitForCompletion("ses_mock1", mid, { timeoutMs: 50, shouldStop: () => false })).status).toBe("timeout");
+    expect(st.requests.some((q) => q.url.includes("/message?limit=") || q.url.includes("/abort"))).toBe(false);
+  });
+
+  it("does not label a rejected abort or an acknowledgement with a still-busy worker as stopped", async () => {
+    for (const mode of ["reject", "busy"] as const) {
+      st.messages = [];
+      const w = worker();
+      const mid = w.newMessageId();
+      await w.submit("ses_mock1", mid, "task");
+      st.messages.push(...staleLoop(mid));
+      st.status = { ses_mock1: { type: "busy" } };
+      st.abortMode = mode;
+      expect(await w.waitForCompletion("ses_mock1", mid, { timeoutMs: 5000, shouldStop: () => false })).toMatchObject({ status: "stalled", aborted: false });
+    }
+  });
+
+  it("ignores a previous task's loop while waiting for a new task", async () => {
+    const w = worker();
+    const mid = w.newMessageId();
+    await w.submit("ses_mock1", mid, "new task");
+    st.messages.push(...staleLoop("msg_oldtask"));
+    st.status = { ses_mock1: { type: "busy" } };
+    expect((await w.waitForCompletion("ses_mock1", mid, { timeoutMs: 50, shouldStop: () => false })).status).toBe("timeout");
+    expect(st.requests.some((q) => q.url.includes("/abort"))).toBe(false);
+  });
+
   it("creates a session, submits with our messageID and directory, and uses Basic auth user 'opencode'", async () => {
     const w = worker("pw123");
     const sid = await w.createSession("EXP-004 test");

@@ -33,6 +33,7 @@ structured log is `data\runs\<run-id>\events.jsonl`.
 | `duplicate_reply` | The same assistant message would be forwarded twice | Inspect; usually the reply was not regenerated. `--reask` |
 | `worker_blocked:permission` / `worker_blocked:question` | OpenCode waits for a permission/question answer | `opencode attach http://127.0.0.1:4096`, answer it, then `resume` |
 | `worker_timeout` | OpenCode task still running after `opencode.taskTimeoutMinutes` | `resume` keeps waiting; `stop --abort-worker` aborts |
+| `worker_inspection_loop` | Repeated missing snapshot refs; partial output saved | Read the pause detail. If interrupted and confirmed idle, `resume` forwards the failure to the coordinator. Otherwise attach, interrupt, wait until idle, then `resume` |
 | `backend_unavailable` | OpenCode backend not reachable and could not be restarted | `backend health`, check `data\backend\logs\`, `backend restart`, `resume` |
 | `controller_error` | Unexpected exception (details in the log) | Fix the cause; `resume` reconciles before sending anything |
 
@@ -70,6 +71,76 @@ update the selector → `npm run build` → `npm run test:browser` (fixture) →
   `opencode attach` you use; the harness sends Basic auth with user `opencode`.
 - A Playwright MCP failure inside OpenCode (Mongoose browser won't open) is usually the profile
   `C:\AI\mongoose-playwright-profile` being in use by another OpenCode's browser. Close it.
+
+## Repeated browser snapshots / stale references
+
+`Ref ... not found in the current page snapshot` means that reference cannot be
+used with the current snapshot. The worker should capture one fresh page snapshot
+without `target`, use the resulting refs, and make one corrected inspection. If
+the required identity/scope remains ambiguous, it must finish with a blocker.
+A successful cell-only read does not prove that neighboring refs remain valid.
+
+The harness monitors the current task's busy-session history. By default, six
+missing-reference failures for the same snapshot target among the last 24 tool
+calls trigger an interrupt of that session and `worker_inspection_loop`. A fresh
+untargeted snapshot or another successful tool resets the count. Repeated valid
+reads, other error types, previous tasks, and histories with pending/running tools
+do not trigger it. This is a fallback for the observed stale-ref loop, not a
+general detector of every unproductive action.
+
+Partial text and the tool transcript are saved under `data/runs/<run>/`. After
+an interrupt confirmed idle, the failure counts against the normal failure budget
+and the coordinator receives it only when you run `resume`; the old task is not
+automatically resubmitted. If interruption fails or idle cannot be confirmed,
+the operation remains pending. Follow the attach command in the pause detail,
+press Esc, wait until idle, then resume. No backend/browser restart or automatic
+permission/question answer is performed.
+
+`opencode.maxSnapshotRefFailures` in `harness.config.json` defaults to `6`; allowed
+values are `0` through `24`, with `0` disabling this monitor. Polling uses a bounded
+64-message tail; full task history is fetched when a loop is suspected or the task
+finishes. The monitor applies only while a harness controller is running.
+
+## Context growth and interrupted output
+
+The output limit is per model response; context capacity must fit both input and
+output. OpenCode compaction helps manage history, but it does not guarantee a
+particular prompt fits. Strata's `fit_max_tokens` can reduce the output allowance;
+it does not truncate an oversized prompt or raise the configured output limit.
+
+Keep browser reads focused, save large permitted results to evidence files, and
+checkpoint the target/scope, visible state, completed steps, evidence paths,
+blockers, and next permitted action. The coordinator can use
+`NEW_OPENCODE_SESSION` with that handoff. It does not restart the browser, restore
+authentication, or reset task limits. Inspect any partially completed edit/action
+before retrying; split large edits rather than assuming truncated calls succeeded.
+
+## Requested images and incomplete evidence
+
+The controller does not upload images. Before attaching an image, check that it
+shows the claimed result and necessary identity/scope. A heading-only crop or a
+filename is insufficient. Worker reports should summarize each decisive capture's
+visible contents and limitations before the task ends; omitted/cropped/hidden
+contents remain unresolved.
+
+For `review:attachment_required`, open the registered coordinator chat (Tab 1),
+attach the exact requested files, and use:
+
+```powershell
+.\harness.ps1 resume --reask "The requested evidence was attached manually. Review visible contents against the acceptance checks; do not infer hidden content."
+```
+
+This requests a fresh decision. `resume --approve attachment` allows routing the
+existing decision without the attachments and does not prove any acceptance
+check. If that decision is `PAUSE`, it still pauses. For a specialist attachment
+request, provide the files in the specialist conversation (Tab 2) and follow the
+specific pause detail. Neither model sees files merely because they exist locally.
+
+When worker tasks are exhausted, review existing evidence or pause for operator
+review. Increasing `maxWorkerTasks` is an explicit operator choice, not a way for
+the coordinator to evade the brief. After two blocked experiments, review both
+completion records before re-enabling autopilot; address the blocker or choose
+a different scoped experiment instead of blindly repeating it.
 
 ## Recovery after a crash / power loss
 

@@ -86,8 +86,8 @@ export class OpenCodeClient {
   getMessage(sessionId: string, messageId: string) {
     return this.req<OcMessage>("GET", `/session/${encodeURIComponent(sessionId)}/message/${encodeURIComponent(messageId)}`, undefined, { allow404: true });
   }
-  listMessages(sessionId: string) {
-    return this.req<OcMessage[]>("GET", `/session/${encodeURIComponent(sessionId)}/message`, undefined, { timeoutMs: 60_000 });
+  listMessages(sessionId: string, limit?: number) {
+    return this.req<OcMessage[]>("GET", `/session/${encodeURIComponent(sessionId)}/message${limit === undefined ? "" : `?limit=${limit}`}`, undefined, { timeoutMs: 60_000 });
   }
   status() {
     return this.req<Record<string, OcStatus>>("GET", "/session/status");
