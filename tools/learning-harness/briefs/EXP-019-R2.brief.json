@@ -3,7 +3,7 @@
   "title": "EXP-019-R2 — Clean Replay: Fresh-Dialog Classic Wizard Selection",
   "record_path": "experiments/EXP-019-R2-clean-replay-fresh-dialog-classic-wizard-selection.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Independently replay the EXP-019 visible wizard-selection procedure in User scope. First establish that the inherited EXP-019 first Build-from-Scratch wizard page is still unfilled and has produced no artifact; cancel that page through its visible Cancel control as preflight cleanup only. Then open one fresh Form Wizard Selection dialog through Web Designer New Form Definition, select Category Classic through its rendered dropdown option, select Build from Scratch / Plain form without defined components through its rendered dropdown option, type nothing into either dropdown, and submit the selection dialog exactly once. Verify that the first Build-from-Scratch wizard page appears again, then stop before entering a name, advancing, finishing, saving, or creating any artifact. A successful replay may promote only the complete visible selection sequence to replay_verified; it must not attribute success to reopening, Category selection, Wizard reselection, or any internal mechanism individually. Saving, close/reopen persistence, and artifact durability are not applicable because this replay intentionally stops before Form creation.",
   "scope": {
     "in_scope": [
