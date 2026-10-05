@@ -1,0 +1,123 @@
+{
+  "experiment_id": "EXP-020",
+  "title": "EXP-020 — Button Caption Recovery Across Ordinary Close/Reopen",
+  "record_path": "experiments/EXP-020-button-caption-recovery-across-ordinary-close-reop.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Create one new User-scoped classic BuildFromScratch Form `FX_ButtonCaptionLab01` using the replay-verified fresh-dialog visible wizard-selection sequence, add exactly one Button component using the verified component procedure, set only that Button's Caption to `Button Caption Close Only`, perform exactly one ordinary Designer Save to a clean state, close the Form through its ordinary Form-tab close control without any explicit unload, then reopen the same User-scoped Form through the supported Form-menu recent-forms path and verify that the same Button component is present with the exact Caption recovered unchanged. Treat this only as recovery across the tested ordinary close/reopen boundary; do not infer physical Forms-database durability, cache eviction, unload behavior, or any internal persistence mechanism.",
+  "scope": {
+    "in_scope": [
+      "Read EXP-019-R2 and the verified basic-form/component recipes before mutation",
+      "Read-only preflight confirming a live Designer session in User scope and no authentication recovery is required",
+      "If the inherited EXP-019-R2 first Build-from-Scratch page is still open, verify Name is empty and cancel it only as preflight cleanup through its visible Cancel flow before starting EXP-020",
+      "Prove `FX_ButtonCaptionLab01` absent before creation using a supported visible inventory/search path",
+      "Create exactly one User-scoped classic BuildFromScratch Form named `FX_ButtonCaptionLab01` using the replay-verified fresh-dialog, untyped Category Classic + Build from Scratch wizard-selection sequence and the verified basic-form creation procedure",
+      "Create exactly one Button component named `FX_CaptionButton` using the verified component procedure",
+      "Capture an untouched Button baseline before changing Caption",
+      "Change only the Button Caption to exactly `Button Caption Close Only`",
+      "Perform exactly one ordinary Designer Save and verify the Designer returns to a clean state",
+      "Close `FX_ButtonCaptionLab01` through its ordinary Form-tab close control",
+      "Reopen exactly `FX_ButtonCaptionLab01` through the supported Designer Form-menu recent-forms path",
+      "Verify Name + ScopeType + ScopeName identify the same User-scoped Form and verify `FX_CaptionButton` has Caption exactly `Button Caption Close Only` after reopen",
+      "Record evidence and write only the EXP-020 experiment record plus `evidence/EXP-020/`"
+    ],
+    "out_of_scope": [
+      "Continuation or replay classification of EXP-018",
+      "Testing why EXP-018 wizard selection failed",
+      "Testing which constituent action in EXP-019/EXP-019-R2 was decisive",
+      "Form Variables or variable serialization",
+      "FormSync or generated definition representations",
+      "Explicit global-Form-object unload or IDO-metadata unload",
+      "User Preference changes",
+      "Events, scripts, IDOs, bindings, portals, runtime behavior, or database inspection",
+      "New Web Designer client-instance recovery",
+      "Regenerate Form",
+      "Physical database durability, cache eviction, commit-boundary, or internal persistence claims",
+      "Changing editing scope, environment, configuration, authentication state, or security"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not create, modify, or delete any non-FX_ Mongoose artifact",
+    "Do not proceed if the session requires Sign In, login, reauthentication, logout, browser restart, or other session recovery after the experiment starts",
+    "Do not type Classic, BuildFromScratch, Build from Scratch, or guessed internal wizard keys into either wizard-selection dropdown",
+    "Do not use hidden controls, JavaScript evaluation, Ext stores/components, synthetic events, internal APIs, direct SQL, or reverse-engineered requests",
+    "Do not create more than one target Form or more than one Button component",
+    "Do not change any Form property other than what the verified creation path requires",
+    "Do not change any Button property after the baseline except Caption",
+    "Do not Save more than once after the Caption mutation",
+    "Do not Regenerate the Form",
+    "Do not invoke any explicit unload operation",
+    "Do not change User Preferences",
+    "Do not use direct URL navigation to reopen the target",
+    "Do not dismiss or bypass unexpected dirty-state, permission, authentication, or conflict prompts",
+    "Do not start any other experiment or modify recipes, environment documentation, AGENTS.md, or prior experiment records"
+  ],
+  "prohibited_patterns": [
+    "\\b(FormSync|Pseudo\\s*Code|generated\\s+SQL)\\b",
+    "\\b(Form Variable|Variables|PersistentVariables)\\b",
+    "\\b(Unload All Global Form Objects|Unload IDO Metadata With Forms)\\b",
+    "\\b(event handler|script|IDO|portal|binding)\\b",
+    "\\b(Sign In|reauthenticate|logout|log in)\\b"
+  ],
+  "related_experiments": [
+    "EXP-003",
+    "EXP-003-R2",
+    "EXP-018",
+    "EXP-019",
+    "EXP-019-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_ButtonCaptionLab01",
+    "artifacts": [
+      "FX_ButtonCaptionLab01",
+      "FX_CaptionButton"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Preflight visibly proves a live User-scope Designer session requiring no authentication recovery; any inherited empty EXP-019-R2 wizard page is visibly cancelled through its normal Cancel flow; no creation dialog remains; and `FX_ButtonCaptionLab01` is proven absent before mutation. Evidence must show the User scope and absence result."
+    },
+    {
+      "id": "AC-2",
+      "description": "Exactly one `FX_ButtonCaptionLab01` is created in User scope through the replay-verified fresh-dialog visible wizard-selection sequence and verified basic-form creation path, with Save Template unchecked; evidence visibly identifies the created Form and User scope and shows it clean."
+    },
+    {
+      "id": "AC-3",
+      "description": "Exactly one Button component named `FX_CaptionButton` is added through the verified component procedure; evidence visibly identifies the target Form and Button and captures the untouched pre-Caption baseline."
+    },
+    {
+      "id": "AC-4",
+      "description": "Only `FX_CaptionButton` Caption changes to exactly `Button Caption Close Only`, followed by exactly one ordinary Designer Save; evidence shows the exact Caption after Save and the Designer returned to a clean state."
+    },
+    {
+      "id": "AC-5",
+      "description": "`FX_ButtonCaptionLab01` is closed through its ordinary Form-tab close control with no unsaved-change or other unexpected prompt, and no explicit unload, preference change, Regenerate, authentication recovery, or session replacement occurs."
+    },
+    {
+      "id": "AC-6",
+      "description": "The target is reopened through the supported Form-menu recent-forms path; decisive evidence identifies the same User-scoped Form by Name + ScopeType + ScopeName and visibly identifies `FX_CaptionButton` with Caption exactly `Button Caption Close Only` after reopen."
+    },
+    {
+      "id": "AC-7",
+      "description": "Post-reopen evidence shows the target Designer state clean and confirms the Button identity and relevant comparison properties match the saved baseline except for the intentionally changed Caption."
+    },
+    {
+      "id": "AC-8",
+      "description": "Final audit proves exactly one case-insensitive `FX_ButtonCaptionLab01` exists, records the exact close/reopen sequence and evidence paths, confirms no prohibited action occurred, confines repository changes to the EXP-020 record plus `evidence/EXP-020/`, and classifies the result no higher than `observed`; it explicitly excludes physical database durability, cache, unload, and internal-mechanism claims."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-020",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261005-213313-uTgv. Rationale: EXP-018 could not reach Form creation because its wizard-selection prerequisite failed. EXP-019 and EXP-019-R2 subsequently established a replay-verified, fully visible fresh-dialog creation prerequisite: open a fresh Form Wizard Selection dialog, select rendered Category Classic and rendered Build from Scratch without typing, and submit once to reach the first Build-from-Scratch page. The next useful small capability is therefore a new experiment—not a continuation of EXP-018—that uses this documented creation approach plus the already replay-verified basic Form/component procedures to determine whether one Button component's Caption survives an ordinary Designer Form-tab close/reopen. This isolates a component-property recovery question that has not yet been established, while avoiding variables, FormSync, unload behavior, and persistence-mechanism claims."
+}
