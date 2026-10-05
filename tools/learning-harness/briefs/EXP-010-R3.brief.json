@@ -1,0 +1,121 @@
+{
+  "experiment_id": "EXP-010-R3",
+  "title": "EXP-010-R3 — Clean Replay: Form Caption Recovery Across Ordinary Close/Reopen",
+  "record_path": "experiments/EXP-010-R3-clean-replay-form-caption-recovery-across-ordinary.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Independently replay the EXP-010 Form-level Caption recovery procedure on one new User-scoped classic BuildFromScratch Form. Starting from an already-live usable Mongoose session, prove the target absent, create exactly one Form, record its untouched Form-property baseline, change only the Form-level Caption to a controlled replay value, perform exactly one ordinary Designer Save to clean, close the Form through its ordinary Form-tab control, reopen it through the supported Designer Form-menu recent-forms path in the same Designer/session context, and verify the Caption and all recorded comparison properties recover unchanged. This experiment concerns only Form-level Caption metadata; it does not test Button/component Caption editing or explain persistence mechanisms.",
+  "scope": {
+    "in_scope": [
+      "Read EXP-010, EXP-010-R2, and the verified basic-form recipe before mutation.",
+      "Read-only preflight proving an already-live usable Web Client/Designer session, User editing scope, and no session-establishment or recovery action is required.",
+      "Prove the new target Form absent before creation using the supported visible Select Form inventory with a case-insensitive Name filter and a positive control.",
+      "Create exactly one User-scoped classic BuildFromScratch Form using the verified basic-form creation procedure with Save Template unchecked.",
+      "Capture the untouched Form-property baseline before Caption mutation, including Name, Caption, Version, Device Type, Form Type, Is Master, ScopeType, and ScopeName as visibly supported.",
+      "Change only the Form-level Caption to exactly `Form Property Caption Close Only Replay 2`.",
+      "Perform exactly one ordinary Designer Save and verify the Designer returns to a clean state.",
+      "Close the target through its ordinary Form-tab close control with no unsaved-change prompt.",
+      "Reopen exactly the target through the supported Designer Form-menu recent-forms path in the same Designer/session context.",
+      "Verify Name + ScopeType + ScopeName identify the same User-scoped Form and that Caption plus every recorded non-Caption comparison property match the saved state.",
+      "Perform a final read-only inventory/repository audit and record evidence under evidence/EXP-010-R3/ plus the EXP-010-R3 experiment record."
+    ],
+    "out_of_scope": [
+      "Button or other component Caption editing, including any continuation or workaround for EXP-020.",
+      "Component creation or modification.",
+      "Form Variables, FormSync, generated definition representations, scripts, events, IDOs, bindings, portals, or runtime behavior.",
+      "Explicit global-Form-object unload or IDO-metadata unload.",
+      "User Preference changes.",
+      "New Web Designer client-instance recovery.",
+      "Regenerate Form.",
+      "Physical database durability, cache eviction, commit-boundary, internal serialization, or causal explanations.",
+      "Testing why EXP-010-R2 required session recovery or why EXP-020's Button Caption editor transformed literal input.",
+      "Any change to prior experiment artifacts, including FX_ButtonCaptionLab01."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not create, modify, or delete any non-FX_ Mongoose artifact.",
+    "Do not modify any prior FX_ artifact, including FX_ButtonCaptionLab01.",
+    "Do not proceed past preflight if the Web Client or Designer requires any session-establishment or recovery action after the experiment begins.",
+    "Do not dismiss or bypass authentication, permission, conflict, or unexpected dirty-state prompts.",
+    "Do not create more than one target Form.",
+    "Do not change any Form property other than the target Form-level Caption after the untouched baseline is captured.",
+    "Do not Save more than once after the Caption mutation.",
+    "Do not Regenerate the Form.",
+    "Do not invoke any explicit unload operation.",
+    "Do not change User Preferences.",
+    "Do not reload the Designer page, replace the Designer session, close/reopen the Designer browser tab, or launch a new Designer instance.",
+    "Do not use direct URL navigation to reopen the target.",
+    "Do not use JavaScript evaluation, hidden controls, Ext internal stores/components, synthetic events, internal APIs, reverse-engineered requests, or direct SQL.",
+    "Do not modify recipes, environment documentation, AGENTS.md, or prior experiment records.",
+    "Do not classify success as proof of physical persistence, cache eviction, database durability, or behavior of Button/component Caption metadata."
+  ],
+  "prohibited_patterns": [
+    "\\b(FormSync|Pseudo\\s*Code|generated\\s+SQL)\\b",
+    "\\b(Unload All Global Form Objects|Unload IDO Metadata With Forms)\\b",
+    "\\b(Regenerate Form|Regenerate)\\b",
+    "\\b(Button|PushButton|FX_CaptionButton|FX_ButtonCaptionLab01)\\b",
+    "\\b(event handler|script|IDO|binding|portal)\\b",
+    "\\b(JavaScript|Ext\\s*(store|component)|direct\\s+SQL|internal\\s+API)\\b",
+    "\\b(new Web Designer|new Designer instance|browser restart)\\b"
+  ],
+  "related_experiments": [
+    "EXP-010",
+    "EXP-010-R2",
+    "EXP-008",
+    "EXP-008-R2",
+    "EXP-019-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_FormPropertyLab13",
+    "artifacts": [
+      "FX_FormPropertyLab13"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Preflight visibly proves an already-live usable Designer/Web Client session in User scope, no session recovery is required, the inherited state does not require modifying any prior artifact, and FX_FormPropertyLab13 is absent under an applied case-insensitive Select Form Name filter with a visible positive control."
+    },
+    {
+      "id": "AC-2",
+      "description": "Exactly one User-scoped classic BuildFromScratch Form FX_FormPropertyLab13 is created with Save Template unchecked and is visibly open and clean; evidence identifies Name and User scope."
+    },
+    {
+      "id": "AC-3",
+      "description": "Before Caption mutation, visible evidence records the untouched target Form baseline: Name, Caption, Version, Device Type, Form Type, Is Master, ScopeType, and ScopeName."
+    },
+    {
+      "id": "AC-4",
+      "description": "Only the Form-level Caption is changed to exactly `Form Property Caption Close Only Replay 2`; exactly one ordinary Designer Save follows; post-Save evidence shows the Designer clean, Caption exact, and every recorded non-Caption baseline property unchanged."
+    },
+    {
+      "id": "AC-5",
+      "description": "FX_FormPropertyLab13 is closed through its ordinary Form-tab close control with no unsaved-change or unexpected prompt and without reload, unload, preference change, session replacement, or new Designer instance."
+    },
+    {
+      "id": "AC-6",
+      "description": "The target is reopened through the supported Designer Form-menu recent-forms path in the same Designer/session context; evidence identifies the same User-scoped Form by Name + ScopeType + ScopeName."
+    },
+    {
+      "id": "AC-7",
+      "description": "Post-reopen visible evidence shows Caption exactly `Form Property Caption Close Only Replay 2`, every recorded comparison property unchanged from AC-3/AC-4, and the Designer clean."
+    },
+    {
+      "id": "AC-8",
+      "description": "Final audit proves exactly one case-insensitive FX_FormPropertyLab13 exists, records the exact Save → ordinary Form-tab close → Form-menu recent-forms reopen sequence, confirms no prohibited action occurred, and confines repository changes to the EXP-010-R3 record plus evidence/EXP-010-R3/. If all prior checks pass, classify the EXP-010 ordinary Form-level Caption close/reopen procedure as replay_verified, bounded to this tested User-scope UI workflow."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-010-R3",
+  "replay_of": "EXP-010",
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261005-215424-QvhT. Rationale: EXP-010 established the Form-level Caption close/reopen procedure as observed, but EXP-010-R2 could not promote it because that run performed prohibited after-start session recovery even though the semantic Form behavior succeeded. A fresh replay is therefore the smallest high-value next experiment: it tests an already-observed procedure rather than working around EXP-020's separate Button-Caption editor blocker. The run must begin only if the Designer/Web Client session is already usable and User scope is visibly established; otherwise it blocks before mutation. Success would provide the missing accepted independent replay for Form-level Caption recovery across the ordinary Form-tab close/recent-forms reopen boundary."
+}
