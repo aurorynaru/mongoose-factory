@@ -92,6 +92,16 @@ Recovery and context:
   context growth/repeated context errors make continuation unreliable, with the
   required handoff including current browser state in observed_facts. Do not use
   session changes to repair forbidden lifecycle boundaries or bypass task budgets.
+- After recurring loops or an interrupted recovery, do not send another attempt
+  into the same looping worker conversation. If another inspection is authorized,
+  request NEW_OPENCODE_SESSION with a concise handoff: completed steps, target/scope,
+  last observed browser state, exact evidence paths, unresolved facts, restrictions,
+  and remaining budgets. Use one bounded permitted inspection, then report a blocker
+  if unresolved. The fresh conversation does not grant another recovery allowance.
+  If the allowance is exhausted, PAUSE for operator review or complete blocked.
+- The harness enforces tool denials before worker submission and pauses if they
+  cannot be confirmed. Browser evaluate/run-code tools are denied for no-JavaScript
+  briefs. Do not request a shell, subagent, or alternate-script workaround.
 
 Evidence review:
 - For each acceptance check, state what was observed, the exact supporting path,

@@ -38,6 +38,17 @@ export interface OcMessage {
 
 export type OcStatus = { type: "idle" } | { type: "busy" } | { type: "retry"; attempt: number; message: string; next: number };
 
+export interface OcPermissionRule {
+  permission: string;
+  pattern: string;
+  action: "allow" | "ask" | "deny";
+}
+export interface OcSession {
+  id: string;
+  title: string;
+  permission?: OcPermissionRule[];
+}
+
 export class OpenCodeHttpError extends Error {
   constructor(
     readonly status: number,
@@ -79,7 +90,11 @@ export class OpenCodeClient {
     return this.req<{ id: string; title: string; directory: string }>("POST", "/session", { title });
   }
   getSession(id: string) {
-    return this.req<{ id: string; title: string }>("GET", `/session/${encodeURIComponent(id)}`, undefined, { allow404: true });
+    return this.req<OcSession>("GET", `/session/${encodeURIComponent(id)}`, undefined, { allow404: true });
+  }
+  /** OpenCode 1.18.34 /doc verifies session permission PATCH; no instance disposal. */
+  setSessionPermissions(id: string, permission: OcPermissionRule[]) {
+    return this.req<OcSession>("PATCH", `/session/${encodeURIComponent(id)}`, { permission });
   }
   promptAsync(sessionId: string, body: { messageID: string; parts: Array<{ type: "text"; text: string }>; agent?: string; model?: { providerID: string; modelID: string } }) {
     return this.req<null>("POST", `/session/${encodeURIComponent(sessionId)}/prompt_async`, body);

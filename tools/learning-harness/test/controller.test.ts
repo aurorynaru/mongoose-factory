@@ -37,6 +37,25 @@ describe("fixture scenarios (same set as `harness dry-run`)", () => {
 });
 
 describe("direct worker routing", () => {
+  it("enforces brief tool restrictions before submitting a task", async () => {
+    const h = track(harness({ coordinator: [SEND("Inspect FX_FixtureForm01"), { envelope: { action: "PAUSE", reason: "done" } }], worker: [WORKER_OK] }));
+    const brief = fixtureBrief();
+    brief.brief.prohibited_actions.push("No JavaScript");
+    const run = await h.controller.run(h.controller.createRun(brief).id);
+    expect(h.worker.policies).toEqual([{ sessionId: run.current_session_id, policy: { denyBrowserJavaScript: true } }]);
+    expect(h.worker.submissions).toHaveLength(1);
+  });
+
+  it("pauses without submitting or consuming a worker task if permissions cannot be enforced", async () => {
+    const h = track(harness({ coordinator: [SEND("Inspect FX_FixtureForm01")] }));
+    h.worker.configureSession = async () => { throw new Error("permission PATCH unavailable"); };
+    const run = await h.controller.run(h.controller.createRun(fixtureBrief()).id);
+    expect(run.pause_reason).toBe("worker_policy_failed");
+    expect(h.worker.submissions).toHaveLength(0);
+    expect(run.counters.workerTasks).toBe(0);
+    expect(h.store.getOp(run.pending_op_id!)?.status).toBe("planned");
+  });
+
   it("wraps the coordinator instruction in the bounded worker preamble and reports back with evidence refs", async () => {
     const h = track(harness({ coordinator: [SEND("Create FX_FixtureVar and save."), COMPLETE], worker: [WORKER_OK] }));
     const run = await h.controller.run(h.controller.createRun(fixtureBrief()).id);

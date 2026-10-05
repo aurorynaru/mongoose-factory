@@ -3,6 +3,7 @@ import { join } from "node:path";
 import type { Brief } from "../brief.js";
 import type { Counters } from "../store.js";
 import type { Limits } from "../config.js";
+import { workerPolicyForBrief } from "../adapters/opencode/tool-policy.js";
 
 export function protocolBlock(protocolDir: string, file: string, marker = "PROTOCOL"): string {
   const text = readFileSync(join(protocolDir, file), "utf8");
@@ -68,6 +69,7 @@ export function briefForCoordinator(b: Brief): string {
     `In scope:\n${list(b.scope.in_scope)}`,
     `Out of scope:\n${list(b.scope.out_of_scope)}`,
     `Prohibited actions:\n${list(b.prohibited_actions)}`,
+    `Enforced worker tools: doom-loop permission denied; browser JavaScript ${workerPolicyForBrief(b).denyBrowserJavaScript ? "denied (evaluate/run-code tools)" : "not additionally restricted"}.`,
     `Editing scope: ${b.environment.editing_scope}${b.environment.notes ? ` (${b.environment.notes})` : ""}`,
     `Target form: ${b.target.form ?? "(none)"}; artifacts: ${b.target.artifacts.join(", ") || "(none)"}`,
     `Evidence directory: ${b.evidence_dir}`,
@@ -88,6 +90,9 @@ export function fillWorkerPreamble(template: string, b: Brief, runId: string, cy
     in_scope: b.scope.in_scope.join("; "),
     out_of_scope: b.scope.out_of_scope.join("; ") || "(see record)",
     prohibited: b.prohibited_actions.join("; "),
+    worker_tool_policy: workerPolicyForBrief(b).denyBrowserJavaScript
+      ? "Browser evaluate/run-code tools are denied. Use only permitted rendered UI and accessibility tools; report a blocker rather than finding a script or shell workaround."
+      : "Doom-loop permission is denied. All textual experiment restrictions still apply.",
     editing_scope: b.environment.editing_scope,
     target: [b.target.form, ...b.target.artifacts].filter(Boolean).join(", ") || "(none)",
     evidence_dir: b.evidence_dir,

@@ -1,5 +1,62 @@
 # Implementation status
 
+## Run-code loop detection and experiment tool permissions (2026-10-05)
+
+- Implemented on isolated `fix/browser-loop-tool-policy` while EXP-020 T7 remained
+  operator-paused. No prompts, live browser actions, backend/model/MCP restarts,
+  Mongoose mutations, or experiment/evidence edits were performed for validation.
+- Expanded exact repeated-result detection to browser_run_code and
+  browser_run_code_unsafe, including names with MCP prefixes and empty completed
+  output. The existing threshold (6 by default), last-24-call window, changed-result/
+  argument resets, in-flight deferral, scoped interruption, partial transcript,
+  compaction tracking, and one-per-run coordinator recovery allowance remain intact.
+  These scripts can mutate; the detector never executes or replays them.
+- Added a typed session-permission client and worker configureSession port.
+  Before a new worker submission, require idle, retain existing rules, append
+  required denials with final-match precedence, PATCH only the session, and GET
+  authoritative permissions again. Unsupported/rejected/ignored policies pause as
+  worker_policy_failed before submission/counting. No permissions are auto-approved
+  or broadened. New sessions receive the same restrictions before their first task.
+- Recognizes explicit legacy no-JavaScript prohibitions in prohibited_actions,
+  including EXP-020's stored brief. Optional reviewed worker_tool_policy field
+  deny_browser_javascript=true handles other wording. False cannot override a
+  recognized textual prohibition. Deny tool names ending in browser_evaluate,
+  browser_run_code, and browser_run_code_unsafe. Existing session restrictions are
+  never removed automatically by a less restrictive later task.
+- Set project permission.doom_loop=deny in opencode.json and add a session denial.
+  Project configuration loads on the next normal OpenCode config load; the current
+  backend was not disposed/restarted because the experiment preserves Designer
+  lifecycle state. OpenCode's built-in detector can miss repetition spread across
+  separate assistant replies, so the cross-reply harness monitor remains required.
+- Updated coordinator/worker protocols and failure messages: after recurring or
+  interrupted recovery, request NEW_OPENCODE_SESSION with a concise factual handoff
+  only when another inspection is authorized; inspect once, then pause/complete
+  blocked if unresolved. Session changes do not reset browser state or budgets.
+  Include enforced tool policy in generated briefs/preambles and document limits.
+- Important code: adapters/opencode/{inspection-loop,tool-policy,client,worker},
+  adapters/types, brief schema, controller/machine, protocol/prompts, and testing
+  fakes under learning-harness. No dependencies or database migrations added.
+- Added 9 regression tests covering both run-code names and empty results, resets,
+  safe loop interruption with partial history/no replay, idle/idempotent permission
+  updates, retained pre-existing rules, rejected/ignored/busy policies, legacy and
+  structured policy parsing, and controller prevention of submission/budget use.
+- Validation: build/typecheck passed; full suite passed 207 tests with 5 skipped
+  (12 files passed, 1 skipped); all 17 offline dry-run scenarios and diff check passed.
+  Actual archived T7 (114 replies) first triggered detection at assistant reply 25
+  after six identical completed run-code results. Read-only replay did not execute
+  browser code. Verified session PATCH schema against installed OpenCode 1.18.34
+  /doc, then applied/read back four denial rules on the idle EXP-020 worker session.
+  The harness remains paused and the interrupted task remains pending for resume.
+- Limits/QA: the policy enforces those direct browser script tools, not every
+  possible shell/subagent/UI workaround or all semantic experiment restrictions.
+  Ambiguous prose needs the structured field. Exact repetition remains a heuristic;
+  other tools/changing results/child sessions are not universally covered. Existing
+  polling races remain. No live model/tool execution was used to test denials;
+  QA should verify the next permitted worker task uses allowed accessibility/UI
+  tools, retains partial observations, and reports a blocker when proof is unavailable.
+  Global config activation, broader sandboxing, model changes, and full browser
+  recovery execution were intentionally deferred.
+
 ## Compaction task tracking and repeated shell calls (2026-10-05)
 
 - Implemented in isolated branch `fix/compaction-shell-loop-guard` while EXP-020

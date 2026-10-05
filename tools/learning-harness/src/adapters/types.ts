@@ -60,6 +60,10 @@ export interface ChatPort {
 
 export type Presence = "present" | "absent" | "unknown";
 
+export interface WorkerToolPolicy {
+  denyBrowserJavaScript: boolean;
+}
+
 export type WorkerResult =
   | { status: "completed"; text: string; transcript: string; assistantMessageIds: string[]; touchedFiles: string[]; cost: number; tokens: number }
   | { status: "failed"; error: string; text: string; transcript: string; assistantMessageIds: string[] }
@@ -72,6 +76,8 @@ export type WorkerResult =
 export interface WorkerPort {
   health(): Promise<{ ok: boolean; version?: string; detail?: string }>;
   createSession(title: string): Promise<string>;
+  /** Restrict an idle session before submitting; failure must prevent submission. */
+  configureSession(sessionId: string, policy: WorkerToolPolicy): Promise<void>;
   newMessageId(): string;
   findMessage(sessionId: string, messageId: string): Promise<Presence>;
   submit(sessionId: string, messageId: string, text: string): Promise<{ status: "accepted" | "uncertain" | "rejected"; detail?: string }>;

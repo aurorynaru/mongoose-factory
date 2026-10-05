@@ -34,6 +34,7 @@ structured log is `data\runs\<run-id>\events.jsonl`.
 | `worker_blocked:permission` / `worker_blocked:question` | OpenCode waits for a permission/question answer | `opencode attach http://127.0.0.1:4096`, answer it, then `resume` |
 | `worker_timeout` | OpenCode task still running after `opencode.taskTimeoutMinutes` | `resume` keeps waiting; `stop --abort-worker` aborts |
 | `worker_inspection_loop` | Repeated missing snapshot refs; partial output saved | Read the pause detail. If interrupted and confirmed idle, `resume` forwards the failure to the coordinator. Otherwise attach, interrupt, wait until idle, then `resume` |
+| `worker_policy_failed` | Session tool denials could not be applied or verified | No new task was submitted. Keep the run paused, inspect the OpenCode error/version/session status, fix policy support, then resume; do not remove the brief's restriction to bypass it |
 | `backend_unavailable` | OpenCode backend not reachable and could not be restarted | `backend health`, check `data\backend\logs\`, `backend restart`, `resume` |
 | `controller_error` | Unexpected exception (details in the log) | Fix the cause; `resume` reconciles before sending anything |
 
@@ -87,9 +88,10 @@ untargeted snapshot or another successful tool resets the count. Repeated valid
 reads with changing results, other error types, previous tasks, and histories
 with pending/running tools do not trigger that missing-reference check.
 
-A second check detects six consecutive completed `browser_snapshot` or
-`browser_evaluate` calls with identical arguments AND identical results, including
-successful "none" results. It checks the last 24 tool calls and resets on changed
+A second check detects six consecutive completed `browser_snapshot`,
+`browser_evaluate`, `browser_run_code`, or `browser_run_code_unsafe` calls with
+identical arguments AND identical results, including successful "none" or empty
+results. It checks the last 24 tool calls and resets on changed
 arguments/results, missing output, or another tool such as an explicit bounded
 wait. It does not infer that evaluate scripts are read-only or replay them; any
 earlier side effects must be inspected before further mutations. Accessing iframe
@@ -141,6 +143,22 @@ heuristic: a legitimate poll can return an unchanged value repeatedly. Use a
 bounded wait or choose an appropriate threshold for such workflows. Varied
 scripts, changed results, and child-session loops are not covered by these checks;
 no detector guarantees that a model will always make useful progress.
+
+For no-JavaScript experiments, the harness applies session denials for evaluate and
+both run-code tools before each new task, including in a fresh worker conversation.
+EXP-020's existing prohibition is recognized without reloading its brief. Denials
+are read back; a failed/ignored update pauses instead of submitting. No global
+configuration API update or backend/MCP/browser restart is needed for these denials.
+The project `doom_loop: deny` setting is supplemental and needs OpenCode to load
+the updated project config. Its built-in check is not a substitute for the harness's
+cross-reply monitor; repeated calls in separate assistant replies can escape it.
+
+After another loop, pause the harness, interrupt the worker, and wait until idle.
+`resume` forwards the failure; it does not replay the interrupted task. For recurring
+or interrupted recovery, the coordinator should request NEW_OPENCODE_SESSION with
+an accurate concise handoff only if another inspection is authorized, or pause/
+complete blocked. Do not manually create a session and continue mutations outside
+the harness. Fresh conversation history does not reset browser state or limits.
 
 ## Context growth and interrupted output
 

@@ -280,7 +280,7 @@ summarized with visible proof and limitations; unseen/cropped content stays unkn
 The harness also monitors busy worker tasks for the observed stale-ref loop:
 `opencode.maxSnapshotRefFailures` defaults to `6` failures for the same target in
 the last 24 tool calls (`0` disables). `opencode.maxRepeatedBrowserReads` also
-defaults to `6`: consecutive snapshot/evaluate calls with identical arguments and
+defaults to `6`: consecutive snapshot/evaluate/run-code/unsafe-run-code calls with identical arguments and
 results, including successful "none" results (`0` disables this check).
 `opencode.maxRepeatedShellCalls` defaults to `6` identical completed `bash`, `shell`,
 or `powershell` calls and results (`0` disables). Printed "done" or empty output
@@ -301,6 +301,28 @@ context, and are excluded from worker report text. A continuation error/interrup
 is a task failure; an unfinished continuation or a summary alone is not completion.
 Real user prompts and manual compaction end ownership, so the harness will not
 interrupt a later manual task because of an earlier loop.
+
+Before each new worker submission, the harness restricts the idle OpenCode session
+and reads back its permissions. It preserves existing rules and appends denials;
+it never grants extra permissions. If this cannot be verified, the run pauses as
+`worker_policy_failed` before the task is submitted or counted. Session updates
+do not restart OpenCode, MCP, Strata, or the Designer browser.
+
+Explicit no-JavaScript prohibitions in `prohibited_actions` deny tools whose names
+end in `browser_evaluate`, `browser_run_code`, or `browser_run_code_unsafe`.
+For wording not recognized by the legacy parser, add the reviewed brief field:
+`"worker_tool_policy": { "deny_browser_javascript": true }`.
+A false value cannot override an explicit textual prohibition, and less restrictive
+later tasks do not remove existing session denials. This blocks these direct script
+tools; it is not a sandbox for every possible shell/subagent/UI workaround.
+
+`opencode.json` sets `permission.doom_loop` to `deny`, also added to session rules.
+The project config takes effect when OpenCode next loads it; do not restart a
+Designer session to activate it during a lifecycle experiment. OpenCode's built-in
+check can miss loops spread across separate assistant replies, so the harness
+monitor remains necessary. After recurring/interrupted recovery loops, coordinator
+instructions prefer a fresh worker conversation with a concise handoff only when
+another inspection is authorized. Browser state and all budgets carry over.
 
 | Option | Use when |
 |---|---|

@@ -23,7 +23,7 @@ export function repeatedShellCalls(replies: OcMessage[], maxCalls: number): stri
     : null;
 }
 
-/** Exact repetition only; different results or intervening tools are progress. */
+/** Exact repetition only; run-code tools can mutate and are never replayed. */
 export function repeatedBrowserReads(replies: OcMessage[], maxReads: number): string | null {
   if (maxReads <= 0) return null;
   const tools = replies.flatMap((m) => m.parts.filter((p) => p.type === "tool"));
@@ -34,8 +34,8 @@ export function repeatedBrowserReads(replies: OcMessage[], maxReads: number): st
   for (const p of tools.slice(-24)) {
     // Evaluate can execute arbitrary JS. This guard only observes finished calls;
     // recovery must never replay the script or assume it had no side effects.
-    if (!/(?:^|_)browser_(?:snapshot|evaluate)$/.test(p.tool ?? "") ||
-      p.state?.status !== "completed" || p.state.output === undefined || p.state.output === "") {
+    if (!/(?:^|_)browser_(?:snapshot|evaluate|run_code(?:_unsafe)?)$/.test(p.tool ?? "") ||
+      p.state?.status !== "completed" || p.state.output === undefined) {
       fingerprint = ""; repeats = 0; continue;
     }
     const current = createHash("sha256").update(JSON.stringify([p.tool, p.state.input, p.state.output])).digest("hex");

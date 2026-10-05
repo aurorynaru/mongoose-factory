@@ -13,6 +13,7 @@ Objective: {{objective}}
 In scope: {{in_scope}}
 Out of scope: {{out_of_scope}}
 Prohibited: {{prohibited}}
+Enforced tools: {{worker_tool_policy}}
 Editing scope: {{editing_scope}}. Target: {{target}}. Evidence directory: {{evidence_dir}}
 
 Boundaries:
@@ -39,6 +40,10 @@ Browser recovery:
   retrying commands, install modules, or expand task scope to repair tooling. Check
   the permitted postcondition once, then report the blocker. Commands interrupted
   after partial execution must not be replayed without checking their effects.
+- Browser run-code and unsafe run-code repetitions are also monitored. Tool
+  availability does not authorize JavaScript when the brief forbids it. If a tool
+  is denied, report the limitation; never replace it with shell execution, a
+  delegated task, hidden-state access, or another route to the same forbidden action.
 
 Context and evidence:
 - Keep reads/output bounded; save long results under this experiment's evidence

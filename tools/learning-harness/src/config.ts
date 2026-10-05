@@ -47,7 +47,7 @@ export const ConfigSchema = z.object({
       noResponseGraceSeconds: z.number().positive().default(120),
       /** Missing-reference failures for one snapshot target in the last 24 tool calls; 0 disables. */
       maxSnapshotRefFailures: z.number().int().min(0).max(24).default(6),
-      /** Consecutive identical snapshot/evaluate arguments and results; 0 disables. */
+      /** Consecutive identical snapshot/evaluate/run-code arguments/results; 0 disables. */
       maxRepeatedBrowserReads: z.number().int().min(0).max(24).default(6),
       /** Consecutive identical completed shell arguments/results; 0 disables. */
       maxRepeatedShellCalls: z.number().int().min(0).max(24).default(6),

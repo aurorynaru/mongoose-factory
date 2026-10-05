@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import type { ChatPort, ChatRole, InterpreterPort, InterpreterResult, Presence, ReadyStatus, ReplyOutcome, SubmissionCheck, SubmitOutcome, WorkerPort, WorkerResult } from "../adapters/types.js";
+import type { ChatPort, ChatRole, InterpreterPort, InterpreterResult, Presence, ReadyStatus, ReplyOutcome, SubmissionCheck, SubmitOutcome, WorkerPort, WorkerResult, WorkerToolPolicy } from "../adapters/types.js";
 import { PROTOCOL_ID } from "../protocol/envelope.js";
 import { parseHeader } from "../protocol/prompts.js";
 
@@ -147,6 +147,7 @@ export type WorkerSpec =
   | { submit: "uncertain_stored" | "uncertain_lost"; then: WorkerSpec };
 
 export class FakeWorker implements WorkerPort {
+  readonly policies: Array<{ sessionId: string; policy: WorkerToolPolicy }> = [];
   readonly sessions: string[] = [];
   readonly submissions: Array<{ sessionId: string; messageId: string; text: string }> = [];
   readonly stored = new Map<string, Set<string>>();
@@ -171,6 +172,10 @@ export class FakeWorker implements WorkerPort {
     this.sessions.push(id);
     this.stored.set(id, new Set());
     return id;
+  }
+
+  async configureSession(sessionId: string, policy: WorkerToolPolicy): Promise<void> {
+    this.policies.push({ sessionId, policy });
   }
 
   newMessageId(): string {

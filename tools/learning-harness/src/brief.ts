@@ -20,6 +20,8 @@ export const BriefSchema = z.object({
     out_of_scope: z.array(z.string()).default([]),
   }),
   prohibited_actions: z.array(z.string()).default([]),
+  /** Additional enforced worker restrictions; textual prohibitions are still honored. */
+  worker_tool_policy: z.object({ deny_browser_javascript: z.boolean().default(false) }).optional(),
   /** Case-insensitive regexes; a worker-bound message matching one requires operator review. */
   prohibited_patterns: z.array(z.string()).default([]),
   /** Other experiment IDs that may be mentioned (e.g. the experiment being replayed). */

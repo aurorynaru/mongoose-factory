@@ -14,6 +14,7 @@ import { diffSnapshots, snapshotDirs, watchedDirs, type DirSnapshot } from "./ev
 import { renderHandoff } from "./handoff.js";
 import { contextBlock } from "../context.js";
 import { parseConversationUrl } from "../adapters/chatgpt/selectors.js";
+import { workerPolicyForBrief } from "../adapters/opencode/tool-policy.js";
 
 export interface ControllerDeps {
   store: Store;
@@ -765,6 +766,11 @@ export class Controller {
         const before = snapshotDirs(this.d.factoryRoot, watchedDirs(this.brief(run).evidence_dir));
         op = store.updateOp(op.id, { meta: { ...op.meta, before } });
       }
+      try {
+        await worker.configureSession(sid, workerPolicyForBrief(this.brief(run)));
+      } catch (e) {
+        return this.pause(run, "worker_policy_failed", `Could not enforce worker tool restrictions: ${(e as Error).message}. No new task was submitted. Resolve the session policy, then resume.`);
+      }
       store.tx(() => {
         if (!op.counted) {
           const c = store.getRun(run.id)!.counters;
@@ -904,7 +910,7 @@ export class Controller {
       `Consecutive failures: ${run.counters.consecutiveFailures}/${run.limits.maxConsecutiveFailures}.`,
       text ? `\nBEGIN PARTIAL WORKER OUTPUT\n${clip(text, Math.floor(this.d.config.browser.maxMessageChars * 0.6), this.refOf(file))}\nEND PARTIAL WORKER OUTPUT` : "",
       "",
-      "Decide the next step. Do not assume any part of the task took effect; ask the worker to inspect state first.",
+      "Decide the next step. Do not assume any part of the task took effect; ask the worker to inspect state first. After recurring loops/interrupted recovery, use NEW_OPENCODE_SESSION with a concise handoff if another inspection is authorized. Preserve browser state, evidence, unresolved facts, restrictions, and all remaining budgets. A fresh conversation is not permission for another recovery loop; if the allowance is exhausted or inspection remains unresolved, PAUSE or complete blocked.",
     ].join("\n");
     this.planCoordinator(run, "WORKER_FAILURE", body, { extra: { task: op.purpose } });
   }

@@ -1,9 +1,10 @@
 import type { LogSink } from "../../util/log.js";
 import { opencodeMessageId } from "../../util/ids.js";
-import type { Presence, WorkerPort, WorkerResult } from "../types.js";
+import type { Presence, WorkerPort, WorkerResult, WorkerToolPolicy } from "../types.js";
 import { OpenCodeClient, OpenCodeHttpError, type OcMessage } from "./client.js";
 import { inspectionLoop, repeatedBrowserReads, repeatedShellCalls } from "./inspection-loop.js";
 import { taskScope } from "./task-scope.js";
+import { restrictToolRules } from "./tool-policy.js";
 
 export interface OpenCodeWorkerOptions {
   client: OpenCodeClient;
@@ -76,6 +77,22 @@ export class OpenCodeWorker implements WorkerPort {
     const s = await this.o.client.createSession(title);
     if (!s?.id) throw new Error("OpenCode returned no session id");
     return s.id;
+  }
+
+  async configureSession(sessionId: string, policy: WorkerToolPolicy): Promise<void> {
+    const status = (await this.o.client.status())?.[sessionId];
+    if (status && status.type !== "idle") throw new Error("Cannot change worker tool policy while the session is active");
+    const session = await this.o.client.getSession(sessionId);
+    if (!session || session.id !== sessionId) throw new Error("Cannot verify the worker session before restricting tools");
+    const rules = restrictToolRules(session.permission ?? [], policy);
+    if (JSON.stringify(rules) !== JSON.stringify(session.permission ?? [])) {
+      await this.o.client.setSessionPermissions(sessionId, rules);
+    }
+    // Read back authoritative state; a PATCH acknowledgement alone is insufficient.
+    const confirmed = await this.o.client.getSession(sessionId);
+    if (confirmed?.id !== sessionId || JSON.stringify(confirmed.permission) !== JSON.stringify(rules)) {
+      throw new Error("OpenCode did not retain the required worker tool permissions; task not submitted");
+    }
   }
 
   newMessageId(): string {

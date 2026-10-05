@@ -5,7 +5,7 @@ import { OpenCodeClient } from "../src/adapters/opencode/client.js";
 import { OpenCodeWorker } from "../src/adapters/opencode/worker.js";
 import { MemoryLogger } from "../src/util/log.js";
 import { inspectionLoop, repeatedBrowserReads, repeatedShellCalls } from "../src/adapters/opencode/inspection-loop.js";
-import type { OcMessage } from "../src/adapters/opencode/client.js";
+import type { OcMessage, OcSession } from "../src/adapters/opencode/client.js";
 import { ConfigSchema } from "../src/config.js";
 
 /**
@@ -13,6 +13,7 @@ import { ConfigSchema } from "../src/config.js";
  * document served by the installed version (GET /doc) and a probe run against it.
  */
 interface MockState {
+  sessions: Record<string, OcSession>;
   messages: Array<{ info: Record<string, unknown>; parts: Array<Record<string, unknown>> }>;
   status: Record<string, unknown>;
   permissions: Array<Record<string, unknown>>;
@@ -20,6 +21,7 @@ interface MockState {
   requests: Array<{ method: string; url: string; auth?: string; body?: unknown }>;
   failPrompt?: boolean;
   abortMode?: "idle" | "busy" | "reject";
+  policyMode?: "reject" | "ignore";
 }
 
 let server: Server;
@@ -32,7 +34,7 @@ function send(res: ServerResponse, code: number, body?: unknown) {
 }
 
 beforeEach(async () => {
-  st = { messages: [], status: {}, permissions: [], questions: [], requests: [] };
+  st = { sessions: { ses_mock1: { id: "ses_mock1", title: "test" } }, messages: [], status: {}, permissions: [], questions: [], requests: [] };
   server = createServer(async (req: IncomingMessage, res) => {
     let raw = "";
     for await (const c of req) raw += c;
@@ -45,6 +47,15 @@ beforeEach(async () => {
     if (p === "/permission") return send(res, 200, st.permissions);
     if (p === "/question") return send(res, 200, st.questions);
     if (p === "/session/ses_mock1/children") return send(res, 200, [{ id: "ses_child" }]);
+    if (/^\/session\/ses_\w+$/.test(p)) {
+      const id = p.split("/")[2];
+      if (!st.sessions[id]) return send(res, 404, { name: "NotFound" });
+      if (req.method === "PATCH") {
+        if (st.policyMode === "reject") return send(res, 400, { error: "policy unavailable" });
+        if (st.policyMode !== "ignore") st.sessions[id].permission = JSON.parse(raw).permission;
+      }
+      return send(res, 200, st.sessions[id]);
+    }
     let m = p.match(/^\/session\/(ses_\w+)\/prompt_async$/);
     if (m) {
       if (st.failPrompt) return res.destroy();
@@ -167,6 +178,20 @@ describe("repeated shell-call guard", () => {
 });
 
 describe("repeated browser-result guard", () => {
+  it("detects run-code and unsafe run-code repetitions including empty results without executing scripts", () => {
+    for (const name of ["playwright_browser_run_code", "playwright_browser_run_code_unsafe", "mcp__playwright__browser_run_code_unsafe"]) {
+      const calls = evaluateReads("msg_task", 6, "");
+      for (const m of calls) { m.parts[0].tool = name; m.parts[0].state!.input = { code: "async page => page.evaluate(() => getComputedStyle(document.getElementById('button')).color)" }; }
+      expect(repeatedBrowserReads(calls, 6)).toContain(name);
+      calls.at(-1)!.parts[0].state!.output = "changed";
+      expect(repeatedBrowserReads(calls, 6)).toBeNull();
+      calls.at(-1)!.parts[0].state!.output = "";
+      calls.at(-1)!.parts[0].state!.input = { code: "different script" };
+      expect(repeatedBrowserReads(calls, 6)).toBeNull();
+      calls.at(-1)!.parts[0].state!.status = "running";
+      expect(repeatedBrowserReads(calls, 6)).toBeNull();
+    }
+  });
   it("detects successful repeated evaluate calls returning none or any other identical result", () => {
     expect(repeatedBrowserReads(evaluateReads("msg_task"), 6)).toContain("6 consecutive times");
     expect(repeatedBrowserReads(evaluateReads("msg_task", 6, '### Result\n"same cell"'), 6)).toContain("same result");
@@ -242,6 +267,49 @@ describe("snapshot missing-reference guard", () => {
 });
 
 describe("OpenCode worker adapter (mock server)", () => {
+  it("restricts idle-session tools, preserves existing rules, and verifies persistence", async () => {
+    st.sessions.ses_mock1.permission = [{ permission: "git", pattern: "push *", action: "deny" }, { permission: "*", pattern: "*", action: "allow" }];
+    const w = worker();
+    await w.configureSession("ses_mock1", { denyBrowserJavaScript: true });
+    expect(st.sessions.ses_mock1.permission).toContainEqual({ permission: "doom_loop", pattern: "*", action: "deny" });
+    expect(st.sessions.ses_mock1.permission?.at(-1)).toEqual({ permission: "*browser_run_code_unsafe", pattern: "*", action: "deny" });
+    expect(st.sessions.ses_mock1.permission?.[0]).toEqual({ permission: "git", pattern: "push *", action: "deny" });
+    await w.configureSession("ses_mock1", { denyBrowserJavaScript: true });
+    expect(st.requests.filter((r) => r.method === "PATCH")).toHaveLength(1);
+    expect(st.requests.filter((r) => r.method === "GET" && r.url.includes("/session/ses_mock1?")).length).toBeGreaterThanOrEqual(4);
+    expect(st.requests.some((r) => r.url.includes("prompt_async") || r.url.includes("/config"))).toBe(false);
+  });
+
+  it("refuses policy changes while busy or when OpenCode rejects or loses the policy", async () => {
+    const w = worker();
+    st.status = { ses_mock1: { type: "busy" } };
+    await expect(w.configureSession("ses_mock1", { denyBrowserJavaScript: true })).rejects.toThrow("session is active");
+    expect(st.requests.some((r) => r.method === "PATCH")).toBe(false);
+    st.status = {};
+    st.policyMode = "reject";
+    await expect(w.configureSession("ses_mock1", { denyBrowserJavaScript: true })).rejects.toThrow("HTTP 400");
+    st.policyMode = "ignore";
+    await expect(w.configureSession("ses_mock1", { denyBrowserJavaScript: true })).rejects.toThrow("did not retain");
+  });
+
+  it("interrupts an unsafe run-code loop and preserves partial history without replaying the code", async () => {
+    const w = worker();
+    const mid = w.newMessageId();
+    await w.submit("ses_mock1", mid, "Inspect only; no JavaScript");
+    const calls = evaluateReads(mid);
+    for (const m of calls) { m.parts[0].tool = "playwright_browser_run_code_unsafe"; m.parts[0].state!.input = { code: "async page => page.evaluate(() => getComputedStyle(document.getElementById('button')).color)" }; }
+    st.messages.push(assistant("msg_prefix", mid, "Name remains unresolved"), ...calls);
+    st.status = { ses_mock1: { type: "busy" } };
+    const r = await w.waitForCompletion("ses_mock1", mid, { timeoutMs: 5000, shouldStop: () => false });
+    expect(r).toMatchObject({ status: "stalled", aborted: true });
+    if (r.status === "stalled") {
+      expect(r.text).toContain("Name remains unresolved");
+      expect(r.transcript).toContain("playwright_browser_run_code_unsafe");
+      expect(r.detail).toContain("Earlier actions may have had side effects");
+    }
+    expect(st.requests.filter((q) => q.url.includes("prompt_async"))).toHaveLength(1);
+  });
+
   it("tracks long compacted tasks, interrupts their shell loop, and preserves both sides of compaction", async () => {
     const w = worker(undefined, null, 0, 0); // Shell guard is independent.
     const mid = w.newMessageId();
