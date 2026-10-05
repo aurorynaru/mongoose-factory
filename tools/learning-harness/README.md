@@ -122,6 +122,23 @@ test, the default thinking mode spent the entire 32,000-token output allowance t
 calling a requested tool; with this option, OpenCode called its Bash tool and returned the result.
 This setting applies only to this OpenCode model entry, not to Strata's other clients.
 
+The Strata model's OpenCode output cap is 16,384 tokens, and automatic compaction reserves a
+48,000-token buffer. This gives more room than the previous 32,000-token request allowance,
+which was rejected when a rendered prompt reached about 165,000 tokens in a 196,608-token
+context. Compaction is still enabled with old-tool-output pruning; these settings reduce
+context pressure but do not guarantee that every rendered request fits.
+
+In the installed Strata model configuration (`C:\AI\Strata\strata-coder-iq1_m.json`), enable
+`"fit_max_tokens": true`. Strata then reduces a requested reply allowance to the space remaining
+after the actual prompt and its safety margin. It never truncates the prompt, and still rejects
+a prompt that leaves no room to answer. This local server setting is outside the factory repo.
+
+Load these changes between worker tasks: pause the harness, check whether the worker is still
+busy, and allow it to finish or explicitly abort its OpenCode task before restarting either
+server. Use `harness pause` for a resumable pause; `harness stop` permanently ends a run.
+A backend restart closes OpenCode's Playwright/Mongoose browser. Resume the same run only when
+its experiment scope allows browser/session reconnection and the worker can re-inspect state.
+
 For an existing `harness.config.json`, set `opencode.model` to
 `{"providerID":"strata","modelID":"qwen3.8-flash-next-coder-iq1_m"}`; the example config already
 has this setting. Change it between runs, and restart the harness-owned OpenCode backend with

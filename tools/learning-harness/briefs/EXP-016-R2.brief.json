@@ -1,0 +1,108 @@
+{
+  "experiment_id": "EXP-016-R2",
+  "title": "EXP-016-R2 — Clean Replay: FormSync Script Saved-Form Representation",
+  "record_path": "experiments/EXP-016-R2-clean-replay-formsync-script-saved-form-representa.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "In a fresh worker execution, use the existing factory-owned User-scope Form FX_FormVariableLab05 and the supported Runtime FormSync Script utility to independently reproduce the EXP-016 saved-Form representation path. Select the intended configuration as Source, explicitly use Filter Configuration=Source, constrain or verify the exact User/ScopeName and Form identity, include exactly the intended scoped Form row, and generate the Script with Output=View. Capture evidence that the generated representation identifies the intended Form and visibly contains the same class of variable-related metadata handling observed in EXP-016. This replay must remain strictly non-mutating and must not interpret generic Variables/FormID handling as proof that any specific Form variable was serialized.",
+  "scope": {
+    "in_scope": [
+      "Confirm a live supported Mongoose/Web Client session and User editing scope before inspection",
+      "Inspect the existing FX_FormVariableLab05 only",
+      "Open Runtime FormSync through the supported UI",
+      "Select the intended DEM configuration as Source",
+      "Set Filter Configuration=Source",
+      "Filter to Form objects and FX_FormVariableLab05",
+      "Select the exact User/ScopeName where the UI permits, or visibly verify the returned row's User/Group Name before inclusion",
+      "Refresh the FormSync object list, Deselect All, and include exactly the verified FX_FormVariableLab05 User-scoped row",
+      "Use Script with Output=View and Generate",
+      "Capture the generated representation showing the target Form identity/scope and variable-related metadata handling",
+      "Record browser and repository evidence under evidence/EXP-016-R2/"
+    ],
+    "out_of_scope": [
+      "Creating, editing, renaming, deleting, or saving any Form or Form variable",
+      "Determining whether any specific EXP-014, EXP-015, or FX_FormVariableLab05 variable was serialized",
+      "Searching for a controlled variable name/value as positive serialization evidence",
+      "Treating absence of a variable name as negative serialization evidence",
+      "Troubleshooting or enabling Pseudo Code Generate",
+      "Testing Form-variable runtime values",
+      "Testing close/reopen variable recovery",
+      "Testing cache, unload, IDO metadata, transaction, commit, or physical database durability behavior",
+      "Promoting generated SQL table names, columns, numeric scope codes, or statement layout as stable automation contracts",
+      "Modifying recipes, AGENTS.md, environment documentation, or unrelated experiment records"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not create, edit, rename, delete, Save, Save As, or Regenerate any Mongoose Form or Form variable",
+    "Do not execute or preview FX_FormVariableLab05 at runtime",
+    "Do not invoke Unload All Global Form Objects, ClearCache, metadata unload, or change User Preferences",
+    "Do not invoke FormSync Import, Synchronize, Copy, Delete, or any operation that applies generated SQL to a target database",
+    "Do not use direct database queries, internal APIs, reverse-engineered payloads, Ext internal stores, or network payload contents as authoritative saved-definition evidence",
+    "Do not claim that generic Variables/FormID SQL proves a specific variable exists or was serialized",
+    "Do not log, print, expose, or screenshot credential values",
+    "Do not modify any non-FX_ Mongoose artifact"
+  ],
+  "prohibited_patterns": [
+    "\\b(create|add|edit|rename|delete)\\b[^.\\n]{0,50}\\b(form variable|variable|form)\\b",
+    "\\b(save as|regenerate form|save changes)\\b",
+    "\\b(unload all global form objects|clearcache|unload ido metadata)\\b",
+    "\\b(import|synchronize|copy|delete)\\b[^.\\n]{0,40}\\b(formsync|object|form)\\b",
+    "\\b(apply|execute|run)\\b[^.\\n]{0,50}\\b(sql|script)\\b",
+    "\\b(database query|direct sql|internal api|ext store|reverse[- ]engineer)\\b",
+    "\\b(runtime|preview)\\b[^.\\n]{0,30}\\bfx_formvariablelab05\\b"
+  ],
+  "related_experiments": [
+    "EXP-016",
+    "EXP-015",
+    "EXP-014"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_FormVariableLab05",
+    "artifacts": [
+      "FX_FormVariableLab05"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Before FormSync inspection, evidence proves a live supported Mongoose/Web Client session and User editing scope without exposing credential values."
+    },
+    {
+      "id": "AC-2",
+      "description": "Evidence proves exactly the intended existing Form is selected using Name=FX_FormVariableLab05 plus ScopeType=User plus the exact ScopeName/User identity; if the User filter is blank or broader than one user, the included grid row's User/Group Name is visibly verified before Inc is selected."
+    },
+    {
+      "id": "AC-3",
+      "description": "Evidence shows Runtime FormSync configured with the intended configuration as Source and Filter Configuration explicitly set to Source, with the object list narrowed to FX_FormVariableLab05."
+    },
+    {
+      "id": "AC-4",
+      "description": "After Refresh List and Deselect All, evidence shows exactly one verified scoped FX_FormVariableLab05 row included in the Script batch and no other object included."
+    },
+    {
+      "id": "AC-5",
+      "description": "Script with Output=View successfully generates a visible representation that identifies FX_FormVariableLab05 and its scoped identity and contains variable-related Forms-database metadata handling of the same semantic class observed in EXP-016; generic metadata handling is explicitly recorded as insufficient to prove any specific variable exists."
+    },
+    {
+      "id": "AC-6",
+      "description": "A controlled-action audit proves no Form/variable mutation, Save/Save As/Regenerate, runtime execution, cache/global-object/IDO-metadata action, preference change, FormSync Import/Synchronize/Copy/Delete, SQL application, direct database query, or internal API/Ext-store evidence was used."
+    },
+    {
+      "id": "AC-7",
+      "description": "Final repository audit shows experiment-attributable changes confined to the EXP-016-R2 experiment record and evidence/EXP-016-R2/; no recipe, environment, AGENTS.md, unrelated experiment record, or Mongoose artifact was modified."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-016-R2",
+  "replay_of": "EXP-016",
+  "initial_instruction": "Perform a fresh, strictly read-only replay of the successful final EXP-016 FormSync Script path on the existing User-scoped FX_FormVariableLab05. Confirm live session and User scope first. In Runtime FormSync, select the intended configuration as Source, set Filter Configuration=Source, constrain or visibly verify the exact User/ScopeName and exact Form name, Refresh List, Deselect All, include exactly the verified FX_FormVariableLab05 row, then use Script with Output=View and Generate. Capture evidence of the scoped Form identity and variable-related metadata handling, but do not infer that any specific Form variable was serialized from generic Variables/FormID statements. Do not mutate any Mongoose artifact or perform any cache, preference, runtime, database-apply, internal-API, or direct-SQL action.",
+  "notes": "Proposed by the coordinator after run R-20261004-094134-Cn9j. Rationale: EXP-016 ultimately established one successful observed FormSync Script path for producing a Forms-database-oriented representation of a selected customized Form, but that path has not been independently replayed. The specialist review identified replay of this exact route—with Filter Configuration=Source and exact User/ScopeName verification—as the smallest next step before using FormSync Script as evidence in a new variable-serialization experiment. This experiment therefore replays only the representation-generation procedure and does not attempt to resolve EXP-014/EXP-015 variable serialization. Auto-approved by autopilot 2026-10-05T10:19:01.587Z after specialist verdict \"supports\" (see data/autopilot/2026-10-05T10-10-35-346Z-PROPOSAL_CHECK-reply.md)."
+}
