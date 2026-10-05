@@ -228,8 +228,59 @@ describe("ambiguous browser submission timeout", () => {
 });
 
 describe("OpenCode task failure", () => {
+  it("recovers once through the coordinator, then pauses on a second loop without replaying either task", async () => {
+    const h = track(harness({ coordinator: [SEND("Inspect rendered UI only; no JavaScript"), SEND("Capture one fresh snapshot; report a blocker if unclear"), { envelope: { action: "PAUSE", reason: "stop" } }], worker: [
+      { status: "stalled", aborted: true, detail: "Same evaluate result six times", text: "Scope unclear", transcript: "initial loop" },
+      { status: "stalled", aborted: true, detail: "Recovery looped again", transcript: "recovery loop" },
+    ] }));
+    let run = await h.controller.run(h.controller.createRun(fixtureBrief()).id);
+    expect(run.pause_reason).toBe("worker_inspection_loop");
+    expect(run.counters.inspectionRecoveries).toBe(1);
+    expect(run.counters.totalFailures).toBe(2);
+    expect(h.worker.submissions).toHaveLength(2);
+    expect(h.worker.submissions[0].messageId).not.toBe(h.worker.submissions[1].messageId);
+    const recovery = h.chat.submissions.find((s) => kindOf(s.text) === "WORKER_FAILURE")!.text;
+    expect(recovery).toContain("Automatic inspection recovery 1/1");
+    expect(recovery).toContain("Do not replay the original arguments/scripts");
+    expect(recovery).toContain("no JavaScript");
+    expect(recovery).toContain("remaining budgets");
+    expect(h.chat.submissions).toHaveLength(2); // Second loop is saved but not forwarded until resume.
+    run = await h.controller.run(run.id);
+    expect(run.counters.inspectionRecoveries).toBe(1);
+    expect(h.worker.submissions).toHaveLength(2);
+    expect(run.pause_reason).toBe("coordinator_requested_pause");
+  });
+
+  it("respects task budgets during automatic recovery", async () => {
+    const h = track(harness({ coordinator: [SEND("inspect"), SEND("fresh snapshot")], limits: { maxWorkerTasks: 1 }, worker: [
+      { status: "stalled", aborted: true, detail: "loop" },
+    ] }));
+    const run = await h.controller.run(h.controller.createRun(fixtureBrief()).id);
+    expect(run.pause_reason).toBe("limit:maxWorkerTasks");
+    expect(run.counters.inspectionRecoveries).toBe(1);
+    expect(h.worker.submissions).toHaveLength(1);
+  });
+
+  it("does not bypass the consecutive-failure budget to recover", async () => {
+    const h = track(harness({ coordinator: [SEND("inspect")], limits: { maxConsecutiveFailures: 1 }, worker: [
+      { status: "stalled", aborted: true, detail: "loop" },
+    ] }));
+    const run = await h.controller.run(h.controller.createRun(fixtureBrief()).id);
+    expect(run.pause_reason).toBe("limit:maxConsecutiveFailures");
+    expect(h.chat.submissions).toHaveLength(1);
+    expect(h.worker.submissions).toHaveLength(1);
+  });
+
+  it("reads old run counters with a zero recovery allowance used", () => {
+    const h = track(harness({ coordinator: [] }));
+    const run = h.controller.createRun(fixtureBrief());
+    const { inspectionRecoveries: omitted, ...oldCounters } = run.counters;
+    h.store.db.prepare("UPDATE runs SET counters_json=? WHERE id=?").run(JSON.stringify(oldCounters), run.id);
+    expect(h.store.getRun(run.id)!.counters.inspectionRecoveries).toBe(0);
+  });
+
   it("saves an interrupted inspection loop, pauses, and forwards its failure only on resume", async () => {
-    const h = track(harness({ coordinator: [SEND("inspect target"), { envelope: { action: "PAUSE", reason: "reviewed blocker" } }], worker: [
+    const h = track(harness({ config: { opencode: { autoRecoverInspectionLoops: false } }, coordinator: [SEND("inspect target"), { envelope: { action: "PAUSE", reason: "reviewed blocker" } }], worker: [
       { status: "stalled", aborted: true, detail: "Repeated missing snapshot refs", text: "Scope unresolved", transcript: "snapshot ERROR: Ref stale not found" },
     ] }));
     let run = await h.controller.run(h.controller.createRun(fixtureBrief()).id);

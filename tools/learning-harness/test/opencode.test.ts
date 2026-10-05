@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { OpenCodeClient } from "../src/adapters/opencode/client.js";
 import { OpenCodeWorker } from "../src/adapters/opencode/worker.js";
 import { MemoryLogger } from "../src/util/log.js";
-import { inspectionLoop } from "../src/adapters/opencode/inspection-loop.js";
+import { inspectionLoop, repeatedBrowserReads } from "../src/adapters/opencode/inspection-loop.js";
 import type { OcMessage } from "../src/adapters/opencode/client.js";
 import { ConfigSchema } from "../src/config.js";
 
@@ -73,7 +73,7 @@ beforeEach(async () => {
 });
 afterEach(() => new Promise<void>((r) => server.close(() => r())));
 
-const worker = (password?: string, model: { providerID: string; modelID: string } | null = null, maxSnapshotRefFailures?: number) =>
+const worker = (password?: string, model: { providerID: string; modelID: string } | null = null, maxSnapshotRefFailures?: number, maxRepeatedBrowserReads?: number) =>
   new OpenCodeWorker({
     client: new OpenCodeClient({ baseUrl: base, directory: "C:\\AI\\mongoose-factory", password, timeoutMs: 2000 }),
     agent: null,
@@ -81,6 +81,7 @@ const worker = (password?: string, model: { providerID: string; modelID: string 
     pollIntervalMs: 10,
     noResponseGraceMs: 300,
     maxSnapshotRefFailures,
+    maxRepeatedBrowserReads,
     log: new MemoryLogger(),
   });
 
@@ -107,6 +108,56 @@ function staleLoop(parentID: string, cycles = 6): OcMessage[] {
     snapshot(`msg_${n}c`, parentID, "f3e1311", true),
   ]).flat();
 }
+
+function evaluateReads(parentID: string, count = 6, output = '### Result\n"none"'): OcMessage[] {
+  return Array.from({ length: count }, (_, n) => ({
+    info: { id: `msg_eval${n}`, sessionID: "ses_mock1", role: "assistant" as const, parentID, time: { created: 2, completed: 3 } },
+    parts: [{ id: `prt_eval${n}`, type: "tool", tool: "playwright_browser_evaluate", state: {
+      status: "completed", input: { function: "() => document.querySelector('iframe')?.contentDocument?.title ?? 'none'" }, output,
+    } }],
+  }));
+}
+
+describe("repeated browser-result guard", () => {
+  it("detects successful repeated evaluate calls returning none or any other identical result", () => {
+    expect(repeatedBrowserReads(evaluateReads("msg_task"), 6)).toContain("6 consecutive times");
+    expect(repeatedBrowserReads(evaluateReads("msg_task", 6, '### Result\n"same cell"'), 6)).toContain("same result");
+    expect(repeatedBrowserReads(evaluateReads("msg_task", 5), 6)).toBeNull();
+    expect(repeatedBrowserReads(evaluateReads("msg_task"), 0)).toBeNull();
+  });
+
+  it("detects repeated snapshots with identical arguments and observed output", () => {
+    const reads = evaluateReads("msg_task");
+    for (const m of reads) { m.parts[0].tool = "playwright_browser_snapshot"; m.parts[0].state!.input = { depth: 4 }; }
+    expect(repeatedBrowserReads(reads, 6)).toContain("playwright_browser_snapshot");
+  });
+
+  it("resets on a changed result, changed arguments, or intervening tool", () => {
+    const reads = evaluateReads("msg_task");
+    reads.at(-1)!.parts[0].state!.output = '### Result\n"new observation"';
+    expect(repeatedBrowserReads(reads, 6)).toBeNull();
+    reads.at(-1)!.parts[0].state!.output = '### Result\n"none"';
+    reads.at(-1)!.parts[0].state!.input = { function: "() => document.title" };
+    expect(repeatedBrowserReads(reads, 6)).toBeNull();
+    expect(repeatedBrowserReads([...evaluateReads("msg_task"), assistant("msg_wait", "msg_task", "wait"), ...evaluateReads("msg_task", 1)], 6)).toBeNull();
+  });
+
+  it("ignores unrelated tools, missing output, and an in-flight tool", () => {
+    const reads = evaluateReads("msg_task");
+    for (const m of reads) m.parts[0].tool = "playwright_browser_click";
+    expect(repeatedBrowserReads(reads, 6)).toBeNull();
+    for (const m of reads) { m.parts[0].tool = "playwright_browser_evaluate"; delete (m.parts[0].state as { output?: unknown }).output; }
+    expect(repeatedBrowserReads(reads, 6)).toBeNull();
+    const active = snapshot("msg_active", "msg_task");
+    active.parts[0].state!.status = "running";
+    expect(repeatedBrowserReads([...evaluateReads("msg_task"), active], 6)).toBeNull();
+  });
+
+  it("defaults to six reads with one automatic recovery, and validates thresholds", () => {
+    expect(ConfigSchema.parse({}).opencode).toMatchObject({ maxRepeatedBrowserReads: 6, autoRecoverInspectionLoops: true });
+    expect(ConfigSchema.safeParse({ opencode: { maxRepeatedBrowserReads: 25 } }).success).toBe(false);
+  });
+});
 
 describe("snapshot missing-reference guard", () => {
   it("detects alternating failed refs despite a successful cell-only read", () => {
@@ -143,6 +194,22 @@ describe("snapshot missing-reference guard", () => {
 });
 
 describe("OpenCode worker adapter (mock server)", () => {
+  it("interrupts repeated successful evaluate results without replaying the script", async () => {
+    const w = worker(undefined, null, 0); // The new guard works independently of stale-reference checks.
+    const mid = w.newMessageId();
+    await w.submit("ses_mock1", mid, "Rendered UI only; no JavaScript");
+    st.messages.push(...evaluateReads(mid));
+    st.status = { ses_mock1: { type: "busy" } };
+    const r = await w.waitForCompletion("ses_mock1", mid, { timeoutMs: 5000, shouldStop: () => false });
+    expect(r).toMatchObject({ status: "stalled", aborted: true });
+    if (r.status === "stalled") {
+      expect(r.detail).toContain("same result 6 consecutive times");
+      expect(r.detail).toContain("Do not repeat those arguments or scripts");
+      expect(r.transcript).toContain("Rendered UI only; no JavaScript");
+    }
+    expect(st.requests.filter((q) => q.url.includes("prompt_async"))).toHaveLength(1);
+    expect(st.requests.filter((q) => q.url.includes("/abort"))).toHaveLength(1);
+  });
   it("interrupts only the looping task's session, confirms idle, and retains partial output", async () => {
     const w = worker();
     const mid = w.newMessageId();
@@ -164,7 +231,7 @@ describe("OpenCode worker adapter (mock server)", () => {
   });
 
   it("can disable monitoring without changing normal busy-task handling", async () => {
-    const w = worker(undefined, null, 0);
+    const w = worker(undefined, null, 0, 0);
     const mid = w.newMessageId();
     await w.submit("ses_mock1", mid, "task");
     st.messages.push(...staleLoop(mid));

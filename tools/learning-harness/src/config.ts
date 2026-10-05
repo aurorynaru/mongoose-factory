@@ -47,6 +47,10 @@ export const ConfigSchema = z.object({
       noResponseGraceSeconds: z.number().positive().default(120),
       /** Missing-reference failures for one snapshot target in the last 24 tool calls; 0 disables. */
       maxSnapshotRefFailures: z.number().int().min(0).max(24).default(6),
+      /** Consecutive identical snapshot/evaluate arguments and results; 0 disables. */
+      maxRepeatedBrowserReads: z.number().int().min(0).max(24).default(6),
+      /** Permit one coordinator-directed inspection recovery per run, within normal budgets. */
+      autoRecoverInspectionLoops: z.boolean().default(true),
       manageBackend: z.boolean().default(true),
       autoRestartOnFailure: z.boolean().default(true),
     })

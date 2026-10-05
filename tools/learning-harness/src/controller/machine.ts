@@ -814,10 +814,19 @@ export class Controller {
             store.updateOp(op.id, { meta: { ...op.meta, inspectionLoop: res.detail, transcript } });
             return this.pause(run, "worker_inspection_loop", `${res.detail} The harness could not confirm the worker stopped. Attach with 'opencode attach ${this.d.config.opencode.baseUrl} -s ${op.session_id}', interrupt it and wait until idle, then 'harness resume'. Partial transcript: ${transcript}.`);
           }
+          const recover = this.d.config.opencode.autoRecoverInspectionLoops && run.counters.inspectionRecoveries < 1;
+          const recoveryNote = recover
+            ? " Automatic inspection recovery 1/1: choose at most one bounded recovery task within the brief and remaining budgets, or PAUSE/complete blocked. Use a fresh untargeted snapshot and at most one corrected inspection of permitted rendered UI. Do not replay the original arguments/scripts. Preserve explicit restrictions such as no JavaScript, reload, navigation, Save, close/reopen, hidden stores or internal APIs. Report a blocker if still unresolved. Earlier actions may have had side effects; verify state before mutation. Another detected loop in this run requires operator review."
+            : "";
           store.tx(() => {
             store.updateOp(op.id, { status: "failed", error: res.detail });
-            this.workerFailed(run, op, `Browser inspection loop interrupted: ${res.detail}`, res.text, res.transcript, res.assistantMessageIds);
+            const current = recover ? store.updateRun(run.id, { counters: { ...run.counters, inspectionRecoveries: run.counters.inspectionRecoveries + 1 } }) : run;
+            this.workerFailed(current, op, `Browser inspection loop interrupted: ${res.detail}${recoveryNote}`, res.text, res.transcript, res.assistantMessageIds);
           });
+          if (recover) {
+            this.d.log.log("info", "run.inspection_recovery", { run_id: run.id, task: op.purpose, session: op.session_id, attempt: 1 });
+            return; // Existing coordinator validation, task budgets and failure limits still apply.
+          }
           return this.pause(store.getRun(run.id)!, "worker_inspection_loop", `${res.detail} The worker session was interrupted and confirmed idle; its partial output is saved. Review it, then 'harness resume' forwards the failure to the coordinator without resubmitting the old task. The browser and backend were not restarted.`);
         }
         case "backend_unavailable": {

@@ -279,9 +279,16 @@ summarized with visible proof and limitations; unseen/cropped content stays unkn
 
 The harness also monitors busy worker tasks for the observed stale-ref loop:
 `opencode.maxSnapshotRefFailures` defaults to `6` failures for the same target in
-the last 24 tool calls (`0` disables). It requests an interrupt of that session,
-preserves partial output, and pauses as `worker_inspection_loop`. It does not
-restart the browser or automatically retry the task. See
+the last 24 tool calls (`0` disables). `opencode.maxRepeatedBrowserReads` also
+defaults to `6`: consecutive snapshot/evaluate calls with identical arguments and
+results, including successful "none" results (`0` disables this check). Pending
+or running tools defer interruption. It requests an interrupt of that session
+and preserves partial output. With `opencode.autoRecoverInspectionLoops: true`
+(default), the first confirmed interruption per run is forwarded to the coordinator
+for one recovery decision within scope and normal budgets. Further loops pause as
+`worker_inspection_loop`; set the option to `false` to pause on the first loop too.
+The original task/script is not automatically replayed, and the browser is not
+restarted. `status` shows the one-per-run recovery allowance used. See
 [Troubleshooting](TROUBLESHOOTING.md#repeated-browser-snapshots--stale-references)
 for the detection boundaries and safe recovery.
 

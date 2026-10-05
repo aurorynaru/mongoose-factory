@@ -134,6 +134,12 @@ and one corrected attempt still cannot establish the required state, preserve
 the observations and report the blocker. Never reload, navigate, save, or
 close/reopen as a recovery step unless the current experiment permits it.
 
+The same rule applies to successful browser reads that repeatedly return the
+same result, including "none" or empty output. Check the intended visible frame
+using current accessibility refs, and honor a no-JavaScript restriction even for
+read-only evaluation. Do not replay a script after interruption: it may already
+have had side effects. Report a blocker after one corrected inspection.
+
 ## Context and handoffs
 
 Keep browser reads focused on the information needed for the current step.

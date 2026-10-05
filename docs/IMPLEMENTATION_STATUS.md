@@ -1,5 +1,51 @@
 # Implementation status
 
+## Repeated-result detection and bounded automatic recovery (2026-10-05)
+
+- Implemented in an isolated `feat/bounded-browser-loop-recovery` worktree while
+  EXP-017 was safely paused. Its unfinished experiment/evidence files are not part
+  of this change. Builds/tests used the existing installed dependencies; no new
+  packages, model settings, browser resets, or live Mongoose actions.
+- The worker now detects six consecutive completed `browser_snapshot` or
+  `browser_evaluate` calls with identical arguments and identical observed output,
+  including successful `"none"` results. Hashing bounds comparison state; changed
+  arguments/results, another tool, missing output, or an in-flight tool prevent
+  detection. The existing missing-reference check remains independent.
+- `opencode.maxRepeatedBrowserReads` defaults to 6 (0 disables; maximum 24).
+  `opencode.autoRecoverInspectionLoops` defaults to true. After the first detected
+  loop is interrupted and confirmed idle, preserve its partial output and forward
+  a failure/recovery request to the coordinator automatically. The coordinator
+  may request one bounded fresh inspection within the brief or pause/declare a
+  blocked outcome. Original arguments/scripts are never automatically resubmitted.
+- Persist `inspectionRecoveries` in existing run counters; old records default to
+  zero without a migration. Status displays the single recovery allowance used.
+  A second detected loop in that run pauses for operator review, including after
+  resume/session changes. Unconfirmed interruption always pauses, and normal
+  task, cycle, duration, and consecutive-failure budgets still apply. Set the auto
+  recovery option to false to pause at the first loop.
+- Recovery instructions require rendered UI, fresh accessibility refs, honoring
+  no-JavaScript/lifecycle restrictions, and verifying earlier side effects before
+  mutation. Successful empty results are not evidence of progress or target absence.
+  Updated AGENTS, worker/coordinator protocols, README and troubleshooting.
+- Runtime changes: inspection-loop detector, worker/app options, config/example,
+  controller recovery routing, persisted counter, and status under learning-harness.
+  Added 10 tests: identical successful evaluate/snapshot results, independent
+  checks/disable/thresholds, progress resets, in-flight/unrelated calls, automatic
+  recovery then pause, task/failure budget enforcement, and legacy counter loading.
+- Validation: typecheck/build passed; focused suites passed 78 tests; full suite
+  passed 187 tests with 5 skipped (10 test files passed, 1 skipped); all 17 offline
+  dry-run scenarios and `git diff --check` passed. Read-only replay of saved EXP-017
+  T2 (`msg_10bda72c4001jUQ1X4iwHLimcp`, 126 assistant replies) detected the loop at
+  assistant reply 28 / tool call 29; no tool actions executed by this replay.
+- Limitations: exact repetition is a heuristic and can interrupt legitimate polls
+  of unchanged state; use bounded wait tools or tune thresholds. Varied scripts,
+  changing results, and child-session loops remain outside detection. Evaluations
+  can mutate state; this monitor observes completed calls and never certifies them
+  read-only. Recovery is a coordinator decision, not a guarantee of model compliance
+  or success. API polling still has a race between observed tool state and interrupt.
+  QA should confirm a live permitted recovery obeys scope and reports a blocker
+  instead of looping. Automatic permission approval and model replacement deferred.
+
 ## Learning recovery, context, and evidence guardrails (2026-10-05)
 
 - Implemented on `feat/learning-recovery-guardrails` after EXP-016-R2 completed

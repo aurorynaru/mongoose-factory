@@ -32,6 +32,7 @@ export function renderStatus(store: Store, run: RunRow | null): string {
     `Last action  ${run.last_action ?? "-"}`,
     `Pending op   ${op ? `#${op.id} ${op.kind}/${op.purpose} [${op.status}]${op.nonce ? ` nonce=${op.nonce}` : ""}${op.message_id ? ` msg=${op.message_id}` : ""}` : "-"}`,
     `Session      ${run.current_session_id ?? "-"}   (sessions created: ${c.sessionsCreated})`,
+    `Recovery     inspection ${c.inspectionRecoveries}/1 used${c.inspectionRecoveries ? " (automatic allowance exhausted)" : ""}`,
     `Pause reason ${run.pause_reason ?? "-"}`,
     run.pause_detail ? `             ${run.pause_detail.replace(/\n/g, "\n             ")}` : null,
     ``,

@@ -2,7 +2,7 @@ import type { LogSink } from "../../util/log.js";
 import { opencodeMessageId } from "../../util/ids.js";
 import type { Presence, WorkerPort, WorkerResult } from "../types.js";
 import { OpenCodeClient, OpenCodeHttpError, type OcMessage } from "./client.js";
-import { inspectionLoop } from "./inspection-loop.js";
+import { inspectionLoop, repeatedBrowserReads } from "./inspection-loop.js";
 
 export interface OpenCodeWorkerOptions {
   client: OpenCodeClient;
@@ -11,6 +11,7 @@ export interface OpenCodeWorkerOptions {
   pollIntervalMs: number;
   noResponseGraceMs: number;
   maxSnapshotRefFailures?: number;
+  maxRepeatedBrowserReads?: number;
   log: LogSink;
   /** Restarts only the harness-owned backend (via the fixed PowerShell script). */
   restartOwned?: () => Promise<boolean>;
@@ -128,15 +129,17 @@ export class OpenCodeWorker implements WorkerPort {
           lastRetryMsg = st.message;
           this.o.log.log("warn", "worker.provider_retry", { sessionId, attempt: st.attempt, message: st.message });
         }
-        if (st.type !== "idle" && (this.o.maxSnapshotRefFailures ?? 6) > 0) {
+        if (st.type !== "idle" && ((this.o.maxSnapshotRefFailures ?? 6) > 0 || (this.o.maxRepeatedBrowserReads ?? 6) > 0)) {
           let msgs = (await this.o.client.listMessages(sessionId, 64)) ?? [];
           let replies = msgs.filter((m) => m.info.role === "assistant" && m.info.parentID === messageId);
-          let detail = inspectionLoop(replies, this.o.maxSnapshotRefFailures ?? 6);
+          const detect = (history: OcMessage[]) => inspectionLoop(history, this.o.maxSnapshotRefFailures ?? 6)
+            ?? repeatedBrowserReads(history, this.o.maxRepeatedBrowserReads ?? 6);
+          let detail = detect(replies);
           if (detail) {
             // Preserve the whole bounded task, and recheck for recovery/in-flight tools.
             msgs = (await this.o.client.listMessages(sessionId)) ?? msgs;
             replies = msgs.filter((m) => m.info.role === "assistant" && m.info.parentID === messageId);
-            detail = inspectionLoop(replies, this.o.maxSnapshotRefFailures ?? 6);
+            detail = detect(replies);
           }
           if (detail && !opts.shouldStop()) {
             // Recheck activity before interrupting: the task could have finished during inspection.

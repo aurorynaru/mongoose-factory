@@ -84,14 +84,30 @@ The harness monitors the current task's busy-session history. By default, six
 missing-reference failures for the same snapshot target among the last 24 tool
 calls trigger an interrupt of that session and `worker_inspection_loop`. A fresh
 untargeted snapshot or another successful tool resets the count. Repeated valid
-reads, other error types, previous tasks, and histories with pending/running tools
-do not trigger it. This is a fallback for the observed stale-ref loop, not a
-general detector of every unproductive action.
+reads with changing results, other error types, previous tasks, and histories
+with pending/running tools do not trigger that missing-reference check.
+
+A second check detects six consecutive completed `browser_snapshot` or
+`browser_evaluate` calls with identical arguments AND identical results, including
+successful "none" results. It checks the last 24 tool calls and resets on changed
+arguments/results, missing output, or another tool such as an explicit bounded
+wait. It does not infer that evaluate scripts are read-only or replay them; any
+earlier side effects must be inspected before further mutations. Accessing iframe
+contents from the top page can fail or return nothing; retrying the same script
+does not establish the target's absence. Use current frame-aware accessibility
+refs and honor any no-JavaScript restriction instead.
 
 Partial text and the tool transcript are saved under `data/runs/<run>/`. After
-an interrupt confirmed idle, the failure counts against the normal failure budget
-and the coordinator receives it only when you run `resume`; the old task is not
-automatically resubmitted. If interruption fails or idle cannot be confirmed,
+an interrupt confirmed idle, the failure counts against the normal failure budget.
+By default the first loop in a run is forwarded to the coordinator automatically
+with recovery allowance 1/1: one fresh untargeted snapshot and at most one corrected
+inspection using permitted rendered UI, or a pause/blocked outcome. It still
+consumes normal worker tasks, cycles, failures, and active-time budgets. The
+coordinator chooses the new task; the harness does not replay the old script,
+restart a browser, restore authentication, or relax the brief. Another detected
+loop in the same run pauses for operator review; `resume` then forwards its saved
+failure. The recovery count persists across resume and fresh worker sessions.
+If interruption fails or idle cannot be confirmed,
 the operation remains pending. Follow the attach command in the pause detail,
 press Esc, wait until idle, then resume. No backend/browser restart or automatic
 permission/question answer is performed.
@@ -100,6 +116,15 @@ permission/question answer is performed.
 values are `0` through `24`, with `0` disabling this monitor. Polling uses a bounded
 64-message tail; full task history is fetched when a loop is suspected or the task
 finishes. The monitor applies only while a harness controller is running.
+
+`opencode.maxRepeatedBrowserReads` has the same range and default, independently
+controlling identical-result monitoring. Set both thresholds to `0` to disable
+both checks. `opencode.autoRecoverInspectionLoops` defaults to `true`; set it to
+`false` for manual review on the first loop. Exact repetition detection is a
+heuristic: a legitimate poll can return an unchanged value repeatedly. Use a
+bounded wait or choose an appropriate threshold for such workflows. Varied
+scripts, changed results, and child-session loops are not covered by these checks;
+no detector guarantees that a model will always make useful progress.
 
 ## Context growth and interrupted output
 

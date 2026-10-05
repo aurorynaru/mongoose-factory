@@ -29,6 +29,11 @@ Browser recovery:
   blocker if the required state remains unclear. Do not cycle through stale refs
   or repeat identical reads. Do not reload/navigate/save/close/reopen unless this
   task permits it. Never bypass the brief through internal stores or APIs.
+- Successful reads returning the same result (including "none"/empty) do not
+  establish progress. Do not repeat identical scripts or snapshots indefinitely.
+  Inspect the correct visible frame with fresh accessibility refs; top-page access
+  to an iframe may be unavailable. Respect a no-JavaScript restriction even for
+  read-only evaluation. Stop after one corrected inspection if still unclear.
 
 Context and evidence:
 - Keep reads/output bounded; save long results under this experiment's evidence

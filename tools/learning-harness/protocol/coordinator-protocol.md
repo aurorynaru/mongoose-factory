@@ -76,6 +76,12 @@ Recovery and context:
 - After repeated identical reads or missing snapshot refs, request at most one fresh
   page snapshot and one corrected inspection, within the brief. If still unresolved,
   record the blocker; do not send the same failed task again or widen its scope.
+- The harness may interrupt an inspection loop and offer automatic recovery 1/1.
+  Use one fresh untargeted snapshot and at most one corrected visible inspection,
+  or PAUSE/complete blocked if recovery cannot stay within scope. Successful calls
+  returning the same "none"/empty result are not progress. Preserve no-JavaScript
+  and other task restrictions; never replay the interrupted script. A second loop
+  requires operator review; handoffs/new sessions do not reset this allowance.
 - A worker failure/interrupt may leave partial changes. Inspect current state and
   existing evidence before retrying any mutation. A fresh worker session changes
   conversation history only; it does not restore login or reset browser state/limits.

@@ -26,6 +26,8 @@
     "pollIntervalMs": 3000,
     "noResponseGraceSeconds": 120,
     "maxSnapshotRefFailures": 6,
+    "maxRepeatedBrowserReads": 6,
+    "autoRecoverInspectionLoops": true,
     "manageBackend": true,
     "autoRestartOnFailure": true
   },

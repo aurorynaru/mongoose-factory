@@ -24,6 +24,7 @@ export interface Counters {
   sessionsCreated: number;
   reasks: number;
   backendRestarts: number;
+  inspectionRecoveries: number;
 }
 
 export const ZERO_COUNTERS: Counters = {
@@ -38,6 +39,7 @@ export const ZERO_COUNTERS: Counters = {
   sessionsCreated: 0,
   reasks: 0,
   backendRestarts: 0,
+  inspectionRecoveries: 0,
 };
 
 /** Operator approvals for a specific pending item (keyed by review code -> item id). */

@@ -1,4 +1,30 @@
 import type { OcMessage } from "./client.js";
+import { createHash } from "node:crypto";
+
+/** Exact repetition only; different results or intervening tools are progress. */
+export function repeatedBrowserReads(replies: OcMessage[], maxReads: number): string | null {
+  if (maxReads <= 0) return null;
+  const tools = replies.flatMap((m) => m.parts.filter((p) => p.type === "tool"));
+  if (tools.some((p) => p.state?.status === "running" || p.state?.status === "pending")) return null;
+  let fingerprint = "";
+  let repeats = 0;
+  let name = "";
+  for (const p of tools.slice(-24)) {
+    // Evaluate can execute arbitrary JS. This guard only observes finished calls;
+    // recovery must never replay the script or assume it had no side effects.
+    if (!/(?:^|_)browser_(?:snapshot|evaluate)$/.test(p.tool ?? "") ||
+      p.state?.status !== "completed" || p.state.output === undefined || p.state.output === "") {
+      fingerprint = ""; repeats = 0; continue;
+    }
+    const current = createHash("sha256").update(JSON.stringify([p.tool, p.state.input, p.state.output])).digest("hex");
+    repeats = current === fingerprint ? repeats + 1 : 1;
+    fingerprint = current;
+    name = p.tool!;
+  }
+  return repeats >= maxReads
+    ? `${name} repeated identical arguments and returned the same result ${repeats} consecutive times without another tool or a changed result. Successful execution does not prove progress. Do not repeat those arguments or scripts; inspect the current page once using allowed rendered UI, then report a blocker if the required state remains unclear. Earlier actions may have had side effects; verify postconditions before any mutation.`
+    : null;
+}
 
 /** Detect the observed stale-reference loop, not legitimate repeated browser reads. */
 export function inspectionLoop(replies: OcMessage[], maxFailures: number): string | null {
