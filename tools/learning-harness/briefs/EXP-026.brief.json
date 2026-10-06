@@ -1,0 +1,123 @@
+{
+  "experiment_id": "EXP-026",
+  "title": "EXP-026 — Button Component Recovery Across Ordinary Close/Reopen",
+  "record_path": "experiments/EXP-026-button-component-recovery-across-ordinary-close-re.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Create exactly one new User-scoped classic BuildFromScratch Form `FX_ComponentRecoveryLab01`, record an untouched baseline, add exactly one native Button component using the verified component procedure, record that Button's observed component identity and type without changing its Caption or other unrelated properties, perform exactly one ordinary Designer Save to a clean state, close the Form once through its ordinary Form-tab close control without any explicit unload, reopen the same User-scoped Form through a supported Designer reopen path, and verify that the same Button component identity/type is recovered and the Form is clean. Treat the result only as UI-level structural component recovery across this specific ordinary close/reopen boundary; do not infer Forms-database durability, cache eviction, metadata unloading, Button Caption persistence, or behavior of other component types.",
+  "scope": {
+    "in_scope": [
+      "Read EXP-002-R2, EXP-003-R2 and EXP-019-R2 before mutation and use their verified semantic procedures for Form creation, component placement/configuration and fresh-dialog wizard selection",
+      "Read EXP-018 and the EXP-020 record only for boundaries so this experiment does not repeat their Button-Caption scope",
+      "Read-only preflight proving a usable Mongoose session, User editing scope and absence of `FX_ComponentRecoveryLab01` by exact and case-insensitive identity before creation",
+      "If session establishment is required, perform it only before the first Form/component mutation using the previously supported flow without reading, printing, logging or screenshotting credential values",
+      "Create exactly one User-scoped classic BuildFromScratch Form named `FX_ComponentRecoveryLab01` using the replay-verified fresh-dialog wizard-selection sequence and verified basic-form recipe",
+      "Capture an untouched post-creation baseline proving the target Form identity, User scope, clean state and absence of any Button component before the tested addition",
+      "Add exactly one native Button component using the verified component recipe",
+      "Record the Button's actual observed component Name/identity and component type immediately after placement; do not require a preselected hard-coded generated component name",
+      "Perform exactly one ordinary Designer Save after the Button addition and prove the Designer returns to a clean state",
+      "Close exactly `FX_ComponentRecoveryLab01` once through its ordinary Designer Form-tab close control with no explicit unload",
+      "Reopen exactly the same User-scoped Form through the supported Designer Form-menu recent-forms path or Select Form path if needed",
+      "After reopen, prove the same recorded Button component identity and Button type are present and the Form is clean",
+      "Record screenshots/accessibility/property evidence under `evidence/EXP-026/` that visibly identifies the target Form, User scope, Button identity/type, close state and reopened result",
+      "Final read-only audit of target cardinality and repository confinement"
+    ],
+    "out_of_scope": [
+      "Button Caption persistence or modification",
+      "Form Caption, Form Description, Static Caption or No Colon behavior",
+      "Form variables, variable serialization, Persistent/Global behavior or FormSync",
+      "Explicit Form/global-object unload or IDO-metadata cache behavior",
+      "Testing database durability, generated SQL or Forms-database contents",
+      "Launching an additional Web Designer client or investigating EXP-023/024/025 launch behavior",
+      "Bindings, IDOs, events, scripts, validators, event handlers or runtime behavior of the Button",
+      "Testing any component type other than the single native Button",
+      "Creating a reusable recipe from this first execution",
+      "Inferring that ordinary close/reopen evicted caches or forced a database read"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Create, modify or delete any non-FX_ Mongoose artifact",
+    "Create more than one target Form or more than one Button component",
+    "Change the Button Caption, Form Caption, Form Description, Static Caption, No Colon or any unrelated component/Form property",
+    "Add bindings, event handlers, scripts, validators, IDO references or runtime actions to the Button",
+    "Invoke `Unload All Global Form Objects`, change `Unload IDO Metadata With Forms`, or change any User Preference",
+    "Save more than once after the tested Button addition",
+    "Regenerate Form",
+    "Close/reopen the target more than once as part of the tested lifecycle",
+    "Use direct cold `?MGForm=` navigation as the reopen mechanism",
+    "Launch another Web Designer, use Runtime Builder or test any alternate Designer-launch route",
+    "Authenticate, click Sign In/OK, reauthenticate, log out or restart the browser after the first Form/component mutation has begun; if the session becomes unusable after mutation starts, stop blocked",
+    "Read, print, log or screenshot credential values",
+    "Use shell/module installation, synthetic DOM activation or alternate scripted UI actions as recovery for a failed semantic browser step",
+    "Widen recovery beyond one fresh snapshot and one corrected read-only inspection; if state remains unresolved, stop blocked"
+  ],
+  "prohibited_patterns": [
+    "\\b(set|edit|change|modify)\\b[^.\\n]{0,50}\\b(button\\s+caption|form\\s+caption|description|no\\s+colon)\\b",
+    "\\b(create|add|edit|modify)\\b[^.\\n]{0,50}\\b(form\\s+variable|variable|binding|event\\s+handler|validator|script)\\b",
+    "\\b(unload\\s+all\\s+global\\s+form\\s+objects|clearcache|formsync)\\b",
+    "\\b(open\\s+designer\\s+in\\s+a\\s+new\\s+window|runtime\\s+builder)\\b",
+    "\\bregenerate\\s+form\\b",
+    "\\?MGForm="
+  ],
+  "related_experiments": [
+    "EXP-002-R2",
+    "EXP-003-R2",
+    "EXP-018",
+    "EXP-019-R2",
+    "EXP-020",
+    "EXP-008-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_ComponentRecoveryLab01",
+    "artifacts": [
+      "FX_ComponentRecoveryLab01"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Before mutation, evidence proves a usable Mongoose workflow, editing scope User, and zero exact/case-insensitive `FX_ComponentRecoveryLab01` matches in a valid target inventory. If session establishment was necessary, evidence shows it completed before mutation without credential exposure."
+    },
+    {
+      "id": "AC-2",
+      "description": "Evidence proves exactly one User-scoped classic BuildFromScratch Form `FX_ComponentRecoveryLab01` was created using the verified creation path, is open in Designer, and is clean before the tested component addition."
+    },
+    {
+      "id": "AC-3",
+      "description": "An untouched post-creation baseline visibly identifies `FX_ComponentRecoveryLab01`, User scope, clean state, and zero Button components on the Form before the tested addition."
+    },
+    {
+      "id": "AC-4",
+      "description": "Evidence immediately after placement shows exactly one native Button component on `FX_ComponentRecoveryLab01` and records its observed component Name/identity and Button type; no Button Caption or unrelated Form/component property is intentionally changed."
+    },
+    {
+      "id": "AC-5",
+      "description": "Exactly one ordinary Designer Save occurs after Button placement; post-Save evidence shows the Form clean and the same recorded Button identity/type still present."
+    },
+    {
+      "id": "AC-6",
+      "description": "The target Form is closed exactly once using its ordinary Form-tab close control with no unsaved-change prompt and no explicit unload; evidence shows `FX_ComponentRecoveryLab01` is no longer open immediately after the close."
+    },
+    {
+      "id": "AC-7",
+      "description": "The same User-scoped `FX_ComponentRecoveryLab01` is reopened through a supported Designer reopen path, and decisive evidence shows the exact previously recorded Button component identity is present with type Button and the Form is clean."
+    },
+    {
+      "id": "AC-8",
+      "description": "Final evidence proves exactly one case-insensitive `FX_ComponentRecoveryLab01` exists, no additional tested Button was created, no explicit unload/Regenerate or post-mutation authentication action occurred, and repository changes are confined to the EXP-026 record plus `evidence/EXP-026/`. The result is classified only as observed UI-level structural recovery across ordinary close/reopen."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-026",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261006-162608-kmU9. Rationale: EXP-025 is blocked because the available MCP surface cannot satisfy its required persistent lifecycle-telemetry gate, so the next experiment should not work around that tooling limitation. A small independent learning step is to establish whether a native Button component itself recovers across the already-used weak ordinary Form-tab close/reopen boundary. This builds only on replay-verified prerequisites: basic BuildFromScratch Form creation, native component placement/configuration, and the fresh-dialog classic wizard-selection sequence. It deliberately does not test Button Caption, avoiding overlap with the unresolved/unknown EXP-020 record and the blocked EXP-018 Button-Caption attempt. Structural Button recovery is a useful prerequisite before any later Button-property lifecycle experiment."
+}
