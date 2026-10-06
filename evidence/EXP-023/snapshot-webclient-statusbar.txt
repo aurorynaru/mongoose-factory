@@ -1,0 +1,12 @@
+Found 1 match for /ScopeType|portal-notification|Session Expired/:
+
+- generic [ref=e1]:
+  - tablist [ref=e271]:
+    ...
+    - tab [selected] [ref=e274] [cursor=pointer]:
+      - heading "Component" [level=2] [ref=e275]
+  - toolbar [ref=e276]:
+    - generic [ref=e277]: "[ ScopeType: User / ScopeName: <secret>SECRET_MONGOOSE_USERNAME</secret> ]"
+    - generic [ref=e278]: en-US
+    - separator [ref=e279]
+    - img "Powered by Infor" [ref=e280]

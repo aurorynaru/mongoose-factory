@@ -1,8 +1,8 @@
 <!-- harness-context reviewed: true -->
-<!-- updated by autopilot after EXP-021 (R-20261006-004825-suU5); specialist findings verdict: supports; 2026-10-06T02:01:11.011Z -->
-<!-- FINALIZED after EXP-021 (R-20261006-004825-suU5). Authoritative coordinator outcome: ACCEPTED observation. AC-1..AC-8 supported by completed worker reports; AC-9 independently reconciled after the T9 interruption and T10/T11 shell loops. Specialist review verdict: supports, with evidence-wording corrections incorporated. Static component Caption recovery across ordinary close/reopen is observed at UI level only; no replay-verified promotion. The EXP-021 record text saying AWAITING COORDINATOR ACCEPTANCE / harness paused is historical pre-acceptance state and is superseded by this final outcome. --> <!-- EXP-010-R3 remains BLOCKED/non-accepted: AC-1..AC-7 passed; AC-8 exactly-one inventory proof unresolved because Session Expired invalidated the final Select Form read. --> <!-- EXP-017 remains BLOCKED at its rendered exact-name prerequisite; View/Generate was not tested. -->
+<!-- updated by autopilot after EXP-023 (R-20261006-151910-W6Bn); specialist findings verdict: objects; 2026-10-06T07:33:22.008Z -->
+<!-- finalized after EXP-023 specialist review (R-20261006-151910-W6Bn). EXP-023 remains BLOCKED. Two native click attempts are recorded; both reportedly failed before the Designer command received the pointer action. The experiment text is internally inconsistent about whether the second corrected click was an authorized recovery or a prohibited retry, so recovery-policy compliance is unresolved. No whole-run claim is made that no Designer appeared after attempt 2 because no final page/window enumeration after that attempt is identified in the supplied evidence. --> <!-- EXP-021 remains an ACCEPTED observation only: Static component Caption recovery across ordinary close/reopen was observed at UI level; no replay-verified promotion and no database/cache/backend-session claim. EXP-010-R3 remains BLOCKED/non-accepted because final inventory proof was invalidated by Session Expired. EXP-017 remains BLOCKED before View/Generate. -->
 
-# 1. Project and workflow
+# 1\. Project and workflow
 
 The project is an autonomous **Infor Mongoose factory** being built in C:\\AI\\mongoose-factory. Its long-term goal is to take a natural-language request, optionally with reference images, and reliably build Mongoose Forms/portal-related artifacts using browser automation and a growing body of verified procedures and recipes.
 
@@ -29,7 +29,7 @@ A run stopped because prerequisites or prohibitions cannot be satisfied is **blo
 
 “Fresh worker context” establishes independence only at the harness/OpenCode-session level. It does not establish independence across browser, Portal authentication, Web Client, Web Designer backend, IDO Runtime, tenant, configuration or other product sessions unless explicitly tested.
 
-# 2. Environment facts that matter
+# 2\. Environment facts that matter
 
 Current proven environment:
 
@@ -38,8 +38,8 @@ Current proven environment:
 -   Tenant: **G6R8LJ9Q4E8C2Z8Y\_DEM**
 -   Configuration: **G6R8LJ9Q4E8C2Z8Y\_MONGOOSE\_DEM\_DEFAULT**
 -   Editing permission: **Site Developer**
--   Factory experiments use explicitly confirmed **User-scope** versions.
--   For tested scoped identity checks, use **Form name + ScopeType + ScopeName**.
+-   Factory experiments use explicitly confirmed **User-scope** editing when required.
+-   For scoped Form-version identity checks, use **Form name + ScopeType + ScopeName**. A Designer status bar showing User scope establishes current editing scope, not by itself the exact stored version identity of every already-loaded Form.
 -   User, Group and Site are customized versions; Vendor Default is the base/vendor version.
 -   Documented precedence: **User → Group → Site → Vendor Default**.
 -   Current learning lane: classic **BuildFromScratch** Forms.
@@ -48,22 +48,24 @@ Current proven environment:
 Environment/browser observations:
 
 -   Web Client normally runs inside the Portal iframe; Web Designer opens separately.
--   Numeric Ext JS IDs drift between sessions.
+-   Numeric Ext JS IDs drift between sessions and are implementation details, not supported product contracts.
 -   Native/frame-scoped Playwright interaction has generally been more reliable than synthetic/low-level DOM manipulation.
 -   Hidden/off-screen Ext controls can remain in the DOM. DOM/accessibility state does **not** by itself prove rendered UI state or what Mongoose will process.
--   EXP-017 observed disagreement between off-screen accessibility/HTML View state and the rendered Save selection. Generate was never reached.
 -   Direct cold ?MGForm=... navigation has been unreliable.
 -   Bare portal-root navigation has produced HTTP 403 Missing Authentication Token.
 -   Designer recent-forms and Select Form are tested navigation/reopen paths.
 -   Closing a clean Designer Form tab can produce no prompt.
 -   A session-expired Select Form result is invalid inventory evidence.
--   EXP-010-R3 showed that Designer can remain usable through Save→close→reopen while the separate Web Client later reports **Session Expired**. This does not prove continuity of Portal authentication, Web Client, IDO Runtime or backend Designer sessions.
--   EXP-021 began with the Web Client session expired while the Designer still showed prior state. Because no target mutation had begun and the experiment permitted establishment, Session Expired → OK → config-group Sign In → OK was performed **before mutation** and disclosed. No authentication/session establishment occurred after the first target mutation.
--   Pre-mutation establishment being acceptable in EXP-021 does not retroactively make EXP-010-R2 acceptable; that run explicitly prohibited deliberate post-start reauthentication/session establishment.
+-   EXP-010-R3 showed that Designer can remain usable while the separate Web Client later reports **Session Expired**. This does not prove continuity of Portal authentication, Web Client, IDO Runtime or backend Designer sessions.
+-   EXP-021 permitted and used session establishment **before mutation**; this does not retroactively validate runs that prohibited reauthentication.
+-   EXP-023 showed a Web Client UI that rendered an already-signed-in state; no login was performed during EXP-023. This does not by itself prove that a new server-backed request would have succeeded.
+-   EXP-023 supported the narrow browser observation that **no rendered runtime Form/tab was visible in the Web Client** at the inspected preflight state. Hidden, cached or internal active-Form state was not established.
+-   The second rendered Designer split control previously correlated with the successful launch route in EXP-009/R2 was present/enabled in EXP-023; in that browser state its implementation ID was mgtoolbarbutton-1126.
+-   During EXP-023, an x-mask intercepted pointer events while the Select Form dialog was visible. Attribution of that mask specifically to the Select Form dialog is **plausible but unverified**.
 
-Documented/current-product guidance indicates that **ordinary Form close is cache-preserving**: Mongoose can retain the Form and associated global objects in memory after close, and reopening can use locally cached state. Exact equivalence of adjacent/current documentation to build 2026.09.08 remains **unverified**.
+Current documentation indicates that an ordinary Form close **can preserve Form/global-object state in memory** and reopening can use a locally cached version. Exact applicability of adjacent/current 2026.10 documentation to build 2026.09.08 remains **unverified**.
 
-Therefore **close-only is intentionally a weak persistence boundary**. Recovery across it cannot distinguish Forms-database readback from reconstruction using retained in-memory Form/global-object state.
+Therefore ordinary close is **not a reliable cache-eviction or database-readback boundary**. Factory terminology retains **weak persistence boundary** for close-only tests.
 
 Explicit form/global-object unload route:
 
@@ -80,8 +82,9 @@ The **Unload IDO Metadata With Forms** preference was observed enabled earlier. 
 Factory terminology:
 
 -   **close-only** = ordinary Designer Form-tab close/reopen without explicit unload.
--   **weak persistence boundary** = ordinary close/reopen; compatible with cache reuse.
--   **new Web Designer client instance** = newly launched/rendered Designer tab/window only; not proof of a new backend/session boundary.
+-   **weak persistence boundary** = ordinary close/reopen; compatible with retained cached state.
+-   **new Web Designer client instance** = newly launched/rendered Designer page/window only; not proof of a new backend/session boundary.
+-   **additional Designer while retaining existing Designer** = **unverified**; EXP-023 did not establish whether the launch command would create a new client or focus/reuse an existing one.
 
 ## Documented Form-variable baseline
 
@@ -94,7 +97,7 @@ Documented behavior indicates:
 -   **Global** governs visibility/scope.
 -   Form-level/global and persistent/temporary are independent attributes.
 -   An explicitly designed Form-variable definition is Form metadata.
--   Current FormSync documentation can represent persistent Form variables under structures such as PersistentVariables().
+-   FormSync representations can contain structures such as PersistentVariables().
 -   Some nonpersistent variables can be created automatically when referenced and therefore do not necessarily imply a separately pre-created design-time definition.
 
 Current lifecycle observations:
@@ -104,15 +107,16 @@ Current lifecycle observations:
 -   Description + ordinary close/reopen: **replay-verified**.
 -   Description + newly launched Designer: **replay-verified at UI-recovery level only**.
 -   Form-level Caption + ordinary close/reopen: **observed only**.
--   **Static component Caption + ordinary close/reopen: observed only by EXP-021.**
+-   Static component Caption + ordinary close/reopen: **observed only by EXP-021**.
 -   Persistent=True variable immediately after Save: **observed visible**, serialization unproven.
 -   Persistent=True variable after ordinary close/reopen: EXP-014 **observed absent**.
 -   FormSync Script generation for one exact selected User-scoped customized Form: **replay-verified by EXP-016 + EXP-016-R2**.
 -   Specific Output=View visible display behavior remains **unverified**.
+-   Additional-Designer launch with an existing Designer retained: **unverified / blocked in EXP-023**.
 
-Generated FormSync SQL is customization-definition SQL that can subsequently be executed against a destination Forms database. Generation was non-mutating to the inspected Source Form, but the SQL itself is executable and not intrinsically read-only.
+Generated FormSync SQL is customization-definition SQL that can subsequently be executed against a destination Forms database. Generation was non-mutating to the inspected Source Form, but the generated SQL itself is executable and not intrinsically read-only.
 
-# 3. Decisions and rules established so far
+# 3\. Decisions and rules established so far
 
 Permanent knowledge progression:
 
@@ -130,30 +134,31 @@ Core rules:
 -   Read current state before retrying; never blindly repeat a mutation.
 -   Record blockers, failures, negative findings and corrections.
 -   Evidence must prove semantic state transitions, not merely clicks or filenames.
--   A screenshot proves only the pixels/rendered state actually visible in it.
--   Keep **rendered-visible evidence** separate from **accessibility-derived/property evidence**.
--   Cropped/truncated text does not visibly prove its complete string merely because accessibility exposes the full value.
--   Verify customized-object identity using **Name + ScopeType + ScopeName**.
+-   A screenshot proves only the pixels actually visible in it.
+-   Keep rendered-visible evidence separate from accessibility/property evidence.
+-   Verify customized-object identity using **Name + ScopeType + ScopeName** when exact scoped version identity matters.
+-   Current editing scope does not by itself prove the scoped identity of an already-cached Form.
 -   Version identity and storage/serialization provenance are separate.
 -   Do not generalize across metadata classes, scopes or lifecycle boundaries.
--   Treat internal request paths, Ext IDs/stores, model IDs, numeric ScopeType values and generated SQL layout as implementation details.
--   Do not manipulate hidden controls or preferences/cache state merely to force a pass.
+-   Treat request paths, Ext IDs/stores, model IDs, numeric ScopeType values and generated SQL layout as implementation details.
 -   Ordinary close/reopen does not prove Forms-database durability or cache eviction.
 -   Form Caption, Description, Static Caption, Button Caption and Form-variable definitions are separate metadata classes.
 -   **Persistent is a runtime-value-lifetime property, not proof of design-time definition persistence.**
 -   Immediate post-Save UI visibility is insufficient proof of variable serialization.
 -   No reusable Form-variable creation/persistence recipe has been promoted.
--   FormSync Script and Pseudo Code are different representations.
--   Generic SQL such as DELETE FROM Variables WHERE FormID = @FormID does **not** prove a specific named variable exists or was serialized.
+-   Generic Variables/FormID SQL does **not** prove a particular named variable exists or was serialized.
 -   Positive serialization evidence must contain variable-specific identity/data.
--   Negative serialization evidence first requires proving the representation exposes a known-present variable.
+-   Negative serialization evidence first requires proving that the inspected representation exposes a known-present variable.
 -   A session-expired/recovery-obstructed Select Form result proves neither absence nor cardinality.
--   **One creation operation is not the same as final inventory cardinality.**
--   One component-creation action plus one visible component does not automatically establish complete component cardinality when hidden/off-screen components have not been excluded.
--   A property-edit trace establishes recorded deliberate mutations, not a complete metadata diff; framework-managed Wizard/Save changes must not be silently excluded.
--   Failed audit/recovery tooling must not trigger blind replay of commands that may already have side effects. Preserve partial results and use only permitted inspection/reconciliation.
--   An independent trace/repository reconciliation supports action counts and repository confinement, but does not substitute for inspection of screenshot pixels when visual semantics are an acceptance criterion.
--   If a required acceptance criterion is unresolved, semantic success may remain observed/corroborating evidence but cannot promote the run.
+-   One creation operation is not the same as final inventory cardinality.
+-   Failed tooling must not trigger blind replay of actions that might already have side effects.
+-   After an interrupted or ambiguous browser action, inspect the postcondition before any authorized corrective interaction.
+-   Distinguish **click attempts** from **successful command activation**.
+-   A visible/enabled control is not proof it is pointer-actionable through a modal/mask state.
+-   Failure to activate a command establishes nothing about what that command would have done.
+-   When a corrected retry conflicts with an experiment's explicit no-retry prohibition, protocol compliance must be treated as unresolved unless authorization is explicitly documented.
+-   A whole-run browser postcondition cannot be inferred from an earlier screenshot when another interaction occurred afterward.
+-   If a required acceptance criterion is unresolved, the run cannot be promoted.
 -   A single accepted experiment establishes **observed**, not replay-verified, behavior.
 
 Experiment status:
@@ -164,23 +169,20 @@ Experiment status:
 -   **EXP-008 + R2:** Description + close/reopen — replay-verified.
 -   **EXP-009 + R2:** Description + new Designer — replay-verified at UI-recovery level.
 -   **EXP-010:** Form Caption + close/reopen — observed.
--   **EXP-010-R2:** blocked/non-accepted due prohibited reauthentication; corroborating only.
--   **EXP-010-R3:** blocked/non-accepted; AC-1..AC-7 PASS, AC-8 inventory unresolved due Session Expired.
--   **EXP-011:** blocked at preflight.
--   **EXP-012:** blocked after variable creation, before Save.
--   **EXP-013:** blocked/non-accepted; immediate post-Save variable visibility observed.
--   **EXP-014:** blocked because post-reopen variable recovery failed.
--   **EXP-015:** blocked before intended serialization investigation completed.
--   **EXP-016:** FormSync Script-generation route observed.
--   **EXP-016-R2:** Script-generation route replay-verified; Output=View semantics unresolved.
--   **EXP-017:** blocked at rendered exact-name prerequisite; View/Generate not tested.
+-   **EXP-010-R2:** blocked/non-accepted due prohibited reauthentication.
+-   **EXP-010-R3:** blocked/non-accepted; final inventory unresolved due Session Expired.
+-   **EXP-011–015:** variable investigations blocked/incomplete; no serialization recipe.
+-   **EXP-016:** FormSync Script route observed.
+-   **EXP-016-R2:** Script route replay-verified; View semantics unresolved.
+-   **EXP-017:** blocked before rendered View/Generate prerequisite.
 -   **EXP-018:** blocked at wizard-selection prerequisite.
--   **EXP-019:** fresh-dialog Classic + Build from Scratch sequence observed accepted.
--   **EXP-019-R2:** fresh-dialog/rendered-dropdown/single-OK prefix replay-verified.
--   **EXP-020:** blocked during Button Caption editing before Save/close/reopen.
--   **EXP-021:** **accepted observation** — one execution observed Static Caption recovery across one ordinary Save→Form-tab close→recent-forms reopen; AC-1..AC-8 supported and AC-9 independently reconciled; **not replay-verified**.
+-   **EXP-019:** fresh-dialog Classic + Build from Scratch sequence observed.
+-   **EXP-019-R2:** wizard prefix replay-verified.
+-   **EXP-020:** blocked during Button Caption editing before persistence testing.
+-   **EXP-021:** accepted observation — Static Caption recovered across one ordinary Save→close→recent-forms reopen; not replay-verified.
+-   **EXP-023:** **BLOCKED**. Two native click attempts are recorded. Both reportedly encountered pointer interception before successful Designer command activation. Whether attempt 2 was an authorized corrected recovery or a violation of the no-retry prohibition is unresolved. No final browser page/window enumeration after attempt 2 is identified.
 
-# 4. Lessons learned and pitfalls per experiment
+# 4\. Lessons learned and pitfalls per experiment
 
 **EXP-001–003/R2:** environment fingerprint, BuildFromScratch creation and Static/Edit/Button fundamentals established verified foundations.
 
@@ -208,58 +210,61 @@ cancel inherited wizard if present
 
 This proves the coupled sequence, not which constituent action caused success.
 
-**EXP-020:** Button Caption literal entry was not reliably established. The property editor behaved as a string-resource combobox and the controlled literal did not remain exact. No persistence boundary was tested.
+**EXP-020:** Button Caption literal entry was not reliably established. No persistence boundary was tested.
 
-**EXP-010-R3:** Caption recovery through AC-7 succeeded, but final exactly-one inventory proof was invalidated by Session Expired. Decisive blocker evidence:
+**EXP-010-R3:** Caption recovery progressed through its lifecycle checks, but final exactly-one inventory proof was invalidated by Session Expired.
 
--   evidence/EXP-010-R3/32-t10-select-form-filter-lab13-one-row.png — filtered Select Form state with overlapping Session Expired; zero rows are invalid inventory evidence.
+-   evidence/EXP-010-R3/32-t10-select-form-filter-lab13-one-row.png — Select Form overlapped by Session Expired; displayed zero rows are invalid inventory evidence.
 -   evidence/EXP-010-R3/33-t10-blocker-session-expired-prompt.png — Session Expired prompt left untouched.
 
-**EXP-021 — Static Caption Recovery Across Ordinary Close/Reopen**
+**EXP-021:** one Static Caption was observed recovered unchanged across one ordinary close/reopen at UI level. This remains a weak-boundary observation, not proof of Forms-database durability, cache eviction or replay verification.
 
-At preflight, FX\_StaticCaptionLab01 had **no matching row on the tested live Select Form Name-filter surface**, case-insensitively, with an FX\_ positive control. This is UI-level target-absence evidence only; it is not a direct physical Forms-database inventory proof.
+**EXP-023 — Additional Web Designer Launch While Retaining Existing Client**
 
-A User-scope classic BuildFromScratch FX\_StaticCaptionLab01 was created. One Static component, FX\_StaticCaptionStatic, was created and visibly verified. Unless complete component inventory evidence is separately established, this does not claim that no other hidden/off-screen component could exist.
+Preflight showed a Web Client UI in an already-signed-in rendered state; no login was performed. The corrected Web Client capture supported that no **rendered** runtime Form/tab was visible. The inherited Designer visibly retained its existing tabs/state, and its current editing scope was visibly User; this status-bar evidence alone does not establish the stored scoped-version identity of each already-loaded Form.
 
-The Static's Caption was the only **recorded deliberate target-property mutation**, set to Static Caption Close Only; recorded non-Caption comparison properties remained equal. This is not a complete before/after Form-definition diff and does not exclude framework-managed metadata work performed by Wizard Finish or Save.
+Two native click attempts are recorded against the second Designer split control:
 
-Exactly one recorded ordinary Designer Save was followed by one ordinary target Form-tab close and one Designer Form-menu recent-forms reopen. After reopen, the matching User-scoped Form/component state was present: scoped Form identity matched by Name + ScopeType + ScopeName, and a component with the same Name and equal recorded comparison properties was observed. This establishes UI-level matching state, not internal object-instance identity.
+1.  **Attempt 1:** Playwright timed out with an x-mask intercepting pointer events. A subsequent inspection established that no new rendered Designer client was observed at that point.
+2.  **Attempt 2:** described by the worker as a corrected click after a fresh snapshot; it also reportedly encountered pointer interception. The supplied record does **not** identify an equivalent final browser page/window enumeration after this attempt.
 
-Post-reopen rendered canvas text showed Static Caption Close Only:. The exact **Caption property value** Static Caption Close Only was accessibility/property-grid-derived; it is not evidence of physical storage representation or Forms-database serialization. Static Caption and colon display are separate concerns in Mongoose, so the rendered trailing colon is only corroborating display evidence. If future evidence relies on the colon itself, the Static component's **No Colon** property should be recorded and compared explicitly.
+The experiment's own text simultaneously prohibited retry after error and described a corrected second attempt. Therefore whether attempt 2 was authorized recovery or a protocol violation is **unresolved**. In either case, neither click is evidenced as successfully activating the Mongoose Designer launch command.
 
-EXP-021 therefore proves only **one accepted observation of UI-level Static Caption recovery across the tested weak close-only boundary**. It does not prove Forms-database durability, cache eviction, backend-session continuity, object-instance continuity, or Button/Edit behavior.
+Decisive evidence and limits:
 
-Evidence/audit paths:
+-   evidence/EXP-023/04-webclient-no-form-open-corrected.png — inspected Web Client capture supporting the narrow claim that no rendered runtime Form/tab was visible. It does not exclude hidden/cached/internal Form state.
+-   evidence/EXP-023/05-launch-attempt1-mask-interception.png — inspected visible state after attempt 1; supports no visible launch effect after that attempt. It does not prove the final state after attempt 2 and does not establish causal ownership of the mask.
+-   evidence/EXP-023/01-preflight-designer-inherited-state.png — relevant pixel evidence for visible inherited Designer tabs/state and User editing-scope display.
+-   evidence/EXP-023/03-webclient-select-form-dialog-preserved.png — supports the pre-existing Select Form dialog state.
+-   evidence/EXP-023/02-preflight-webclient-no-form-open.png — **do not use for Web Client claims**; the experiment record identifies it as a defective Designer-frame capture.
+-   evidence/EXP-023/snapshot-webclient-toolbar.txt and snapshot-webclient-toolbar-enabledstate.txt — accessibility evidence that the Designer controls were present/enabled; not proof of pointer actionability.
+-   evidence/EXP-023/snapshot-webclient-runtimeformtabs.txt — supports absence of rendered runtime Form tabs at the inspected point; not hidden-state evidence.
+-   evidence/EXP-023/snapshot-designer-tabs-toolbar.txt and snapshot-designer-statusbar.txt — support inherited rendered Designer state and current editing scope.
 
--   experiments/EXP-021-static-caption-recovery-across-ordinary-close-reop.md
--   evidence/EXP-021/ — screenshots 01–24
--   evidence/EXP-021/19... — useful pre-Save Caption-state evidence; cropped property-grid text must remain labeled as cropped, with exact accessibility-derived values reported separately.
--   evidence/EXP-021/24... — decisive post-reopen Form/component/canvas-state evidence if independent pixel review is required.
--   evidence/EXP-021/17... and 18... — relevant if component-cardinality claims are later reconsidered; do not infer complete inventory unless the visible contents actually establish it.
--   evidence/EXP-021/independent-ac9-reconciliation.md — independently supports action-count and repository-confinement audit only; it did **not** independently inspect screenshot contents and therefore does not independently establish AC-3/AC-4/AC-8 visual semantics.
+No Form was intentionally opened, closed, created, modified or saved; no login, unload, cache clear or client closure was performed by EXP-023. The experiment establishes no Caption recovery result, no additional-client capability, no backend-session independence and no persistence result.
 
-T9 was interrupted before an authoritative final report. The independent AC-9 reconciliation subsequently supported sequence/action counts and repository confinement. T10/T11 failed in shell-loop handling and supplied no additional Mongoose evidence. The record's earlier AWAITING COORDINATOR ACCEPTANCE status is historical; the authoritative final state is **ACCEPTED observation**.
+# 5\. Negative findings / blocked topics and why
 
-# 5. Negative findings / blocked topics and why
+-   **Form variables:** immediate UI visibility has not established serialization; close/reopen loss remains unresolved. No verified variable-persistence procedure.
+-   **Form Caption replay:** later attempts have been blocked/non-accepted; EXP-010 remains observed only.
+-   **Static Caption:** EXP-021 remains observed only.
+-   **Button Caption:** exact literal property entry was not established in EXP-020; lifecycle persistence was never reached.
+-   **FormSync View:** rendered Output=View semantics remain unverified.
+-   **Session expiry:** can invalidate inventory reads while a Designer still appears usable.
+-   **EXP-017 hidden controls:** accessibility/DOM state cannot substitute for required rendered selection state.
+-   **Additional Designer with existing Designer retained:** EXP-023 did not successfully activate the launch command, so new-client-versus-focus/reuse remains unknown.
+-   **EXP-023 recovery compliance:** two click attempts occurred despite no-retry wording; whether attempt 2 was authorized is unresolved.
+-   **EXP-023 final postcondition:** no final page/window enumeration after attempt 2 is identified, so “no new Designer client appeared during the entire run” is **not proven**.
+-   **EXP-023 mask ownership:** Select Form was visible when x-mask intercepted pointer events, but causation/ownership remains **unverified**.
+-   **Inherited EXP-021-R4 / EXP-022 property state:** preserved rather than resolved by EXP-023.
 
--   **Form-variable definition retention remains unresolved.** UI disappearance does not establish serialization failure.
--   **Form Caption close/reopen remains not replay-verified.** EXP-010 is observed; R2 was non-accepted; R3 was blocked at its final inventory audit.
--   **Static Caption close/reopen is now observed but not replay-verified.** EXP-021 is one accepted execution only.
--   EXP-021 does not prove complete component inventory unless screenshots 17/18 or another approved surface establish that explicitly.
--   EXP-021's rendered trailing colon does not by itself prove the exact Caption property because colon display is separately controlled.
--   **Button Caption close/reopen remains untested.** EXP-020 blocked before Save.
--   **FormSync View behavior remains unverified.**
--   Session expiry/recovery remains a recurring experimental hazard.
--   No close-only experiment proves physical Forms-database durability, cache eviction, commit mechanics, IDO-metadata behavior or stronger backend/session independence.
+# 6\. Open questions and sensible next directions
 
-# 6. Open questions and sensible next directions
-
-1.  **Static Caption replay:** independently replay EXP-021 on a new FX\_ Form if repeatability at the **same weak cache-preserving close/reopen boundary** is desired. An EXP-021-R2 replay would not establish Forms-metadata/database retrieval by itself.
-2.  **Static Caption stronger boundary:** if the goal becomes proving recovery after retained Form/global-object memory is removed, design a separate experiment crossing the documented **Unload All Global Form Objects** boundary. Do not fold that stronger question into the close-only replay.
-3.  **Static display evidence:** explicitly capture/compare **No Colon** if the rendered trailing colon will be used as semantic corroboration.
-4.  **Form Caption close/reopen:** a future compliant replay still needs the required final inventory audit without post-mutation session recovery.
-5.  **Form-variable serialization:** establish a representation that demonstrably exposes a known-present saved variable, then obtain variable-specific evidence.
-6.  **Button Caption editing:** first establish a small replayable exact-literal editing procedure before attempting persistence.
-7.  **FormSync View:** test only with visibly rendered View selection and disabled Filename checkpoint before Generate.
-8.  **Browser/session boundaries:** continue distinguishing Designer usability from Web Client/Portal authentication and backend/session state.
-9.  Continue strengthening lifecycle tests one boundary and metadata class at a time; do not infer database durability, cache behavior, component cardinality, complete metadata diffs or cross-class behavior from ordinary close/reopen observations.
+-   Test, in a separately approved bounded experiment, whether the **Designer split-button UI command** can create a distinct additional rendered Designer while retaining the original.
+-   A future experiment may explicitly permit closing the pre-existing Select Form inventory dialog before the one launch activation. This would be a new starting condition, not a continuation or retry of EXP-023.
+-   Define browser/client-level distinctness before testing: for example, a newly enumerated browser page/window with a Designer URL plus independently rendered editing-scope UI. This would still **not** prove distinct Portal, authentication, IDO Runtime or Designer backend sessions.
+-   Require explicit action-budget wording distinguishing one **click attempt** from one **successful command activation**, and specify whether a corrected locator/click is permitted after pointer interception.
+-   After the final permitted interaction, always capture a final browser page/window enumeration when “new client versus no new client” is an acceptance criterion.
+-   Static Caption still needs a clean independent replay before promotion from observed to replay-verified.
+-   Form-variable work requires variable-specific serialization evidence before any persistence recipe can be promoted.
+-   Keep lifecycle experiments one boundary at a time: ordinary close, explicit form/global-object unload, newly launched Designer, and stronger session/cache boundaries must remain distinct.

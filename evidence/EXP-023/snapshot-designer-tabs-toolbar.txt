@@ -1,0 +1,53 @@
+Found 8 matches for /tablist|closable|Save|Regenerate/:
+
+- generic [ref=e1]:
+  - toolbar [ref=e11]:
+    - button [ref=e12] [cursor=pointer]:
+      - button "Design" [ref=e13]
+    - button [ref=e15] [cursor=pointer]:
+      - button "Save" [ref=e734]
+    - button [ref=e16] [cursor=pointer]:
+      - button "Regenerate Form" [ref=e736]
+    - separator [ref=e17]
+    - button [ref=e18] [cursor=pointer]:
+      - button "New" [ref=e19]
+
+----
+
+- generic [ref=e1]:
+  - grid "Toolbox" [ref=e44]:
+    ...
+    - tree [ref=e59]:
+      - generic [ref=e60]:
+        ...
+        - table [ref=e231]:
+          - rowgroup [ref=e232]:
+            - row [ref=e233]:
+              - treeitem "User Components" [ref=e234]
+  - separator [ref=e236]
+  - text: 
+  - tablist [ref=e237]:
+    - tab [ref=e607] [cursor=pointer]:
+      - heading "FX_StaticNoColonLab01" [level=2] [ref=e608]
+      - button "closable FX_StaticNoColonLab01" [ref=e609]:
+        - img "closable FX_StaticNoColonLab01"
+    - tab [selected] [ref=e1788] [cursor=pointer]:
+      - heading "FX_StaticCaptionLab04" [level=2] [ref=e1789]
+      - button "closable FX_StaticCaptionLab04" [ref=e1790]:
+        - img "closable FX_StaticCaptionLab04"
+  - tabpanel [ref=e1791]:
+    - generic [ref=e1792]: ":"
+    - separator [ref=e1793]
+
+----
+
+- generic [ref=e1]:
+  - tabpanel [aria-hidden] [ref=e749]:
+    ...
+    - generic [ref=e914]:
+      - generic [ref=e915]: Name
+      - textbox [active] [ref=e920]: Name
+  - tablist [ref=e271]:
+    - tab [ref=e272] [cursor=pointer]:
+      - heading "Form" [level=2] [ref=e273]
+    - tab [selected] [ref=e274] [cursor=pointer]:

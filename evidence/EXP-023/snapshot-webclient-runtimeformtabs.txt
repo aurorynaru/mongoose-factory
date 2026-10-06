@@ -1,0 +1,15 @@
+Found 1 match for /tablist|tab \[|heading "FX_/:
+
+- generic [ref=f10e5]:
+  - banner "Portal Top Navigation Bar" [ref=f10e6]:
+    - generic [ref=f10e8]:
+      - generic:
+        - generic [ref=f10e10]:
+          - generic:
+            - link "Home" [ref=f10e12] [cursor=pointer]
+            - button "Open navigation menu" [ref=f10e15] [cursor=pointer]
+        - generic [ref=f10e17]:
+          - tablist "Tabs" [ref=f10e18]:
+            - tab "System Administrator" [ref=f10e19] [cursor=pointer]:
+              - link "System Administrator" [ref=f10e20]
+              - button "Close tab System Administrator" [ref=f10e27]
