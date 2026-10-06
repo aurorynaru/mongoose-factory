@@ -1,0 +1,13 @@
+Total messages: 1 (Errors: 1, Warnings: 0)
+
+TypeError: Cannot read properties of null (reading 'data')
+    at ctor.onKeyEnter (https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/res/Designer/app.js?_dc=20260824204954:2:1879433)
+    at ctor.handleEvent (https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/res/Designer/app.js?_dc=20260824204954:2:608380)
+    at ctor.<anonymous> (https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/res/Designer/app.js?_dc=20260824204954:2:100957)
+    at ctor.processBinding (https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/res/Designer/app.js?_dc=20260824204954:2:605761)
+    at ctor.handleTargetEvent (https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/res/Designer/app.js?_dc=20260824204954:2:605384)
+    at ctor.fire (https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/res/Designer/app.js?_dc=20260824204954:2:182575)
+    at ctor.doFireEvent (https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/res/Designer/app.js?_dc=20260824204954:2:188637)
+    at ctor.doFireEvent (https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/res/Designer/app.js?_dc=20260824204954:2:495700)
+    at ctor.fireEventArgs (https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/res/Designer/app.js?_dc=20260824204954:2:188262)
+    at ctor.fireEvent (https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/res/Designer/app.js?_dc=20260824204954:2:187993)
