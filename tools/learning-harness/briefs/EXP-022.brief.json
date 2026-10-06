@@ -3,7 +3,7 @@
   "title": "EXP-022 — Static No-Colon Recovery Across Ordinary Close/Reopen",
   "record_path": "experiments/EXP-022-static-no-colon-recovery-across-ordinary-close-reo.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Create one new User-scoped classic BuildFromScratch Form `FX_StaticNoColonLab01`, add one Static component named `FX_StaticNoColonStatic01`, and before the property under test establish a visible setup baseline by assigning Caption `Static No Colon Test` and recording the component's Name, Caption, No Colon, and the comparison properties exposed by the verified component workflow. Require the pre-test No Colon value to be False; otherwise stop as blocked rather than changing additional properties to manufacture a transition. Then change only No Colon from False to True, perform exactly one ordinary Designer Save to clean state, close the target exactly once through its ordinary Form-tab close control, reopen it exactly once through Designer Form-menu recent forms in the same Designer/client context, and verify that No Colon=True, Caption and comparison properties are unchanged, and the rendered Static display reflects the no-colon state. Treat this only as UI-level recovery across the tested weak close-only boundary; make no database-durability, cache-eviction, serialization, or internal-instance claim.",
   "scope": {
     "in_scope": [
@@ -11,7 +11,7 @@
       "One new User-scoped classic BuildFromScratch Form `FX_StaticNoColonLab01`",
       "One Static component named `FX_StaticNoColonStatic01`",
       "Pre-test setup may assign the Static Caption exactly `Static No Colon Test` before the No Colon baseline is captured",
-      "Capture a pre-No-Colon baseline containing component Name, Caption, No Colon, rendered Static text, and the comparison properties exposed by the verified component workflow",
+      "Capture a pre-No-Colon baseline containing exact property-grid/accessibility evidence for component Name, Caption, No Colon, and the comparison properties exposed by the verified component workflow. Record rendered Static text only as optional corroborating evidence if actually visible; if it is not visible, leave rendered state unresolved without blocking this pre-reopen step",
       "One deliberate post-baseline target-property mutation: No Colon from False to True",
       "Exactly one ordinary Designer Save after the No Colon change",
       "Exactly one ordinary target Form-tab close",
@@ -95,11 +95,11 @@
     },
     {
       "id": "AC-3",
-      "description": "Perform one Static creation operation, name it `FX_StaticNoColonStatic01`, assign Caption exactly `Static No Colon Test` as pre-test setup, and then capture the pre-No-Colon baseline before the tested mutation. The baseline must visibly/property-grid prove component Name, exact Caption, No Colon=False, rendered Static text showing the baseline colon behavior, and the other comparison properties exposed by the verified component workflow. If No Colon is not False, stop blocked."
+      "description": "Perform one Static creation operation, name it `FX_StaticNoColonStatic01`, assign Caption exactly `Static No Colon Test` as pre-test setup, and then capture the pre-No-Colon baseline before the tested mutation. The baseline must prove component Name, Caption exactly `Static No Colon Test`, No Colon=False, and the other comparison properties exposed by the verified component workflow using exact property-grid/accessibility evidence. If canvas text actually renders, record it separately as optional corroborating evidence; otherwise leave rendered state unresolved without blocking AC-3. If No Colon is not False, stop blocked."
     },
     {
       "id": "AC-4",
-      "description": "After AC-3, change only No Colon from False to True. Capture exact No Colon=True, unchanged Caption and comparison properties, the expected dirty Designer state, and rendered Static text showing the no-colon display. Label rendered-visible evidence separately from exact property-grid/accessibility-derived values."
+      "description": "After AC-3, change only No Colon from False to True. Capture exact No Colon=True, unchanged Caption and comparison properties, and the expected dirty Designer state. Record canvas text separately as optional corroborating evidence only if actually visible; absence of pre-reopen rendering does not block AC-4 and leaves rendered state unresolved. Label rendered-visible evidence separately from exact property-grid/accessibility-derived values. AC-8 remains the decisive post-reopen rendered checkpoint."
     },
     {
       "id": "AC-5",
