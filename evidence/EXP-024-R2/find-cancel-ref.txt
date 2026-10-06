@@ -1,0 +1,16 @@
+Found 1 match for "Cancel":
+
+- generic [ref=f10e5]:
+  - main [ref=f10e43]:
+    - iframe [active] [ref=f10e424]:
+      - generic [ref=f14e1]:
+        - dialog "Select Form" [ref=f14e78]:
+          - generic [ref=f14e415]:
+            ...
+            - generic [ref=f14e418]: Starts With
+          - toolbar [ref=f14e419]:
+            - button "OK" [ref=f14e420] [cursor=pointer]
+            - button "Cancel" [ref=f14e422] [cursor=pointer]
+            - button "Help" [ref=f14e424] [cursor=pointer]
+    - complementary "Smart Panel" [ref=f10e384]:
+      - generic [ref=f10e385]:
