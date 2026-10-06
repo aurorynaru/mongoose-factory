@@ -1,0 +1,45 @@
+Found 15 matches for /button "(Open|Save|New|Delete|Refresh|Designer|Help Current Form)"/:
+
+- generic [ref=f10e5]:
+  - main [ref=f10e43]:
+    - iframe [active] [ref=f10e424]:
+      - generic [ref=f14e1]:
+        - banner [ref=f14e2]:
+          - navigation [ref=f14e5]:
+            ...
+            - button "Help" [ref=f14e18] [cursor=pointer]
+            - button "<secret>SECRET_MONGOOSE_USERNAME</secret> | G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT" [ref=f14e20] [cursor=pointer]
+          - toolbar [ref=f14e22]:
+            - button "Open" [ref=f14e23] [cursor=pointer]:
+              - button "Open" [ref=f14e24]
+            - button "Save" [disabled] [ref=f14e26]:
+              - button "Save" [disabled]
+            - button "New" [disabled] [ref=f14e27]:
+              - button "New" [disabled]
+            - button "Delete" [disabled] [ref=f14e28]:
+              - button "Delete" [disabled]
+            - button "Refresh" [disabled] [ref=f14e29]:
+              - button "Refresh" [disabled]
+            - button "Filter in Place" [disabled] [ref=f14e30]:
+              - button "FiP" [disabled]
+            - button "Get More Rows" [disabled] [ref=f14e31]:
+
+----
+
+- generic [ref=f10e5]:
+  - main [ref=f10e43]:
+    - iframe [active] [ref=f10e424]:
+      - generic [ref=f14e1]:
+        - banner [ref=f14e2]:
+          - toolbar [ref=f14e22]:
+            - button "Export To Excel" [disabled] [ref=f14e35]:
+              - button "Export To Excel" [disabled]
+            - button [ref=f14e36] [cursor=pointer]:
+              - button "Designer" [ref=f14e37]
+            - button "Designer" [ref=f14e39] [cursor=pointer]:
+              - button "Designer" [ref=f14e40]
+            - button "Help Current Form" [disabled] [ref=f14e42]:
+              - button "Help Current Form" [disabled]
+        - region [ref=f14e43]:
+          - heading "Explorer" [ref=f14e44]
+          - button "Collapse Panel"
