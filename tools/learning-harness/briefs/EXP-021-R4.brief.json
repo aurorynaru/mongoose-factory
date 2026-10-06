@@ -1,0 +1,135 @@
+{
+  "experiment_id": "EXP-021-R4",
+  "title": "EXP-021-R4 — Clean Replay: Static Caption Recovery Across Ordinary Close/Reopen",
+  "record_path": "experiments/EXP-021-R4-clean-replay-static-caption-recovery-across-ordina.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "In a fresh OpenCode/worker context distinct from EXP-021, create one new User-scoped classic BuildFromScratch Form `FX_StaticCaptionLab04`, perform exactly one Static creation operation producing a visibly verified component named `FX_StaticCaptionStatic04`, establish an exact pre-Caption comparison baseline, change only that Static's Caption to `Static Caption Close Only Replay 4`, perform exactly one ordinary Designer Save to clean state, close the target exactly once through its ordinary Form-tab close control, reopen it exactly once through Designer Form-menu recent forms in the same Designer/client context, and verify that the same User-scoped Form recovers the Static with the exact Caption and unchanged recorded comparison properties. Require rendered Static text after reopen as corroborating display evidence, recording its literal text separately from the exact Caption property; a trailing colon does not make the Caption comparison fail. No Colon state and the cause of rendering differences remain unproven. Treat the result only as UI-level recovery across this tested weak close-only boundary; make no Forms-database durability, serialization, cache-eviction, unload, or internal-instance claim.",
+  "scope": {
+    "in_scope": [
+      "Read EXP-021, EXP-021-R2, EXP-003-R2, EXP-019-R2, recipes/forms/create-basic-form.md, recipes/components/add-component-from-toolbox.md, and recipes/components/configure-basic-component.md before mutation",
+      "Start in a fresh OpenCode/worker context distinct from EXP-021 and record the worker/session identity or harness-provided freshness fact before target mutation; worker freshness must not be obtained by replacing the existing Designer/browser client",
+      "One new User-scoped classic BuildFromScratch Form `FX_StaticCaptionLab04`",
+      "Exactly one Static creation operation producing a visibly verified component named `FX_StaticCaptionStatic04`; this action count does not prove complete component inventory",
+      "Pre-Caption exact baseline for component Name, Caption, Type, From Device Master, Layout Size, Justification, and any other comparison properties exposed by the verified component workflow without changing them",
+      "One deliberate tested-property mutation: Caption to exactly `Static Caption Close Only Replay 4`",
+      "Exactly one ordinary Designer Save after the Caption mutation",
+      "Exactly one ordinary target Form-tab close",
+      "Exactly one Designer Form-menu recent-forms reopen in the same Designer/client context",
+      "Read-only post-reopen verification using Form Name + ScopeType + ScopeName and component Name + recorded properties",
+      "Rendered-visible evidence kept distinct from exact property-grid/accessibility-derived values",
+      "Record literal post-reopen canvas text, including any trailing colon, as corroboration of the exact Caption property; do not infer No Colon state or explain rendering differences from punctuation alone",
+      "Read-only final action-count, target-inventory, and repository-confinement audit",
+      "Read-only preflight of inherited visible Form tabs/dialogs and dirty-state indicators, including any leftover `FX_StaticNoColonLab01` state; record observations without investigating No Colon or changing an earlier experiment's artifacts",
+      "If the inherited Mongoose session is unusable before any target mutation, at most one supported pre-mutation session-establishment sequence may be used and disclosed, after which live-session, User-scope, and target-absence guards must be re-proven before mutation. This allowance does not authorize saving, discarding, closing, replacing, or modifying inherited dirty Forms or uncommitted dialogs; if session establishment or the target workflow cannot preserve them, stop blocked for separately authorized operator cleanup"
+    ],
+    "out_of_scope": [
+      "Continuation, retry, or workaround of EXP-022 or investigation of Static No Colon",
+      "Button or Edit component Caption behavior",
+      "Form-level Caption or Description behavior",
+      "Form variables or variable persistence",
+      "FormSync or generated metadata representations",
+      "Explicit Form/global-object unload or any stronger persistence boundary",
+      "IDO-metadata cache behavior",
+      "New Designer/client lifecycle testing",
+      "Forms-database durability or serialization provenance",
+      "Cache eviction",
+      "Internal object-instance identity",
+      "Bindings, scripts, event handlers, validators, collections, or data-source work",
+      "Complete component-inventory claims unless independently proven by an already-supported visible inventory surface",
+      "Any replay_verified promotion without documented fresh OpenCode/worker context distinct from EXP-021"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Create, modify, rename, Save, Regenerate, or delete any non-FX_ Mongoose artifact",
+    "Start another experiment or replay",
+    "Claim replay_verified without recording fresh worker context before target mutation; preserve any observations but stop the qualifying replay if worker freshness cannot be established",
+    "Replace, restart, or launch a new Designer/browser client merely to establish worker-context freshness",
+    "Invoke Unload All Global Form Objects or any other explicit unload",
+    "Change User Preferences, including Unload IDO Metadata With Forms",
+    "Create Button or Edit components",
+    "Create or modify Form variables, FormSync definitions, scripts, event handlers, validators, bindings, IDO metadata, collections, or data sources",
+    "Regenerate Form",
+    "Inspect, search for, change, or test the Static No Colon property",
+    "Replace the existing Designer/client or use a stronger lifecycle boundary",
+    "Save, discard, close, delete, or modify inherited dirty Forms or uncommitted dialogs from another experiment as cleanup or recovery; stop blocked if the target workflow cannot proceed without disturbing them",
+    "After the pre-Caption baseline is captured, deliberately change the Static Name or any target component property other than Caption",
+    "Perform authentication or session-establishment after the first target mutation",
+    "Manipulate hidden or off-screen controls to substitute for a required rendered-visible checkpoint",
+    "Infer complete component cardinality from one creation action plus visible presence",
+    "Blindly repeat an interrupted browser or shell action; recovery is limited to one fresh snapshot and one corrected inspection, then a blocker",
+    "Expose credential values or weaken security"
+  ],
+  "prohibited_patterns": [
+    "\\b(create|add|modify)\\b[^.\\n]{0,50}\\b(event handler|script|validator|binding)s?\\b",
+    "\\b(create|add|modify)\\b[^.\\n]{0,50}\\b(form variable|variable)s?\\b",
+    "\\bformsync\\b[^.\\n]{0,50}\\b(generate|execute|apply|modify)\\b",
+    "\\bunload\\s+all\\s+global\\s+form\\s+objects\\b",
+    "\\bregenerate\\s+form\\b"
+  ],
+  "related_experiments": [
+    "EXP-021",
+    "EXP-021-R2",
+    "EXP-003-R2",
+    "EXP-019-R2",
+    "EXP-008-R2",
+    "EXP-022"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_StaticCaptionLab04",
+    "artifacts": [
+      "FX_StaticCaptionStatic04"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Before target mutation, record the worker/session identity or harness-provided freshness fact establishing a fresh OpenCode/worker context distinct from EXP-021. Preserve the existing Designer/browser client: worker freshness does not authorize replacing or restarting it or resetting recovery limits. If freshness cannot be established, preserve any observations, stop this qualifying replay, and do not promote to replay_verified. Inspect and record the current visible Form tabs/dialogs and dirty-state indicators, including any inherited `FX_StaticNoColonLab01` state, without investigating No Colon or changing earlier artifacts. Preserve inherited dirty Forms and uncommitted dialogs: do not Save, discard, close, delete, or modify them. Stop blocked if session establishment, creation, or the target-only Save/close/reopen workflow cannot proceed without disturbing that state; any cleanup requires separate operator authorization outside this experiment. Visibly prove a usable live Mongoose workflow and Designer Editing Scope=User, then use the supported Select Form Name filter in case-insensitive mode with a visible known-existing positive control to prove `FX_StaticCaptionLab04` has zero matching rows. If one permitted pre-mutation session-establishment sequence is needed, disclose it and repeat these guards afterward."
+    },
+    {
+      "id": "AC-2",
+      "description": "Create exactly one User-scoped classic BuildFromScratch Form `FX_StaticCaptionLab04` using the replay-verified EXP-019-R2 fresh-dialog rendered Classic/Build from Scratch selection prefix, followed by the separately verified basic-form creation procedure from the first Build-from-Scratch page onward. Do not describe the entire composed creation path as replay-verified. Require Save Template visibly unchecked, and capture the target's loaded clean state plus visible Name + ScopeType + ScopeName identity."
+    },
+    {
+      "id": "AC-3",
+      "description": "Perform exactly one Static creation operation, name it `FX_StaticCaptionStatic04`, and before the tested Caption mutation capture an exact property-grid/accessibility baseline for component Name, Caption, Type, From Device Master, Layout Size, Justification, and every other comparison property exposed by the verified component workflow. Keep any rendered canvas text separate and optional at this checkpoint."
+    },
+    {
+      "id": "AC-4",
+      "description": "After AC-3, change only the Static Caption to exactly `Static Caption Close Only Replay 4`. Capture exact Caption, unchanged comparison properties, and the expected dirty Designer state. Pre-reopen canvas rendering is optional corroboration only and is not required to pass this check."
+    },
+    {
+      "id": "AC-5",
+      "description": "Perform exactly one ordinary Designer Save after the Caption edit and prove Designer returns clean while `FX_StaticCaptionStatic04` remains present with Caption exactly `Static Caption Close Only Replay 4` and every recorded non-Caption comparison property remains equal to the AC-3 baseline."
+    },
+    {
+      "id": "AC-6",
+      "description": "Close `FX_StaticCaptionLab04` exactly once through its ordinary Form-tab close control and visibly prove the target tab is closed with no unsaved-change or unexpected prompt. Record that no explicit unload, Regenerate, preference change, client replacement, or post-mutation session-establishment action occurred."
+    },
+    {
+      "id": "AC-7",
+      "description": "Reopen the target exactly once through Designer Form-menu recent forms in the same Designer/client context and visibly verify matching User-scoped Form identity using Name + ScopeType + ScopeName."
+    },
+    {
+      "id": "AC-8",
+      "description": "After reopen, verify `FX_StaticCaptionStatic04` is present with Caption property exactly `Static Caption Close Only Replay 4` and every recorded non-Caption comparison property equals the AC-3 baseline. The exact Caption property is the decisive value. Capture and transcribe the literal rendered Static text separately as corroborating display evidence: either `Static Caption Close Only Replay 4` or `Static Caption Close Only Replay 4:` supports the displayed Caption, and a trailing colon alone does not fail this check. Record any other discrepancy explicitly rather than silently normalizing it. Do not infer No Colon state, its persistence, the cause of punctuation, internal instance identity, or complete component cardinality."
+    },
+    {
+      "id": "AC-9",
+      "description": "Final read-only audit must reconcile documented fresh worker context distinct from EXP-021, exactly one Static creation operation (not a complete component-inventory claim), exactly one ordinary Save, one target Form-tab close, one recent-forms reopen, no deliberate target-property mutation after AC-3 except Caption, zero explicit unloads, zero Regenerates, zero preference changes, zero client replacements, and zero post-mutation authentication/session-establishment actions. A live case-insensitive Select Form check must show exactly one `FX_StaticCaptionLab04`; a session-expired or recovery-obstructed inventory read is invalid evidence and blocks replay verification rather than authorizing another recovery attempt. Repository changes must be confined to the EXP-021-R4 record and `evidence/EXP-021-R4/`."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-021-R4",
+  "replay_of": "EXP-021",
+  "initial_instruction": "Before any target mutation, establish and record fresh OpenCode/worker context distinct from EXP-021, preserve the existing Designer/browser client and inherited dirty state, and complete AC-1. A new record is expected (`new_record=true`): create it within the declared record path when needed; do not repeatedly search Git for it. Keep the exact Caption property distinct from rendered canvas text, including a possible trailing colon. Do not search for or infer No Colon. Report the bounded task result to the coordinator and stop; worker freshness does not reset experiment or recovery limits.",
+  "notes": "Proposed by the coordinator after run R-20261006-125233-BECN. Rationale: EXP-021 is an accepted single observation that a Static component Caption recovered across one ordinary Designer Save, Form-tab close, and recent-forms reopen, but it is not replay-verified. EXP-021-R2 never established a qualifying replay because its preflight remained incomplete, EXP-021-R3 is already reserved on disk, and EXP-022 is blocked on the separate No Colon property and must not be worked around. The smallest useful next experiment is therefore a fresh independent replay of EXP-021 on a new FX_ Form using a new replay ID."
+}
