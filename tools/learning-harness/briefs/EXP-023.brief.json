@@ -1,0 +1,148 @@
+{
+  "experiment_id": "EXP-023",
+  "title": "EXP-023 — Form Caption Recovery Across New Web Designer Client",
+  "record_path": "experiments/EXP-023-form-caption-recovery-across-new-web-designer-clie.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Create one new User-scoped classic BuildFromScratch Form `FX_FormPropertyLab14`, capture an exact untouched Form-property baseline, change only its Form-level Caption to exactly `Form Property Caption New Designer Client`, perform exactly one ordinary Designer Save to a demonstrably clean state, close that target Form normally in the original Designer, launch exactly one additional rendered Web Designer client through the previously supported new-client procedure within the same authenticated Web Client context, and reopen the same User-scoped Form there through the supported Form-menu recent-forms path. Verify that the exact Caption and all recorded comparison properties recover unchanged. Treat the result only as UI-level recovery across the tested new-Designer-client boundary; do not infer a new backend session, Forms-database durability, serialization provenance, cache eviction, IDO-metadata unloading, or internal object identity.",
+  "scope": {
+    "in_scope": [
+      "Read EXP-010, EXP-009, EXP-009-R2, EXP-019-R2, and recipes/forms/create-basic-form.md before mutation",
+      "Read-only preflight of the inherited browser/Designer state, visible dirty Forms/dialogs, authenticated usability, and Editing Scope=User",
+      "If the inherited Mongoose/Web Client session is unusable before any target mutation, at most one supported pre-mutation session-establishment sequence may be used and disclosed; after it, re-prove live workflow, User scope, and target absence before mutation",
+      "Use the supported Select Form Name filter in case-insensitive mode with one visible known-existing positive control to prove `FX_FormPropertyLab14` has zero matching rows before creation",
+      "Create exactly one User-scoped classic BuildFromScratch Form `FX_FormPropertyLab14` using the replay-verified EXP-019-R2 fresh-dialog Classic/BuildFromScratch selection prefix followed by the verified basic-form creation procedure; visibly require Save Template unchecked",
+      "Capture an exact pre-Caption baseline for Form Name, Caption, Description, Version, Device Type, Form Type, Is Master, ScopeType, ScopeName, and other comparison properties exposed by the verified Form-property workflow without changing them",
+      "Change only the Form-level Caption to exactly `Form Property Caption New Designer Client`",
+      "Perform exactly one ordinary Designer Save after the Caption mutation and verify the target returns clean with Caption exact and all non-Caption comparison properties unchanged",
+      "Close only `FX_FormPropertyLab14` exactly once through its ordinary Form-tab close control and verify no unsaved-change or unexpected prompt",
+      "Launch exactly one additional rendered Web Designer client using the previously supported EXP-009/EXP-009-R2 new-client procedure while preserving the same authenticated Web Client context; do not restart or replace the Web Client",
+      "Use User editing scope in the new Designer client; ordinary scope selection required by that supported launch path is permitted, but authentication or session-establishment after the first target mutation is not",
+      "Reopen `FX_FormPropertyLab14` exactly once in the new Designer through the supported Form-menu recent-forms path",
+      "Read-only post-reopen verification using Form Name + ScopeType + ScopeName and exact comparison against the pre-Caption baseline",
+      "Read-only final target-inventory, lifecycle-action, and repository-confinement audit",
+      "Write only the EXP-023 experiment record and evidence under evidence/EXP-023/"
+    ],
+    "out_of_scope": [
+      "Static, Button, Edit, or any other component Caption behavior",
+      "Continuation, retry, workaround, cleanup, or investigation of EXP-021-R4 or EXP-022",
+      "Form Description mutation",
+      "Form variables or variable persistence",
+      "FormSync or generated metadata representations",
+      "Explicit Form/global-object unload",
+      "IDO-metadata cache behavior",
+      "Forms-database durability or serialization provenance",
+      "Cache eviction",
+      "Proof of a new backend, Portal, Web Client, Designer backend, IDO Runtime, or server session",
+      "Internal object-instance identity",
+      "Bindings, scripts, event handlers, validators, collections, or data-source work",
+      "User Preferences changes",
+      "Regenerate Form",
+      "Component creation or modification",
+      "Any lifecycle boundary stronger than the one additional rendered Designer client specified by this experiment",
+      "Promotion of any result beyond the exact User-scope Form Caption/new-Designer-client procedure tested here"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Create, modify, rename, Save, Regenerate, close, or delete any non-FX_ Mongoose artifact",
+    "Modify or clean up any inherited dirty Form or uncommitted dialog from another experiment; if EXP-023 cannot proceed while preserving it, stop blocked",
+    "Create or modify any component",
+    "Create or modify Form variables",
+    "Create or modify scripts, event handlers, validators, bindings, IDO metadata, collections, or data sources",
+    "Invoke `Unload All Global Form Objects` or any explicit unload",
+    "Change User Preferences, including `Unload IDO Metadata With Forms`",
+    "Perform Regenerate Form",
+    "Deliberately change any target Form property other than Caption after the pre-Caption baseline is captured",
+    "Perform more than one ordinary Designer Save after the Caption mutation",
+    "Close the target more than once",
+    "Launch more than one additional Web Designer client",
+    "Replace, restart, reload, or close the authenticated Web Client as part of the tested boundary",
+    "Perform authentication, Sign In, session establishment, or reauthentication after the first target mutation",
+    "Use direct cold `?MGForm=` navigation to substitute for the required recent-forms reopen",
+    "Invoke an explicit unload, preference change, cache-clearing action, or stronger lifecycle action before reopen",
+    "Manipulate hidden or off-screen controls to substitute for rendered-visible required checkpoints",
+    "Blindly repeat an interrupted browser or shell action; recovery is limited to one fresh snapshot and one corrected inspection, then stop blocked",
+    "Read, print, log, or expose credential values",
+    "Weaken security or modify production data",
+    "Start another experiment or replay"
+  ],
+  "prohibited_patterns": [
+    "\\b(create|add|modify|delete|rename)\\b[^.\\n]{0,50}\\b(component|static|button|edit)\\b",
+    "\\b(create|add|modify|delete)\\b[^.\\n]{0,50}\\b(form variable|variable)\\b",
+    "\\b(unload all global form objects|explicit unload|clearcache)\\b",
+    "\\b(regenerate form)\\b",
+    "\\b(user preferences?)\\b[^.\\n]{0,40}\\b(change|modify|save|toggle|enable|disable)\\b",
+    "\\b(create|add|modify)\\b[^.\\n]{0,50}\\b(event handler|script|binding|validator|collection|data source|ido metadata)\\b",
+    "\\b(sign in|login|reauthenticate|session establishment)\\b[^.\\n]{0,60}\\bafter\\b[^.\\n]{0,30}\\b(caption|mutation|edit)\\b",
+    "\\b(second|another|additional)\\b[^.\\n]{0,40}\\b(new )?(designer client|web designer)\\b"
+  ],
+  "related_experiments": [
+    "EXP-010",
+    "EXP-009",
+    "EXP-009-R2",
+    "EXP-019-R2",
+    "EXP-021-R4",
+    "EXP-022"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_FormPropertyLab14",
+    "artifacts": [
+      "FX_FormPropertyLab14"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Before target mutation, visibly prove a usable live workflow and Designer Editing Scope=User, record inherited visible Forms/dialogs and dirty-state indicators without changing them, and use the supported Select Form Name filter with Case Sensitive unchecked plus a visible known-existing positive control to prove `FX_FormPropertyLab14` returns zero matching rows. If one permitted pre-mutation session-establishment sequence is required, disclose it and repeat these guards afterward."
+    },
+    {
+      "id": "AC-2",
+      "description": "Create exactly one User-scoped classic BuildFromScratch Form `FX_FormPropertyLab14` using the EXP-019-R2 fresh-dialog rendered Classic/BuildFromScratch prefix plus the separately verified basic-form procedure; visibly prove Save Template unchecked and capture the loaded clean Form with Name + ScopeType + ScopeName."
+    },
+    {
+      "id": "AC-3",
+      "description": "Before Caption mutation, capture an exact Form-property baseline showing Caption empty or its untouched original value and recording Name, Description, Version, Device Type, Form Type, Is Master, ScopeType, ScopeName, and every other comparison property exposed by the verified Form-property workflow."
+    },
+    {
+      "id": "AC-4",
+      "description": "Change only the Form-level Caption to exactly `Form Property Caption New Designer Client`; visibly prove the exact property value, unchanged recorded comparison properties, and expected dirty Designer state."
+    },
+    {
+      "id": "AC-5",
+      "description": "Perform exactly one ordinary Designer Save after the Caption edit and visibly prove the Designer returns clean while Caption remains exactly `Form Property Caption New Designer Client` and every recorded non-Caption comparison property remains equal to AC-3."
+    },
+    {
+      "id": "AC-6",
+      "description": "Close `FX_FormPropertyLab14` exactly once through its ordinary Form-tab close control and visibly prove the target tab is closed with no unsaved-change or unexpected prompt; record that no unload, Regenerate, preference change, client restart, or post-mutation authentication occurred."
+    },
+    {
+      "id": "AC-7",
+      "description": "Launch exactly one additional rendered Web Designer client through the supported EXP-009/EXP-009-R2 procedure within the same authenticated Web Client context, visibly establish User editing scope there, and prove the original Web Client was not replaced or restarted. If authentication/session establishment is demanded after mutation, stop blocked rather than performing it."
+    },
+    {
+      "id": "AC-8",
+      "description": "In the new Designer client, reopen `FX_FormPropertyLab14` exactly once through Designer Form-menu recent forms and visibly verify the same User-scoped identity using Name + ScopeType + ScopeName."
+    },
+    {
+      "id": "AC-9",
+      "description": "After reopen in the new Designer, verify Caption property exactly `Form Property Caption New Designer Client`, every recorded non-Caption property equals the AC-3 baseline, and Designer is clean. Evidence must identify the target and User scope. This proves UI-level recovery only and not database durability, serialization, cache eviction, unload behavior, or backend-session independence."
+    },
+    {
+      "id": "AC-10",
+      "description": "Perform a final read-only audit showing exactly one case-insensitive `FX_FormPropertyLab14` target in the supported inventory if the live Select Form surface remains usable, reconcile the action counts (one target creation, one Caption mutation, one ordinary Save, one target close, one additional Designer launch, one recent-forms reopen), and prove repository changes are confined to the EXP-023 record and evidence/EXP-023/. If the inventory surface is session-expired or otherwise invalid, do not infer cardinality; stop the acceptance check unresolved."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-023",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261006-141521-OdOc. Rationale: EXP-010 established one accepted observation that a User-scoped Form-level Caption recovers across the weak ordinary close/reopen boundary, but Form Caption has not been tested across a newly launched Web Designer client. Separately, EXP-009 and EXP-009-R2 established and replay-verified the supported new-Web-Designer-client recovery procedure for Form Description. EXP-021-R4 and EXP-022 are blocked component-property experiments, so this proposal deliberately does not work around either blocker. The smallest useful next step is to combine the already-observed Form Caption metadata class with the already-verified new-Designer-client lifecycle procedure on one fresh FX_ Form, while keeping all stronger unload/database/cache claims out of scope."
+}

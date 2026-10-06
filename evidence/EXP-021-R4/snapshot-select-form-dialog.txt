@@ -1,0 +1,44 @@
+Found 6 matches for /filter|Filter By|Case Sensitive|textbox/i:
+
+- generic [ref=f10e5]:
+  - main [ref=f10e43]:
+    - iframe [active] [ref=f10e424]:
+      - generic [ref=f14e1]:
+        - banner [ref=f14e2]:
+          - toolbar [ref=f14e22]:
+            - button "Delete" [disabled] [ref=f14e28]:
+              - button "Delete" [disabled]
+            - button "Refresh" [disabled] [ref=f14e29]:
+              - button "Refresh" [disabled]
+            - button "Filter in Place" [disabled] [ref=f14e30]:
+              - button "FiP" [disabled]
+            - button "Get More Rows" [disabled] [ref=f14e31]:
+              - button "Get More Rows" [disabled]
+
+----
+
+- generic [ref=f10e5]:
+  - main [ref=f10e43]:
+    - iframe [active] [ref=f10e424]:
+      - generic [ref=f14e1]:
+        - dialog "Select Form" [ref=f14e78]:
+          - grid [ref=f14e81]:
+            ...
+            - grid [ref=f14e93]:
+              - table [ref=f14e747]:
+                - rowgroup [ref=f14e748]:
+                  - row [ref=f14e749]:
+                    - gridcell "FX_StaticNoColonLab01" [ref=f14e750]
+                    - gridcell "FX_StaticNoColonLab01" [ref=f14e752]
+          - generic [ref=f14e396]: "Filter:"
+          - textbox [active] [ref=f14e401]: FX_StaticNoColonLab01
+          - generic [ref=f14e402]: "Filter By:"
+          - generic [ref=f14e405]:
+            - combobox [ref=f14e407]: Name
+            - generic [ref=f14e408] [cursor=pointer]
+          - generic [ref=f14e410]:
+            - checkbox "Case Sensitive" [ref=f14e411]
+            - generic [ref=f14e413]: Case Sensitive
+          - generic [ref=f14e415]:
+            - checkbox "Starts With" [ref=f14e416]
+            - generic [ref=f14e418]: Starts With
