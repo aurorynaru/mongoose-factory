@@ -1,0 +1,127 @@
+{
+  "experiment_id": "EXP-025",
+  "title": "EXP-025 — Designer Launch Click Telemetry",
+  "record_path": "experiments/EXP-025-designer-launch-click-telemetry.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "From a qualifying baseline containing exactly one retained Web Client and one retained original Web Designer, with no rendered modal covering the launch surface and no visible authentication/session-establishment challenge, demonstrate that supported pre-activation observation is armed for browser-context page lifecycle plus request/response activity and, where supported, page-level popup and console activity. Then perform exactly one native Playwright click on the EXP-009/R2/EXP-024-correlated semantic \"Open designer in a new window\" control. Immediately enumerate the controlled pages, keep all telemetry listeners armed for a fixed five seconds after click completion, then perform one final enumeration and capture the resulting telemetry and rendered state. Classify only what was observed; do not infer command execution or failure from click completion, page count, HTTP status, console silence, or absence of captured telemetry.",
+  "scope": {
+    "in_scope": [
+      "Read EXP-024, EXP-024-R2 and EXP-009-R2 before action so the semantic launch control and prior browser outcomes are identified correctly",
+      "Read-only preflight enumeration of every controlled browser page/window with URL and title",
+      "Read-only verification that the Web Client has no rendered modal covering the launch surface and no visible authentication/session-establishment challenge",
+      "Read-only verification that the semantic \"Open designer in a new window\" control is visibly present/enabled before activation",
+      "Before activation, demonstrably arm supported browser-context page lifecycle and request/response observation; supplement with page-level popup and console observation where supported",
+      "Record a task-local telemetry baseline immediately before activation so post-click activity can be correlated to the decisive action",
+      "Exactly one native Playwright activation of the EXP-009/R2/EXP-024-correlated launch control",
+      "Immediate independent enumeration of controlled pages/windows after the click completes or errors",
+      "Keep telemetry observation continuously armed for exactly five seconds after click completion, with no second launch action during that interval",
+      "Perform one final controlled-page enumeration after the five-second telemetry window closes",
+      "Inspect any newly enumerated controlled page sufficiently to identify URL/title and whether it is a Designer surface",
+      "If a distinct new Designer renders the normal editing-scope dialog, select User and confirm it only as necessary to identify the new client; perform no Form work",
+      "Record decisive evidence under evidence/EXP-025/ with a concise distinction between point-in-time page state, lifecycle history, console/network telemetry, and unsupported inferences"
+    ],
+    "out_of_scope": [
+      "Creating, editing, saving, closing, reopening, regenerating or deleting any Form or component",
+      "Testing Caption, Description, Static Caption, Button Caption, No Colon or Form-variable behavior",
+      "FormSync, generated SQL, variable serialization or database persistence",
+      "Determining the root cause of any observed or absent launch activity",
+      "Testing alternate Designer-launch commands, Runtime Builder, direct Designer URLs or other launch routes",
+      "Changing browser popup settings, security settings or browser configuration",
+      "Proving absence of OS/browser processes or browser-chrome popup UI outside the controlled automation context",
+      "Proving authentication-session, application-session, IDO Runtime-session or Designer-backend identity",
+      "Promoting an additional-Designer procedure unless the documented rendered new-tab/window postcondition is actually observed"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not perform more than one Designer-launch activation",
+    "Do not retry or perform a corrected launch click after the single activation, regardless of outcome",
+    "Do not use an alternate launch control, route, direct URL, synthetic DOM activation, page-evaluated click or script-triggered click",
+    "Do not perform the launch click unless AC-3 instrumentation is demonstrably armed through supported Playwright/MCP observation; if it cannot be armed, stop blocked",
+    "Do not close, reload, replace or deliberately navigate either retained Web Client or retained Designer before or during the telemetry window",
+    "Do not authenticate, sign in, click Sign In/OK, reauthenticate, log out or restart the browser during this experiment; if a rendered authentication/session-establishment challenge prevents the qualifying baseline, stop blocked",
+    "Do not open a Form in the Web Client or deliberately perform any Form operation",
+    "Do not Save, Regenerate Form, unload global Form objects, change User Preferences or change editing scope on the retained Designer",
+    "Do not alter browser popup-blocker or security settings",
+    "Do not stop telemetry observation before five seconds have elapsed after click completion unless the automation tool itself fails; if observation fails, record the failure without another launch attempt",
+    "Do not treat the immediate or final enumeration as proof that no transient page or popup existed",
+    "Do not treat a final screenshot as proof that no transient reload, navigation, replacement or Form opening occurred",
+    "Do not treat HTTP success, lack of network traffic, console silence, completed Playwright click or unchanged page count as proof that the Mongoose launch command executed or failed",
+    "Do not widen recovery beyond one fresh snapshot and one corrected read-only inspection; if the qualifying state remains unresolved, stop blocked"
+  ],
+  "prohibited_patterns": [
+    "\\b(create|add|edit|modify|delete)\\b[^.\\n]{0,50}\\b(form|component|variable|event handler|script)s?\\b",
+    "\\b(save|regenerate|unload)\\b[^.\\n]{0,50}\\b(form|global form objects?|ido metadata)?\\b",
+    "\\b(login|log in|sign in|reauthenticate|authentication recovery|logout|log out)\\b",
+    "\\b(reload|refresh|restart)\\b[^.\\n]{0,40}\\b(browser|web client|designer|page|tab|window)\\b",
+    "\\b(second|retry|again|corrected|alternate)\\b[^.\\n]{0,50}\\b(click|activation|launch|designer)\\b",
+    "\\b(direct url|navigate directly|synthetic click|javascript click|dom click|page evaluate)\\b",
+    "\\b(change|disable|enable)\\b[^.\\n]{0,50}\\b(popup blocker|popup blocking|browser security|browser setting)\\b"
+  ],
+  "related_experiments": [
+    "EXP-023",
+    "EXP-024",
+    "EXP-024-R2",
+    "EXP-009",
+    "EXP-009-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": null,
+    "artifacts": []
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Before activation, evidence records every controlled page/window with URL/title and shows the qualifying point-in-time baseline contains the retained Web Client and retained original Designer; the inspected Web Client has no rendered modal covering the launch surface and no visible authentication/session-establishment challenge."
+    },
+    {
+      "id": "AC-2",
+      "description": "Pre-click rendered/accessibility evidence identifies the semantic \"Open designer in a new window\" control as visibly present/enabled and records its experiment-specific correlation without treating its Ext ID, ordinal position or accessibility ref as a supported product contract."
+    },
+    {
+      "id": "AC-3",
+      "description": "Before any launch activation, the worker demonstrates through supported Playwright/MCP facilities that browser-context page lifecycle and request/response observation are armed, with page-level popup and console observation also armed where supported, and captures a task-local pre-click baseline. No synthetic page scripting, DOM-triggered activation or prohibited recovery technique may be used to create this instrumentation. If the required lifecycle plus console/network observation cannot be demonstrably armed, EXP-025 stops BLOCKED here and no launch click occurs."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly one native Playwright click is attempted on the correlated launch control. Evidence records whether Playwright completed it without actionability/interception error or returned an error. No retry, corrected click, alternate route or second launch activation occurs."
+    },
+    {
+      "id": "AC-5",
+      "description": "Immediately after the single click, controlled pages/windows are independently enumerated and their URL/title identities recorded. This acceptance check states only which controlled pages are present at that enumeration instant; if the same two pages are present, it makes no claim about whether a transient page/popup lifecycle event occurred before enumeration."
+    },
+    {
+      "id": "AC-6",
+      "description": "All armed telemetry remains active continuously until exactly five seconds after click completion. Evidence preserves and orders any launch-correlated browser-context page creation/closure/navigation event, popup event where supported, console message/error and relevant request/response observed during that fixed window. If none is captured in a telemetry class, the record says only that no event of that captured class was observed during the five-second window; absence is not proof that no Mongoose/client/backend processing occurred."
+    },
+    {
+      "id": "AC-7",
+      "description": "After the fixed five-second telemetry window closes, one final controlled-page enumeration records which pages/windows are present at that instant. The final enumeration is explicitly kept separate from AC-6 lifecycle history: a page observed transiently by AC-6 may legitimately be absent from AC-7."
+    },
+    {
+      "id": "AC-8",
+      "description": "If and only if a distinct new Designer is enumerated and renders the normal editing-scope dialog, evidence shows User selected and the resulting rendered Designer identified by URL/title. Otherwise no editing-scope interaction is performed, and the record states only that no such dialog was observed in the inspected controlled pages."
+    },
+    {
+      "id": "AC-9",
+      "description": "Execution-history evidence records that the worker deliberately performed no prohibited Form operation, retained-client close/reload/navigation, authentication action, preference change, unload, Save/Regenerate action, browser-setting change or second launch attempt. Separately, lifecycle/navigation telemetry reports whether any corresponding observable browser event occurred without intentional worker action. Final screenshots/enumeration are used only to establish final visible state, not historical absence of transient events."
+    },
+    {
+      "id": "AC-10",
+      "description": "Final evidence records the visible state of the retained controlled clients and repository confinement. Repository changes must be limited to the EXP-025 experiment record and evidence/EXP-025/. The final classification distinguishes point-in-time enumeration from lifecycle/console/network telemetry and makes no claim beyond those captured evidence classes."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-025",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261006-160452-YWtc. Rationale: EXP-024 and accepted clean replay EXP-024-R2 both reached the same narrow browser observation: after the launch surface appeared unobstructed, one Playwright click on the correlated \"Open designer in a new window\" control completed without the EXP-023 interception failure, yet immediate controlled-page enumeration still contained the retained Web Client and original Designer. The smallest useful next step is therefore not another lifecycle workaround but instrumentation of that single launch boundary. EXP-025 will arm supported browser-context lifecycle/network observation, supplemented by page-level popup/console observation where available, before exactly one launch click and keep it armed through a fixed five-second post-click observation window. Immediate and final page enumerations are treated only as point-in-time state observations; transient page/popup events are classified separately from the armed telemetry. If the required observation cannot be demonstrably armed through supported Playwright/MCP capabilities without synthetic scripting or prohibited techniques, the experiment stops blocked before any launch click. Auto-approved by autopilot 2026-10-06T08:26:00.342Z after specialist verdict \"supports\" (see data/autopilot/2026-10-06T08-12-05-787Z-PROPOSAL_RECHECK_1-reply.md)."
+}
