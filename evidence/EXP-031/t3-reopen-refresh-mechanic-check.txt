@@ -1,0 +1,5 @@
+
+1. `browser_tabs list` + fresh snapshot of active tab 0: two tabs unchanged; Web Client live/clean; NO Select Form dialog present at task start (contrary to a naive assumption ΓÇö the EXP-027 session's open dialog was no longer open in this context).
+4. **Positive control (normal mechanism):** one `fill("FX_ComponentRecoveryLab02")` into the Filter textbox (id `#textfield-1143-inputEl`) ΓåÆ fresh snapshot of the dialog: grid renders exactly ONE row: `"FX_ComponentRecoveryLab02 FX_ComponentRecoveryLab02"` (Caption+Name). Screenshot t2-01 inspected: shows Select Form with that single highlighted row, Filter By=Name, Case Sensitive visibly unchecked; filter field truncated at field edge showing `ΓÇªomponentRecoveryLab02` (exact full string from the accessibility snapshot). OK NOT pressed; no Form opened.
+7. One permitted FRESH untargeted page snapshot settled the visible result with current accessibility refs: dialog `Select Form`, Filter textbox `FX_ComponentRecoveryLab03`, combobox `Name`, checkbox "Case Sensitive" without `[checked]`, grid children = header row `"Caption Name"` + empty inner grid (zero rendered data rows).
+

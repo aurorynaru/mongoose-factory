@@ -1,0 +1,1 @@
+recipes\forms\create-basic-form.md:3. **Double-click the row** (Playwright native dblclick) to open the form. Do **not** click OK with filter text ΓÇö OK activates the first/selected row, it does not filter.
