@@ -1,0 +1,20 @@
+EXP-026 T4 live-state reconciliation note (documentation only; no browser interaction in T5)
+Run: R-20261006-172006-UMJu cycle 6 task T5, date recorded 2026-10-07
+
+T4 inspected the Playwright page state once (fresh untargeted snapshot + one corrected
+read-only inspection): the only live Playwright tab was about:blank with an empty
+accessibility tree and no Designer document or tab. The Web Designer client observed in
+T2/T3 is therefore not currently present in the inspectable browser.
+
+Consequences recorded by T4:
+- Current rendered Designer state cannot be established without a prohibited relaunch/navigation.
+- Historical PNGs under evidence/EXP-026/ prove only the last recorded T3 UI state, not continuity.
+- AC-1 (preflight guards + Select Form absence proof) cannot be completed under the current brief.
+
+Partial T3 evidence inspected by T4 (existing files, not modified):
+evidence/EXP-026/01-ac1-inherited-designer-state-scope-user.png
+evidence/EXP-026/02-ac1-designer-toolbar-clean.png
+evidence/EXP-026/03-form-menu-recent-forms-list.png
+evidence/EXP-026/04-form-menu-dropdown-recent-forms.png
+evidence/EXP-026/05-scope-bar-user.png
+evidence/EXP-026/06-restored-inherited-state-clean.png
