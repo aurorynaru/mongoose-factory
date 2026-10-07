@@ -3,25 +3,25 @@
   "title": "EXP-034 — Select Form Positive Filter Retention Across Cancel/Reopen",
   "record_path": "experiments/EXP-034-select-form-positive-filter-retention-across-cance.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Against the existing live Web Client, open one Select Form dialog, establish Filter By=Name with Case Sensitive unchecked and Starts With unchecked, clear the Name-filter textbox through native Ctrl+A followed by Backspace, and enter exact `FX_ComponentRecoveryLab02` through exactly 25 one-printable-character native key operations. Require a settled rendered row whose Name exactly equals `FX_ComponentRecoveryLab02`. Then perform exactly one ordinary Cancel and exactly one ordinary reopen of Select Form without changing or re-entering the filter. Determine whether the reopened dialog visibly retains the exact filter text and settings and, after settling, visibly contains the exact `FX_ComponentRecoveryLab02` row without any additional typing or setting change. Keep conclusions limited to rendered Select Form UI retention across this one Cancel/reopen boundary; do not infer database, cache, session, serialization, or internal refresh mechanisms.",
   "scope": {
     "in_scope": [
       "Read EXP-031, EXP-033, and EXP-033-R2 records and decisive evidence before browser interaction",
       "Inspect and preserve the inherited Web Client and Designer context read-only",
       "Use only the supported rendered Web Client Select Form dialog",
-      "If Select Form is initially closed and the inherited Web Client is already usable, perform at most one ordinary initial Open",
+      "If Select Form is initially closed and the inherited Web Client is already usable, perform at most one ordinary initial Open; if already open, use that dialog without an extra close/reopen reset. If the inherited Web Client is unusable, stop blocked without authentication, navigation, or session replacement",
       "Record inherited filter text, Filter By, Case Sensitive, Starts With, and visible rows before changing the filter",
       "Establish Filter By=Name, Case Sensitive unchecked, and Starts With unchecked through rendered controls",
-      "Clear the Name-filter textbox using native Ctrl+A followed by native Backspace",
-      "Enter exact `FX_ComponentRecoveryLab02` as exactly 25 one-printable-character native key operations",
+      "Resolve and focus the currently visible Name-filter textbox using current accessibility/rendered references; clear it using native Ctrl+A followed by native Backspace",
+      "Enter exact `FX_ComponentRecoveryLab02` as exactly 25 successful one-printable-character native key operations: `F X _ C o m p o n e n t R e c o v e r y L a b 0 2`. If the native-key facility cannot represent this exact sequence, stop blocked without substituting bulk input or JavaScript",
       "Require a settled visible row whose Name exactly equals `FX_ComponentRecoveryLab02` before lifecycle testing",
       "Perform exactly one ordinary Cancel followed by exactly one ordinary reopen of Select Form",
       "After reopen, inspect retained textbox text, filter settings, and rendered rows without retyping or changing settings",
       "Capture decisive pre-Cancel and post-reopen rendered screenshots plus accessibility observations",
       "Perform at most one final ordinary Cancel after evidence capture, with no subsequent reopen",
       "Write repository evidence only under `evidence/EXP-034/` and the EXP-034 experiment record",
-      "Use at most one fresh untargeted snapshot plus one corrected visible inspection for ambiguity recovery across the entire experiment"
+      "Planned preflight, current-reference/focus checks, settled pre-Cancel and post-reopen captures, and final audit captures are allowed evidence operations. Extra ambiguity recovery is limited to one additional fresh untargeted snapshot plus one corrected visible inspection total across all tasks; record used/remaining allowance, do not reset it on worker/session changes, and do not relabel repeated stale or ambiguous reads as planned evidence"
     ],
     "out_of_scope": [
       "Retesting the EXP-031 zero-match probe path",
@@ -39,14 +39,14 @@
     ]
   },
   "prohibited_actions": [
-    "Creating, modifying or deleting any non-FX_ artifact",
+    "Creating, modifying or deleting any non-FX_ Mongoose artifact; repository writes are explicitly permitted only to `experiments/EXP-034-select-form-positive-filter-retention-across-cance.md` and `evidence/EXP-034/`",
     "Starting any other experiment or replay",
     "Modifying production data or disabling security",
     "Reading or printing credential values",
     "Create, modify, delete, Save, Regenerate, close, or reopen any Mongoose Form or component",
     "Create any Mongoose object for this experiment",
     "Use bulk textbox replacement, clipboard insertion, or any multi-character text-entry action in place of the required individual native printable-key operations",
-    "Use scripted DOM manipulation or internal Ext stores to enter text, force filtering, or establish the result",
+    "Use JavaScript, browser evaluate/run-code (including read-only evaluation), synthetic DOM mutation, or internal Ext stores to enter text, force filtering, or inspect/establish the result",
     "Press Enter or OK in Select Form",
     "Interact with any result row so as to open or activate a Form",
     "Retype `FX_ComponentRecoveryLab02` after the pre-Cancel settled result",
@@ -60,6 +60,11 @@
     "Modify any repository path outside the EXP-034 record and `evidence/EXP-034/`"
   ],
   "prohibited_patterns": [
+    "\\b(fill|paste)\\b",
+    "\\b((?:playwright_)?browser_(?:evaluate|run_code(?:_unsafe)?)|run[-_ ]?code(?:_unsafe)?|javascript)\\b|\\bevaluate\\s*\\(",
+    "\\b(press|hit|send)\\b[^.\\n;]{0,35}\\bEnter\\b",
+    "\\b(click|press|activate|hit)\\b[^.\\n;]{0,35}\\bOK\\b",
+    "\\b(double[- ]?click|row activation)\\b",
     "\\b(variable|variables|persistentvariables)\\b",
     "\\b(unload all global form objects|clearcache)\\b",
     "\\b(regenerate|savechanges)\\b",
@@ -109,15 +114,15 @@
     },
     {
       "id": "AC-7",
-      "description": "Recovery accounting separately records planned captures versus ambiguity recovery, with at most one extra fresh untargeted snapshot plus one corrected visible inspection across the full experiment; unresolved ambiguity after that produces a blocked outcome."
+      "description": "Recovery accounting separately records planned preflight/current-reference/focus checks, settled pre-Cancel/post-reopen and final-audit captures versus extra ambiguity recovery, with at most one extra fresh untargeted snapshot plus one corrected visible inspection total across the full experiment. Record used/remaining allowance, do not reset it on worker/session changes, and do not relabel repeated stale or ambiguous reads as planned evidence; unresolved ambiguity after that produces a blocked outcome."
     },
     {
       "id": "AC-8",
-      "description": "Final audit captures the retained post-reopen result, performs at most one final ordinary Cancel solely to dismiss Select Form, confirms no subsequent reopen, confirms inherited Web Client/Designer Forms remain untouched, and proves repository writes are confined to the EXP-034 record plus `evidence/EXP-034/`. A passing result is classified only as observed rendered-UI filter retention across the single tested Cancel/reopen boundary."
+      "description": "Final audit captures the actual post-reopen result without repairing or changing it, performs at most one final ordinary Cancel solely to dismiss Select Form, confirms no subsequent reopen, confirms inherited Web Client/Designer Forms remain untouched, and proves this experiment's repository writes are confined to the EXP-034 record plus `evidence/EXP-034/`; list pre-existing unrelated changes separately and leave them untouched. A passing result is classified only as observed rendered-UI filter/settings retention with the exact positive-control row present after this single tested Cancel/reopen boundary, using the replay-verified native keyboard entry procedure. The matching row does not establish that reopening refreshed or reapplied the filter internally. On an early blocker, record actual actions and unperformed steps rather than claiming the complete sequence passed."
     }
   ],
   "evidence_dir": "evidence/EXP-034",
   "replay_of": null,
   "initial_instruction": null,
-  "notes": "Proposed by the coordinator after run R-20261007-220054-xlTM. Rationale: EXP-031 was blocked on applied-filter/zero-match characterization, although text/settings retention was observed. EXP-033 and EXP-033-R2 subsequently established and independently replay-verified a rendered Select Form filtering procedure using native Ctrl+A/Backspace plus one printable native key operation per character. The smallest next learning step is therefore a new, narrower experiment that uses that verified entry method with the known-positive `FX_ComponentRecoveryLab02`, then performs exactly one ordinary Cancel/reopen and asks whether the exact filter text/settings and the exact matching rendered row recover without retyping. This is a deliberately different documented approach from EXP-031, not a retry of its ambiguous zero-match path."
+  "notes": "Proposed by the coordinator after accepted run R-20261007-220054-xlTM. EXP-031 already recorded positive-control text/settings retention and a matching rendered row across Cancel/reopen, but the overall experiment was blocked on its stale zero-match probe and recovery-budget compliance. EXP-034 must not claim first evidence of positive-filter retention or repair/reclassify EXP-031. EXP-033 and EXP-033-R2 subsequently established and independently replay-verified native Ctrl+A/Backspace plus one printable native key operation per character as a rendered Select Form filtering procedure. EXP-034 isolates the next procedure extension: establish the positive filter through that replay-verified entry method, then perform one ordinary Cancel/reopen and inspect exact retained text/settings and the matching row without retyping. This is an observed-only test of that bounded native-entry-plus-retention sequence, not a test of the zero-match path or proof of a server refresh/requery."
 }
