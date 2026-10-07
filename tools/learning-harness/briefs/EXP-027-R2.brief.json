@@ -3,11 +3,12 @@
   "title": "EXP-027-R2 — Clean Replay: Button Component Recovery in a Self-Contained Designer Session",
   "record_path": "experiments/EXP-027-R2-clean-replay-button-component-recovery-in-a-self-c.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Independently replay the accepted EXP-027 procedure on a new User-scoped classic BuildFromScratch Form `FX_ComponentRecoveryLab03`: establish or confirm a usable Mongoose workflow entirely before mutation, prove the target absent, create exactly one target Form, capture its untouched clean baseline, place exactly one native Toolbox Button, assign only Name=`FX_ButtonRecovery03`, record the exact property-grid Type label, perform exactly one ordinary Designer Save, exactly one ordinary target Form-tab close, and exactly one same-Designer Form-menu recent-forms reopen, then verify that the same scoped Form recovers the component with Name=`FX_ButtonRecovery03` and the identical Type label. If every semantic postcondition reproduces with decisive evidence, classify the EXP-027 procedure replay_verified only for this tested User-scope self-contained close/reopen workflow.",
   "scope": {
     "in_scope": [
       "Read EXP-027, EXP-019-R2, EXP-003-R2, recipes/forms/create-basic-form.md, recipes/components/add-component-from-toolbox.md, and recipes/components/configure-basic-component.md before mutation",
+      "Use a fresh OpenCode worker session distinct from EXP-027's ses_eea6d6124ffes94Z5Ncy8SwXYM and record the harness-provided worker/session identity before target mutation; worker freshness does not require restarting the browser or replacing an existing usable Designer",
       "Initial read-only enumeration of the controlled Playwright browser context and preservation audit",
       "At most one documented supported Portal/Web Client/Designer session-establishment sequence before mutation if no usable live workflow exists, using configured secret placeholders without exposing credentials",
       "Launch exactly one Designer only if initial enumeration establishes that no usable Designer exists in the controlled context",
@@ -39,7 +40,7 @@
     ]
   },
   "prohibited_actions": [
-    "Creating, modifying or deleting any non-FX_ artifact",
+    "Creating, modifying or deleting any non-FX_ Mongoose artifact; repository changes are explicitly permitted only for experiments/EXP-027-R2-clean-replay-button-component-recovery-in-a-self-c.md and evidence/EXP-027-R2/",
     "Starting any other experiment or replay",
     "Modifying production data or disabling security",
     "Reading or printing credential values",
@@ -85,14 +86,13 @@
   "target": {
     "form": "FX_ComponentRecoveryLab03",
     "artifacts": [
-      "FX_ComponentRecoveryLab03",
       "FX_ButtonRecovery03"
     ]
   },
   "acceptance_checks": [
     {
       "id": "AC-1",
-      "description": "Before mutation, evidence enumerates the controlled browser context, preserves any inherited dirty state untouched, performs at most one permitted pre-mutation session-establishment sequence if needed, proves a populated live Select Form result, visibly confirms User editing scope, shows Case Sensitive unchecked with a known-existing positive control, and proves zero case-insensitive Name matches for FX_ComponentRecoveryLab03."
+      "description": "Before mutation, record the harness-provided identity of a fresh OpenCode worker session distinct from EXP-027's ses_eea6d6124ffes94Z5Ncy8SwXYM. Do not obtain worker freshness by restarting the browser or replacing an existing usable Designer. Evidence enumerates the controlled browser context, preserves any inherited dirty state untouched, performs at most one permitted pre-mutation session-establishment sequence if needed, proves a populated live Select Form result, visibly confirms User editing scope, shows Case Sensitive unchecked with a known-existing positive control, and proves zero case-insensitive Name matches for FX_ComponentRecoveryLab03. If worker freshness cannot be established, the result cannot qualify for replay_verified."
     },
     {
       "id": "AC-2",
@@ -120,7 +120,7 @@
     },
     {
       "id": "AC-8",
-      "description": "Final read-only audit shows exactly one case-insensitive Select Form Name match for FX_ComponentRecoveryLab03, reconciles exactly one Form creation, one Button creation, one Name assignment, one ordinary Save, one target close, and one recent-forms reopen, and proves repository changes are confined to the EXP-027-R2 record and evidence/EXP-027-R2/. If all prior checks pass, the EXP-027 procedure may be classified replay_verified with the same narrow non-claims."
+      "description": "Final read-only audit shows exactly one case-insensitive Select Form Name match for FX_ComponentRecoveryLab03, reconciles exactly one Form creation, one Button creation, one Name assignment, one ordinary Save, one target close, and one recent-forms reopen, and proves repository changes are confined to the EXP-027-R2 record and evidence/EXP-027-R2/. If all prior checks pass, including the fresh-worker qualification recorded before mutation in AC-1, the EXP-027 procedure may be classified replay_verified with the same narrow non-claims. Otherwise do not promote the procedure."
     }
   ],
   "evidence_dir": "evidence/EXP-027-R2",
