@@ -1,5 +1,255 @@
 # Implementation status
 
+## Coder custom non-thinking preset (2026-10-07)
+
+- Selected Coder IQ1_M in OpenCode and the local harness worker configuration.
+  Loaded the installed Coder configuration at context 196,608 with reasoning
+  disabled, temperature 0.8, top-p 0.95, top-k 40, presence penalty 1.0 and
+  frequency penalty 0.3. This is a user-requested experimental preset, not the
+  official Qwen non-thinking recommendation. Default penalty window remains 64.
+- Frozen `exp009-shadow-v3` run `S-20261007020038017-79564ead`: 16 trials,
+  15 valid, 1 invalid (unavailable evidence IDs), no failure/timeout, all AI-graded;
+  correctness 1.50/2, evidence 1.5625/2, median 10.258 seconds, 7,946 output tokens.
+  Output cap/timeout remain 16,384 / 600 seconds. No proposed tool action executed.
+- Compared with the preceding Coder non-thinking recommendation run: small score
+  increase and one fewer valid response. Context also changed from 131,072, so
+  neither sampling effects nor loop prevention are causally established.
+- Backups, research, grades and baseline verification are under ignored
+  `data/shadow/reviews/exp009-v3-coder-iq1-custom-nonthinking-20261007/`.
+  Comparison: `data/shadow/comparisons/exp009-v3-coder-iq1-official-vs-custom-nonthinking-20261007-reviewed.md`.
+- At the end of the test, Coder was loaded on the original port 8080 and EXP-026
+  remained paused; the test did not restart the OpenCode backend or Mongoose
+  browser. EXP-026 subsequently completed blocked after the live Designer state
+  was unavailable. EXP-027 is approved with pre-mutation session establishment
+  permitted. Existing loop guards and recovery limits continue to apply.
+
+## Recommended non-thinking sampling comparison (2026-10-07)
+
+- Repeated the same eight frozen `exp009-shadow-v3` checkpoints twice per model
+  with reasoning disabled, temperature 0.7, top-p 0.80, top-k 20, min-p 0,
+  presence penalty 1.5 and repetition penalty 1. These follow the base Qwen
+  non-thinking recommendation. Context/output/timeout remained 131,072 / 16,384 /
+  600 seconds, matching the preceding thinking tests.
+- IQ2_XS `S-20261006170355631-1f64e2ea`: 16/16 valid formats, correctness
+  1.375/2, evidence 1.25/2, median 14.9725 seconds, 7,182 output tokens.
+- Coder IQ1_M `S-20261006170958768-2c668298`: 16/16 valid formats, correctness
+  1.4375/2, evidence 1.4375/2, median 12.2185 seconds, 9,176 output tokens.
+  All 32 trials were AI-graded and saved without executing proposals or identifying
+  unsafe actions. Valid formats still contained tool/context and verification errors.
+- This sample gives Coder a small correctness edge and stronger evidence score.
+  Both are faster than the thinking configurations; Coder's quality scores are
+  slightly lower. Reasoning and sampling change together, so this does not isolate
+  their individual effects or establish live loop prevention.
+- Review/backups/verification are under ignored
+  `data/shadow/reviews/exp009-v3-recommended-nonthinking-codex-20261007/`.
+  Saved paired and four-configuration comparisons under `data/shadow/comparisons/`:
+  `exp009-v3-iq2-vs-coder-iq1-recommended-nonthinking-20261007-reviewed.md` and
+  `exp009-v3-iq1-iq2-thinking-vs-nonthinking-recommended-20261007-reviewed.md`.
+- Nine older reviewed results, OpenCode settings and installed Strata configurations
+  were preserved. Used graceful unload/load and a temporary Coder service, then
+  restored IQ2_XS on port 8080. The factory stays paused; no browser or OpenCode
+  backend restart occurred, and these settings were not applied to the live worker.
+
+## Recommended thinking sampling comparison (2026-10-07)
+
+- Ran the same eight frozen `exp009-shadow-v3` checkpoints twice per model, first
+  full IQ2_XS, then pruned Coder IQ1_M. Both used temperature 1.0, top-p 0.95,
+  top-k 20, min-p 0, presence penalty 0, repetition penalty 1 and Strata high
+  reasoning. Runtime context was 131,072, output cap 16,384, timeout 600 seconds.
+  These sampling values follow the base Qwen model card's thinking settings;
+  the output cap is the local workflow budget rather than its larger benchmark budget.
+- IQ2_XS run `S-20261006160552190-dc892efe`: 12/16 valid responses, correctness
+  1.3125/2, evidence 1.3125/2, median 76.2335 seconds, 98,112 output tokens.
+  Three responses had malformed JSON and one exhausted the output limit without
+  final content. One otherwise valid JSON proposal contained invalid JavaScript.
+- Coder IQ1_M run `S-20261006163800233-b07b0997`: 16/16 valid responses,
+  correctness 1.5/2, evidence 1.5625/2, median 53.6265 seconds, 79,054 output tokens.
+  All 32 trials were graded by Codex against the frozen observations and relevant
+  procedures. No proposed tool or script executed; no unsafe proposal was identified.
+- This small paired sample favors Coder IQ1_M with these settings. Both variants
+  still made incomplete visibility/property-readback proposals; this does not establish
+  live experiment completion or prevent browser loops. Earlier greedy 8K/300-second
+  runs remain historical reference and cannot isolate the sampling effect.
+- Saved canonical grades, original inference backups, review notes and verification
+  under ignored `data/shadow/reviews/exp009-v3-recommended-sampling-codex-20261007/`.
+  The paired report is
+  `data/shadow/comparisons/exp009-v3-iq2-vs-coder-iq1-recommended-sampling-20261007-reviewed.md`.
+- OpenCode settings, installed Strata configurations and seven previous reviewed
+  baseline files were preserved. Used graceful model unload/load and a temporary
+  Coder service on port 8081; that service is stopped. Original IQ2_XS is restored,
+  loaded and idle on port 8080 at 128K. EXP-026 remains paused; the browser and
+  OpenCode backend were not restarted. Test settings were not applied to the live worker.
+
+## IQ2_XS medium-reasoning shadow trial (2026-10-06)
+
+- Reused the idle installed IQ2_XS server at 131,072 context without restarting
+  Strata, OpenCode or the browser. EXP-026 remains paused.
+- Uses the existing shadow runner with an in-memory `reasoning_effort: medium`
+  override, recorded in the result. The live worker and `opencode.json` remain
+  unchanged with IQ2_XS reasoning `none`.
+- Runs the same eight frozen checkpoints, two repeats, 8,192 output tokens,
+  temperature zero and 300-second timeout. No proposed actions execute.
+- Completed `S-20261006151841105-910a46b2`: thirteen valid responses, three invalid
+  (one truncated JSON and one empty response at the output cap; one normally
+  finished response citing an unknown evidence ID), no HTTP failures/timeouts.
+  Saved AI grades for all sixteen: correctness 1.3125/2, evidence 1.3125/2,
+  no proposal safety failures, median 68.7045 seconds and 57,974 output tokens.
+  Separate reasoning-token counts are not reported by Strata.
+- The matched IQ2_XS `none` baseline has sixteen valid, correctness 1.625/2,
+  evidence 1.5/2 and median 12.4795 seconds. `high` has fourteen valid,
+  correctness/evidence 1.5/2 and median 76.5405 seconds. Neither reasoning
+  setting improves average correctness or validity on this corpus at this cap;
+  this evidence favors retaining live IQ2_XS reasoning `none`.
+- Original inference/settings/usage, all compared baseline files and
+  `opencode.json` remained unchanged. Ignored audit scripts, backups and
+  verification are under `data/shadow/reviews/exp009-v3-iq2-medium-codex-20261006/`;
+  three-way comparison is
+  `data/shadow/comparisons/exp009-v3-iq2-none-medium-high-20261006-reviewed.md`.
+  AI review of next-action proposals does not establish live completion or loop
+  prevention; prompts supplied tool names rather than full argument schemas.
+  Review-script syntax validation and `git diff --check` passed.
+
+## IQ2_XS high-reasoning shadow trial (2026-10-06)
+
+- Stopped Coder IQ1_M's Strata server/text/vision processes and started the installed
+  IQ2_XS server without opening a browser or restarting OpenCode. EXP-026 remains
+  paused. Existing IQ2_XS runtime settings remain 131,072 context, k8v4, resident
+  headroom 6 and file release enabled.
+- Uses the existing shadow runner with an in-memory `reasoning_effort: high`
+  override, recorded in the result and ignored review driver. `opencode.json`
+  and the live worker's `reasoningEffort: none` configuration remain unchanged.
+- Requests the same eight frozen checkpoints, two repeats, 8,192 output tokens,
+  temperature zero and 300-second timeout. No proposed action executes.
+- Completed `S-20261006143358736-9ed42511`: fourteen valid responses, two invalid
+  (one empty output-cap exhaustion; one normally finished response with an unknown
+  evidence ID), no HTTP failures/timeouts. Saved AI grades for all sixteen:
+  correctness 1.5/2, evidence 1.5/2, no proposal safety failures; median 76.5405
+  seconds and 70,343 output tokens. The matched `none` baseline has sixteen valid,
+  correctness 1.625/2, evidence 1.5/2, median 12.4795 seconds and 6,226 output tokens.
+  This result does not justify enabling high reasoning for the live worker.
+- Verified original inference/settings/usage, all compared baseline files and
+  `opencode.json` remained unchanged. Review scripts, backups and verification
+  are under ignored `data/shadow/reviews/exp009-v3-iq2-high-codex-20261006/`;
+  paired comparison is `data/shadow/comparisons/exp009-v3-iq2-none-vs-high-20261006-reviewed.md`.
+  Only next-action proposals were evaluated, not live Mongoose completion or loop
+  prevention. Syntax/configuration validation and `git diff --check` passed.
+  IQ2_XS remains loaded and idle; its live reasoning configuration remains `none`.
+
+## Coder IQ1_M medium-reasoning shadow trial (2026-10-06)
+
+- Stopped the existing Strata server, text engine and vision engine, and verified
+  no Strata processes remained before starting the installed Coder IQ1_M server.
+  OpenCode and the Mongoose browser were not restarted; EXP-026 remains paused.
+- Changed only Coder IQ1_M's current `reasoningEffort` from `high` to `medium`.
+  Verified the wire option is `reasoning_effort: medium`; IQ2_XS remains the
+  default and harness worker with reasoning `none`. Updated usage documentation.
+- Started `S-20261006142152825-89c4ece4` on the same eight frozen checkpoints,
+  two repeats, 8,192 output tokens, temperature zero and 300-second timeout.
+  All sixteen trials returned valid proposals with `finish_reason: stop`; none
+  exhausted the output cap. Proposed actions were not executed.
+- Saved AI grades for all sixteen: correctness 1.625/2, evidence 1.625/2,
+  no proposal safety failures, median 19.655 seconds and 25,144 output tokens.
+  This matches the saved `none` quality scores at roughly twice its latency;
+  high had slightly better scores but one empty output-cap failure and 47.23-second
+  median. This does not establish live loop recovery or justify a worker switch.
+- Verified original inference/settings/usage and all baseline files were unchanged.
+  Audit files and the none/medium/high comparison are under ignored
+  `data/shadow/reviews/exp009-v3-iq1-medium-codex-20261006/` and
+  `data/shadow/comparisons/exp009-v3-iq1-none-medium-high-20261006-reviewed.md`.
+  Configuration/wire-option validation and `git diff --check` passed. Changes are
+  uncommitted. The Coder IQ1_M server remains running; the current default worker
+  still selects IQ2_XS, so load that model before resuming that selection.
+
+## Coder IQ1_M high-reasoning shadow trial (2026-10-06)
+
+- Changed only Coder IQ1_M's `reasoningEffort` from `none` to `high` in
+  `opencode.json` for the requested comparison. IQ2_XS remains the default and
+  harness worker; its reasoning setting remains `none`. The documentation now
+  distinguishes the two entries and notes that thinking shares the output cap.
+- Verified that the shadow loader sends `reasoning_effort: high`. The existing
+  IQ1_M baseline retains its saved `none` setting and inference data.
+- Started the installed Coder IQ1_M server on localhost:8080 without opening a
+  browser or restarting OpenCode. Its model catalog confirms Coder IQ1_M,
+  196,608-token context and image input. EXP-026 remains paused.
+- Started `S-20261006140346382-830ec606`: the same frozen eight-case dataset,
+  two repeats, 8,192 output tokens, temperature zero and 300-second timeout.
+  Proposed actions do not execute. All sixteen trials completed: fifteen valid,
+  one empty response with `finish_reason: length` after consuming all 8,192 tokens.
+- Saved AI grades for all sixteen trials: correctness 1.75/2, evidence 1.6875/2,
+  no proposed-action safety failures; median 47.23 seconds versus 10.05 seconds
+  for the saved `none` baseline (correctness/evidence 1.625/2, sixteen valid).
+  Separate reasoning-token usage is unreported. This small frozen corpus does
+  not demonstrate live loop recovery or justify an automatic worker switch.
+- Original responses/settings/usage and old baseline files were verified unchanged.
+  Review backups, notes and the paired comparison are under ignored
+  `data/shadow/reviews/exp009-v3-iq1-high-codex-20261006/` and
+  `data/shadow/comparisons/exp009-v3-iq1-none-vs-high-20261006-reviewed.md`.
+  Configuration validation and `git diff --check` passed. Changes are uncommitted.
+  The server remains loaded with Coder IQ1_M; restart the desired model server
+  before using the unchanged IQ2_XS worker selection.
+
+## DeepSeek API shadow comparison and latest IQ2_XS grading (2026-10-06)
+
+- Reviewed and saved all sixteen proposals from `S-20261006132033062-d0f4b782`
+  as `Codex (AI review)`: correctness 1.625/2, evidence 1.5/2, no proposal safety
+  failures. Original IQ2_XS inference data and all older baseline grades were
+  verified unchanged. Backups, grades, verification and the detailed comparison
+  are in ignored `tools/learning-harness/data/shadow/` review/comparison files.
+- Extended the existing shadow provider loader and CLI to permit only the official
+  HTTPS DeepSeek endpoint with per-command `--allow-deepseek-api`. Local endpoints
+  remain the default. The opt-in explicitly states that frozen history/screenshots
+  are uploaded and paid API usage applies. URL credentials, other remote hosts,
+  alternate ports, queries/fragments and redirects remain rejected.
+- Added `deepseek/deepseek-flash` (DeepSeek V4.1 Flash, text/image input,
+  `reasoningEffort: high` per the subsequent user request) to `opencode.json`,
+  referencing `{env:DEEPSEEK_API_KEY}`. The shadow loader maps this to
+  `reasoning_effort: high`; comparison reports expose the difference from Strata's
+  non-thinking configuration. DeepSeek ignores temperature in thinking mode.
+  The existing default and harness worker selection were preserved. No dependencies
+  were added and no backend/browser/model server or controller was restarted.
+- Documented masked terminal-only key entry, the paired shadow command, comparison
+  and key cleanup in the harness README. `/connect` auth and the separate harness
+  DeepSeek fallback are not used by shadow requests. No actual API key was read,
+  written or requested in chat; no paid inference was performed.
+- Validation: typecheck and build passed; shadow and OpenCode adapter suites passed
+  68 tests, including ten new tests covering opt-in, official endpoint restrictions,
+  environment-only authentication, image/request format, key exclusion, unchanged
+  dataset hashes and no controller database creation. CLI help exposes the new flag.
+- Limits: remote inference is verified with mocked responses, not the live paid API.
+  Model preflight and returned-model validation still apply. Screenshots and some
+  environment metadata may contain identifiable information that text redaction
+  cannot remove; inspect the frozen dataset before external transmission. This
+  evaluates inert decisions only, not live Mongoose execution or loop prevention.
+  Changes remain uncommitted alongside earlier IQ2_XS integration edits on exp/EXP-026.
+
+## Strata IQ2_XS worker configuration (2026-10-06)
+
+- Added `strata/qwen3.8-flash-next-iq2_xs` to `opencode.json` and selected it as the
+  interactive default and in the local/example harness worker configurations.
+  Retained the existing Coder IQ1_M and Tabby/Qwen entries. The Strata provider
+  label now covers both model variants; its localhost endpoint is unchanged.
+- IQ2_XS uses text/image input, tool calls, a 196,608-token context, a 16,384-token
+  output cap and `reasoningEffort: none`. Existing automatic compaction, pruning,
+  48,000-token reserve and loop denials remain. No runtime logic, dependencies,
+  permissions or experiment budgets changed. No additional permanent tests were
+  needed for the declarative configuration change.
+- Updated the root/harness READMEs with installation, startup, model selection,
+  rollback and shadow comparison instructions. Model switches must respect the
+  current experiment's browser lifecycle restrictions; a worker backend restart
+  can close its browser. Strata accepting a request model label does not prove
+  which weights are loaded, so check server health/model metadata independently.
+- Validation: typecheck/build passed; adapter and shadow suites passed 58 tests.
+  OpenCode model enumeration lists IQ2_XS and Coder. Both harness configurations
+  passed the existing schema/safety checks and match the OpenCode default; manual
+  assertions confirmed retained alternate models, limits, vision, compaction and
+  doom-loop settings. `git diff --check` passed.
+- Live IQ2_XS inference/tool use, image understanding and reliability remain
+  unverified: port 8080 refused the health check. No model download/start, backend
+  restart, experiment resume or browser interaction was performed. EXP-026 evidence
+  and saved run state were left intact. Q2_0 is not added by this change.
+- QA should compare matched frozen responses and separately measure progress and
+  loop behavior on permitted live tasks before claiming a model-quality improvement.
+
 ## Run-code loop detection and experiment tool permissions (2026-10-05)
 
 - Implemented on isolated `fix/browser-loop-tool-policy` while EXP-020 T7 remained

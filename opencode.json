@@ -4,6 +4,26 @@
   "model": "strata/qwen3.8-flash-next-coder-iq1_m",
 
   "provider": {
+    "deepseek": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "DeepSeek API",
+      "options": {
+        "baseURL": "https://api.deepseek.com/v1",
+        "apiKey": "{env:DEEPSEEK_API_KEY}"
+      },
+      "models": {
+        "deepseek-flash": {
+          "name": "DeepSeek V4.1 Flash",
+          "options": { "reasoningEffort": "high" },
+          "reasoning": true,
+          "tool_call": true,
+          "attachment": true,
+          "interleaved": { "field": "reasoning_content" },
+          "modalities": { "input": ["text", "image"], "output": ["text"] },
+          "limit": { "context": 1048576, "output": 16384 }
+        }
+      }
+    },
     "tabby": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "Local TabbyAPI",
@@ -31,21 +51,46 @@
           },
 
           "limit": {
-            "context": 196608,
-            "output": 32768
+            "context": 131072,
+            "output": 16384
           }
         }
       }
     },
     "strata": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "Local Strata Coder IQ1_M",
+      "name": "Local Strata",
 
       "options": {
         "baseURL": "http://127.0.0.1:8080/v1"
       },
 
       "models": {
+        "qwen3.8-flash-next-iq2_xs": {
+          "name": "Qwen3.8 Flash Next IQ2_XS (Strata)",
+
+          "options": {
+            "reasoningEffort": "none"
+          },
+
+          "reasoning": true,
+          "tool_call": true,
+          "attachment": true,
+
+          "interleaved": {
+            "field": "reasoning_content"
+          },
+
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+
+          "limit": {
+            "context": 196608,
+            "output": 16384
+          }
+        },
         "qwen3.8-flash-next-coder-iq1_m": {
           "name": "Qwen3.8 Flash Next Coder IQ1_M (Strata)",
 
