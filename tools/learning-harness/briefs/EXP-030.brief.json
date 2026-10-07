@@ -1,0 +1,128 @@
+{
+  "experiment_id": "EXP-030",
+  "title": "EXP-030 — Button Type Label Recovery Across Ordinary Close/Reopen",
+  "record_path": "experiments/EXP-030-button-type-label-recovery-across-ordinary-close-r.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "On one new User-scoped classic BuildFromScratch Form `FX_ButtonTypeRecoveryLab01`, place exactly one native Toolbox Button, assign only Name=`FX_ButtonTypeRecovery01`, and record the Button's exact visibly rendered property-grid Type label before Save. Perform exactly one ordinary Designer Save, verify the Form returns clean with Name and Type unchanged, close the target Form exactly once through its ordinary Form-tab close control, then reopen it exactly once through the same Designer's Form-menu recent-forms path. Verify the same User-scoped Form recovers the component with Name=`FX_ButtonTypeRecovery01` and exactly the same visible Type label. Classify the result only as UI-level recovery of the Button Name + visible Type label across this ordinary close/reopen workflow; do not claim database durability, cache eviction, serialization, Caption persistence, or behavior of other component types/properties.",
+  "scope": {
+    "in_scope": [
+      "Read EXP-027, EXP-003-R2, EXP-002-R2, EXP-019-R2, and the verified basic-form/component recipes before mutation",
+      "Fresh-worker read-only browser/Designer preflight and preservation audit",
+      "At most one documented supported session-establishment sequence before the first target mutation if no usable live workflow exists; no session establishment after mutation begins",
+      "Prove editing scope User and prove `FX_ButtonTypeRecoveryLab01` absent case-insensitively before creation using a live supported Select Form workflow with a rendered known-existing positive control; if the positive control cannot be established within one fresh snapshot plus one corrected inspection, stop blocked without mutation",
+      "Create exactly one User-scoped classic BuildFromScratch Form `FX_ButtonTypeRecoveryLab01` with Save Template visibly unchecked",
+      "Capture the clean untouched post-creation Form baseline before component placement without claiming complete component cardinality",
+      "Place exactly one native Toolbox Button using the verified component-placement procedure; native Playwright mouse.click at coordinates is permitted only when the current visible canvas has been inspected and no semantic placement alternative is available",
+      "Assign only component Name=`FX_ButtonTypeRecovery01` using the verified Name-edit procedure",
+      "Record authoritative component Name and exact visible property-grid Type label before Save",
+      "Perform exactly one ordinary Designer Save and verify clean return with Name and Type unchanged",
+      "Close `FX_ButtonTypeRecoveryLab01` exactly once through its ordinary Form-tab close control",
+      "Reopen `FX_ButtonTypeRecoveryLab01` exactly once through the same Designer's Form-menu recent-forms entry",
+      "Post-reopen verify exact Form identity by Name + ScopeType + ScopeName, clean state, recovered component Name, and Type exactly equal to the pre-close visible Type label",
+      "Perform a final read-only exactly-one-target inventory check, controlled-action reconciliation, and repository-confinement audit",
+      "Write repository evidence only under `evidence/EXP-030/` and the EXP-030 experiment record"
+    ],
+    "out_of_scope": [
+      "Retrying, repairing, replaying, or changing the status of EXP-029",
+      "Explicit global-Form-object unload or testing `Unload IDO Metadata With Forms` semantics",
+      "Button Caption, Static Caption, Form Caption, Form Description, or any other component/Form property persistence",
+      "Component types other than the single native Button",
+      "Form variables, Persistent/Global behavior, serialization, FormSync, or generated SQL",
+      "Bindings, IDOs, validators, event handlers, scripts, runtime actions, or navigation behavior",
+      "Forms-database durability, backend object identity, numeric/internal component type codes, cache-eviction claims, or complete component inventory",
+      "Launching or testing an additional Designer client",
+      "Promoting or modifying reusable recipes"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Create, modify, or delete any non-FX_ Mongoose artifact",
+    "Create more than one target Form or more than one Button component",
+    "Modify any Button property other than the required Name assignment",
+    "Modify unrelated Form properties",
+    "Change or Save any User Preference",
+    "Invoke `Unload All Global Form Objects`",
+    "Regenerate Form",
+    "Perform more than one ordinary Designer Save after Button placement and Name assignment",
+    "Close or reopen the target more than once as part of the tested lifecycle",
+    "Use direct cold MGForm navigation or Select Form as the tested reopen path",
+    "Authenticate or establish a session after the first target mutation; if the session becomes unusable after mutation, stop blocked",
+    "Launch another Designer while a usable Designer is retained",
+    "Use synthetic DOM activation or scripted mutation outside the verified placement/configuration procedures",
+    "Retry a failed component Name editor through an alternate mechanism or blind repeated input",
+    "Use shell/module installation or internal Ext stores as recovery for a failed semantic mutation or an unproven rendered positive-control result",
+    "Delete, save, discard, close, or alter inherited dirty Forms or dialogs encountered during preflight",
+    "Widen browser recovery beyond one fresh snapshot and one corrected inspection",
+    "Claim complete component cardinality from rendered absence alone",
+    "Claim database durability, serialization, cache eviction, Caption persistence, unrelated property persistence, or behavior of other component types"
+  ],
+  "prohibited_patterns": [
+    "\\bunload all global form objects\\b",
+    "\\bregenerate(?: form)?\\b",
+    "\\b(event handler|script|validator|binding|formsync|form variable)s?\\b",
+    "\\b(button|static|form) caption\\b",
+    "\\bform description\\b",
+    "\\b(database durability|cache eviction|backend identity|serialization)\\b"
+  ],
+  "related_experiments": [
+    "EXP-027",
+    "EXP-003-R2",
+    "EXP-002-R2",
+    "EXP-019-R2",
+    "EXP-029"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_ButtonTypeRecoveryLab01",
+    "artifacts": [
+      "FX_ButtonTypeRecoveryLab01",
+      "FX_ButtonTypeRecovery01"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Before mutation, evidence records the fresh worker/session identity, preserves inherited state untouched, proves a usable live workflow and editing scope User, shows a settled rendered Select Form positive-control row corresponding to an exact known-existing Name with Case Sensitive unchecked, and proves zero case-insensitive Name matches for `FX_ButtonTypeRecoveryLab01`. If the positive control is not proven within the bounded inspection or the target already exists, the experiment stops blocked without mutation."
+    },
+    {
+      "id": "AC-2",
+      "description": "Evidence proves exactly one User-scoped classic BuildFromScratch Form `FX_ButtonTypeRecoveryLab01` was created through the verified fresh-dialog procedure with Save Template visibly unchecked, and the loaded Form identity is Name=`FX_ButtonTypeRecoveryLab01`, ScopeType=User, ScopeName=<current user>."
+    },
+    {
+      "id": "AC-3",
+      "description": "Before component placement, evidence proves the target Form is clean and untouched and records the rendered canvas/component state without claiming complete component cardinality."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly one native Toolbox Button creation operation is evidenced. Only Name is assigned, to exactly `FX_ButtonTypeRecovery01`. Before Save, authoritative visible property-grid/accessibility evidence records Name=`FX_ButtonTypeRecovery01` and the exact visible Type label, with no unrelated component-property mutation."
+    },
+    {
+      "id": "AC-5",
+      "description": "Exactly one ordinary Designer Save is evidenced; afterward the target is clean and the Button still reports Name=`FX_ButtonTypeRecovery01` and the identical Type label recorded in AC-4."
+    },
+    {
+      "id": "AC-6",
+      "description": "Exactly one ordinary Form-tab close is evidenced with the target tab removed, no unsaved-change or unexpected prompt, and the same Designer retained; the target is then reopened exactly once through that Designer's Form-menu recent-forms entry, not by direct URL or Select Form."
+    },
+    {
+      "id": "AC-7",
+      "description": "After reopen, evidence proves exact Form identity by Name + ScopeType + ScopeName, clean state, recovered component Name=`FX_ButtonTypeRecovery01`, and visible Type exactly equal to the AC-4 pre-close value."
+    },
+    {
+      "id": "AC-8",
+      "description": "Final read-only audit proves exactly one case-insensitive `FX_ButtonTypeRecoveryLab01` inventory target, reconciles exactly one Button placement, one Name assignment, one ordinary Save, one close, one recent-forms reopen, and zero explicit global-Form-object unloads, and proves repository changes are confined to the EXP-030 record plus `evidence/EXP-030/`."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-030",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261007-183958-H9GE. Rationale: EXP-027 established an observed UI-level recovery of a native Button definition across one ordinary Designer Save and Form-tab close/reopen, but the current experiment history does not independently establish recovery of the Button's exact visible property-grid Type label as its own observable postcondition. EXP-029 cannot proceed because its mandatory pre-mutation Select Form positive-control gate was not proven within the bounded inspection, so this proposal does not retry, repair, or work around EXP-029 and does not exercise the coupled-unload boundary. Instead it isolates one smaller metadata observation on the already-observed ordinary close/reopen lifecycle: whether one native Button returns with the identical visible Type label after reopening. The experiment modifies only a new FX_ Form and one FX_ Button, assigns only Name, and treats Type as read-only evidence."
+}

@@ -1,0 +1,125 @@
+- generic [ref=f2e5]:
+  - banner "Portal Top Navigation Bar" [ref=f2e8]:
+    - generic [ref=f2e10]:
+      - generic:
+        - generic [ref=f2e12]:
+          - generic:
+            - link "Home" [ref=f2e14] [cursor=pointer]
+            - button "Open navigation menu" [ref=f2e17] [cursor=pointer]
+        - generic [ref=f2e19]:
+          - tablist "Tabs" [ref=f2e20]:
+            - tab "System Administrator" [ref=f2e21] [cursor=pointer]:
+              - link "System Administrator" [ref=f2e22]
+              - button "Close tab System Administrator" [ref=f2e26]
+            - tab "Mongoose" [selected] [ref=f2e564] [cursor=pointer]:
+              - link "Mongoose" [ref=f2e565]
+              - button "Open tab menu" [ref=f2e567]
+              - button "Close tab Mongoose" [ref=f2e569]
+          - button "Tabs menu more" [ref=f2e30] [cursor=pointer]
+        - generic [ref=f2e32]:
+          - generic:
+            - generic [ref=f2e33]: DEM
+            - link "Health Notifications" [ref=f2e37] [cursor=pointer]
+            - button "User menu" [ref=f2e39] [cursor=pointer]
+            - button "Hide Smart Panel" [ref=f2e41] [cursor=pointer]
+    - generic:
+      - generic:
+        - generic: Infor OS Portal
+        - generic: 2026.09.00 (20260724-165348, 20260724-164130, 1062, 1582, 727)
+        - generic:
+          - generic:
+            - text: Copyright © 2026 Infor. All rights reserved. The word and design marks set forth herein are trademarks and/or registered trademarks of Infor and/or its affiliates and subsidiaries. All other trademarks listed herein are the property of their respective owners
+            - generic: www.infor.com
+            - text: .
+  - main [ref=f2e42]:
+    - iframe [active] [ref=f2e578]:
+      - generic [ref=f3e1]:
+        - banner [ref=f3e2]:
+          - heading "Infor Mongoose Application Development Framework" [level=1] [ref=f3e3]
+          - link "Skip to Main Content" [ref=f3e4] [cursor=pointer]:
+            - /url: "#formContainer"
+          - navigation [ref=f3e5]:
+            - button "Explorer" [ref=f3e6] [cursor=pointer]
+            - separator
+            - button "Form" [ref=f3e10] [cursor=pointer]
+            - separator
+            - button "Actions" [ref=f3e749] [cursor=pointer]
+            - separator
+            - button "Edit" [ref=f3e12] [cursor=pointer]
+            - separator
+            - button "View" [ref=f3e14] [cursor=pointer]
+            - separator
+            - button "Window" [ref=f3e16] [cursor=pointer]
+            - separator
+            - button "Help" [ref=f3e18] [cursor=pointer]
+            - button "<secret>SECRET_MONGOOSE_USERNAME</secret> | G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT" [ref=f3e20] [cursor=pointer]
+          - toolbar [ref=f3e22]:
+            - button "Open" [active] [ref=f3e23] [cursor=pointer]:
+              - button "Open" [ref=f3e24]
+            - button "Save" [disabled] [ref=f3e26]:
+              - button "Save" [disabled]
+            - button "New" [disabled] [ref=f3e27]:
+              - button "New" [disabled]
+            - button "Delete" [disabled] [ref=f3e28]:
+              - button "Delete" [disabled]
+            - button "Refresh" [disabled] [ref=f3e29]:
+              - button "Refresh" [disabled]
+            - button "Filter in Place" [disabled] [ref=f3e30]:
+              - button "FiP" [disabled]
+            - button "Get More Rows" [disabled] [ref=f3e31]:
+              - button "Get More Rows" [disabled]
+            - button "System Notes" [disabled] [ref=f3e32]:
+              - button "System Notes" [disabled]
+            - button "Documents" [disabled] [ref=f3e33]:
+              - button "Documents" [disabled]
+            - button "Send email for the current object" [disabled] [ref=f3e34]:
+              - button "Send email for the current object" [disabled]
+            - button "Export To Excel" [disabled] [ref=f3e35]:
+              - button "Export To Excel" [disabled]
+            - button [ref=f3e36] [cursor=pointer]:
+              - button "Designer" [ref=f3e37]
+            - button "Designer" [ref=f3e39] [cursor=pointer]:
+              - button "Designer" [ref=f3e40]
+            - button "Help Current Form" [ref=f3e42] [cursor=pointer]:
+              - button "Help Current Form" [ref=f3e751]
+        - region [ref=f3e43]:
+          - heading "Explorer" [ref=f3e44]
+          - button "Collapse Panel"
+          - grid [ref=f3e45]:
+            - columnheader "Name"
+            - tree [ref=f3e50]:
+              - generic [ref=f3e53]:
+                - table [ref=f3e54]:
+                  - rowgroup [ref=f3e55]:
+                    - row [ref=f3e56]:
+                      - treeitem [ref=f3e57]:
+                        - treeitem "My Folders" [ref=f3e59]
+                - table [ref=f3e60]:
+                  - rowgroup [ref=f3e61]:
+                    - row [ref=f3e62]:
+                      - treeitem [ref=f3e63]:
+                        - treeitem "Master Explorer" [ref=f3e65]
+                - table [ref=f3e66]:
+                  - rowgroup [ref=f3e67]:
+                    - row [ref=f3e68]:
+                      - treeitem [ref=f3e69]:
+                        - treeitem "Public Folders" [ref=f3e71]
+                - table [ref=f3e72]:
+                  - rowgroup [ref=f3e73]:
+                    - row [ref=f3e74]:
+                      - treeitem [ref=f3e75]:
+                        - treeitem "User Folders" [ref=f3e77]
+        - main [ref=f3e52]:
+          - tablist [ref=f3e753]:
+            - tab [selected] [ref=f3e754] [cursor=pointer]:
+              - heading "FX_ComponentRecoveryLab03" [level=2] [ref=f3e755]
+              - button "Close Panel FX_ComponentRecoveryLab03" [ref=f3e756]:
+                - img "Close Panel FX_ComponentRecoveryLab03"
+          - tabpanel "FX_ComponentRecoveryLab03" [ref=f3e757]:
+            - button [ref=f3e760] [cursor=pointer]
+    - complementary "Smart Panel" [ref=f2e259]:
+      - generic [ref=f2e260]:
+        - button "Insights" [ref=f2e581] [cursor=pointer]
+        - button "Inbox" [ref=f2e263] [cursor=pointer]
+        - button "Smart Help" [ref=f2e266] [cursor=pointer]
+        - button "Popout Smart Panel" [ref=f2e269] [cursor=pointer]
