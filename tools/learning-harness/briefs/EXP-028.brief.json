@@ -3,23 +3,23 @@
   "title": "EXP-028 — Button Caption Recovery Across Ordinary Close/Reopen",
   "record_path": "experiments/EXP-028-button-caption-recovery-across-ordinary-close-reop.md",
   "new_record": true,
-  "reviewed": false,
-  "objective": "On one new User-scoped classic BuildFromScratch Form `FX_ButtonCaptionLab01`, use the replay-verified creation and native Button procedures to create exactly one Button named `FX_ButtonCaption01`, record its untouched Caption baseline and exact property-grid Type label, change only the Button Caption to exactly `Button Caption Recovery`, perform exactly one ordinary Designer Save, exactly one ordinary target Form-tab close, and exactly one same-Designer Form-menu recent-forms reopen, then verify that the same scoped Form recovers the same Button Name, identical Type label, and exact Caption. Treat the result only as UI-level recovery across this ordinary close/reopen workflow; do not claim Forms-database durability, cache eviction, unload behavior, or behavior of other component properties/types.",
+  "reviewed": true,
+  "objective": "On one new User-scoped classic BuildFromScratch Form `FX_ButtonCaptionLab02`, use the replay-verified creation and native Button procedures to perform exactly one Button creation operation and assign Name=`FX_ButtonCaption02`. Capture the clean Form baseline before placement, then capture the dirty pre-Caption component baseline after placement and Name assignment, with exact Caption and property-grid Type label and no ordinary Save yet. After that baseline, the only intentional Button-property mutation is Caption, assigned exactly `Button Caption Recovery`. Perform exactly one ordinary Designer Save, exactly one ordinary target Form-tab close, and exactly one same-Designer Form-menu recent-forms reopen, then verify that the same scoped Form recovers the recorded Button Name, identical Type label, and exact Caption. The new observation is specifically Caption recovery across this ordinary close/recent-forms boundary; EXP-003/R2 already verified Button Caption recovery across full-page reload/reopen. Treat the result only as UI-level recovery across the tested workflow; do not claim Forms-database durability, cache eviction, unload behavior, or behavior of other component properties/types.",
   "scope": {
     "in_scope": [
-      "Read EXP-027-R2, EXP-003-R2, EXP-019-R2, recipes/forms/create-basic-form.md, recipes/components/add-component-from-toolbox.md, and recipes/components/configure-basic-component.md before mutation",
+      "Read EXP-027-R2, EXP-003-R2, EXP-019-R2, the blocked EXP-020 record, recipes/forms/create-basic-form.md, recipes/components/add-component-from-toolbox.md, and recipes/components/configure-basic-component.md before mutation",
       "Fresh-worker read-only browser/Designer preflight and preservation audit",
       "At most one documented supported session-establishment sequence before the first target mutation if no usable live workflow exists; no session establishment after mutation",
-      "Live Select Form positive-control proof plus zero case-insensitive Name matches for FX_ButtonCaptionLab01 before creation",
-      "Create exactly one User-scoped classic BuildFromScratch Form FX_ButtonCaptionLab01 with Save Template visibly unchecked",
-      "Capture an untouched clean post-creation Form baseline without claiming complete component cardinality",
+      "Live Select Form positive-control proof plus zero case-insensitive Name matches for FX_ButtonCaptionLab02 before creation; if the target already exists, stop blocked without altering it",
+      "Create exactly one User-scoped classic BuildFromScratch Form FX_ButtonCaptionLab02 with Save Template visibly unchecked",
+      "Capture an untouched clean post-creation Form baseline before Button placement, without claiming complete component cardinality",
       "Place exactly one native Toolbox Button using the verified placement procedure",
-      "Assign component Name exactly FX_ButtonCaption01 using the verified Name-edit procedure",
-      "Record authoritative pre-Caption component Name, exact visible property-grid Type label, and exact Caption baseline",
-      "Change only the Button Caption to exactly Button Caption Recovery",
+      "Assign component Name exactly FX_ButtonCaption02 using the verified Name-edit procedure",
+      "After placement and Name assignment, record the dirty pre-Caption baseline with authoritative component Name, exact visible property-grid Type label, and untouched Caption value; no ordinary Save before Caption assignment",
+      "After the pre-Caption baseline, change only the Button Caption to exactly Button Caption Recovery through the verified literal Caption editor; verify the exact committed value immediately, without selecting a named string resource; if the value differs or cannot be established, stop blocked without Save or corrective input",
       "Perform exactly one ordinary Designer Save and verify clean return with Name, Type, and Caption unchanged",
-      "Close FX_ButtonCaptionLab01 exactly once through its ordinary Form-tab close control",
-      "Reopen FX_ButtonCaptionLab01 exactly once through the same Designer's Form-menu recent-forms entry",
+      "Close FX_ButtonCaptionLab02 exactly once through its ordinary Form-tab close control",
+      "Reopen FX_ButtonCaptionLab02 exactly once through the same Designer's Form-menu recent-forms entry",
       "Post-reopen verify exact Form identity by Name + ScopeType + ScopeName and exact recovered component Name + Type + Caption",
       "Final read-only Select Form exactly-one target proof, controlled-action reconciliation, and repository-confinement audit",
       "Write evidence only under evidence/EXP-028/ and the EXP-028 experiment record"
@@ -38,7 +38,7 @@
     ]
   },
   "prohibited_actions": [
-    "Creating, modifying or deleting any non-FX_ artifact",
+    "Creating, modifying or deleting any non-FX_ Mongoose artifact; repository changes are explicitly permitted only for experiments/EXP-028-button-caption-recovery-across-ordinary-close-reop.md and evidence/EXP-028/",
     "Starting any other experiment or replay",
     "Modifying production data or disabling security",
     "Reading or printing credential values",
@@ -49,13 +49,13 @@
     "Add bindings, IDO references, validators, event handlers, scripts, or runtime actions",
     "Invoke Unload All Global Form Objects or change any User Preference",
     "Regenerate Form",
-    "Perform more than one ordinary Designer Save after the Button Caption assignment",
+    "Perform any ordinary Designer Save before the Button Caption assignment, or more than the single ordinary Designer Save after that assignment",
     "Close or reopen the target more than once as part of the tested lifecycle",
     "Use direct cold MGForm navigation, Select Form, or another fallback route for the tested reopen",
     "Authenticate or establish a session after the first target mutation; if the session becomes unusable after mutation, stop blocked",
     "Launch another Designer while a usable Designer is retained",
     "Use synthetic DOM activation or an alternate scripted mutation mechanism outside the verified component-placement/configuration recipes",
-    "Retry a failed Caption editor through an alternate mechanism or blind repeated input",
+    "Retry a failed Caption editor through an alternate mechanism or blind repeated input; if committing the literal produces a named string resource or any value other than Button Caption Recovery, stop blocked without Save, replacement, or another editor attempt",
     "Delete, save, discard, close, or alter inherited dirty Forms or dialogs encountered during preflight",
     "Widen browser recovery beyond one fresh snapshot and one corrected inspection",
     "Claim complete component cardinality from rendered absence alone",
@@ -84,32 +84,31 @@
     "notes": ""
   },
   "target": {
-    "form": "FX_ButtonCaptionLab01",
+    "form": "FX_ButtonCaptionLab02",
     "artifacts": [
-      "FX_ButtonCaptionLab01",
-      "FX_ButtonCaption01"
+      "FX_ButtonCaption02"
     ]
   },
   "acceptance_checks": [
     {
       "id": "AC-1",
-      "description": "Before mutation, evidence proves a usable live workflow in User scope, preserves inherited state untouched, shows a working known-existing Select Form positive control with Case Sensitive unchecked, and proves zero case-insensitive Name matches for FX_ButtonCaptionLab01."
+      "description": "Before mutation, record the fresh worker/session identity and evidence proving a usable live workflow in User scope, preserve inherited state untouched, show a working known-existing Select Form positive control with Case Sensitive unchecked, and prove zero case-insensitive Name matches for FX_ButtonCaptionLab02. If a target match exists, stop blocked without altering it; repository name searches alone do not prove live absence."
     },
     {
       "id": "AC-2",
-      "description": "Evidence proves exactly one User-scoped classic BuildFromScratch Form FX_ButtonCaptionLab01 was created through the fresh-dialog Classic/BuildFromScratch procedure with Save Template visibly unchecked, and the loaded Form identity is Name=FX_ButtonCaptionLab01, ScopeType=User, ScopeName=<current user>."
+      "description": "Evidence proves exactly one User-scoped classic BuildFromScratch Form FX_ButtonCaptionLab02 was created through the fresh-dialog Classic/BuildFromScratch procedure with Save Template visibly unchecked, and the loaded Form identity is Name=FX_ButtonCaptionLab02, ScopeType=User, ScopeName=<current user>. Capture its untouched clean post-creation baseline before Button placement; distinguish rendered canvas absence from complete component inventory."
     },
     {
       "id": "AC-3",
-      "description": "Before Caption mutation, evidence proves the target Form is clean and shows exactly one newly placed native Button identified authoritatively as Name=FX_ButtonCaption01, records its exact visible property-grid Type label, and records its exact untouched Caption baseline; no unrelated property mutation is evidenced."
+      "description": "After exactly one native Toolbox Button creation operation and the required Name assignment, but before Caption mutation, capture the dirty pre-Caption baseline. Authoritative property-grid/accessibility evidence records Name=FX_ButtonCaption02, the exact visible Type label, and the exact untouched Caption value. Record the action count without claiming complete component inventory. No ordinary Save has occurred; placement and Name assignment are the only intentional mutations since the clean Form baseline, and no unrelated property mutation is evidenced."
     },
     {
       "id": "AC-4",
-      "description": "Evidence proves only the Button Caption changed from the recorded baseline to exactly `Button Caption Recovery`, while authoritative Name remains FX_ButtonCaption01 and Type remains identical to AC-3; the Form is dirty and no ordinary Save has yet occurred."
+      "description": "After AC-3, the only intentional Button-property mutation is Caption. Immediately after the single literal Caption edit is committed, authoritative property-grid/accessibility evidence must show Caption exactly `Button Caption Recovery`, Name=FX_ButtonCaption02, and Type identical to AC-3. The Form remains dirty and no ordinary Save has occurred. If the literal is replaced by a named string resource, differs from the required value, or cannot be established, stop blocked without Save or corrective input."
     },
     {
       "id": "AC-5",
-      "description": "Exactly one ordinary Designer Save is evidenced; afterward the target is clean and authoritative component Name=FX_ButtonCaption01, Type equals AC-3, and Caption equals exactly `Button Caption Recovery`."
+      "description": "Exactly one ordinary Designer Save is evidenced, only after AC-4 establishes the exact literal Caption; afterward the target is clean and authoritative component Name=FX_ButtonCaption02, Type equals AC-3, and Caption equals exactly `Button Caption Recovery`."
     },
     {
       "id": "AC-6",
@@ -117,15 +116,15 @@
     },
     {
       "id": "AC-7",
-      "description": "Exactly one reopen through the same Designer's Form-menu recent-forms entry is evidenced; the reopened Form has Name=FX_ButtonCaptionLab01, ScopeType=User, matching ScopeName, clean state, and the recovered Button reports authoritative Name=FX_ButtonCaption01, Type exactly equal to AC-3, and Caption exactly `Button Caption Recovery`. If the recent-forms entry is unavailable or session establishment is required after mutation, stop blocked."
+      "description": "Exactly one reopen through the same Designer's Form-menu recent-forms entry is evidenced; the reopened Form has Name=FX_ButtonCaptionLab02, ScopeType=User, matching ScopeName, clean state, and the recovered Button reports authoritative Name=FX_ButtonCaption02, Type exactly equal to AC-3, and Caption exactly `Button Caption Recovery`. If the recent-forms entry is unavailable or session establishment is required after mutation, stop blocked."
     },
     {
       "id": "AC-8",
-      "description": "Final read-only audit shows exactly one case-insensitive Select Form Name match for FX_ButtonCaptionLab01, reconciles exactly one Form creation, one Button creation, one Name assignment, one Caption assignment, one ordinary Save, one target close, and one recent-forms reopen, and proves experiment-authored repository changes are confined to the EXP-028 record and evidence/EXP-028/. The resulting finding may be classified observed only; replay verification requires a later independent replay."
+      "description": "Final read-only audit shows exactly one case-insensitive Select Form Name match for FX_ButtonCaptionLab02, reconciles exactly one Form creation, one Button creation, one Name assignment, one Caption assignment, one ordinary Save, one target close, and one recent-forms reopen, and proves experiment-authored repository changes are confined to the EXP-028 record and evidence/EXP-028/. The resulting finding may be classified observed only for Caption recovery across this ordinary close/recent-forms boundary; replay verification requires a later independent replay."
     }
   ],
   "evidence_dir": "evidence/EXP-028",
   "replay_of": null,
   "initial_instruction": null,
-  "notes": "Proposed by the coordinator after run R-20261007-173418-s6vM. Rationale: EXP-027-R2 has now replay-verified the self-contained User-scope workflow for creating one classic BuildFromScratch Form, placing one native Button, saving once, closing the Form tab once, and reopening it through the same Designer's recent-forms route while recovering the Button's Name and Type. The smallest adjacent unanswered metadata question is whether a Button Caption, which is a distinct component property class, recovers across that same weak close/reopen boundary. EXP-018 was blocked before Form creation at an obsolete wizard-selection prerequisite, while the later fresh-dialog Classic/BuildFromScratch sequence and Button placement procedure are now independently replay-verified; this proposal therefore uses those documented procedures as a new experiment rather than attempting to repair EXP-018. EXP-020 has unknown status and is not relied upon."
+  "notes": "Proposed by the coordinator after accepted run R-20261007-173418-s6vM. EXP-027-R2 replay-verified the self-contained User-scope workflow for creating one classic BuildFromScratch Form, placing one native Button, saving once, closing once, and reopening through the same Designer's recent-forms route while recovering Name and Type. EXP-003/R2 already verified Button Caption recovery across full-page reload/reopen; the new question here is only the ordinary Form-tab close/recent-forms boundary. EXP-020 is completed blocked: it created FX_ButtonCaptionLab01, but its Caption editor committed the named string-resource value ApplyFullTextIndexScriptQuestion instead of the requested literal, and it stopped without ordinary Save or close/reopen testing. EXP-028 therefore proposes FX_ButtonCaptionLab02 (live absence remains a preflight requirement), incorporates the immediate literal-value verification/stop rule, and does not repair or alter EXP-020. EXP-018 was blocked before Form creation; the now replay-verified creation and placement prerequisites are used here. The Form is clean before placement, dirty after placement and Name assignment, and saved exactly once only after the exact Caption is established. A successful run would be one observed path-specific Caption result, not general persistence verification."
 }
