@@ -1,0 +1,5 @@
+- Opened Select Form once from the live Web Client toolbar (Open button); Cancel used to close (non-activating).
+| Form-menu recent-forms reopens | 1 | T8 (one click on `menuitem "FX_ComponentRecoveryLab02"`, `#menuitem-1073-itemEl`) |
+| Fallback reopen routes (cold MGForm nav / Select Form reopen) | 0 | none used; reopen path was the recent-forms menu entry only |
+## Reopened Designer target state at audit time
+- Tab 1 remains the reopened clean target: heading/Properties Name `FX_ComponentRecoveryLab02`, Version "User version for user <signed-in user>", scope bar `[ ScopeType: User / ScopeName: anton.ramos@3mworks.com.ph ]`, Save disabled (clean); recovered component grid Name `FX_ButtonRecovery02` / Type `PushButton` (proven in T8, evidence t8-02). Not re-inspected redundantly; state preserved.
