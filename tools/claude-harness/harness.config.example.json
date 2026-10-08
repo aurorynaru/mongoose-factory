@@ -21,7 +21,10 @@
     "passwordEnv": "OPENCODE_SERVER_PASSWORD",
     "executable": null,
     "agent": null,
-    "model": {"providerID": "strata", "modelID": "qwen3.8-flash-next-iq2_xs"},
+    "model": {
+      "providerID": "strata",
+      "modelID": "qwen3.8-flash-next-iq2_xs"
+    },
     "taskTimeoutMinutes": 90,
     "pollIntervalMs": 3000,
     "noResponseGraceSeconds": 120,
@@ -65,5 +68,13 @@
     "maxDurationMinutes": 240,
     "maxDeepseekCalls": 10,
     "maxDeepseekCostUsd": 0.5
+  },
+  "mcp": {
+    "port": 8931,
+    "cdpPort": 9224,
+    "chromeExecutable": null,
+    "entrypoint": null,
+    "secretsFile": "C:\\AI\\mongoose-secrets\\demo.env",
+    "outputDir": "evidence/playwright"
   }
 }

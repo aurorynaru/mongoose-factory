@@ -1,8 +1,21 @@
 # Claude harness: Phase 0 inspection and implementation plan
 
 Date: 2026-10-08 (Asia/Singapore). Branch: `claude-harness`.
-Status: **Phases 1–3 approved with amendments below. STOP after Phase 1 and report
-the installed MCP CDP cleanup finding before Phase 2.**
+Status: **Phase 1/CDP finding accepted; Phases 2–3 authorized. STOP after Phase 3,
+before Phase 4, for the operator's live worker replay comparison.**
+
+Latest additions supersede older profile/no-browser proposals below. Phase 2
+permits one scratch-profile Chrome launch on about:blank: MCP opens a second
+about:blank tab via CDP, disconnect the last client, verify Chrome/both tabs via
+/json, record exact output, stop owned Chrome and delete the scratch profile.
+No secrets/login/Mongoose URL. Production uses configured
+C:\AI\mongoose-playwright-profile, refuses an in-use profile, and never uses
+default Chrome user data. Each worker task starts with a fresh visible-tab/scope
+snapshot and ends stable without dialogs/unsaved prompts (disconnect dismisses
+beforeunload dialogs; installed coreBundle.js:40014). Known risk: any local
+process reaching CDP controls the session. Loopback only, worker Bash denied
+by default, stop owned Chrome when not in use. No other browser launches or
+real model/Mongoose calls, no secrets-file reads, no gateway, no push/main merge.
 
 Phase 1 finding: installed MCP 0.0.83 CDP cleanup disconnects Playwright without
 closing external Chrome's default context or pages. **Select CDP; drop the

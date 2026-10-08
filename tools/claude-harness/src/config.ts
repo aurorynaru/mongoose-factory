@@ -20,6 +20,14 @@ export type Limits = z.infer<typeof LimitsSchema>;
 export const ConfigSchema = z.object({
   factoryRoot: z.string().min(1).default(resolve(HARNESS_DIR, "..", "..")),
   dataDir: z.string().min(1).default("claude-data"),
+  mcp: z.object({
+    port: z.number().int().min(1024).max(65535).default(8931),
+    cdpPort: z.number().int().min(1024).max(65535).default(9224),
+    chromeExecutable: z.string().nullable().default(null),
+    entrypoint: z.string().nullable().default(null),
+    secretsFile: z.string().nullable().default("C:\\AI\\mongoose-secrets\\demo.env"),
+    outputDir: z.string().default("evidence/playwright"),
+  }).prefault({}),
   browser: z
     .object({
       mode: z.enum(["persistent", "cdp"]).default("persistent"),
