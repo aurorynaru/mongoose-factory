@@ -4,6 +4,11 @@ Date: 2026-10-08 (Asia/Singapore). Branch: `claude-harness`.
 Status: **Phases 1–3 approved with amendments below. STOP after Phase 1 and report
 the installed MCP CDP cleanup finding before Phase 2.**
 
+Phase 1 finding: installed MCP 0.0.83 CDP cleanup disconnects Playwright without
+closing external Chrome's default context or pages. **Select CDP; drop the
+gateway.** See [PHASE-1.md](PHASE-1.md) for exact installed-source references,
+validation and limits. Phase 2 has not started.
+
 ## Approved amendments and execution order
 
 These operator amendments supersede conflicting Phase 0 proposals below.
@@ -237,7 +242,7 @@ after their fixture tests are retired; add the MCP SDK and a pinned tested
 Playwright MCP package. No package changes in Phase 0.
 
 Planned additions: `src/adapters/claude/{process,events,transcripts,worker,chat,tool-policy}.ts`,
-`src/backend/{mcp-service,mcp-gateway}.ts`, `src/hooks/pre-tool-use.ts`,
+`src/backend/mcp-service.ts` (CDP, no gateway), `src/hooks/pre-tool-use.ts`,
 `protocol/specialist-knowledge.md`, fake executable and MCP fixtures/tests,
 local `.gitignore`. Runtime settings, MCP configs, process journals and hook state
 live under ignored `tools/claude-harness/claude-data/`, never the old `data/`.
@@ -334,7 +339,28 @@ model resolution as unknown if no matching prior init event exists.
 
 ## Persistent MCP service and browser ownership
 
-Proposed owned service command: a hidden Node supervisor hosts the gateway and
+**Selected Phase 2 topology after source inspection:** one owned MCP HTTP service
+at configurable loopback port 8931, attached to separately started harness-owned
+Chrome at configurable loopback CDP port 9224. Use a dedicated profile (proposed
+`C:\AI\claude-harness-mongoose-profile`), separate from both existing profiles;
+do not launch Chrome during this engineering task. Chrome owns its profile;
+omit MCP `--user-data-dir` in CDP mode. Track Chrome and MCP ownership independently.
+
+Equivalent MCP argv (launch directly with Node from the pinned package):
+
+```text
+npx -y @playwright/mcp@0.0.83 --host 127.0.0.1 --port 8931 --allowed-hosts "127.0.0.1:8931" --cdp-endpoint http://127.0.0.1:9224 --idle-timeout 0 --secrets {MCP_SECRETS_FILE} --output-dir {MCP_OUTPUT_DIR}
+```
+
+No retained upstream session/gateway is required. Disconnect releases Playwright
+objects, tab-selection metadata, listeners/recording and connection; Chrome and
+its default-context pages survive. A later task must freshly inspect its active
+tab and scope; stale accessibility references must not be reused. The source
+finding does not establish live persistence, authentication or Mongoose state.
+An isolated/new context would be disposed and is incompatible with this design.
+
+The following **superseded fallback** is retained only as Phase 0 rationale and
+must not be implemented for the inspected version. Its proposed hidden supervisor hosts a gateway and
 spawns a pinned `@playwright/mcp` entrypoint directly with Node. Do not track an
 `npx.cmd` wrapper PID as if it owned the listening port. The equivalent backend
 argument vector, with config-sourced paths from `opencode.json`, is:
@@ -524,7 +550,7 @@ runtime hook-failure behavior instead of assuming a nonzero exit is a denial.
    applicable controller/proposal/autopilot scenarios; session recovery and file
    boundary tests. Commit.
 5. **Config/CLI/docs:** per-role model/effort/billing, executable+argv-prefix for
-   fake Node CLI, MCP gateway/backend ports and path settings, task/chat/turn limits,
+   fake Node CLI, MCP/CDP ports and path settings, task/chat/turn limits,
    loop thresholds, allowBash; CLAUDE.md and preserve existing docs index. Doctor validates
    CLI/auth/service/config/hook/child environment/Git without calling a model or
    starting a browser. Rewrite verified/not-verified table honestly. Commit.

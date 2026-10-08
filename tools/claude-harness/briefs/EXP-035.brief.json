@@ -1,0 +1,118 @@
+{
+  "experiment_id": "EXP-035",
+  "title": "EXP-035 — Select Form Positive-State Retention Across One Cancel/Reopen",
+  "record_path": "experiments/EXP-035-select-form-positive-state-retention-across-one-ca.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Using only the inherited live Web Client state, determine whether one already-rendered positive Select Form state survives exactly one ordinary Cancel followed by exactly one ordinary reopen. At preflight, require Select Form to already be open and visibly show exact filter text `FX_ComponentRecoveryLab02`, Filter By=Name, Case Sensitive unchecked, Starts With unchecked, and a rendered row whose Name exactly equals `FX_ComponentRecoveryLab02`. Do not type, clear, repair, or otherwise establish that state in this experiment. If the prerequisite is present, capture it, perform exactly one ordinary Cancel and exactly one ordinary reopen without any intervening filter/settings change or Form activation, then capture whether the reopened dialog retains the exact text/settings and exact positive-control row. Keep the conclusion limited to rendered Select Form UI retention across this single lifecycle boundary.",
+  "scope": {
+    "in_scope": [
+      "Read EXP-031, EXP-033-R2, and EXP-034 records and decisive evidence before browser interaction",
+      "Inspect the inherited Web Client and Designer context read-only",
+      "Require the inherited Select Form dialog to already be open with exact `FX_ComponentRecoveryLab02` text, Filter By=Name, Case Sensitive unchecked, Starts With unchecked, and an exact rendered matching row",
+      "Capture decisive pre-Cancel rendered/accessibility evidence of that prerequisite state",
+      "Perform exactly one ordinary Select Form Cancel",
+      "Perform exactly one ordinary reopen of Select Form through the supported rendered Web Client Open control",
+      "Inspect the reopened dialog before any text or setting change",
+      "Capture exact post-reopen textbox text, Filter By, checkbox states, and rendered rows",
+      "Perform at most one final ordinary Cancel after post-reopen evidence capture, with no subsequent reopen",
+      "Record recovery accounting separately from planned preflight/current-reference/post-reopen/final-audit captures. Extra ambiguity recovery is limited to one additional fresh untargeted snapshot plus one corrected visible inspection total across all tasks; record used/remaining allowance, do not reset it on worker/session changes, and do not relabel repeated stale or ambiguous reads as planned evidence",
+      "Write only the EXP-035 record and evidence under `evidence/EXP-035/`"
+    ],
+    "out_of_scope": [
+      "Re-entering, clearing, correcting, or otherwise establishing `FX_ComponentRecoveryLab02`",
+      "Retesting EXP-034's native-keyboard setup sequence",
+      "Retesting the EXP-031 zero-match path",
+      "Using `FX_SelectFormKeyboardProbe01`",
+      "Creating or modifying any Form, component, variable, event, script, binding, validator, or other Mongoose artifact",
+      "Testing Form/component persistence or serialization",
+      "Testing cache eviction, refresh/requery internals, Ext stores, IDO metadata behavior, or database durability",
+      "Launching another Designer client",
+      "Changing User Preferences",
+      "Invoking any unload operation",
+      "Direct cold MGForm navigation",
+      "Reusable recipe modification",
+      "Any other experiment or replay"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ Mongoose artifact; repository writes are explicitly permitted only to `experiments/EXP-035-select-form-positive-state-retention-across-one-ca.md` and `evidence/EXP-035/`",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not type, fill, paste, press printable keys, clear, or alter the Select Form filter textbox at any point",
+    "Do not change Filter By, Case Sensitive, or Starts With",
+    "Do not use JavaScript, browser evaluate/run-code (including read-only evaluation), synthetic DOM mutation, or internal Ext stores",
+    "Do not perform an initial Open to manufacture the required already-open dialog; the only permitted Open is the single tested reopen after the authorized Cancel",
+    "Do not press Enter or OK in Select Form",
+    "Do not interact with any result row so as to open or activate a Form",
+    "Do not perform more than one tested Cancel/reopen cycle",
+    "Do not perform more than one tested reopen",
+    "Do not authenticate, reauthenticate, log out, or establish a replacement session",
+    "Do not create, modify, delete, Save, Regenerate, close, or reopen any Mongoose Form or component",
+    "Do not invoke `Unload All Global Form Objects`",
+    "Do not change or Save any User Preference",
+    "Do not infer database, cache, serialization, persistence, or server-refresh behavior from the rendered result",
+    "Do not modify repository paths outside the EXP-035 record and `evidence/EXP-035/`",
+    "If the exact inherited positive prerequisite state is absent or ambiguous, stop blocked rather than reconstructing it"
+  ],
+  "prohibited_patterns": [
+    "\\b((?:playwright_)?browser_(?:evaluate|run_code(?:_unsafe)?)|run[-_ ]?code(?:_unsafe)?|javascript)\\b|\\bevaluate\\s*\\(",
+    "\\b(press|hit|send)\\b[^.\\n;]{0,35}\\bEnter\\b",
+    "\\b(click|press|activate|hit)\\b[^.\\n;]{0,35}\\bOK\\b",
+    "\\b(double[- ]?click|row activation)\\b",
+    "\\b((?:playwright_)?browser_type|fill|paste|press[_ -]?sequentially)\\b|\\btype\\b[^.\\n;]{0,45}\\b(text|textbox|filter|FX_ComponentRecoveryLab02)\\b",
+    "\\b(press|send|use|issue)\\b[^.\\n;]{0,35}\\b((?:ctrl|control)\\s*\\+?\\s*a|backspace|printable keys?)\\b|\\b(?:playwright_)?browser_press_key\\b",
+    "\\bFX_SelectFormKeyboardProbe01\\b",
+    "\\b(unload all global form objects|user preferences)\\b",
+    "\\b(save|regenerate)\\b[^.\\n]{0,40}\\b(form|component)\\b",
+    "\\b(create|add|delete|modify)\\b[^.\\n]{0,40}\\b(form|component|variable|event handler|script|binding|validator)s?\\b",
+    "\\b(sign[ -]?in|login|log[ -]?out|reauthenticate)\\b"
+  ],
+  "related_experiments": [
+    "EXP-031",
+    "EXP-033-R2",
+    "EXP-034"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": null,
+    "artifacts": [
+      "FX_ComponentRecoveryLab02"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Preflight evidence proves the inherited Web Client is usable without session-establishment action, Select Form is already open, the inherited Designer context remains untouched, and before any lifecycle action the dialog visibly contains exact textbox text `FX_ComponentRecoveryLab02`, Filter By=Name, Case Sensitive unchecked, Starts With unchecked, and a rendered row whose Name exactly equals `FX_ComponentRecoveryLab02`. If any prerequisite is absent or ambiguous, the experiment stops blocked without repairing it."
+    },
+    {
+      "id": "AC-2",
+      "description": "Action evidence proves exactly one ordinary Cancel dismissed the prerequisite Select Form and exactly one ordinary reopen followed, with no typing, textbox clearing, setting change, result-row interaction, Form activation, authentication/session-establishment action, or extra lifecycle retry between them."
+    },
+    {
+      "id": "AC-3",
+      "description": "Settled post-reopen evidence, captured before any text or setting change, visibly shows the Name-filter textbox still contains exact `FX_ComponentRecoveryLab02`, Filter By remains Name, Case Sensitive remains unchecked, Starts With remains unchecked, and a rendered row whose Name exactly equals `FX_ComponentRecoveryLab02` is present."
+    },
+    {
+      "id": "AC-4",
+      "description": "The complete action audit proves no textbox input of any kind, no filter/settings mutation, no Enter/OK, no result-row activation, no Mongoose artifact mutation, no Save/Regenerate, no unload, no preference change, no authentication/session-establishment action, and no extra tested Cancel/reopen occurred."
+    },
+    {
+      "id": "AC-5",
+      "description": "Recovery accounting distinguishes planned preflight/current-reference/post-reopen/final-audit captures from extra ambiguity recovery and uses at most one additional fresh untargeted snapshot plus one corrected visible inspection total across all tasks. Record used/remaining allowance, do not reset it on worker/session changes, and do not relabel repeated stale or ambiguous reads as planned evidence; unresolved ambiguity after that produces a blocked result."
+    },
+    {
+      "id": "AC-6",
+      "description": "After the tested reopen, final audit captures the actual state without repairing it, performs at most one final ordinary Cancel solely to dismiss Select Form, confirms no subsequent reopen, confirms inherited Web Client/Designer Forms remain untouched, and proves this experiment's repository writes are confined to the EXP-035 record plus `evidence/EXP-035/`; list pre-existing unrelated changes separately and leave them untouched. If blocked before lifecycle testing, leave the inherited state untouched and record actual actions and unperformed checks rather than claiming the sequence passed. A passing result is classified only as observed retention of exact filter text/settings and the matching rendered positive-control row across this single Cancel/reopen boundary; it does not prove reopening refreshed or reapplied the filter internally, or verify EXP-034's input sequence."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-035",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Proposed after blocked run R-20261007-225604-DG5Z. EXP-034's worker used a text-entry action to insert literal multi-character `Control+A` instead of issuing a native keyboard shortcut. That protocol violation blocked the run; it does not disprove the native keyboard filtering procedure replay-verified in EXP-033-R2. EXP-034 later recorded exact text `FX_ComponentRecoveryLab02`, Filter By=Name, both checkboxes unchecked, and an exact matching row, but performed zero tested Cancels/reopens. EXP-035 treats this only as a possible inherited prerequisite that must be freshly proved from rendered/accessibility evidence; history alone cannot establish current state. It permits no input or reconstruction and tests only one Cancel/reopen from that already-visible positive state. EXP-031 already observed positive-control retention, so EXP-035 must not claim its first discovery. EXP-034's lifecycle remained unperformed; EXP-035 cannot repair/reclassify that run or verify its invalid input sequence. A success adds an observed lifecycle-only result with inherited setup; if the prerequisite is absent or ambiguous, stop blocked without recreating it."
+}

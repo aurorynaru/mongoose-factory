@@ -1,0 +1,129 @@
+{
+  "experiment_id": "EXP-022",
+  "title": "EXP-022 — Static No-Colon Recovery Across Ordinary Close/Reopen",
+  "record_path": "experiments/EXP-022-static-no-colon-recovery-across-ordinary-close-reo.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "Create one new User-scoped classic BuildFromScratch Form `FX_StaticNoColonLab01`, add one Static component named `FX_StaticNoColonStatic01`, and before the property under test establish a visible setup baseline by assigning Caption `Static No Colon Test` and recording the component's Name, Caption, No Colon, and the comparison properties exposed by the verified component workflow. Require the pre-test No Colon value to be False; otherwise stop as blocked rather than changing additional properties to manufacture a transition. Then change only No Colon from False to True, perform exactly one ordinary Designer Save to clean state, close the target exactly once through its ordinary Form-tab close control, reopen it exactly once through Designer Form-menu recent forms in the same Designer/client context, and verify that No Colon=True, Caption and comparison properties are unchanged, and the rendered Static display reflects the no-colon state. Treat this only as UI-level recovery across the tested weak close-only boundary; make no database-durability, cache-eviction, serialization, or internal-instance claim.",
+  "scope": {
+    "in_scope": [
+      "Read EXP-003-R2, EXP-008-R2, EXP-019-R2, EXP-021, recipes/forms/create-basic-form.md, recipes/components/add-component-from-toolbox.md, and recipes/components/configure-basic-component.md before mutation",
+      "One new User-scoped classic BuildFromScratch Form `FX_StaticNoColonLab01`",
+      "One Static component named `FX_StaticNoColonStatic01`",
+      "Pre-test setup may assign the Static Caption exactly `Static No Colon Test` before the No Colon baseline is captured",
+      "Capture a pre-No-Colon baseline containing exact property-grid/accessibility evidence for component Name, Caption, No Colon, and the comparison properties exposed by the verified component workflow. Record rendered Static text only as optional corroborating evidence if actually visible; if it is not visible, leave rendered state unresolved without blocking this pre-reopen step",
+      "One deliberate post-baseline target-property mutation: No Colon from False to True",
+      "Exactly one ordinary Designer Save after the No Colon change",
+      "Exactly one ordinary target Form-tab close",
+      "Exactly one Designer Form-menu recent-forms reopen in the same Designer/client context",
+      "Read-only post-reopen verification using Form Name + ScopeType + ScopeName and component Name + recorded properties",
+      "Rendered-visible evidence kept distinct from property-grid/accessibility-derived exact values",
+      "Read-only final action-count and repository-confinement audit limited to this experiment record and `evidence/EXP-022/`",
+      "If the inherited Mongoose session is unusable before any target mutation, at most one supported pre-mutation session-establishment sequence may be used and disclosed, after which all live-session, User-scope, and target-absence guards must be re-proven before mutation"
+    ],
+    "out_of_scope": [
+      "Replay or retry of EXP-021-R2",
+      "Static Caption recovery as the property under test",
+      "Button or Edit component Caption behavior",
+      "Form-level Caption or Description behavior",
+      "Form variables or variable persistence",
+      "FormSync or generated metadata representations",
+      "Explicit Form/global-object unload or any stronger persistence boundary",
+      "IDO-metadata cache behavior",
+      "New Designer/client lifecycle testing",
+      "Forms-database durability or serialization provenance",
+      "Cache eviction",
+      "Internal object-instance identity",
+      "Complete component-inventory claims unless independently proven by an already-supported visible inventory surface",
+      "Bindings, scripts, event handlers, validators, collections, or data-source work"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Create, modify, rename, Save, Regenerate, or delete any non-FX_ Mongoose artifact",
+    "Start another experiment or replay",
+    "Invoke Unload All Global Form Objects or any other explicit unload",
+    "Change User Preferences, including Unload IDO Metadata With Forms",
+    "Create Button or Edit components",
+    "Create or modify Form variables, FormSync definitions, scripts, event handlers, validators, bindings, IDO metadata, collections, or data sources",
+    "Regenerate Form",
+    "Replace the existing Designer/client or use a stronger lifecycle boundary as part of this experiment",
+    "After the pre-No-Colon baseline is captured, deliberately change Caption, Name, or any target component property other than No Colon",
+    "Continue if the recorded No Colon baseline is not False; record the experiment blocked instead",
+    "Perform any authentication or session-establishment action after the first target mutation",
+    "Manipulate hidden or off-screen controls to substitute for a required rendered-visible checkpoint",
+    "Infer complete component cardinality from one creation action plus visible presence",
+    "Blindly repeat an interrupted browser or shell action; recovery is limited to one fresh snapshot and one corrected inspection, then a blocker",
+    "Expose credential values or weaken security"
+  ],
+  "prohibited_patterns": [
+    "\\b(unload all global form objects|regenerate form)\\b",
+    "\\b(form variables?|formsync)\\b",
+    "\\b(event handlers?|scripts?|validators?|bindings?|ido metadata|collections?|data sources?)\\b",
+    "\\b(button|edit)\\b[^.\\n]{0,40}\\b(create|add|caption|component)\\b"
+  ],
+  "related_experiments": [
+    "EXP-003-R2",
+    "EXP-008-R2",
+    "EXP-019-R2",
+    "EXP-021",
+    "EXP-021-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_StaticNoColonLab01",
+    "artifacts": [
+      "FX_StaticNoColonLab01",
+      "FX_StaticNoColonStatic01"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Before target mutation, visibly prove a usable live Mongoose workflow and Editing Scope=User, then use the supported Select Form Name filter in case-insensitive mode with a visible positive control to prove `FX_StaticNoColonLab01` has zero matching rows. If one pre-mutation session establishment is needed, disclose it and repeat these guards afterward. Evidence must distinguish the positive-control hit from the target-zero result."
+    },
+    {
+      "id": "AC-2",
+      "description": "Create exactly one User-scoped classic BuildFromScratch Form `FX_StaticNoColonLab01` through the verified fresh-dialog/basic-form path with Save Template unchecked, and capture its loaded clean state plus visible Name/ScopeType/ScopeName identity."
+    },
+    {
+      "id": "AC-3",
+      "description": "Perform one Static creation operation, name it `FX_StaticNoColonStatic01`, assign Caption exactly `Static No Colon Test` as pre-test setup, and then capture the pre-No-Colon baseline before the tested mutation. The baseline must prove component Name, Caption exactly `Static No Colon Test`, No Colon=False, and the other comparison properties exposed by the verified component workflow using exact property-grid/accessibility evidence. If canvas text actually renders, record it separately as optional corroborating evidence; otherwise leave rendered state unresolved without blocking AC-3. If No Colon is not False, stop blocked."
+    },
+    {
+      "id": "AC-4",
+      "description": "After AC-3, change only No Colon from False to True. Capture exact No Colon=True, unchanged Caption and comparison properties, and the expected dirty Designer state. Record canvas text separately as optional corroborating evidence only if actually visible; absence of pre-reopen rendering does not block AC-4 and leaves rendered state unresolved. Label rendered-visible evidence separately from exact property-grid/accessibility-derived values. AC-8 remains the decisive post-reopen rendered checkpoint."
+    },
+    {
+      "id": "AC-5",
+      "description": "Perform exactly one ordinary Designer Save after the No Colon edit and prove the Designer returns clean while `FX_StaticNoColonStatic01` remains present with No Colon=True, Caption exactly `Static No Colon Test`, and every recorded post-baseline comparison property unchanged."
+    },
+    {
+      "id": "AC-6",
+      "description": "Close `FX_StaticNoColonLab01` exactly once through its ordinary Form-tab close control and visibly prove the target tab is closed with no unsaved-change or unexpected prompt. Record that no explicit unload, Regenerate, preference change, client replacement, or post-mutation session-establishment action occurred."
+    },
+    {
+      "id": "AC-7",
+      "description": "Reopen the target exactly once through Designer Form-menu recent forms in the same Designer/client context and visibly verify matching User-scoped Form identity by Name + ScopeType + ScopeName."
+    },
+    {
+      "id": "AC-8",
+      "description": "After reopen, verify `FX_StaticNoColonStatic01` is present with No Colon=True, Caption exactly `Static No Colon Test`, and every recorded non-No-Colon comparison property equal to the AC-3 baseline. Capture rendered Static text as corroborating display evidence that the no-colon state is still reflected, without inferring internal instance identity or complete component cardinality."
+    },
+    {
+      "id": "AC-9",
+      "description": "Final read-only audit must reconcile exactly one ordinary Save, one target Form-tab close, one recent-forms reopen, no deliberate target-property mutation after AC-3 except No Colon, zero explicit unloads, zero Regenerates, zero preference changes, zero client replacements, and zero post-mutation authentication/session-establishment actions. Repository changes must be confined to the EXP-022 record and `evidence/EXP-022/`; any recovery-obstructed or session-expired inventory read is invalid evidence rather than grounds for another recovery attempt."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-022",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261006-100540-dxLq. Rationale: EXP-021 established one accepted observation for a Static component across the weak ordinary close/reopen boundary, while EXP-021-R2 was blocked by preflight/environment issues and must not be worked around by simply retrying that replay. The smallest independent next learning step is therefore a different Static-component metadata property already exposed by the verified component workflow: No Colon. This stays within the proven classic BuildFromScratch + Static-component lane, uses the replay-verified fresh-dialog/wizard selection and verified component procedures, and asks only whether one deliberate No Colon change is recovered after one ordinary Save, one Form-tab close, and one recent-forms reopen. It does not depend on any blocked variable, FormSync, Button-Caption, or Static-Caption replay result."
+}

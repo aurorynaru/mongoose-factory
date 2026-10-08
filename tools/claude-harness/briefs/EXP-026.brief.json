@@ -1,0 +1,127 @@
+{
+  "experiment_id": "EXP-026",
+  "title": "EXP-026 — Button Component Recovery Across Ordinary Close/Reopen",
+  "record_path": "experiments/EXP-026-button-component-recovery-across-ordinary-close-re.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "Create one new User-scoped classic BuildFromScratch Form `FX_ComponentRecoveryLab01`, record its untouched visible baseline, and perform exactly one native Button creation operation using the verified placement procedure. As required identification setup, assign the component Name `FX_ButtonRecovery01` using only the verified Name-edit portion of the configuration recipe, without changing Caption or unrelated properties. Record exact component Name and the rendered Type label (expected PushButton for the Toolbox Button) before the lifecycle test. Perform exactly one ordinary Designer Save to a clean target state, close the target once through its ordinary Form-tab close control, reopen it once through Designer Form-menu recent forms in the same Designer/client, and verify the recorded Name and Type recover unchanged. This is a first observation of UI-level structural component recovery for this bounded sequence, not a complete component-inventory claim or proof of database durability, cache eviction, metadata unloading, Button Caption persistence, backend object identity or other component types.",
+  "scope": {
+    "in_scope": [
+      "Read EXP-002-R2, EXP-003-R2, EXP-019-R2, recipes/forms/create-basic-form.md, recipes/components/add-component-from-toolbox.md, and recipes/components/configure-basic-component.md before mutation",
+      "Read EXP-018 and EXP-020 for scope boundaries and EXP-021-R4 for the bounded component-Name editor failure; do not retry or repair any previous experiment",
+      "Read-only preflight recording inherited visible Forms/dialogs and dirty state, proving usable Mongoose workflow and User editing scope, and proving target absence with the supported case-insensitive Select Form Name filter and a visible known-existing positive control",
+      "At most one supported session-establishment sequence before any target mutation, with credentials handled only through configured secret placeholders and no credential exposure; preserve inherited state and repeat live/scope/absence guards afterward, or stop blocked if that is impossible",
+      "Create one User-scoped classic BuildFromScratch Form FX_ComponentRecoveryLab01 using the replay-verified EXP-019-R2 fresh-dialog rendered-selection prefix followed by the separately verified basic-form recipe, with Save Template visibly unchecked",
+      "Capture the untouched target Form baseline: Name, ScopeType, ScopeName, clean target state and rendered canvas/component state; distinguish visible absence from a complete component inventory",
+      "Perform exactly one native Button creation operation and visibly verify its presence; do not infer total component cardinality from this action count",
+      "Assign component Name FX_ButtonRecovery01 as identification setup using only the verified Name-edit step; do not follow the configuration recipe's Caption-edit or separate Save steps",
+      "Record the exact Name and visible Type label after identification setup, distinguishing Toolbox Button from property-grid PushButton; if required Name cannot be established, stop blocked without an alternate editor mechanism or blind retry",
+      "Exactly one ordinary Designer Save after the placement/Name setup, one target Form-tab close and one same-Designer Form-menu recent-forms reopen",
+      "Post-reopen comparison of the same scoped Form and recorded exact component Name/Type, with the target Form clean; no Select Form fallback as an alternative tested reopen path",
+      "Inspected screenshots/property-grid/accessibility evidence under evidence/EXP-026/; final read-only live target Name-filter count, lifecycle-action audit and repository confinement"
+    ],
+    "out_of_scope": [
+      "Button Caption persistence or modification",
+      "Form Caption, Form Description, Static Caption or No Colon behavior",
+      "Form variables, variable serialization, Persistent/Global behavior or FormSync",
+      "Explicit Form/global-object unload or IDO-metadata cache behavior",
+      "Testing database durability, generated SQL or Forms-database contents",
+      "Launching an additional Web Designer client or investigating EXP-023/024/025 launch behavior",
+      "Bindings, IDOs, events, scripts, validators, event handlers or runtime behavior of the Button",
+      "Testing any component type other than the single native Button",
+      "Creating a reusable recipe from this first execution",
+      "Inferring that ordinary close/reopen evicted caches or forced a database read",
+      "Complete component cardinality without an independently supported visible inventory; the experiment requires one creation action and verified target component presence instead",
+      "An alternate reopen route or component-Name editor workaround after the specified supported procedure fails"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Create, modify or delete any non-FX_ Mongoose artifact",
+    "Create more than one target Form or more than one Button component",
+    "Change Button Caption, Form Caption, Form Description, Static Caption, No Colon or any unrelated property; only the required component Name assignment is permitted as identification setup, and no component property mutation is permitted after that baseline",
+    "Add bindings, event handlers, scripts, validators, IDO references or runtime actions to the Button",
+    "Invoke `Unload All Global Form Objects`, change `Unload IDO Metadata With Forms`, or change any User Preference",
+    "Save more than once after the tested Button addition",
+    "Regenerate Form",
+    "Close/reopen the target more than once as part of the tested lifecycle",
+    "Use direct cold `?MGForm=` navigation as the reopen mechanism",
+    "Launch another Web Designer, use Runtime Builder or test any alternate Designer-launch route",
+    "Perform authentication, activate an authentication Sign In/OK control, reauthenticate, log out or restart the browser after the first target mutation; normal creation-wizard confirmations are distinct from authentication controls and remain permitted. If the session becomes unusable after mutation, stop blocked",
+    "Read, print, log or screenshot credential values",
+    "Use shell/module installation, synthetic DOM activation or alternate scripted UI actions as recovery for a failed semantic browser step",
+    "Widen recovery beyond one fresh snapshot and one corrected read-only inspection; if state remains unresolved, stop blocked",
+    "Save, discard, close, delete or modify inherited dirty Forms or uncommitted dialogs from another experiment; stop blocked if the target workflow cannot preserve them",
+    "Use Select Form or another route as a fallback after the required recent-forms reopen fails or is unavailable",
+    "Claim the rendered component Type must literally equal Button; compare the observed property-grid label, normally PushButton, without inferring numeric/internal type codes"
+  ],
+  "prohibited_patterns": [
+    "\\b(set|edit|change|modify)\\b[^.\\n]{0,50}\\b(button\\s+caption|form\\s+caption|description|no\\s+colon)\\b",
+    "\\b(create|add|edit|modify)\\b[^.\\n]{0,50}\\b(form\\s+variable|variable|binding|event\\s+handler|validator|script)\\b",
+    "\\b(unload\\s+all\\s+global\\s+form\\s+objects|clearcache|formsync)\\b",
+    "\\b(open\\s+designer\\s+in\\s+a\\s+new\\s+window|runtime\\s+builder)\\b",
+    "\\bregenerate\\s+form\\b",
+    "\\b(navigate|goto|go\\s+to|open|reopen)\\b[^\\n]{0,100}\\?MGForm="
+  ],
+  "related_experiments": [
+    "EXP-002-R2",
+    "EXP-003-R2",
+    "EXP-018",
+    "EXP-019-R2",
+    "EXP-020",
+    "EXP-008-R2",
+    "EXP-021-R4"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_ComponentRecoveryLab01",
+    "artifacts": [
+      "FX_ButtonRecovery01"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Before any target mutation, record inherited visible Forms/dialogs and dirty state without changing them, prove a usable live Mongoose workflow and User editing scope, and use the supported Select Form Name filter with Case Sensitive unchecked and a visible known-existing positive control to prove zero FX_ComponentRecoveryLab01 matches. Any permitted pre-mutation session establishment must preserve inherited state, avoid credential exposure, and be followed by re-proving these guards; otherwise stop blocked."
+    },
+    {
+      "id": "AC-2",
+      "description": "Perform one target Form creation using the replay-verified EXP-019-R2 fresh-dialog rendered Classic/Build from Scratch selection prefix followed by the separately verified basic-form procedure. Prove Save Template unchecked and the loaded clean target identity by Name FX_ComponentRecoveryLab01 + ScopeType User + ScopeName. Do not claim that the entire composed procedure is already replay-verified."
+    },
+    {
+      "id": "AC-3",
+      "description": "Before Button placement, capture an inspected untouched post-creation baseline identifying the target Form, User scope, clean state and rendered canvas/component state. Record any supported visible inventory result; a blank canvas or missing visible Button alone does not establish complete component cardinality. If an unexpected existing Button is observed, preserve the state and stop blocked rather than deleting or replacing it."
+    },
+    {
+      "id": "AC-4",
+      "description": "Perform exactly one native Button creation operation and verify the placed component. Assign Name FX_ButtonRecovery01 using only the verified Name-edit step as identification setup. Capture the exact property-grid/accessibility Name and Type label (expected PushButton for Toolbox Button), with inspected rendered evidence labeled separately. Do not change Caption or unrelated properties, invoke another editor mechanism after failure, or infer total component count from one creation action. If the required FX_ Name cannot be established, stop blocked after bounded read-only inspection."
+    },
+    {
+      "id": "AC-5",
+      "description": "Perform exactly one ordinary Designer Save after placement and required Name setup. Prove the selected target Form returns clean and the component retains Name FX_ButtonRecovery01 and the exact Type label recorded in AC-4. No component property changes are permitted after the AC-4 baseline."
+    },
+    {
+      "id": "AC-6",
+      "description": "Close FX_ComponentRecoveryLab01 exactly once through its ordinary Form-tab close control, with no unsaved-change or unexpected prompt and no explicit unload. Visibly prove the target tab is closed while the same Designer/client and inherited Forms are retained."
+    },
+    {
+      "id": "AC-7",
+      "description": "Reopen FX_ComponentRecoveryLab01 exactly once through Designer Form-menu recent forms in the same Designer/client. If the entry or required route is unavailable, stop blocked without an alternative reopen path. Verify Name + ScopeType + ScopeName, component Name FX_ButtonRecovery01, exact Type equal to AC-4 (normally PushButton), and clean target state using decisive inspected evidence. Do not infer internal object identity, complete component inventory or Caption persistence."
+    },
+    {
+      "id": "AC-8",
+      "description": "Final read-only supported case-insensitive Select Form Name-filter evidence must show exactly one FX_ComponentRecoveryLab01; an expired or obstructed read is unresolved, not permission for recovery across the tested boundary. Reconcile one Form creation action, one Button creation operation, the permitted FX_ Name setup, one ordinary Save, one target Form-tab close, one recent-forms reopen, no Caption/unrelated property mutations, no additional Button creation action, no unload/Regenerate, no post-mutation authentication and no inherited-state cleanup. Repository changes must be confined to the EXP-026 record plus evidence/EXP-026/. Classify a successful first execution only as observed UI-level structural recovery for the bounded Name/type comparison."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-026",
+  "replay_of": null,
+  "initial_instruction": "Complete AC-1 preflight and preserve inherited dirty Forms/dialogs before target mutation. The record is new and expected to be missing: create it at the declared path rather than repeatedly searching Git. Use the verified creation/placement procedures and only the component configuration recipe's Name step to establish FX_ButtonRecovery01; do not change Caption or perform that recipe's separate Save. Record Toolbox Button versus the observed property-grid Type (normally PushButton). One placement is an action count, not proof of total inventory. Stop blocked if the required Name or prescribed lifecycle route fails; do not try an alternate editor, scripted recovery or reopen route. Report the bounded task result to the coordinator and stop.",
+  "notes": "Proposed by the coordinator after run R-20261006-162608-kmU9. Rationale: EXP-025 is blocked because the available MCP surface cannot satisfy its required persistent lifecycle-telemetry gate, so the next experiment should not work around that tooling limitation. A small independent learning step is to establish whether a native Button component itself recovers across the already-used weak ordinary Form-tab close/reopen boundary. This builds only on replay-verified prerequisites: basic BuildFromScratch Form creation, native component placement/configuration, and the fresh-dialog classic wizard-selection sequence. It deliberately does not test Button Caption, avoiding overlap with the unresolved/unknown EXP-020 record and the blocked EXP-018 Button-Caption attempt. Structural Button recovery is a useful prerequisite before any later Button-property lifecycle experiment. Draft correction: use an FX_-prefixed component identity, distinguish the visible PushButton Type from Toolbox Button, distinguish one creation action from complete component cardinality, preserve inherited dirty state, and fix the tested reopen path to recent forms. Component Name assignment is required identification setup through the previously verified Name-edit procedure, not Caption testing; its success in the current environment remains a prerequisite to observe, especially given EXP-021-R4's Static Name-edit blocker. Revised draft remains unapproved pending specialist assessment."
+}

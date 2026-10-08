@@ -1,0 +1,145 @@
+{
+  "experiment_id": "EXP-029",
+  "title": "EXP-029 — Button Component Recovery Across Verified Coupled Unload",
+  "record_path": "experiments/EXP-029-button-component-recovery-across-verified-coupled-.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "On one new User-scoped classic BuildFromScratch Form `FX_ComponentUnloadLab01`, create exactly one native Toolbox Button, assign only Name=`FX_ButtonUnload01`, record its exact visible property-grid Type label, perform exactly one ordinary Designer Save, close the target Form exactly once, verify the existing `Unload IDO Metadata With Forms` preference remains enabled without changing it, invoke `Form > Definition > Unload All Global Form Objects` exactly once, then reopen the target exactly once through the same Designer's Form-menu recent-forms entry. Verify the same scoped Form recovers `FX_ButtonUnload01` with the identical Type label. Treat the result only as UI-level recovery of this Button definition across the tested coupled-unload workflow; do not claim database durability, backend identity, Caption persistence, IDO-metadata semantics, or behavior of other component properties/types.",
+  "scope": {
+    "in_scope": [
+      "Read EXP-027, accepted replay EXP-027-R2, EXP-006-R2, EXP-007-R2, EXP-003-R2, EXP-019-R2, blocked EXP-028, recipes/forms/create-basic-form.md, recipes/components/add-component-from-toolbox.md, and recipes/components/configure-basic-component.md before mutation",
+      "Fresh-worker read-only browser/Designer preflight and preservation audit",
+      "At most one documented supported session-establishment sequence before the first target mutation if no usable live workflow exists; no session establishment after mutation",
+      "Live Select Form positive-control proof plus zero case-insensitive Name matches for `FX_ComponentUnloadLab01` before creation. The settled rendered positive-control row must correspond to the exact known-existing Name filter with Case Sensitive unchecked; a populated grid, stale row, or target-zero result alone is insufficient. Read-only inspection of the Caption and Name columns is permitted. If the positive control remains unproven after the bounded inspection or the target already exists, stop blocked without mutation or further retry",
+      "Create exactly one User-scoped classic BuildFromScratch Form `FX_ComponentUnloadLab01` with Save Template visibly unchecked",
+      "Capture an untouched clean post-creation Form baseline before component placement without claiming complete component cardinality",
+      "Place exactly one native Toolbox Button using the verified placement procedure. As resolved in EXP-027-R2, native Playwright mouse.click at coordinates is permitted for canvas placement when no semantic alternative is available, using the currently inspected visible target canvas rather than fixed coordinates copied from another run; the tool vehicle does not authorize synthetic DOM activation or any mechanism outside the verified recipe",
+      "Assign only component Name=`FX_ButtonUnload01` using the verified Name-edit procedure",
+      "Record authoritative component Name and the exact visible property-grid Type label before Save",
+      "Perform exactly one ordinary Designer Save and verify clean return with Name and Type unchanged",
+      "Close `FX_ComponentUnloadLab01` exactly once through its ordinary Form-tab close control",
+      "Read the visibly rendered `Unload IDO Metadata With Forms` checkbox through the verified Web Client > Form > User Preferences > Behavior route, require it to be checked/enabled, leave it unchanged, and close preferences without Save. Do not substitute the Designer View-menu preferences dialog or hidden/internal preference values; if the visible gate cannot be established, stop blocked before unload",
+      "Invoke `Form > Definition > Unload All Global Form Objects` exactly once after the target is closed",
+      "Verify the target remains closed and the same Designer client remains active after unload",
+      "Reopen `FX_ComponentUnloadLab01` exactly once through the same Designer's Form-menu recent-forms entry",
+      "Post-reopen verify exact Form identity by Name + ScopeType + ScopeName, clean state, recovered component Name=`FX_ButtonUnload01`, and Type exactly equal to the pre-close value",
+      "Final read-only Select Form exactly-one target proof, controlled-action reconciliation, preference re-check, and repository-confinement audit",
+      "Write repository evidence only under `evidence/EXP-029/` and the EXP-029 experiment record"
+    ],
+    "out_of_scope": [
+      "Button Caption, Static Caption, Form Caption, Form Description, or any other component/Form property persistence",
+      "Retrying, repairing, replaying, or changing the status of EXP-028 or EXP-026",
+      "Form variables, Persistent/Global behavior, serialization, FormSync, or generated SQL",
+      "Bindings, IDOs, validators, event handlers, scripts, runtime actions, or navigation behavior",
+      "Testing component types other than the single native Button",
+      "Changing the `Unload IDO Metadata With Forms` preference",
+      "Investigating IDO-metadata cache internals or attributing behavior to that preference",
+      "Forms-database durability, backend object identity, numeric/internal component type codes, or complete component inventory",
+      "Launching or testing an additional Designer client",
+      "Promoting or modifying reusable recipes during this experiment"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ Mongoose artifact; repository changes are explicitly permitted only for experiments/EXP-029-button-component-recovery-across-verified-coupled-.md and evidence/EXP-029/",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Create, modify, or delete any non-FX_ Mongoose artifact; repository changes are permitted only for the EXP-029 experiment record and `evidence/EXP-029/`",
+    "Start any other experiment or replay",
+    "Modify production data or disable security",
+    "Read, print, log, or screenshot credential values",
+    "Create more than one target Form or more than one Button component",
+    "Modify any Button property other than the required Name assignment",
+    "Modify unrelated Form properties",
+    "Add bindings, IDO references, validators, event handlers, scripts, or runtime actions",
+    "Change or Save any User Preference",
+    "Regenerate Form",
+    "Perform more than one ordinary Designer Save after Button placement and Name assignment",
+    "Close or reopen the target more than once as part of the tested lifecycle",
+    "Invoke `Unload All Global Form Objects` more than once",
+    "Invoke the global-Form-object unload while the target Form is still open",
+    "Proceed with the unload if `Unload IDO Metadata With Forms` is not visibly enabled",
+    "Use direct cold MGForm navigation, Select Form, or another fallback route for the tested reopen",
+    "Authenticate or establish a session after the first target mutation; if the session becomes unusable after mutation, stop blocked",
+    "Launch another Designer while a usable Designer is retained",
+    "Use synthetic DOM activation or a scripted mutation mechanism outside the verified placement/configuration recipes. The recipe-authorized native Playwright mouse.click canvas placement is permitted as resolved in EXP-027-R2; arbitrary run-code mutations are not authorized",
+    "Use shell/module installation or internal Ext stores as recovery for a failed semantic mutation or an unproven rendered positive-control result",
+    "Retry a failed component Name editor through an alternate mechanism or blind repeated input",
+    "Delete, save, discard, close, or alter inherited dirty Forms or dialogs encountered during preflight",
+    "Widen browser recovery beyond one fresh snapshot and one corrected inspection",
+    "Claim complete component cardinality from rendered absence alone",
+    "Claim Forms-database durability, cache eviction, backend identity, IDO-metadata causation, Caption persistence, unrelated property persistence, or behavior of other component types"
+  ],
+  "prohibited_patterns": [
+    "\\b(change|modify|edit|set|assign|replace|clear)\\b[^.\\n;]{0,50}\\b(caption|form description)\\b",
+    "\\b(form variable|persistent variable|formsync)\\b",
+    "\\b(create|add|modify)\\b[^.\\n]{0,50}\\b(binding|ido reference|validator|event handler|script|runtime action)s?\\b",
+    "\\bRegenerate Form\\b",
+    "\\b(change|toggle|uncheck|disable|enable)\\b[^.\\n]{0,50}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(second|additional|another)\\s+(web\\s+)?designer\\b",
+    "\\b(direct|cold)\\b[^.\\n]{0,30}\\bMGForm\\b"
+  ],
+  "related_experiments": [
+    "EXP-027",
+    "EXP-027-R2",
+    "EXP-006-R2",
+    "EXP-007-R2",
+    "EXP-003-R2",
+    "EXP-019-R2",
+    "EXP-028",
+    "EXP-026"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_ComponentUnloadLab01",
+    "artifacts": [
+      "FX_ButtonUnload01"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Before mutation, evidence records the fresh worker/session identity, proves a usable live workflow in User scope while preserving inherited state untouched, shows a settled rendered Select Form row whose Name corresponds to the exact known-existing positive-control Name filter with Case Sensitive unchecked, and proves zero case-insensitive Name matches for `FX_ComponentUnloadLab01`. A populated grid, stale row, or target-zero result does not substitute for the positive control. Inspecting visible Caption/Name columns is permitted without modifying those values. If the positive control cannot be established after the bounded fresh/corrected inspection, stop blocked without target creation or further retry. If a target match exists, stop blocked without altering it."
+    },
+    {
+      "id": "AC-2",
+      "description": "Evidence proves exactly one User-scoped classic BuildFromScratch Form `FX_ComponentUnloadLab01` was created through the fresh-dialog Classic/BuildFromScratch procedure with Save Template visibly unchecked, and the loaded Form identity is Name=`FX_ComponentUnloadLab01`, ScopeType=User, ScopeName=<current user>."
+    },
+    {
+      "id": "AC-3",
+      "description": "Before component placement, inspected evidence proves the target Form is clean and untouched and records the rendered canvas/component state without claiming complete component cardinality."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly one native Toolbox Button creation operation is evidenced using the verified recipe, including its native Playwright mouse.click canvas-placement method when no semantic alternative is available and the current visible canvas is established; only Name is assigned to `FX_ButtonUnload01`. Authoritative property-grid/accessibility evidence records exact Name and the exact visible Type label before Save, with no unrelated component-property mutation. Failed targeting attempts must be recorded and must not result in a second component-producing click or expanded recovery."
+    },
+    {
+      "id": "AC-5",
+      "description": "Exactly one ordinary Designer Save is evidenced; afterward the target is clean and the component still reports exact Name=`FX_ButtonUnload01` and the identical Type label recorded in AC-4."
+    },
+    {
+      "id": "AC-6",
+      "description": "Exactly one ordinary target Form-tab close is evidenced; the target tab is gone, no unsaved-change or unexpected prompt appears, and the same Designer remains active. After close, the verified Web Client > Form > User Preferences > Behavior route visibly shows `Unload IDO Metadata With Forms` checked/enabled; it is left unchanged and preferences close without Save. The Designer View-menu preferences dialog and hidden/internal preference values do not satisfy this visible gate. If the checkbox is unchecked or cannot be visibly established, stop blocked before unload."
+    },
+    {
+      "id": "AC-7",
+      "description": "Exactly one `Form > Definition > Unload All Global Form Objects` invocation is evidenced after the target is closed. Post-action evidence shows no error/unexpected prompt, the target remains closed, the same Designer remains active, and no second unload or preference mutation occurred."
+    },
+    {
+      "id": "AC-8",
+      "description": "Exactly one reopen through the same Designer's Form-menu recent-forms entry is evidenced; the reopened Form has Name=`FX_ComponentUnloadLab01`, ScopeType=User, matching ScopeName, clean state, recovered component Name=`FX_ButtonUnload01`, and Type exactly equal to AC-4. If recent-forms is unavailable or session establishment is required after mutation, stop blocked."
+    },
+    {
+      "id": "AC-9",
+      "description": "Final read-only audit shows exactly one visible case-insensitive Select Form Name match for `FX_ComponentUnloadLab01`, re-confirms through Web Client > Form > User Preferences > Behavior that `Unload IDO Metadata With Forms` remains visibly checked/enabled and unchanged, reconciles exactly one Form creation, one Button creation, one Name assignment, one ordinary Save, one target close, one global-Form-object unload, and one recent-forms reopen, and proves experiment-authored repository changes are confined to the EXP-029 record and `evidence/EXP-029/`. The inventory result is limited to the inspected UI, not database uniqueness. The resulting finding is classified observed only; replay verification requires a later independent replay."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-029",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261007-182351-hVYe. EXP-028 completed blocked before target creation: exact target-zero evidence was obtained, but the required known-existing Select Form positive-control row did not settle to correspond to its displayed Name filter. This was a preflight blocker, not a Caption-editing failure, and changing the experiment topic does not resolve it. EXP-029 retains the same strict positive-control prerequisite and must stop before mutation if it cannot be established within the bounded inspection. The new capability is Button Name/Type recovery across the stronger coupled-unload boundary, extending the accepted, independently replay-verified EXP-027/R2 ordinary close/reopen workflow using the already replay-verified unload procedures in EXP-006-R2 and EXP-007-R2. EXP-027-R2 resolved native Playwright coordinate placement as recipe-authorized; it does not authorize arbitrary scripted mutations. EXP-007-R2 established the visible preference route as Web Client > Form > User Preferences > Behavior, rather than the Designer View-menu dialog. The existing enabled preference is read without change; this experiment tests the coupled sequence only and does not isolate or investigate its incidental IDO-metadata effects. Only one native Button creation and one Name assignment are permitted. A successful result is observed Button Name/Type UI recovery after one Save, close, unload, and same-Designer recent-forms reopen, not Caption persistence, database durability, or backend identity."
+}

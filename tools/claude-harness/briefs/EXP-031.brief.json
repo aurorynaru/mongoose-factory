@@ -1,0 +1,110 @@
+{
+  "experiment_id": "EXP-031",
+  "title": "EXP-031 — Select Form Retained-Filter Refresh Semantics",
+  "record_path": "experiments/EXP-031-select-form-retained-filter-refresh-semantics.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "In one artifact-read-only experiment against the existing live Web Client, characterize whether Select Form retains and applies an exact Name filter after ordinary dialog Cancel and reopen. First use known-existing `FX_ComponentRecoveryLab02` as the positive control: with Filter By=Name, Case Sensitive unchecked, and Starts With unchecked, set the exact filter, Cancel the dialog, reopen Select Form once, and inspect the retained text/settings and settled rendered row. Only if the positive control passes, test `FX_SelectFormFilterProbe01` as a proposed absence-probe string that this experiment must never create: set its exact filter, Cancel, reopen once, and inspect the retained text/settings and visible case-insensitive matches. Do not assume database absence from the name or repository history. Screenshots/accessibility observations are decisive; naturally available request/response evidence is corroboration only. UI filter changes and dialog lifecycle actions are permitted, but no Web Client or Designer Form may be opened, closed, edited, saved, or created. A successful first execution is observed only; independent replay is needed before verifying this preflight procedure.",
+  "scope": {
+    "in_scope": [
+      "Read EXP-030 T1/T2 evidence and record, EXP-028 AC-1 evidence, and relevant EXP-027/EXP-027-R2 Select Form observations before acting",
+      "Preserve all existing Web Client and Designer Form state without mutation",
+      "Use the supported Web Client Select Form dialog only; record whether it is already open. If closed, permit one initial Open solely to enter the test; if already open, use it without an extra lifecycle reset. Record the inherited filter/settings before changing them",
+      "Establish Filter By=Name with Case Sensitive and Starts With visibly unchecked before the first tested Cancel. On each tested reopen, inspect retained filter text/settings before any further input; if they are not retained, record that outcome without repairing or refilling the reopened dialog",
+      "Use existing `FX_ComponentRecoveryLab02` only as a known-present positive control",
+      "Use `FX_SelectFormFilterProbe01` only as a proposed absence-probe string; it must never be created by this experiment and must not be presumed absent from the database",
+      "For the positive-control sequence: set the exact Name filter, ordinarily Cancel Select Form, reopen Select Form exactly once, and inspect the newly settled rendered result",
+      "Proceed to the absence-probe sequence only after the positive-control retained-filter result passes: set the exact probe Name filter, Cancel, reopen Select Form exactly once, and inspect the retained text/settings and settled rendered result. If the positive-control check fails, stop without starting this second sequence",
+      "Capture rendered screenshots/accessibility snapshots identifying filter text, Filter By, Case Sensitive state, and settled row result",
+      "Capture relevant Select Form request/response evidence if naturally available, as corroboration only",
+      "Use at most one fresh snapshot plus one corrected visible inspection if a reopened result is ambiguous",
+      "Inspection recovery permits no further filter input or dialog lifecycle attempt. After the last permitted inspection, allow one final ordinary Cancel solely to dismiss the test dialog without another reopen; record the retained filter and final browser/Form state. Do not restore the filter through another test sequence",
+      "Write evidence only under `evidence/EXP-031/` and the EXP-031 experiment record"
+    ],
+    "out_of_scope": [
+      "Retrying, repairing, resuming, or changing the blocked outcome/status of EXP-030",
+      "Creating `FX_ButtonTypeRecoveryLab01`, `FX_ButtonTypeRecovery01`, or any replacement EXP-030 artifact",
+      "Testing Button Name, Type, Caption, component persistence, or Form persistence",
+      "Creating any new Mongoose Form or component",
+      "Saving, regenerating, closing, reopening, or editing any Designer Form",
+      "Explicit global-Form-object unload or IDO-metadata-cache testing",
+      "User Preferences changes",
+      "Form variables, FormSync, serialization, SQL, bindings, IDOs, validators, events, scripts, or runtime actions",
+      "Database uniqueness or Forms-database durability claims",
+      "Internal Ext store manipulation or treating implementation IDs/request paths as supported product contracts",
+      "Launching another Designer client"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ Mongoose artifact; repository changes are explicitly permitted only for experiments/EXP-031-select-form-retained-filter-refresh-semantics.md and evidence/EXP-031/",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Create, modify, delete, Save, Regenerate, close, or reopen any Mongoose Form or component",
+    "Create `FX_SelectFormFilterProbe01`; it is an absence-probe string only",
+    "Create or modify any non-FX_ Mongoose artifact",
+    "Invoke `Unload All Global Form Objects`",
+    "Change or Save any User Preference",
+    "Authenticate, reauthenticate, log out, or establish a replacement session as a recovery technique",
+    "Use direct cold MGForm navigation",
+    "Press Enter or OK in Select Form, activate/double-click a result row, or otherwise open a runtime or Designer Form; filter input and ordinary dialog Cancel/Open are the only permitted test interactions",
+    "Refill or repair filter text/settings after a tested reopen to manufacture the required retained-filter result, or perform an extra Cancel/Open cycle as inspection recovery",
+    "Use shell/module installation, internal Ext stores, or synthetic DOM mutation to force Select Form refresh",
+    "Repeat a stale/ambiguous read beyond one fresh snapshot and one corrected visible inspection",
+    "Infer successful filtering from filter text alone when rendered rows are stale",
+    "Infer database absence or uniqueness from the rendered Select Form result",
+    "Modify any reusable recipe during this experiment"
+  ],
+  "prohibited_patterns": [
+    "\\b(create|add|place)\\b[^.\\n]{0,50}\\b(form|button|component|variable|event handler|script)s?\\b",
+    "\\b(save|regenerate)\\b[^.\\n]{0,40}\\b(form|designer|changes?)\\b",
+    "\\bunload all global form objects\\b",
+    "\\b(user preferences?|preference)\\b[^.\\n]{0,40}\\b(change|modify|save|set|toggle)\\b",
+    "\\b(login|log in|sign in|reauthenticate|logout|log out)\\b",
+    "\\b(ext store|internal store|synthetic dom|evaluate\\(|run[- ]?code)\\b"
+  ],
+  "related_experiments": [
+    "EXP-030",
+    "EXP-028",
+    "EXP-027",
+    "EXP-027-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": null,
+    "artifacts": [
+      "FX_ComponentRecoveryLab02 (existing positive control; inspect only)",
+      "FX_SelectFormFilterProbe01 (absence-probe name only; must not be created)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Preflight evidence proves a usable live Web Client Select Form workflow, records inherited Form state plus whether the dialog is open and its current filter/settings, and preserves inherited Web Client/Designer Forms untouched. If the dialog is closed, at most one initial Open is permitted solely to enter the test. Record that no Mongoose artifact mutation, Form activation, Save, Regenerate, unload, User Preference change, or session-establishment action occurred. If no usable existing workflow is available, stop blocked without authenticating or recreating it."
+    },
+    {
+      "id": "AC-2",
+      "description": "Before the positive-control Cancel, evidence shows exact filter `FX_ComponentRecoveryLab02`, Filter By=Name, Case Sensitive unchecked, and Starts With unchecked. After exactly one tested Select Form reopen and before further input, evidence must show that exact filter and settings retained and a settled rendered row whose Name equals `FX_ComponentRecoveryLab02`. Filter text alone or an unrelated/stale row is insufficient. If the text/settings are not retained or the expected row cannot be established within one fresh snapshot plus one corrected visible inspection, record the result, fail this check, and stop without the absence-probe sequence, refilling, or further lifecycle retry."
+    },
+    {
+      "id": "AC-3",
+      "description": "Only after AC-2 passes, set the exact probe filter `FX_SelectFormFilterProbe01` with Filter By=Name, Case Sensitive unchecked, and Starts With unchecked, then Cancel and perform exactly one tested reopen. Before further input, evidence must show the same exact filter/settings retained and a settled rendered result with zero visible case-insensitive Name matches. If the filter/settings are not retained, matching rows appear, or the result remains stale/ambiguous within the bounded inspection, record that result and stop without correction or another lifecycle attempt. Any zero-match finding is limited to this inspected UI result; the probe must not be presumed absent from the database."
+    },
+    {
+      "id": "AC-4",
+      "description": "For a successful full execution, reconcile exactly two filter-setting operations, two tested Cancels, and two tested reopens: first the positive control, then the probe. Separately account for at most one initial Open if the dialog began closed and at most one final Cancel solely to dismiss the test dialog, with no further reopen. Snapshot/corrected-inspection recovery authorizes no extra filter input or lifecycle retry. If stopped early, record actual counts and unperformed steps rather than claiming both sequences completed. No Enter, OK, row activation, or Form open/close is permitted."
+    },
+    {
+      "id": "AC-5",
+      "description": "Final repository and action audit proves changes are confined to the EXP-031 record plus `evidence/EXP-031/`, no Mongoose artifacts were created/modified or Forms activated, and inherited Form state was preserved. Record the final dialog state and retained filter without performing an extra reset. A successful first execution is observed Select Form retained-filter/reopen behavior in the tested 2026.09.08 environment, not a verified preflight procedure. An independent clean replay is required before verification; failed/unresolved checks remain recorded as such without database absence/uniqueness claims."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-031",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Proposed after blocked run R-20261007-195234-KQJh. EXP-030 confirmed the rendered positive control but could not establish target absence: changing/refilling the Name filter in an already-open Select Form dialog left stale rows. EXP-028 and EXP-029 also completed blocked at preflight; EXP-028 supplied a partial exact-target zero-row observation, not an accepted complete preflight. This separate experiment permits a distinct dialog-lifecycle sequence that EXP-030 could not use as recovery: set an exact filter, Cancel normally, reopen once, and inspect whether both the filter/settings and corresponding rendered result are retained/applied. Test the known-existing positive control first and the proposed zero-match probe only if that passes. Do not press Enter/OK or activate rows, because prior observations show those actions can open a Web Client Form. Document initial/final dialog actions separately from the two tested reopens. Success provides one observed candidate preflight procedure; only a later independent clean replay could verify it. No blocked run is repaired or resumed, no Mongoose artifact is created, and no Form/component recovery or database claim is made."
+}

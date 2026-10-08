@@ -1,0 +1,103 @@
+{
+  "experiment_id": "EXP-024",
+  "title": "EXP-024 — Additional Designer Launch From Unobstructed Web Client",
+  "record_path": "experiments/EXP-024-additional-designer-launch-from-unobstructed-web-c.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "With the existing Web Client and original Web Designer both retained, record their browser-page and rendered-state baseline, close only the pre-existing Select Form inventory dialog through its ordinary Cancel/close control, verify that the Web Client Designer split-button launch surface is visibly unobstructed, then perform exactly one native click attempt on the Designer split-button UI command previously correlated with the successful EXP-009/R2 launch route. Immediately enumerate browser pages/windows after that attempt and classify the observable result as: a distinct additional rendered Designer client, focus/reuse of an existing Designer, or blocked/error/ambiguous. If a distinct new Designer presents the normal editing-scope dialog, selecting User and confirming that scope is permitted solely to establish independently rendered Designer UI. Do not infer distinct Portal, authentication, IDO Runtime, Designer-backend, cache, or database sessions.",
+  "scope": {
+    "in_scope": [
+      "Read EXP-023 and EXP-009/EXP-009-R2 before browser interaction.",
+      "Read-only baseline enumeration of all browser pages/windows, including URL/title and which page is the retained Web Client versus retained original Designer.",
+      "Read-only capture of the original Designer's visible Form tabs, selected tab, current dirty indicators, dialogs, and visibly displayed editing scope; do not infer stored Form-version identity from the scope status bar alone.",
+      "Read-only capture of the Web Client's rendered already-signed-in state and the pre-existing Select Form inventory dialog.",
+      "Close exactly the pre-existing Select Form inventory dialog using its ordinary Cancel/close UI control; this dialog close is the deliberate changed starting condition for EXP-024.",
+      "Verify after dialog close that no Select Form dialog/mask is visibly present over the Web Client launch surface and that the second rendered Designer split control previously correlated with the EXP-009/R2 launch route is present and enabled.",
+      "Perform exactly one native click attempt on that Designer split-button UI command. One click attempt means one Playwright pointer-action invocation; no corrected second click is authorized.",
+      "Immediately after the one click attempt, perform one read-only final browser page/window enumeration and capture the rendered result, whether success, focus/reuse, timeout, pointer interception, error, or ambiguity.",
+      "If and only if a distinct new Designer page/window renders the normal Identify Your Editing Scope dialog, choose User and confirm it once, then capture independently rendered Designer UI and the final browser-page enumeration.",
+      "Write only the EXP-024 experiment record and evidence under evidence/EXP-024/."
+    ],
+    "out_of_scope": [
+      "Any Caption, Description, component-property, No Colon, Button Caption, Form-variable, or FormSync investigation.",
+      "Any persistence, Save, close/reopen, explicit unload, cache-eviction, or database-readback claim.",
+      "Any continuation, cleanup, mutation, or recovery of EXP-021-R4, EXP-022, or EXP-023 artifacts or Form state.",
+      "Proving distinct Portal, authentication, Web Client, IDO Runtime, Designer backend, Forms-database, or cache sessions.",
+      "Treating implementation IDs such as mgtoolbarbutton-1126 as supported product contracts.",
+      "Determining ownership or internal cause of any Ext x-mask beyond the rendered/Playwright observations."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not perform more than one Designer-launch click attempt. After any timeout, interception, error, focus/reuse, or ambiguous result, do not click the launch control again and do not substitute another launch route.",
+    "Do not use direct Designer URLs, MGForm URLs, browser reload, navigation, duplicate-tab commands, synthetic JavaScript, DOM evaluation, hidden-control manipulation, or alternate toolbar/menu routes to produce an additional Designer.",
+    "Do not close, reload, replace, or restart the retained original Designer or retained Web Client.",
+    "Do not open, close, create, modify, save, regenerate, rename, or delete any Mongoose Form or component. Closing the Select Form inventory dialog is the only pre-existing UI-dialog close permitted.",
+    "Do not investigate or alter the inherited FX_StaticNoColonLab01, FX_StaticCaptionLab04, static1_USER, or any other existing Form/component state.",
+    "Do not perform authentication, Sign In, login, reauthentication, logout, session replacement, or credential interaction. If authentication/session establishment becomes necessary, record a blocker and stop.",
+    "Do not invoke Unload All Global Form Objects, clear cache, change User Preferences, or alter Unload IDO Metadata With Forms.",
+    "Do not perform a second corrective click after pointer interception. Recovery is limited to one fresh read-only snapshot/final enumeration after the single click attempt.",
+    "Do not claim a whole-run new-client/no-new-client result without the mandatory final page/window enumeration performed after the single launch attempt."
+  ],
+  "prohibited_patterns": [
+    "\\b(caption|description|form\\s*variable|formsync|no\\s*colon|button\\s*caption)\\b",
+    "\\b(regenerate|unload\\s+all\\s+global\\s+form\\s+objects|clear\\s+cache)\\b",
+    "\\b(sign\\s*in|log\\s*in|login|reauthenticate|reauthentication|logout)\\b",
+    "\\b(page\\.evaluate|javascript|execute\\s+script)\\b"
+  ],
+  "related_experiments": [
+    "EXP-023",
+    "EXP-009",
+    "EXP-009-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": null,
+    "artifacts": []
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Before changing UI state, evidence records the complete browser page/window baseline and visibly identifies the retained Web Client and retained original Designer; the Web Client renders an already-signed-in state with no login UI, and the original Designer's current rendered tabs/dirty indicators/editing-scope display are captured without modification."
+    },
+    {
+      "id": "AC-2",
+      "description": "Evidence visibly shows the pre-existing Select Form inventory dialog before closure, then shows that exactly that dialog was closed through its ordinary UI control and is no longer rendered; no Mongoose Form/component was opened, closed, saved, or modified by this step."
+    },
+    {
+      "id": "AC-3",
+      "description": "After the Select Form dialog is closed and before launch, evidence shows the Web Client launch surface unobstructed and the second rendered Designer split control previously correlated with EXP-009/R2 present and enabled. Any session-specific Ext implementation ID may be recorded only as diagnostic evidence."
+    },
+    {
+      "id": "AC-4",
+      "description": "The controlled-action record proves exactly one native Designer-launch click attempt after AC-3. No second/corrected launch click, alternate route, direct URL, reload, or synthetic activation occurs."
+    },
+    {
+      "id": "AC-5",
+      "description": "Immediately after that single launch attempt, a final browser page/window enumeration plus rendered capture establishes one unambiguous browser-level outcome: (a) a newly enumerated Designer page/window, (b) focus/reuse of an already-enumerated Designer, or (c) blocked/error/ambiguous. If the outcome cannot be distinguished from this evidence, EXP-024 is blocked rather than retried."
+    },
+    {
+      "id": "AC-6",
+      "description": "If a distinct new Designer is observed, evidence identifies it by a newly enumerated browser page/window with a Designer URL and independently rendered Designer editing-scope UI; User scope may be selected/confirmed once if the normal scope dialog appears. This proves browser/client-level distinctness only."
+    },
+    {
+      "id": "AC-7",
+      "description": "Final evidence shows the retained original Designer and retained Web Client still exist after the experiment and records the original Designer's visible inherited state without saving, closing, or modifying its Forms. No claim is made about hidden/cached state beyond the rendered evidence."
+    },
+    {
+      "id": "AC-8",
+      "description": "Repository/evidence audit confirms no Mongoose artifact was created or changed and filesystem changes attributable to EXP-024 are confined to its experiment record and evidence/EXP-024/."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-024",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261006-151910-W6Bn. Rationale: EXP-023 did not establish the additional-Designer behavior because its Designer split-button interaction occurred while a Select Form dialog and x-mask were present, and its action-count/final-postcondition evidence became ambiguous. This is not a retry of EXP-023 under the same conditions: it tests a deliberately different, documented starting state by first closing the pre-existing Select Form inventory dialog through its ordinary UI, then making exactly one Designer-launch click attempt. EXP-009/EXP-009-R2 already establish the Designer split-button launch route when the prior Designer is not retained; the smallest remaining prerequisite is to observe what that same product-level command does when the original Designer is retained and the Web Client launch surface is visibly unobstructed. The experiment is read-only with respect to Mongoose artifacts and explicitly defines one click attempt plus a mandatory final browser-page/window enumeration so the EXP-023 recovery ambiguity cannot recur. Auto-approved by autopilot 2026-10-06T07:37:28.993Z after specialist verdict \"supports\" (see data/autopilot/2026-10-06T07-24-25-649Z-PROPOSAL_CHECK-reply.md)."
+}

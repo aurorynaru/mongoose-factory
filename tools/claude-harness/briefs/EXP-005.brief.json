@@ -1,0 +1,95 @@
+{
+  "experiment_id": "EXP-005",
+  "title": "EXP-005 — Form Caption Persistence",
+  "record_path": "experiments/EXP-005-form-caption-persistence.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "Create one new User-scope classic BuildFromScratch form using the verified form-creation recipe, change only its Form-level Caption property to a known value, save through the ordinary supported Designer Save path, close the Designer, independently reopen the same User-scope form, and verify that the Caption value persists. Capture evidence of the pre-change state, the changed property, successful save/close, and the independently reopened persisted state. Do not introduce variables, bindings, event handlers, scripts, data sources, or additional Form-property experiments.",
+  "scope": {
+    "in_scope": [
+      "Create FX_FormPropertyLab01 in User scope using recipes/forms/create-basic-form.md",
+      "Inspect the fresh Form-level Properties for FX_FormPropertyLab01",
+      "Change only the Form Caption property to \"Form Property Lab\"",
+      "Use the ordinary supported Designer Save operation",
+      "Close and independently reopen FX_FormPropertyLab01",
+      "Verify the persisted Caption in the reopened Designer",
+      "Capture screenshots or responses under evidence/EXP-005/",
+      "Record observed behavior in the EXP-005 experiment record"
+    ],
+    "out_of_scope": [
+      "Form variables or EXP-004 continuation/replay",
+      "Component bindings or data sources",
+      "Event handlers, validators, scripts, or methods",
+      "Global Objects",
+      "Persistent variables or Global=True experiments",
+      "Changing any Form property other than Caption",
+      "Adding components unless the verified form-creation procedure itself requires them",
+      "Editing Group-scope, Site-scope, vendor, or other non-FX_ artifacts",
+      "Creating a reusable recipe before persistence succeeds"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not modify FX_ComponentLab01, FX_ComponentLab02, FX_TestBlank01, FX_TestBlank02, or any artifact from an earlier completed experiment",
+    "Do not create or edit any non-FX_-prefixed artifact",
+    "Do not open Details -> Variables for mutation",
+    "Do not use Edit -> Variable or Global Objects to create metadata",
+    "Do not create bindings, event handlers, validators, scripts, methods, or data sources",
+    "Do not use direct database edits, undocumented internal APIs, synthetic metadata writes, or captured GenerateServerEvent traffic as an automation interface",
+    "Do not change editing scope from User",
+    "Do not test alternative save mechanisms such as Regenerate Form unless a later separately approved experiment explicitly authorizes it",
+    "Do not alter more than the Caption property after the form has been created"
+  ],
+  "prohibited_patterns": [
+    "\\b(create|add|edit|modify|configure)\\b[^.\\n]{0,50}\\b(variable|variables|global object)s?\\b",
+    "\\b(create|add|configure|attach)\\b[^.\\n]{0,50}\\b(event handler|validator|script|method)s?\\b",
+    "\\b(create|add|configure)\\b[^.\\n]{0,50}\\b(binding|data source)s?\\b",
+    "\\b(regenerate form|regenform)\\b",
+    "\\b(direct database|database edit|metadata hack|undocumented api)\\b"
+  ],
+  "related_experiments": [
+    "EXP-002",
+    "EXP-002-R2",
+    "EXP-004"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_FormPropertyLab01",
+    "artifacts": [
+      "FX_FormPropertyLab01"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Evidence shows FX_FormPropertyLab01 was created as a classic BuildFromScratch Form in User scope, with both scope type and scope name recorded."
+    },
+    {
+      "id": "AC-2",
+      "description": "Before saving, evidence from Web Designer shows the Form-level Caption property set to exactly \"Form Property Lab\" and no other intentional Form-property changes."
+    },
+    {
+      "id": "AC-3",
+      "description": "After ordinary Designer Save, the Designer is closed and the form is independently reopened rather than relying on the existing in-memory Designer session."
+    },
+    {
+      "id": "AC-4",
+      "description": "Evidence from the independently reopened Designer shows FX_FormPropertyLab01 still has Caption exactly \"Form Property Lab\" in the same User-scope version."
+    },
+    {
+      "id": "AC-5",
+      "description": "The experiment record confirms that no variables, Global Objects, bindings, event handlers, scripts, methods, data sources, non-FX_ artifacts, or alternate save paths were created or modified."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-005",
+  "replay_of": null,
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261001-011051-pj2O. Rationale: EXP-004 cannot currently advance because Form-variable definitions do not persist, while basic Form creation and ordinary component editing are already replay-verified. The next experiment should therefore avoid variables entirely and introduce one independent, low-risk Form-level capability. Changing only the Form Caption on a fresh BuildFromScratch FX_ form is small enough to isolate save/persistence behavior while extending the factory beyond component properties."
+}
