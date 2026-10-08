@@ -37,6 +37,15 @@ describe("fixture scenarios (same set as `harness dry-run`)", () => {
 });
 
 describe("direct worker routing", () => {
+  it("preserves a usage-limit pause without failure counts, model switch, restart or resubmission", async () => {
+    const h = track(harness({ coordinator: [SEND("Inspect FX_FixtureForm01")], worker: [{ status: "usage_limit", detail: "weekly usage limit" }] }));
+    let run = await h.controller.run(h.controller.createRun(fixtureBrief()).id);
+    expect(run.pause_reason).toBe("usage_limit");
+    expect(run.counters.totalFailures).toBe(0);expect(h.worker.restarts).toBe(0);expect(h.worker.submissions).toHaveLength(1);
+    expect(h.store.getOp(run.pending_op_id!)?.status).toBe("accepted");
+    run = await h.controller.run(run.id);
+    expect(run.pause_reason).toBe("usage_limit");expect(h.worker.submissions).toHaveLength(1);expect(h.worker.restarts).toBe(0);
+  });
   it("enforces brief tool restrictions before submitting a task", async () => {
     const h = track(harness({ coordinator: [SEND("Inspect FX_FixtureForm01"), { envelope: { action: "PAUSE", reason: "done" } }], worker: [WORKER_OK] }));
     const brief = fixtureBrief();
@@ -349,9 +358,16 @@ describe("OpenCode task failure", () => {
     expect(h.worker.submissions).toHaveLength(1);
   });
 
-  it("resubmits with the SAME messageID when OpenCode verifiably never stored it", async () => {
+  it("requires item-bound approval before resubmitting a worker task whose marker is absent", async () => {
     const h = track(harness({ coordinator: [SEND("t1"), { envelope: { action: "PAUSE", reason: "p" } }], worker: [{ submit: "uncertain_lost", then: WORKER_OK }] }));
-    await h.controller.run(h.controller.createRun(fixtureBrief()).id);
+    let run = await h.controller.run(h.controller.createRun(fixtureBrief()).id);
+    expect(run.pause_reason).toBe("submission_uncertain");
+    expect(h.worker.submissions).toHaveLength(1);
+    run = await h.controller.run(run.id);
+    expect(run.pause_reason).toBe("submission_uncertain");
+    expect(h.worker.submissions).toHaveLength(1);
+    h.controller.applyResumeOptions(run.id, { approve: ["resubmit"] });
+    await h.controller.run(run.id);
     expect(h.worker.submissions).toHaveLength(2);
     expect(h.worker.submissions[0].messageId).toBe(h.worker.submissions[1].messageId);
   });

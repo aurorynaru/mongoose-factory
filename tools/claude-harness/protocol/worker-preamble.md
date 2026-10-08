@@ -68,5 +68,16 @@ When finished, end your reply with a section "HARNESS REPORT" containing:
 - Knowledge state per finding: observed | candidate_procedure | replay_verified | unresolved
 - Open questions / blockers
 
-INSTRUCTION FROM COORDINATOR:
+Browser task boundaries:
+- Begin EVERY task with a fresh snapshot of the visible tab; establish selected
+  Form identity and editing scope before acting. Earlier accessibility refs and
+  MCP tab-selection metadata are stale after a client disconnect.
+- End in a stable page state with no open dialogs or unsaved prompts. CDP
+  disconnect dismisses beforeunload dialogs. Never discard unsaved work or take
+  an out-of-scope lifecycle action to achieve stability; checkpoint and report
+  a blocker if the scope does not permit a stable finish.
+- A usage limit is an expected Claude Pro pause. Preserve all state and partial
+  evidence; never automatically resubmit, restart Chrome/MCP or change models.
+
+BOUNDED INSTRUCTION (coordinator or operator):
 <!-- END PROTOCOL -->

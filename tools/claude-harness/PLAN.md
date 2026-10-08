@@ -1,8 +1,11 @@
 # Claude harness: Phase 0 inspection and implementation plan
 
 Date: 2026-10-08 (Asia/Singapore). Branch: `claude-harness`.
-Status: **Phase 1/CDP finding accepted; Phases 2–3 authorized. STOP after Phase 3,
-before Phase 4, for the operator's live worker replay comparison.**
+Status: **Phases 2–3 implemented and validated. STOP before Phase 4 for the
+operator's live worker replay comparison.** See [PHASE-2.md](PHASE-2.md) and
+[PHASE-3.md](PHASE-3.md). The authorized scratch CDP check passed: both blank
+tabs survived last-client disconnect. Owned Chrome/MCP were stopped; automatic
+approval review blocked scratch-profile deletion, leaving manual cleanup pending.
 
 Latest additions supersede older profile/no-browser proposals below. Phase 2
 permits one scratch-profile Chrome launch on about:blank: MCP opens a second
@@ -20,7 +23,7 @@ real model/Mongoose calls, no secrets-file reads, no gateway, no push/main merge
 Phase 1 finding: installed MCP 0.0.83 CDP cleanup disconnects Playwright without
 closing external Chrome's default context or pages. **Select CDP; drop the
 gateway.** See [PHASE-1.md](PHASE-1.md) for exact installed-source references,
-validation and limits. Phase 2 has not started.
+validation and limits. The Phase 2 scratch observation supports this selection.
 
 ## Approved amendments and execution order
 
@@ -591,12 +594,12 @@ remain outside harness-engineering authorization.
 
 ## Remaining questions / approval decision
 
-- Phases 1–3 approved with amendments above; this turn ends after Phase 1 and
-  CDP findings. Phases 4–6/live smoke require subsequent explicit approval.
+- Phases 1–3 approved with amendments above and implemented. This turn ends
+  after Phase 3. Phases 4–6/live smoke require subsequent explicit approval.
 - Actual installed baseline is 2.1.294. Proposed implementation targets this
   observed version; 2.1.289 flag/behavior compatibility is unverified.
-- Select CDP versus gateway from Phase 1 installed-source cleanup evidence.
-  A tools/list-only keeper cannot resolve non-CDP last-client disposal.
+- CDP selected from accepted Phase 1 source evidence and the authorized Phase 2
+  scratch check. No gateway implemented.
 - Native stream/json event schema, usage-limit signatures, effort/model resolution,
   hook enforcement, empty setting-sources behavior, marker durability after CLI
   compaction/resume, and actual browser persistence cannot be live-confirmed within
@@ -605,5 +608,7 @@ remain outside harness-engineering authorization.
   account identifiers, authentication tokens and secrets were not copied into
   this plan. The plan is the only repository file created in Phase 0.
 
-Next permitted action: commit this amended plan, commit operator docs separately
-as-is, complete/commit Phase 1, then STOP and report CDP findings for review.
+Next step belongs to the operator: live Haiku-versus-Sonnet replay through
+`claude-harness worker task`. Do not start Phase 4. Native model/permission/hook
+behavior remains unverified by the fake suite. Scratch-profile cleanup remains
+pending as recorded in PHASE-2.md; do not rerun its one-off browser check.

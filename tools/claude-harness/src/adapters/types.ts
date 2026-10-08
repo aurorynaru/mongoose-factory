@@ -62,6 +62,10 @@ export type Presence = "present" | "absent" | "unknown";
 
 export interface WorkerToolPolicy {
   denyBrowserJavaScript: boolean;
+  preamble?: string;
+  allowLiteralKeyText?: boolean;
+  exactValues?: string[];
+  maxIdenticalCalls?: number;
 }
 
 export type WorkerResult =
@@ -71,9 +75,14 @@ export type WorkerResult =
   | { status: "blocked"; kind: "permission" | "question"; detail: string }
   | { status: "timeout"; detail: string }
   | { status: "interrupted" }
+  | { status: "usage_limit"; detail: string; text: string; transcript: string; assistantMessageIds: string[] }
+  | { status: "model_mismatch"; detail: string }
+  | { status: "turn_limit"; detail: string; text: string; transcript: string; assistantMessageIds: string[] }
   | { status: "backend_unavailable"; detail: string };
 
 export interface WorkerPort {
+  /** Optional Claude task context; separate from the saved controller payload. */
+  setTaskPreamble?(sessionId: string, preamble: string): Promise<void>;
   health(): Promise<{ ok: boolean; version?: string; detail?: string }>;
   createSession(title: string): Promise<string>;
   /** Restrict an idle session before submitting; failure must prevent submission. */

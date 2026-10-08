@@ -20,9 +20,11 @@ import { controllerAlive, renderStatus } from "./status.js";
 import type { RunRow } from "./store.js";
 import { registerShadowCommands } from "./shadow/cli.js";
 import { registerServiceCommands } from "./backend/cli.js";
+import { registerWorkerCommands } from "./adapters/claude/cli.js";
 
 const program = new Command();
 registerServiceCommands(program);
+registerWorkerCommands(program);
 program.name("claude-harness").description("Mongoose learning-workflow harness: OpenCode worker <-> ChatGPT coordinator (Tab 1) <-> Mongoose GPT (Tab 2)").option("-c, --config <file>", "config file (default: harness.config.json next to package.json)").option("-v, --verbose", "debug output");
 
 const app = (): App => openApp(program.opts().config, program.opts().verbose ? "debug" : "info");

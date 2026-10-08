@@ -379,7 +379,7 @@ export class Controller {
         handoffId,
         payloadPath: file,
         payloadText: text,
-        meta: { reason: o.reason },
+        meta: { reason: o.reason, preamble },
       });
       this.d.store.updateRun(run.id, { state: "WORKER_PENDING", pending_op_id: op.id, pending_inbound_id: null, last_action: `plan:worker:${taskId}${o.newSession ? ":new-session" : ""}` });
       return op;
@@ -759,8 +759,8 @@ export class Controller {
           store.addTransition(run.id, run.state, run.state, run.status, run.status, "submission_reconciled_found", { op: op.id, role: "worker" });
           return;
         }
-        if (pres === "unknown") return this.backendTrouble(run, "cannot verify whether the worker task was accepted");
-        // absent: OpenCode never stored it; resubmitting with the same messageID is safe.
+        if (pres === "unknown") return this.pause(run, "submission_uncertain", "Cannot verify worker task receipt. Preserve state; do not restart the backend or resubmit.");
+        if (run.approvals.resubmit !== op.id) return this.pause(run, "submission_uncertain", "Worker marker absent after a delivery attempt; explicit item-bound resubmit approval is required.");
       }
       if (!op.meta.before) {
         const before = snapshotDirs(this.d.factoryRoot, watchedDirs(this.brief(run).evidence_dir));
@@ -768,6 +768,7 @@ export class Controller {
       }
       try {
         await worker.configureSession(sid, workerPolicyForBrief(this.brief(run)));
+        await worker.setTaskPreamble?.(sid, String(op.meta.preamble ?? ""));
       } catch (e) {
         return this.pause(run, "worker_policy_failed", `Could not enforce worker tool restrictions: ${(e as Error).message}. No new task was submitted. Resolve the session policy, then resume.`);
       }
@@ -793,21 +794,27 @@ export class Controller {
         store.updateOp(op.id, { status: "accepted" });
         return;
       }
-      if (pres === "absent" && op.attempts < 2) {
-        store.updateOp(op.id, { status: "planned", error: out.detail ?? null });
-        return;
-      }
       store.updateOp(op.id, { status: "uncertain", error: out.detail ?? null });
-      return this.backendTrouble(store.getRun(run.id)!, `worker submission uncertain: ${out.detail ?? ""}`);
+      return this.pause(store.getRun(run.id)!, "submission_uncertain", `Worker submission uncertain: ${out.detail ?? ""}. Preserve state; reconcile before any operator-approved resubmission.`);
     }
 
     if (op.status === "accepted") {
       const res = await worker.waitForCompletion(op.session_id!, op.message_id!, {
-        timeoutMs: this.d.config.opencode.taskTimeoutMinutes * 60_000,
+        timeoutMs: this.d.config.worker.taskTimeoutMinutes * 60_000,
         shouldStop: this.shouldStop(run.id),
       });
       run = store.getRun(run.id)!;
       switch (res.status) {
+        case "usage_limit":
+          store.updateOp(op.id, { meta: { ...op.meta, usageLimit: res.detail, partialText: res.text,
+            partialTranscript: this.write(run.id, `worker/${op.purpose}-usage-limit-transcript.md`, res.transcript) } });
+          return this.pause(run, "usage_limit", `${res.detail}. Expected Claude Pro pause; preserve all state and wait for five-hour/weekly reset. No automatic resubmission, model switch or backend restart.`);
+        case "model_mismatch":
+          return this.pause(run, "model_mismatch", res.detail);
+        case "turn_limit":
+          store.updateOp(op.id, { meta: { ...op.meta, partialText: res.text,
+            partialTranscript: this.write(run.id, `worker/${op.purpose}-turn-limit-transcript.md`, res.transcript) } });
+          return this.pause(run, "worker_turn_limit", res.detail);
         case "interrupted":
           return;
         case "blocked":

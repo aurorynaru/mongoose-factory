@@ -20,6 +20,11 @@ export const BriefSchema = z.object({
     out_of_scope: z.array(z.string()).default([]),
   }),
   prohibited_actions: z.array(z.string()).default([]),
+  allow_literal_key_text: z.boolean().optional(),
+  exact_values: z.array(z.string().min(1)).optional().refine(values => {
+    const folded = (values ?? []).map(v => v.toLowerCase());
+    return new Set(folded).size === folded.length;
+  }, "exact_values contains conflicting case-equivalent entries"),
   /** Additional enforced worker restrictions; textual prohibitions are still honored. */
   worker_tool_policy: z.object({ deny_browser_javascript: z.boolean().default(false) }).optional(),
   /** Case-insensitive regexes; a worker-bound message matching one requires operator review. */

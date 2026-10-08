@@ -1,14 +1,72 @@
-# Claude harness — Phase 1 migration baseline
+# Claude harness — Phase 3 bounded worker
 
-Phase 1 forks the controller, protocol, store, Git flow and fake tests. Claude
-adapters and the standalone worker command are not implemented yet. Inherited
-live commands below still use OpenCode/ChatGPT; do not run them during this build.
-See [PLAN.md](PLAN.md) for the migration and Phase 1 stop gate. Runtime defaults
-to `claude-data/`; the old harness remains untouched. `npm test` excludes browser
-fixtures and real backend smoke tests. `test:browser` and `test:smoke` remain
-explicit opt-ins and are not authorized in Phase 1.
+The standalone Claude worker and owned Chrome/MCP CDP services are implemented.
+Coordinator/specialist transports remain inherited browser code until Phase 4;
+use `worker task` for the operator's replay comparison. Phase 3 is the stop gate.
+See [PLAN.md](PLAN.md), [PHASE-2.md](PHASE-2.md) and [PHASE-3.md](PHASE-3.md).
+Runtime defaults to `claude-data/`; the old harness remains untouched. `npm test`
+uses fake processes and excludes browser fixtures/real OpenCode smoke suites.
 
-Validation, source references and the CDP decision are recorded in
+## Operator replay commands
+
+These commands are instructions for the operator's subsequent live replay;
+they were not run against the Mongoose profile or a real model during this build.
+
+```powershell
+cd C:\AI\mongoose-factory\tools\claude-harness
+Copy-Item harness.config.example.json harness.config.json # only if no local config exists
+npm ci --ignore-scripts --no-audit --no-fund
+npm run build
+.\claude-harness.ps1 chrome start
+.\claude-harness.ps1 mcp start
+.\claude-harness.ps1 mcp health
+.\claude-harness.ps1 worker task <EXP-ID> "<instruction>" --model haiku --effort high
+.\claude-harness.ps1 worker task <REPLAY-EXP-ID> "<instruction>" --model sonnet --effort high
+.\claude-harness.ps1 mcp stop
+.\claude-harness.ps1 chrome stop
+```
+
+Production Chrome uses configured `mongooseBrowserProfile`, default
+`C:\AI\mongoose-playwright-profile`, and starts on `about:blank`. It refuses an
+in-use profile (including OpenCode/old-harness ownership) and the default Chrome
+profile. Resolve its current owner through that owner's normal workflow; this
+harness never stops unowned Chrome. Navigate/login only when the operator's
+experiment scope permits it. Health/worker commands never launch Chrome or MCP.
+Keep CDP loopback-only: any local process reaching the port controls the logged-in
+session. Worker Bash and automatic backend restart default to denied/off; stop
+owned Chrome when not in use. No gateway is used.
+
+`worker task` requires a reviewed brief under `briefs/` and validates its record,
+evidence directory and instruction scope. It creates a fresh session by default.
+For comparisons, prepare equivalent permitted browser starting states explicitly;
+new sessions do not reset browser/Designer state. Default worker/coordinator/
+specialist models are haiku/sonnet/opus, all effort high, all configurable.
+Every task starts with a fresh snapshot and ends stable without dialogs/unsaved
+prompts; never discard work or expand scope to stabilize a page.
+
+Output gives session/message IDs, report excerpt, changed files/evidence and
+manifest/event/native-transcript paths. Full reports/settings/brief/AGENTS hash
+are preserved under ignored runtime state. Reconciliation starts no model:
+
+```powershell
+.\claude-harness.ps1 worker reconcile <SESSION-ID> <MESSAGE-ID>
+.\claude-harness.ps1 worker abort <SESSION-ID>
+# After a five-hour/weekly usage reset, with a new bounded operator instruction:
+.\claude-harness.ps1 worker task <EXP-ID> "<next permitted instruction>" --session <SESSION-ID> --continue-from <MESSAGE-ID>
+```
+
+`usage_limit` preserves all state and holds the worker lease. Continuation is
+explicit, requires the paused marker in the native transcript, and resumes the
+same model/session with a new message ID; it never replays the previous payload.
+Absent/unknown markers or interrupted task journals require inspection; there
+is no automatic resubmit/model switch. Only one task may own the browser lease.
+
+## Inherited baseline reference
+
+The remainder describes historical OpenCode/ChatGPT features pending Phase 4–5
+migration. It does not describe the standalone Claude replay path above.
+
+Baseline validation and source references are recorded in
 [PHASE-1.md](PHASE-1.md). On this installation use
 `npm ci --ignore-scripts --no-audit --no-fund`: plain `npm ci` unnecessarily
 attempted to rebuild packaged SQLite binaries and failed without Visual C++.

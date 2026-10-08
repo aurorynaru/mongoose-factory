@@ -1,5 +1,5 @@
 {
-  "$comment": "Copy to harness.config.json and adjust. Every key is optional; this example selects the local Strata worker. Secrets are NEVER stored here: they are read from the environment variables named below.",
+  "$comment": "Phase 3: standalone Claude worker is available. Coordinator/specialist browser transport remains until Phase 4. Subscription billing; credentials stay outside config.",
   "factoryRoot": "C:\\AI\\mongoose-factory",
   "dataDir": "claude-data",
   "mongooseBrowserProfile": "C:\\AI\\mongoose-playwright-profile",
@@ -76,5 +76,35 @@
     "entrypoint": null,
     "secretsFile": "C:\\AI\\mongoose-secrets\\demo.env",
     "outputDir": "evidence/playwright"
+  },
+  "claude": {
+    "executable": "claude",
+    "argvPrefix": [],
+    "billing": "subscription",
+    "configDir": null,
+    "models": {
+      "worker": {
+        "model": "haiku",
+        "effort": "high"
+      },
+      "coordinator": {
+        "model": "sonnet",
+        "effort": "high"
+      },
+      "specialist": {
+        "model": "opus",
+        "effort": "high"
+      }
+    }
+  },
+  "worker": {
+    "allowBash": false,
+    "maxTurns": 40,
+    "taskTimeoutMinutes": 90,
+    "maxIdenticalCalls": 6,
+    "maxSnapshotRefFailures": 6,
+    "maxRepeatedBrowserReads": 6,
+    "maxRepeatedShellCalls": 6,
+    "allowBackendRestart": false
   }
 }

@@ -2,8 +2,8 @@ import { isAbsolute, join } from "node:path";
 import { ChatGptAdapter } from "./adapters/chatgpt/adapter.js";
 import { BrowserSession } from "./adapters/chatgpt/browser.js";
 import { OpenCodeClient } from "./adapters/opencode/client.js";
-import { OpenCodeWorker } from "./adapters/opencode/worker.js";
-import type { ChatRole } from "./adapters/types.js";
+import { ClaudeWorker } from "./adapters/claude/worker.js";
+import type { ChatRole, WorkerPort } from "./adapters/types.js";
 import { BackendManager } from "./backend/process.js";
 import { configProblems, loadConfig, resolvePaths, type HarnessConfig, type ResolvedPaths } from "./config.js";
 import { Controller } from "./controller/machine.js";
@@ -70,39 +70,17 @@ export function chatAdapter(app: App, browser: BrowserSession, runId: () => stri
 export interface LiveController {
   controller: Controller;
   chat: ChatGptAdapter;
-  worker: OpenCodeWorker;
+  worker: WorkerPort;
   browser: BrowserSession;
   close(): Promise<void>;
 }
 
-/** Build the real adapters. Starts the harness-owned OpenCode backend if configured to manage it. */
+/** Phase 3 worker is Claude; coordinator browser transport remains until Phase 4. */
 export async function liveController(app: App, currentRun: () => string | null): Promise<LiveController> {
   const { config } = app;
-  if (config.opencode.manageBackend) {
-    const r = await app.backend.start();
-    if (!r.ok) throw new Error(`OpenCode backend not available: ${JSON.stringify(r)}`);
-    app.log.log("info", "backend.ready", { action: r.action, pid: r.pid, version: r.version });
-  }
-  const client = openCodeClient(app);
-  const worker = new OpenCodeWorker({
-    client,
-    agent: config.opencode.agent,
-    model: config.opencode.model,
-    pollIntervalMs: config.opencode.pollIntervalMs,
-    noResponseGraceMs: config.opencode.noResponseGraceSeconds * 1000,
-    maxSnapshotRefFailures: config.opencode.maxSnapshotRefFailures,
-    maxRepeatedBrowserReads: config.opencode.maxRepeatedBrowserReads,
-    maxRepeatedShellCalls: config.opencode.maxRepeatedShellCalls,
-    log: app.log,
-    restartOwned: async () => {
-      if (!config.opencode.manageBackend) return false;
-      const r = await app.backend.restart();
-      app.log.log(r.ok ? "info" : "error", "backend.restarted", r);
-      return r.ok === true;
-    },
-  });
+  const worker = new ClaudeWorker({ config, paths: app.paths });
   const h = await worker.health();
-  if (!h.ok) throw new Error(`OpenCode at ${config.opencode.baseUrl} is not healthy: ${h.detail ?? ""}`);
+  if (!h.ok) throw new Error(`Claude worker is not ready: ${h.detail ?? ""}`);
 
   let interpreter: DeepSeekInterpreter | null = null;
   if (config.deepseek.enabled) {

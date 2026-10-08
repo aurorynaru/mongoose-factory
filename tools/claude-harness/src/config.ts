@@ -20,6 +20,27 @@ export type Limits = z.infer<typeof LimitsSchema>;
 export const ConfigSchema = z.object({
   factoryRoot: z.string().min(1).default(resolve(HARNESS_DIR, "..", "..")),
   dataDir: z.string().min(1).default("claude-data"),
+  claude: z.object({
+    executable: z.string().default("claude"),
+    argvPrefix: z.array(z.string()).default([]),
+    billing: z.enum(["subscription", "api"]).default("subscription"),
+    configDir: z.string().nullable().default(null),
+    models: z.object({
+      worker: z.object({ model: z.string().default("haiku"), effort: z.enum(["low","medium","high","xhigh","max"]).nullable().default("high") }).prefault({}),
+      coordinator: z.object({ model: z.string().default("sonnet"), effort: z.enum(["low","medium","high","xhigh","max"]).nullable().default("high") }).prefault({}),
+      specialist: z.object({ model: z.string().default("opus"), effort: z.enum(["low","medium","high","xhigh","max"]).nullable().default("high") }).prefault({}),
+    }).prefault({}),
+  }).prefault({}),
+  worker: z.object({
+    allowBash: z.boolean().default(false),
+    allowBackendRestart: z.boolean().default(false),
+    maxTurns: z.number().int().positive().default(40),
+    taskTimeoutMinutes: z.number().positive().default(90),
+    maxIdenticalCalls: z.number().int().min(0).max(24).default(6),
+    maxSnapshotRefFailures: z.number().int().min(0).max(24).default(6),
+    maxRepeatedBrowserReads: z.number().int().min(0).max(24).default(6),
+    maxRepeatedShellCalls: z.number().int().min(0).max(24).default(6),
+  }).prefault({}),
   mcp: z.object({
     port: z.number().int().min(1024).max(65535).default(8931),
     cdpPort: z.number().int().min(1024).max(65535).default(9224),
