@@ -1,0 +1,126 @@
+[0:00] hi there this is caitlin porter from the mongoose enablement team welcome to part
+[0:04] two of the mongoose hello world training series in this video we'll be going over the mongoose
+[0:10] ideo capabilities and introduce the inheritance model so what exactly is the inheritance model
+[0:17] mongoose provides the capabilities to create classes that hold properties characteristics
+[0:22] and attributes that can be reused this allows for a single point of maintenance for the fundamental
+[0:27] data types with proper planning this can create a much more efficient and consistent application
+[0:34] there are many levels at which you can inherit these classes and they can be overwritten at
+[0:38] various levels this model allows us to inherit a base class and refine it keeping our refinements
+[0:44] exclusive to a specific level in today's video we will dive deeper into this using the inheritance
+[0:50] model within our application in part one we created a customer's form a customer's table and a
+[0:57] customer's ido which provided access to the table on that ido we created a property called id and
+[1:04] assigned it a length of 50. to view the attributes of that field let's open the customer form in
+[1:09] design mode click the design mode icon from the toolbar to open up the designer in a separate tab
+[1:16] if this is the first time you've entered design mode you will be asked to identify your editing
+[1:20] scope for this demo we will always be developing at the site default level select site default
+[1:25] and hit ok let's open our customers form from the menu and you should see it in the list of
+[1:30] recently used forms select the id edit component that is bound to id property we would expect this
+[1:36] to have a length of 50. expand the data source section from the properties panel on the right
+[1:41] and you can see that the component is bound to the id property on our ido
+[1:44] once you expand data type you can see that the length is listed as zero now if you scroll down
+[1:49] to the inheritance section click the ellipsis to view the attributes inherited from the property
+[1:57] here you should be able to see your length of 50 that is being inherited from the property
+[2:02] the zero that we saw earlier was the length that was defined at the component level
+[2:07] if we wanted to we could define a length of say 200 here and would overwrite the length of 50
+[2:12] assigned at the property level without changing the property definition instead of changing this
+[2:18] at the component level let's create a property class that we can use as a foundation to build
+[2:22] other property classes the best practice is to use property classes whenever possible and that
+[2:28] involves some proper planning of your data model because property classes are metadata it's simple
+[2:33] to adjust them as you develop navigate back to the runtime mode tab and let's create a new
+[2:38] explorer shortcut right click on my folders and create new shortcut search for property classes
+[2:46] and select the ideo property classes form expand your my folders and double-click your property
+[2:53] classes to open the property classes form after the form opens hit the filter and place icon
+[3:00] and then new to add a new property class go ahead and shrink the explorer to give us a
+[3:05] little more real estate name our property class um base short for unit of measure
+[3:11] give it a data type of string and a length of 10. drop the column data type list by default
+[3:19] this will only query the first 200 items rather than scrolling through this list looking for what
+[3:24] we want we should use the in-place filtering type in nvar and use the wildcard which is an asterisk
+[3:31] and then hit the arrow by typing this it will only query the items in the list that start with nbar
+[3:38] we can do this even quicker by typing nvar and hitting the f2 key doing this will imply there
+[3:43] is an asterisk select nvar char for our column data type and give it a label string id of s-u-m
+[3:50] then hit save for efficiency mongoose has caching of metadata at both the app server
+[3:56] and the client to be sure our new property class shows up as available close the form and
+[4:01] unload all the global form objects by selecting form definition unload all global form objects
+[4:08] the next thing we should do is build the pieces to enable us to designate a unit of measure for
+[4:12] an item in our app for example we want to have the option to say these eggs are x dollars
+[4:17] a dozen or that these bikes are x dollars each navigate back to the design mode tab
+[4:24] and click the new form definition icon from the toolbar the category select new data
+[4:29] and for the wizard select maintenance ok and this will launch the new data maintenance wizard
+[4:35] go ahead and give our ido a name of ums let's use our hello world project and give it a table alias
+[4:42] of ums i want to add a property below type in um for the name and find your um base property
+[4:47] class that we just created once you select the class you will see that it automatically sets
+[4:51] the data type length and label string because it is inheriting that from the property class put
+[4:56] this property to be the primary key and make it required add another row name this one description
+[5:02] give it a data type of string a length of 50 and set the label string id to s description
+[5:09] like next and then finish and select yes when it asks you if you want to create a form
+[5:16] once the new form wizard opens hit next accepting the defaults here you can specify what properties
+[5:22] you want to include on your form let's leave the defaults and hit next here you can reposition
+[5:27] fields in your form by using the arrows on the right i'm going to move my um field to the top
+[5:32] once you're done positioning your fields hit next and finish to create your form once the form opens
+[5:37] in design mode you'll notice that our um string is being inherited from our property class if you
+[5:43] were to change the string value on the um-based property class that change would cascade down to
+[5:48] our um's form since it's a new string we'll need to create it click on the label component and on
+[5:54] the caption field to the right click the ellipsis give it a string value of unit of measure hit ok
+[6:00] and hit save jump back to the runtime mode tab and let's open our new form
+[6:06] notice now that our label is showing the correct string value that we just created the form will
+[6:12] automatically open in add mode let's add two records the first being ea description of each
+[6:18] and the second being dz description of dozen hit save from the toolbar we're now going to create
+[6:24] another property class that will use our um's ido to pull a list of the unit of measures that are
+[6:29] available in our um's table open our ido property classes form and let's create a new property class
+[6:35] called um let's use our um base for the base class which will inherit the data type length
+[6:42] and label string id value any of those attributes that are being inherited from the base class can
+[6:47] be overwritten here to give it a list source go to the domain ido field and select our um ido for the
+[6:55] domain property select um and for additional list properties select description notice the
+[7:02] asterisks next to the domain fields this indicates that we are overriding the inherited attributes
+[7:08] let's create two more property classes that we can use in our application
+[7:12] hit the new icon from the toolbar and let's name our first class item base
+[7:17] give it a data type of string a length of 20 select the column data to end varchar
+[7:24] and give it a label string id of s item add another row and let's name this one cost
+[7:30] give it a data type of decimal a length of 18 a decimal precision of 2 a default value of 0
+[7:38] decimal for the column data type and a label string id of s cost hit saved and let's clear
+[7:45] the cache close the form and select form definition unload all global form objects
+[7:52] now we want to create our items table ideo and form let's go back to the design mode tab and
+[7:58] click the new form definition icon select new data for the category and maintenance for the wizard
+[8:04] click ok to launch the new data maintenance wizard let's name this items and place it in our hello
+[8:10] world ideo project give it a table alias of itms let's add some properties hit the add row button
+[8:17] and let's add one called item let's select our item base property class that we just created
+[8:24] this should inherit the data type the length the column data type as well as the label string id
+[8:29] let's make this property the primary key as well as required
+[8:34] let's add another property hit the add row button and let's name this one description
+[8:39] give it a data type of string a length of 150 and a label string id of s description hit the add row
+[8:46] button to add another property let's name this one cost let's use our cost property class that
+[8:53] we just created and you can see it will inherit all the attributes included in that property class
+[9:00] let's add one more property let's name this one um and let's assign it our um property class that we
+[9:06] previously created hit next and finish and select yes when it asks you if you want to create a form
+[9:13] now the new form wizard will open let's accept the defaults and hit next
+[9:18] let's leave the properties that it defaulted to and hit next i want to rearrange the properties
+[9:23] on my form to do so i'm going to move the item to the top and the description just under that
+[9:30] once i'm done with that i'm going to hit next and finish to create my form
+[9:35] once the form opens you'll notice that the item and cost strings need to be created
+[9:40] i'm going to go ahead and click on the components select the ellipsis from the caption field
+[9:45] and give them both a string value once i'm done with that i'm going to save my form
+[9:50] let's go back to the runtime mode tab and open our newly created items form
+[9:56] notice that mongoose has created a combobox component bound to the um property instead of
+[10:01] an edit this is because we have inherited domain information which mongoose uses to provide a list
+[10:06] source for the component try creating a new entry with an invalid unit of measure when you go to
+[10:13] save your record you should get an error message saying that you selected an invalid item this is
+[10:18] because we use a property class that has a domain ido list which has built-in validation to make
+[10:24] sure the user selects an item from the list source list sources and validations are more examples of
+[10:30] runtime inheritance at work we could go all the way back to the property class level and add
+[10:35] additional units of measure or modify our existing two and the form will automatically update you can
+[10:41] also notice that our cost property is inheriting the decimal data type with a default value of zero
+[10:48] what did we just build let's take a quick look we began by creating the property class um base
+[10:54] where we assigned the label string id sum then we created another property class
+[10:59] named um which was derived from um base which means it inherited the label string id sum
+[11:06] on this level we added the ido domain information which allowed us to have a drop list of items and
+[11:11] validation from the um's table next we created the property um which was derived from um base
+[11:19] meaning that again the label string id sum was inherited after our um's form was created
+[11:26] an edit component that was bound to the um property inherited that same label string id
+[11:32] before we finish up let's add some data to our items table switch back to runtime mode
+[11:38] and add three more entries the first being dumbbell with a description of 45 pound iron
+[11:44] a cost of 45 dollars and a unit a measure of ea add another row this time
+[11:50] name it guitar with the description of natural acoustic costs 129.99 and a unit of measure of ea
+[12:00] add one more record this time name it eggs with a description of cage free a cost of 699
+[12:07] and unit of measure dz once you're done adding your four records hit save in part three we'll
+[12:14] be exploring querying and take our first look at the event system for more tutorials and
+[12:19] documentation check out the mongoose portal at mongoose.infor.com thanks for watching

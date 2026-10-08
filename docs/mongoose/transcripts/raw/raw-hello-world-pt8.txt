@@ -1,0 +1,222 @@
+[0:00] hi there this is caitlin porter from the mongoose enablement team welcome to part 8 of the mongoose
+[0:05] hello world training series in this final video we'll continue building out our xero training
+[0:10] customer portal we'll also get you introduced to tile forms and dynamic actions within mongoose
+[0:17] let's pick up where we left off with our customer portal form in the previous video
+[0:22] we added our items grid but instead of making this a standard grid i want to make it more visual by
+[0:26] displaying a picture of the item alongside it in order to do this i want to utilize a tile form
+[0:33] tile forms are essentially embeddable forms with limited capabilities and they must be
+[0:37] displayed within a container such as our grid the information on each tile is taken from a single
+[0:43] record of the ido collection that's bound to that grid these are a great tool for displaying key
+[0:48] information succinctly let's close our customer portal form and click the new form definition
+[0:54] icon from the toolbar for the category select classic and for the wizard select tile select ok
+[1:02] and let's name our form items tile set the data source to our items ido
+[1:08] then hit next let's remove all of the selected properties except for our picture
+[1:12] property then hit next hit next again and then hit finish to create your tile form
+[1:19] let's get started by resizing the form navigate to the layout section in the properties panel
+[1:25] and set the width to 40 and the height to 4. click on the picture static component and delete it
+[1:34] select the picture edit component and change the type to static then rename it to static picture
+[1:41] scroll down to the formatting section and set the image and text property to image only
+[1:47] then scroll down to the miscellaneous section and set no colon equal to true
+[1:53] resize the component and shape it into a square then move it to the left of the tile form
+[1:58] grab another static component from the toolbox and drop it in the top right section of the form
+[2:03] rename the component to static item and set the theme class to header
+[2:08] set the justification to left and under binding type set it to property click on the binding
+[2:14] drop list and select item set the width to 27 and the height to 1.5 then set no colon equal to true
+[2:24] grab another static component from the toolbox and draw it underneath our item static
+[2:29] rename it to static item description set the justification to left
+[2:38] for the binding type set it to property and select the description property
+[2:43] under the layout section set the width to 20 and the height to 1.5 then set no colon equal to true
+[2:51] grab one more static component from the toolbox and draw it to the right of our item description
+[2:58] rename it to static cost set the justification to right set the binding type to property
+[3:06] select our cost property under the binding field in the layout section set the width to 8 and the
+[3:13] height to 1.5 then set no colon equal to true rearrange the components on the form till you
+[3:18] find something that you like then save the form close it and unload all the global form objects
+[3:25] now let's apply our tile form to the grid on our customer portal form open our customer portal form
+[3:31] and select the grid items component scroll down to the miscellaneous section of the properties panel
+[3:37] and set the tile form property to our new form items tile then directly below that set the
+[3:44] tile and attribute to always now in order to see the items in our grid we need to refresh
+[3:49] the item's collection expand the details pane at the bottom and navigate to the event handlers tab
+[3:56] and let's add a new event hit the new icon on the bottom left name our event sign in btn
+[4:03] set the type to collection refresh and then click the ellipsis on the parameters field
+[4:12] for the collection drop list select our secondary collection then hit ok we want
+[4:18] this event to fire when the user signs in with their customer id select the button sign in to
+[4:24] component and navigate to the events section set the primary event here to our sign in btn event
+[4:32] now we're ready to test this out let's save our form and reopen it in the runtime mode tab
+[4:37] test this out by entering a customer id of 1 and then hit the sign in button you'll see once
+[4:43] you hit the sign in button the collection will refresh and we'll see a list of items in the grid
+[4:47] using our new items tile form next let's add our account field and cart button so users can add
+[4:54] items to their cart grab a static component from the toolbox and drop it into the count region of
+[5:00] flex layout buttons then grab an edit component from the toolbox and drop it into the same region
+[5:09] next grab a button component from the toolbox and drop it into the cart
+[5:13] region of flex layout buttons re-select the first static and let's rename it to static
+[5:19] count give it a caption of s count and create the string if it hasn't yet been created
+[5:26] then select the edit component and rename it to edit count set the justification to left
+[5:34] and let's bind it to our account variable for the binding type set it to variable
+[5:41] and click the ellipsis for the binding
+[5:45] specify count as the variable name and then hit ok set the width of this field to 7 and the
+[5:55] height to 1.5 then select the button component and rename it to button add to cart give it a
+[6:02] caption of s add to cart and create the string value assign it a theme class of blue button
+[6:12] and let's also assign it a bitmap file so it displays the text and an image
+[6:18] for the bitmap file select shoppingcart.png set the image and text attribute to horizontal
+[6:25] image text this will lay out the image and then the text horizontally on the button
+[6:31] then set the size to 20 wide and the height to 1.5 let's pause here and regenerate our form so
+[6:39] we can see our changes with the home page region finished let's start moving on to the cart page
+[6:45] we'll build out a cart page where users can view and save their orders
+[6:49] grab a static component from the toolbox and drop it into the cart page region of flex layout main
+[6:57] let's rename it to static cart give it a caption of s cart assign the header theme class
+[7:07] set the justification to center
+[7:11] and then set the width to 20 and the height to 1.5 next let's grab a grid component from the toolbox
+[7:19] place it into the same region rename this to grid orders and let's set the binding type on this
+[7:28] to primary collection and leave the default of objects in the binding field set the width to 35
+[7:36] and the height to 15. now let's grab a button component from the toolbox
+[7:41] and place it in the same region rename it to button checkout and give it a caption of
+[7:49] s checkout create the string if it hasn't yet been created
+[7:56] let's assign it a theme class of blue button
+[8:00] then set the width to 20 and the height to 1.5 now since the alignment of this
+[8:07] region is set to stretch i don't want the button to stretch too wide across the screen
+[8:13] so i'm going to set a margin on the component itself click on the edit flex attributes button
+[8:19] and set the margin to 10 comma 0 comma 10 comma 0. this will set 10 character units
+[8:26] to the left and right of the button hit ok and now since we just found our grid
+[8:32] we need to regenerate the form so we can bind some grid columns hit the regenerate form button from
+[8:37] the toolbar and when the form opens back up click on our grid orders component and then hit the
+[8:43] edit grid columns button in the top left corner add two more grid columns using the icon below
+[8:49] re-select the first grid column and rename it to grid call ord num set the binding type
+[8:57] to property and bind it to our order number property select the second grid column and
+[9:04] rename it to grid call item set the binding type to property and bind it to our item property
+[9:13] select the third grid column and rename it to grid call count set the binding type to property
+[9:20] and let's bind it to our account property
+[9:24] select the last column and rename it grid call cust id set the binding type to property
+[9:31] and bind it to our customer id property select ok and then reselect our grid orders
+[9:39] we want to set this to read only so expand the behavior section and set read only disable to true
+[9:47] go ahead and regenerate your form here and let's move on to creating the navigation
+[9:53] we want to add in functionality to our buttons that allow the user to click between the pages
+[9:58] to achieve this we're going to use the enable win attribute from the properties panel
+[10:03] this will allow us to create a conditional expression that will evaluate automatically
+[10:06] anytime the value in that expression changes we're going to use a variable to achieve this
+[10:12] we want to start by creating our variable when the form opens and setting it to the
+[10:16] sign in page expand the details pane and select the event handlers tab hit new on the bottom
+[10:24] and let's use one of the standard mongoose events standard form pre-display
+[10:29] change the type to set values then click the ellipsis next to the parameters field
+[10:38] click the ellipsis next to the variables field and then hit new
+[10:42] let's name our variable page and give it a value of 1. then hit ok until you get back
+[10:48] to the home screen now we want to set some visible when conditions on each of our pages
+[10:54] select the flex layout main component then hit the edit flex layout attributes button [Music]
+[11:03] click the sign in page region and scroll down to the behavior section [Music]
+[11:10] hit the ellipsis on the visible when field here is where we can build our conditional statement
+[11:16] select the new button and set the value type to variable value then give it a value of page
+[11:24] then hit ok we want page to be equal to and then hit the edit value for the right value
+[11:30] value type to be literal and the value to be 1. then hit ok we just built a conditional statement
+[11:37] that will only make this region visible when the variable page is equal to one just below
+[11:42] that set visible and design mode to true next grab our visible win statement and copy it
+[11:49] then select our home page region and then paste in our statement into the visiblewin attribute
+[11:55] here change the value from 1 to 2 that way this region only displays when the variable value is
+[12:01] equal to 2. set visible and design mode equal to true next select the cart page region and
+[12:08] paste it there as well here change the value to 3 and set visible and design mode to true
+[12:16] select ok and next let's create some events on our buttons that will set
+[12:21] our page variable value let's add a new event from the details pane
+[12:25] hit the new icon at the bottom and let's name this event sign in btn2
+[12:32] hit ok and change the type to set values then hit the ellipsis on the parameters field
+[12:45] hit the ellipsis next to the variables field and then hit new
+[12:49] set the target equal to page and the value equal to one then hit ok until you return back to the
+[12:56] home screen expand the sign in button to event and select the event handler we just created
+[13:03] hit the copy button at the bottom and then rename this event to home btn
+[13:10] under the parameters field change the value of 1 to 2. then hit the copy button again
+[13:18] and let's rename this event to cart btn under the parameters field change the variable value
+[13:26] from 2 to 3. now that we have our events created let's attach them to the buttons
+[13:32] collapse the details pane and select our sign in button on the left scroll down to the events
+[13:38] section on the properties panel and let's set the primary event on this button to sign in btn2
+[13:47] then select the home button and assign the primary event here to home btn [Music]
+[13:55] lastly select the cart button and set the primary event to cart btn
+[14:02] now we also want to set the page variable after a user logs in with their customer id
+[14:08] so let's set this on the sign in button here click the button sign in to component and
+[14:14] then click the ellipsis on the primary event that's defined on the component
+[14:19] here let's add an event hit ok let's set the type to set values
+[14:27] click the ellipsis for the parameters field and then click the variables ellipsis hit new
+[14:36] set the target to our page variable and set the value to 2 so it shows our homepage region
+[14:44] hit ok until you return back to the home screen let's also set an initial value on
+[14:49] the count variable so it will default to 1. click on the edit count component and click
+[14:55] the ellipsis on the binding attribute set the initial value on that variable to 1 then hit ok
+[15:05] we also want to set some dynamic actions on the menu buttons that only enable them when the
+[15:10] customer has signed in with their customer id we can use the customer id variable to achieve this
+[15:17] click on the sign in button from the menu and under the behavior section
+[15:22] click on the ellipsis to the right of the enabled win attribute
+[15:28] here is where we can build our enabled win condition hit the edit value button
+[15:34] for the left value field set the value type to variable value and set the value to customer id
+[15:47] then hit ok change the operator to less than or greater than and then hit the edit value
+[15:55] for the right value change the value type to literal and leave the value blank then hit ok
+[16:02] this condition is saying that only enable this component when customer id is not equal to null
+[16:09] hit okay until you get back to the home screen and then repeat this same process
+[16:13] with the home and cart buttons from the menu using the same condition statement
+[16:21] once you're done save your form and let's reopen it in the runtime mode tab notice now when you
+[16:28] open the form that all of the menu buttons are disabled because no customer has logged in
+[16:34] let's go ahead and log in with our customer id of one and then click the sign in button
+[16:39] remember the sign in button is refreshing the collection and setting the page variable to two
+[16:44] and because we have a customer id variable populated all of our menu buttons are now enabled
+[16:50] you can see our customer id variable in the top right corner
+[16:54] next we want to add in functionality to allow the user to drag an item from the grid onto the cart
+[16:59] button in order to add it to their cart in order to do that we first need to create some events
+[17:06] hop back over into the design mode tab and let's add a new event name this event set new cart entry
+[17:16] set the event type to set values and then select the parameters ellipsis we want to set the values
+[17:23] for the properties on the primary collection to do this select the ellipsis on the properties field
+[17:29] then select new for the target value let's select our item property from the primary collection
+[17:36] we want to substitute this with the item value from our secondary collection click the ellipsis
+[17:41] on the value field for the type select property value then select our secondary collection for the
+[17:50] value select our item property then hit ok until you get back to the edit set property values modal
+[17:58] this is saying set our item property on the primary collection to our item property on
+[18:03] the secondary collection when you see that it's prefixed with the 2 that means it's coming from
+[18:08] the secondary collection next let's set the count property to our variable count hit the new button
+[18:16] set the target to our account property and leave the primary collection as a collection for target
+[18:22] type in capital v open paren count close paren this will substitute our account
+[18:28] property with the count variable hit ok and let's add one more hit the new button
+[18:35] and this time let's set our customer id equal to our variable customer id
+[18:40] select customer id for the target type in v open paren customer id close paren for the value
+[18:47] then hit ok hit ok until you get back to the home screen and let's add another event hit the new
+[18:54] icon in the bottom left and let's name this event add to cart hit ok and then change the event type
+[19:01] to collection make current then click the ellipsis for the parameters field let's set the collection
+[19:08] to our primary collection hit ok and let's add another event handler to our add to cart event
+[19:15] hit the new icon select our add to cart event then hit ok change the event handler type to collection
+[19:23] new then hit the ellipsis for the parameters field and select our primary collection hit ok
+[19:30] and let's add one more event handler to our add to cart event click the new icon select our add to
+[19:36] cart event and change the event type to generate event click the ellipsis for the parameters field
+[19:44] and select our event set new cart entry check the box that says post event asynchronously
+[19:51] this means that this event will only fire if the first events fire successfully
+[19:56] hit ok to return to the home screen so what did we just build
+[20:00] we started by creating an event that would set the focus onto the primary collection
+[20:05] following that we did a collection new which would insert a new row into the primary collection
+[20:10] then we generated our set new cart entry event which sets all the property values
+[20:15] from the secondary collection to the primary collection anytime you add a new item to the cart
+[20:21] it'll run this event and add a new row each time now that we have our events created let's
+[20:26] add them to the components on our form select our grid items and expand the events section
+[20:32] select the ellipsis on the drag from events property
+[20:35] and select our add to cart event then hit the add button and then hit ok
+[20:42] now select the add to cart button and click the ellipsis on the drop on
+[20:46] events property select our add to cart event here as well and then hit the add button then hit ok
+[20:55] in order to have a successful drag and drop event there must be one matching event name
+[20:59] shared between the two components in this case it's our add to cart event that is linking them
+[21:04] lastly we need a way to save our order click on the checkout button and let's set the
+[21:09] primary event to a standard mongoose event of standard form safe now we're ready to test it
+[21:16] save your form and let's reopen it in the runtime mode tab sign in with our customer id of one
+[21:24] and let's grab an item and drag it to our cart then to view your cart hit the cart button
+[21:31] and now you can see that our bike was added with a count of 1. we can save our order to
+[21:35] the database by hitting the checkout button which is running our standard form save event
+[21:41] and because we built this as a flex form you can see if
+[21:44] you shrink the browser that the form will automatically adjust to the viewing size
+[21:50] there's a lot of concepts that we didn't have a chance to dive deep into with this series
+[21:54] and there's much more you can learn these concepts include adding code into the ido layer via
+[22:00] net ido extension classes other components like browsers subforms user components barcodes
+[22:07] data views and kpis are available providing in-place business intelligence you can create
+[22:13] key performance indicator graphical displays that can be added to any form multiple collections like
+[22:19] parent child that we call sub collections these are useful for order headers and order lines
+[22:24] for example parent child forms which allow you to extend off a form for modifications without
+[22:29] affecting the parent form changes to the parent form automatically cascade to the child forms this
+[22:35] is a great tool for creating application specific templates that can be used across numerous forms
+[22:40] with a single point of maintenance the application event system which is a major subsystem for adding
+[22:45] server-side logic without writing code allowing you to set rules for automation workflow and
+[22:51] integration leveraging ido's in a wide range of options mongoose also integrates with ion ion api
+[22:59] data lake and idm reports and mongoose can easily be generated using its built-in report writer
+[23:06] responsive breakpoints allow you to design for different devices when used in conjunction
+[23:10] with flex forms allowing you to create your core logic once as the form adapts to different devices
+[23:16] mongoose has security where you can set policies at the security role or user level for forms and
+[23:21] idos policies can also be set at the field and row levels well that wraps up the hello
+[23:28] world series your next step is to check out the mongoose fundamental series additional training
+[23:34] and documentation can be found on the mongoose portal at mongoose.m4.com thanks for watching

@@ -1,0 +1,98 @@
+[0:00] hi there this is caitlin porter from the mongoose enablement team welcome to part three of the
+[0:04] mongoose hello world training series in today's video we are going to touch on the technical
+[0:09] architecture of a simple request in mongoose we will also introduce working with the event system
+[0:14] and a few key concepts in developing with minimal code let's start by logging back into mongoose
+[0:20] let's go ahead and open our items form you should see it in your list of recently used forms
+[0:25] remember that the form opens in add mode to query the data hit the refresh icon from the toolbar
+[0:31] so what is exactly happening in the background when we hit refresh [ __ ] sent a load collection
+[0:37] ido request xml to the server where the idl runtime processes the xml and builds a sql
+[0:43] select statement which was sent to the database results were returned from the database where the
+[0:48] ido runtime packed them up into a response xml and sent them back to mongoose to be rendered
+[0:53] on the form this forms the basis for all of the operations on the forms you build and this is all
+[0:58] taken care of by the mongoose infrastructure and does not require any coding from the user
+[1:03] suppose there were millions of rows in our items table and we only wanted to see items
+[1:07] whose name started with b to do this hit the filter and place icon on the toolbar and type in
+[1:13] b and the asterisk character then hit the filter icon again from the toolbar and it should return
+[1:20] our one item that starts with the letter b you can also combine filters in mongoose let's go back
+[1:26] into filter mode by hitting the icon from the toolbar and clear out our item filter
+[1:32] then in the cost field type in greater than 10
+[1:36] and unit of measure select dozen in the back end this will build a sql select statement
+[1:41] that combines the cost and unit of measure to return only values that meet those two criteria
+[1:47] hit the filter icon to execute that filter and you should see it return one row that meets our
+[1:52] criteria we want the items form to refresh when it opens so we can see a list of all of the items
+[1:58] to do so we need to set the initial command to refresh select the designer icon from the
+[2:03] toolbar to open the form in design mode select site default for the editing scope and hit ok
+[2:10] you might see a prompt that tells you to unload your global objects make sure that if you ever
+[2:14] change your editing scope to unload the global form objects before opening a form this will
+[2:19] ensure that you're opening the correct version of the form hit ok once the form opens in design mode
+[2:26] expand the behavior section in the properties panel on the right here you can use the initial
+[2:31] command property to specify a command that controls what happens when the form opens setting
+[2:36] the initial command to refresh will open the form and query all of the data an initial command of
+[2:41] filter will bring up the associated query form where you can specify a variety of filter criteria
+[2:47] filter and place will open the form in filter and place mode so we can query specific data
+[2:53] add will open the form without querying any data with the new row inserted into
+[2:57] the primary collection this is the default behavior for any forms you build the last
+[3:02] one in the list is event and this allows you to execute a form event as the form initial command
+[3:07] we want to return a list of all the items so select refresh for the initial command
+[3:12] and save your form then switch back to runtime mode and reopen your form you can now see it
+[3:20] returning a list of all of the items in our table mongoose has a built-in diagnostics tool that can
+[3:25] be used to view messages and operations in the current session this can capture how events
+[3:30] are interacting with forms as we use them these messages are captured and displayed in real time
+[3:36] and they can be filtered search and save to a file to turn on diagnostics go to view user preferences
+[3:44] select the diagnostics section on the left and check the enable checkbox to turn them on
+[3:50] next switch to the form tab up top and select the events checkbox to capture form events we
+[3:56] also want to include event handlers select the include checkbox under event handler section
+[4:02] select ok and open the diagnostics tool by going to view diagnostic log let's view this in action
+[4:09] close your items form and clear the log messages from the diagnostics panel
+[4:14] reopen your form and you should then see the form events at trigger upon forum open
+[4:19] you can see the standard form refresh event is being called because we set our initial command
+[4:23] to refresh you can also create your own events in the next example let's create a custom event that
+[4:30] can run off a standard mongoose event switch back to the design mode tab and let's select button
+[4:35] from our toolbox on the left draw the button on the form with the component selected expand the
+[4:41] event section on the right set the primary event on the button to standard form refresh
+[4:47] save your form and switch back to runtime mode reopen your form and clear the diagnostic log
+[4:55] then hit your button and you'll see in the diagnostics panel the standard form refresh event
+[5:00] that's being triggered let's go back to the design mode tab and open the details pane at the bottom
+[5:07] select event handlers tab and hit new at the bottom
+[5:11] event handlers wait for events to be executed and respond they won't do anything without an
+[5:16] event to trigger them event handlers are stored in metadata and have response types or actions
+[5:22] the event that we want to handle is standard form refresh completed
+[5:26] select ok and for the response type select prompt select the ellipsis next to the parameters field
+[5:33] type in hello world under the message text field and hit ok
+[5:39] what did we just do we created a custom event that will intercept the standard mongoose event
+[5:43] standard form refresh and will trigger upon completion of that event switch back to the
+[5:49] runtime mode tab and reopen your form you will see that once the form opens we get our prompt
+[5:54] this is because we have the standard form refresh event being triggered on our initial command
+[5:59] since our button is executing the same event we expect to see our event handler triggered
+[6:03] when we click it one of the ways mongoose allows you to develop with minimal coding is by using
+[6:07] substitution keywords that are interpreted by mongoose switch back to our design mode tab and
+[6:12] select event handlers from the details pane select our standard form refresh completed event and hit
+[6:18] new at the bottom let's add another event handler to our standard form refresh completed event
+[6:24] under type select set values select the ellipsis on the parameters field then select the ellipsis
+[6:31] on the variables field and hit new on the right now we want to create a temporary form variable
+[6:37] variables are mechanisms for storing data needed at runtime variables are named value pairs they
+[6:43] can be temporary or persistent global to all forms are only available to the current form
+[6:49] let's name our variable var test for the value type in p parentheses description and parentheses
+[6:58] here we are using a substitution keyword that will populate the variable var test at runtime select
+[7:04] ok and next let's bind our variable to an edit component on the form select edit from the toolbox
+[7:10] and draw it on your form with the component still selected expand the data source section from the
+[7:16] properties panel on the right set the binding type to variable and click the ellipsis on the
+[7:21] binding field let's bind it to our variable var test and hit ok save your form and switch back to
+[7:28] the runtime mode tab and reopen your form you can see that when the form opens and our standard form
+[7:34] refresh event is triggered our variable of our test is being substituted with our description
+[7:39] property but what if we wanted to create a custom event that was only triggered when we told it to
+[7:44] switch back to the design mode tab and let's go to our standard form refresh completed event let's
+[7:49] change the event to a custom event named test then change the second event handler to test as well
+[7:56] now if you expand test you'll see that both of your event handlers are now sitting in
+[8:01] your custom event let's change the primary event on our button to use our custom event
+[8:06] select the button component and expand the events section let's change our primary event to test
+[8:12] save your form and reopen it in runtime mode you will notice now that when we open our form
+[8:17] our events not being triggered that's because we moved it from our standard form refresh event to
+[8:21] a custom event first clear the log messages then select the button you can see the two events that
+[8:27] were triggered when we hit our button you can see the test event at the top followed by our
+[8:31] event handlers prompt and set var values below let's recap what we did today first
+[8:37] we looked at the flow of data between mongoose and the ido runtime service we touched on basic
+[8:42] filtering functionality variables and working with standard and custom events in mongoose
+[8:48] in part 4 we will explore how to add a column and property to our existing items table
+[8:53] and we'll start working with themes and building classes that we can use in our inheritance model
+[8:58] for more information and resources check out the mongoose portal thanks for watching you

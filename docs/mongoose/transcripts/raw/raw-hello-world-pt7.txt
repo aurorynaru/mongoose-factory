@@ -1,0 +1,173 @@
+[0:00] hi there this is caitlin porter from the mongus enablement team welcome to part 7
+[0:05] of the mongoose hello world training series in the previous videos we have leveraged the
+[0:09] powerful productivity user interface for building out the data model and ui for our store we could
+[0:15] run our app right now from the browser but the ui currently requires some orientation from our users
+[0:21] in this video we'll get you started with building out a zero training portal for our store
+[0:26] this portal will consist of three different screens the first will be
+[0:29] a customer sign-in page where they can sign in with their customer id
+[0:33] the second will be a home page where they can add items to their cart by dragging and dropping and
+[0:39] then third will be a cart view where they can view all of the items that they added to their cart
+[0:44] okay let's get started hit the designer icon from the toolbar to open up the web designer
+[0:50] let's set the editing scope to site default then hit ok select the new form definition icon from
+[0:56] the toolbar and for the category select flex and for the wizard select basic then hit ok
+[1:05] let's pause for a second and go over the basics of flex forms and flex layout components
+[1:10] flex forms use flex layout components to render all other components allowing you
+[1:14] to create forms that are dynamically responsive to the viewing environment this allows you to
+[1:19] create a single form that fits in the browser tablet or mobile device all simultaneously
+[1:25] a flex layout component is a container component which is used to flexibly house other components
+[1:31] each flex layout component can be divided into different horizontal or vertical regions and
+[1:36] each region can contain multiple child components you can even nest flex layout components inside
+[1:42] regions of other flex layout components you can nest these components as many levels deep as
+[1:46] you need to accomplish your form design with the flex layout component you can group the regions
+[1:52] horizontally or vertically horizontal boxes will arrange the regions horizontally from left to
+[1:57] right and vertical boxes will arrange the regions vertically from top to bottom the length and units
+[2:04] attributes control the individual length of each region of a flex layout component length can be
+[2:09] expressed in fixed character units or expressed as flex units which are equal portions of the total
+[2:15] available width or most often they can be combined to create fixed and flexible regions within a form
+[2:23] the orientation attribute specifies how the components should be arranged within a region
+[2:27] the pack and align attributes work together to position the child components
+[2:32] when the flex layout region is vertically oriented use a line to position the child
+[2:36] components at the left center right or to stretch them to fill the entire width of the region
+[2:42] use pack to position the child components at the start center or end of the region
+[2:47] when the flex layout region is horizontally oriented use a line to position the child
+[2:52] components at the top middle bottom or to stretch them to fill the entire height of the region
+[2:58] use pac to position the child components at the start center or end of the region now
+[3:03] that we know the basics with flex forms and flex layout components let's keep going in building our
+[3:08] first flex form select ok and when the form wizard opens name the form customer portal
+[3:15] for the unit you have the option to select between pixel or character for the purposes of this demo
+[3:21] let's select character and then hit next hit finish to create your form after the form opens
+[3:27] let's add some collections to the form expand the details pane at the bottom and under the
+[3:33] collections tab select primary collection and set it to our orders idle you should get a prompt
+[3:40] telling you to regenerate your form we need to add another collection to the form so we'll do this
+[3:45] after hit the new icon from the bottom and for the secondary collection let's set it to our items ido
+[3:53] hit ok at the second prompt and now we can regenerate a form using the icon from the toolbar
+[3:58] this will save the form close it and reopen it all in one step this step is necessary whenever a new
+[4:04] collection is added to the form sometimes you'll also have to use this when you make ui changes
+[4:10] next let's utilize flex layout components to layout our form select the flex layout component
+[4:15] that was automatically added to our form and then select the edit flex layout attributes button at
+[4:20] the top left corner the flex layout attributes can also be accessed from the properties panel under
+[4:25] layout flex attributes by clicking the ellipsis by default the flex layout component arranges
+[4:31] the regions horizontally let's change this so they arrange vertically change the type to vertical box
+[4:37] select the index region 0 and let's give it an id of header let's assign it a length of four
+[4:46] let's use form units and let's set the orientation to fill
+[4:53] then select index one and let's rename it to main let's give it a length of 1 a unit of flex
+[5:01] and an orientation of fill lastly select the region index 2 and let's rename it to footer
+[5:09] give it a length of two form units and set the orientation to fill
+[5:16] then hit ok next let's build the header for our form
+[5:20] grab another flex layout component and drop it into the header region with our new component
+[5:25] still selected let's rename this to flex layout header then set the theme class to blue background
+[5:34] next select the edit flex layout attributes button in the top left corner we're going to split this
+[5:41] up into two regions so add another region below using the icon rename the first region to header
+[5:48] give it a length of one flex set the orientation to horizontal align it to the middle and pack set
+[5:56] it to start then select the second region let's give it an id of user give it a length of one
+[6:02] flex unit and set the orientation to horizontal set the alignment to middle and the pack to end
+[6:11] let's also set a margin here set the margin equal to one comma zero comma zero comma zero
+[6:17] the margin is defined as left top right bottom in that order so our default margin will set one
+[6:25] character to the left and this applies to all of the components within that region hit ok and now
+[6:31] grab a static component from the toolbox and drop it into the header region of flex layout header
+[6:38] rename the component to static header give it a caption of s customer portal hit the ellipsis
+[6:45] to create the string and then let's add a theme class of white header set the justification to
+[6:53] left scroll down to the layout section and set the width to 40 and the height to 1.5
+[7:00] then under miscellaneous set no colon to true to see those changes regenerate the form from the
+[7:06] icon on the toolbar now i want to add some spacing to the left of the static component we just added
+[7:13] click on the component and then hit the edit flex layout attributes button this
+[7:18] allows us to set a margin on just one component instead of all of the components within a region
+[7:24] set the margin to two comma zero comma zero comma zero to add two characters at the left
+[7:31] next grab two more static components and drop them both into the user region of flex layout header
+[7:38] select the first static component and rename it to static cust icon give it a bitmap file of
+[7:46] customericon.png this should be one of the images that you imported in one of the earlier videos
+[7:54] set the justification to right and scroll down to the layout section and set the width to 4
+[8:00] and the height to 1.5 then set no colon at the bottom to true select the second
+[8:07] component and give it a name of static cust id let's set the theme class of white header
+[8:16] set the justification to left and let's bind this to a variable set the binding type to variable
+[8:25] and then in the binding field click the ellipsis set it to customer id then hit ok
+[8:32] scroll down to the layout section and set the width to 10 and the height to 1.5 set no colon
+[8:38] to true to see your changes regenerate the form now you can see our customer icon image and an
+[8:46] empty static component that will be bound to our customer id variable later on let's build our
+[8:51] footer now grab another flex layout component from the toolbox and drop it into the footer region
+[8:57] rename the component flex layout footer and then assign it the blue background theme class
+[9:03] once you're done with that regenerate the form to see your changes
+[9:06] now grab another flex layout component and drop it into the main region
+[9:11] rename it to flex layout main then click the edit flex layout attributes button in the top left
+[9:16] corner we need a total of six regions so click the new icon on the bottom and add five new regions
+[9:25] click region 1 and let's rename it to menu give it a length of 20 form units an orientation of
+[9:31] vertical and alignment of center and a pack of start let's set the margin on this to zero
+[9:38] comma one comma zero comma one select the second region and rename it to spacer one
+[9:46] leave the default which is one flex select region 3 and rename it to sign in page give it a length
+[9:53] of 5 flex units set the orientation to vertical set the alignment to center and set the pack
+[10:01] to start select region 4 and let's rename this to home page give it a length of 5 flex
+[10:10] and set the orientation to fill select the 5th region and let's rename this to cart page give it
+[10:16] a length of 5 flex set the orientation to vertical the alignment to stretch the pack to start and set
+[10:28] the default margin to 0 comma 1 comma zero comma one select the last region and rename it to spacer
+[10:35] two leave the default of one flex now let's some maximum lengths on our regions so they don't
+[10:41] stretch too wide across the screen reselect our home page region and set the maximum length to 50.
+[10:49] select the cart page region and set the maximum length to 65.
+[10:54] once you're done with that hit ok now let's create our menu on the left grab three button components
+[11:00] and place them into the menu region of flex layout main select the first component and rename it to
+[11:06] button sign in give it a caption of s sign in and create the string by clicking the ellipsis
+[11:15] give it a theme class of blue button and then under the layout section
+[11:20] set the height to 15 and the width to 2. select the second button and rename it to button home
+[11:28] give it a caption of s home and create the string value set the theme class to blue button
+[11:36] and then under the layout section set the width to 15 and the height to two select the last button
+[11:44] and let's rename it to button cart give it a caption of s cart and then create the string value
+[11:53] assign it the theme class blue button and under the layout section set the width to 15
+[12:01] and the height to 2. then regenerate your form to see your changes next let's build all the
+[12:08] customer sign in page where they can sign in with their customer id grab a static component from the
+[12:14] tool box and drop it into the sign in page region of flex layout main rename it to static sign in
+[12:23] give it a caption of s sign in set the theme class to header set the justification to center
+[12:34] and then set the width to 20 and the height to 1.5 set no colon equal to true
+[12:43] grab another static component from the toolbox and drop it into the same region
+[12:49] let's name this component static image 1 and let's assign it the bitmap file of customersignin.png
+[13:00] set the width to 21 and the height to 8. then set no colon equal to true grab another static
+[13:08] component from the toolbox and drop it into the same region let's name this component static
+[13:15] cust id 2 and give it a caption of s customer id click the ellipsis to create the string
+[13:24] set the justification to center and then set the width to 20 and the height to 1.5
+[13:33] set no colon equal to true now let's grab an edit component and drop it into the same region
+[13:41] rename the component edit cust id and set the justification to center
+[13:49] we also want to bind this to our customer id variable so for the binding type field
+[13:55] select variables and click the ellipsis for the binding type in customer id
+[14:03] set the width to 20 and the height to 1.5
+[14:09] now grab a button component from the toolbox and place it in the same region let's rename this
+[14:15] button sign in 2. give it a caption of s sign in and for the theme class select blue button
+[14:27] on the size set the width to 20 and the height to 1.5 you might need to regenerate your form
+[14:34] here to see your changes select the static sign-in component and hit the edit flex attributes button
+[14:41] let's set a margin here set the margin equal to 0 comma 1 comma 0 comma 1
+[14:48] and then hit ok select the static image 1 component and let's set a margin there as
+[14:53] well click on the component and select the edit flex attributes button set the margin
+[14:59] here to 0 comma 1 comma 0 comma 1. then hit ok let's do the same for the sign in button
+[15:07] click on the component and hit the edit flicks attributes button set the margin here to zero
+[15:12] comma one comma zero comma one then hit ok this will apply a margin of one character at the top
+[15:19] and one character at the bottom for the components that we specified now that we have our sign in
+[15:24] page complete let's go ahead and save and move on to the home page the home page will be where users
+[15:30] can view and add items to their cart start by grabbing a flex layout component from the tool box
+[15:36] and dropping it into the home page region of flex layout main rename it flex layout home
+[15:44] because this region is set to fill notice that our new flex layout component fills up
+[15:48] the entire region with flex layout home still selected click the edit flex attributes button
+[15:56] change the type to vertical box and then using the new icon on the bottom left
+[16:01] add four regions select the first region and rename it to header give it a length of four
+[16:08] form units set the orientation to horizontal set the alignment to middle and the pack to center
+[16:20] select the second region and let's rename this to spacer set the length as one form unit
+[16:28] select region 3 and let's rename this to grid give it a length of 2 flex and set the orientation to
+[16:37] fill then select the fourth region and rename this to spacer2 give it a length of one form unit
+[16:47] then select the last region and rename it to buttons give it a length of one flex and set
+[16:54] the orientation to fill hit ok and then grab another flex layout component from the toolbox
+[17:02] and drop it into the buttons region of flex layout home
+[17:06] rename it to flex layout buttons then select the edit flex attributes button in the top left corner
+[17:14] using the new icon in the bottom left add two regions
+[17:21] select the first region and rename it to count give it a length of one flex
+[17:28] and set the orientation to horizontal set the alignment to top and the pack
+[17:34] to end select the second region and rename it to spacer give it a length of one form unit
+[17:43] then select the third region and rename it to cart give it a length of one flex set the
+[17:50] orientation to horizontal and the alignment to top and then set the pack to start hit ok and
+[17:59] then grab a static component from the toolbox and drop it into the header region of flex layout home
+[18:06] rename it to static home give it a caption of s home set the theme class to header set the
+[18:15] justification to center and give it a width of 20 and a height of 1.5 then set no colon to true
+[18:26] next grab a grid component from the toolbox and drop it into the grid region of flex layout home
+[18:33] rename it to grid items set the binding type to secondary collection
+[18:40] and click on the ellipsis for binding select our secondary collection which is items
+[18:47] then hit ok and then regenerate your form let's stop here and wrap up what we've done so far
+[18:55] we got you introduced to flex forms and flex layout components and got you started building
+[19:00] out our consumer end user interface for the customer portal in the next video we'll introduce
+[19:06] you to tile forms and we'll wrap up the series by completing our customer portal form for more
+[19:12] tutorials and documentation check out the mongoose portal at mongoose.m4.com thanks for watching
+[19:28] you

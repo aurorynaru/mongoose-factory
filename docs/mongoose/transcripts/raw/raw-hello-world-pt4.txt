@@ -1,0 +1,181 @@
+[0:00] hi there this is caitlin porter from the mongoose enablement team welcome to part four of the
+[0:04] mongoose hello world training series in today's video we are going to extend our application
+[0:09] further by building onto our existing items table we will get started on working with themes
+[0:14] and theme classes and we'll create our orders facility that will allow users to place orders
+[0:18] in our store portal in this first part we want to allow the users to add an image of their item
+[0:23] on the items form to do so we will first have to manually add a column to our items table
+[0:29] then we will need to add it as a property onto our ido and finish up by adding it to our items
+[0:34] form we will also utilize the event system so users can import an image from a button
+[0:41] up to this point we have used the new data maintenance wizard to create our tables forms
+[0:45] and ideos but in real development you will often work from existing objects mongoose has
+[0:50] several core forms that allow you to manually add columns and properties to existing objects
+[0:55] let's start by opening the sql tables core form and select ok when you receive
+[1:00] this prompt let's filter to our items table type in items in the table name and hit f4
+[1:09] once you filter to your table hit the columns button to view the columns on the table
+[1:14] hit the new icon from the toolbar to add a new column
+[1:17] let's name this field picture give it a data type of var binary and check the is nullable checkbox
+[1:26] let's give this a length of negative 1 which in mongoose means unlimited
+[1:32] go ahead and save your record and close the forms next we want to create a picture property class
+[1:38] that can be used throughout our application let's do so by opening the ideoproperty classes form
+[1:44] exit filter in place mode and let's add the following property class name the class
+[1:50] picture give it a data type of binary a length of negative 1 a column data type of var binary
+[2:00] and under the binary format field select png save and close the form and let's unload the
+[2:08] global form objects by going to form definition unload global form objects
+[2:13] next we want to add this as a property to our ido go to form open and search
+[2:18] for idos to open our ideo collections form type in items for the ideo name and hit f4 to filter
+[2:27] hit the new property button at the top to add a new property there are several different types
+[2:31] of properties that you can use in this case we're going to use the default which is bound and hit
+[2:36] next in the bind to list select our picture column the property name will default to picture
+[2:43] and let's select our picture property class that we just created you can see that the data type
+[2:48] and column data type are now being inherited from the property class hit finish to create
+[2:53] our property let's close the form and unload the global form objects from form definition
+[3:00] now let's add a button to our items form that will allow the user to import an image
+[3:06] click the design mode toolbar icon to open the designer select site default for our editing scope
+[3:13] let's open our items form let's remove our edit component since we no longer need it
+[3:19] click on the component and hit the delete key next i'm going to reposition my button to the
+[3:24] right of the screen click on the component and drag it to the right let's give our button a
+[3:28] caption select the component and type in s import in the caption field on the properties panel hit
+[3:36] the ellipsis to create the string value let's grab a static component that will display our picture
+[3:42] in the toolbox on the left select the static component and draw it on the form to the right
+[3:47] of your fields let's bind this to our picture property expand the data source section and select
+[3:55] property for the binding type and select our picture property for the by need field
+[4:02] by default all static components include a colon at the end to remove this colon scroll
+[4:06] down to the miscellaneous section under specific attributes set no colon to true
+[4:13] scroll to the top of the properties panel and let's rename our component to static picture
+[4:18] we consider it a best practice to always name your components and prefix them with component type
+[4:23] save the form and let's create an event that will import an image into the picture property
+[4:28] expand the details pane at the bottom and select the event handlers tab
+[4:33] hit the new icon at the bottom to create a new event let's name this event import picture
+[4:39] hit ok and scroll down to response type and let's select binary value
+[4:44] action click the ellipsis on the parameters field and let's set the action type to import now
+[4:51] select the static picture for our component that's bound to the binary value property
+[4:57] hit ok and let's change the primary event on our button to use our custom event
+[5:02] select our button component and expand the events section on the properties panel
+[5:08] set the primary event to import picture save the form and now we're ready to test this out in
+[5:13] runtime mode switch back to the runtime mode tab and reopen your form now we are ready to import an
+[5:19] image onto our item select the import button you should see a dialog asking you to select the file
+[5:25] select the bike image that's located in the hello world assets folder that you downloaded
+[5:29] from the portal you can tell this row is modified by this orange diamond on the left
+[5:35] at this point pressing save will save the binary value back into the database
+[5:39] continue on adding images for the other three remaining items all of these images are located
+[5:45] in the hello world assets folder when you're done importing the images remember to save in this next
+[5:51] part let's create a theme and theme classes that can style our button and use them throughout our
+[5:56] application switch back to the design mode tab and let's edit the themes by going to edit themes
+[6:03] hit the new button at the bottom to create a new theme let's name it hello world then select the
+[6:09] edit button on the top right to edit that theme select button on the left under form component
+[6:16] then on the bottom where it says class name type in blue button and hit add this will add
+[6:21] a theme class to the button after you hit add the tree will refresh re-select your button
+[6:27] and then select your blue button class select normal state under categories
+[6:32] let's give our button a background color of pound ff5cc6c7 and then our foreground color use the
+[6:41] ellipsis this will open the color picker let's select solid and let's leave the default as white
+[6:47] hit okay this will set the text color to white and the background color blue hit ok and save
+[6:53] your changes we now need to apply our theme to the application close the designer and go back
+[6:59] to runtime mode go to view user preferences and go to the layout tab on the left select
+[7:06] our hello world theme hit ok now let's reopen the designer hit the designer icon from the toolbar
+[7:14] then select our button component and expand the appearance section under the properties panel
+[7:19] select our blue button theme class then you should be able to see your button being styled with the
+[7:24] theme class that we created we will use this theme class going forward when we build our store portal
+[7:29] for now save your changes okay let's move on to another ideo capability mongoose allows us
+[7:35] to join and utilize data from multiple tables our items facility has a reference to units of measure
+[7:41] but in cases like this you'll often want to display other fields from that reference
+[7:45] in this particular case in addition to the two character unit of measure code we'd also like to
+[7:50] show the unit a measure description on our items form to do this we want to create a join from our
+[7:55] items table to our unit of measure table switch back to the runtime mode tab and let's open our
+[8:00] ido collections form type in items for our ido name and hit f4 to filter then select the tables
+[8:07] button at the bottom and then select the new table button at the top to add a new table reference
+[8:13] for our table name select our um's table give it a table alias of ums and below we can select
+[8:20] the columns for the join select um equals items um and then hit the add button to add it below
+[8:32] click ok to create the join and then close the ideo tables form
+[8:37] now we want to create a new property on our items ideo that will publish access to the description
+[8:41] column join from the um's table click the new property button leave the default of bounds
+[8:47] selected and hit next drop the list of columns we can bind to and now notice that we not only
+[8:53] see columns on the primary base table which is the items table but now we also see the columns
+[8:57] from the ums table select the um's description column and let's prefix our property name with ums
+[9:05] we consider a best practice to use the table alias as a prefix for properties that are bound
+[9:09] to join tables click finish let's now close the forms and unload all the global form objects
+[9:18] now let's add our new property to our items form switch back to the design mode tab and
+[9:23] close your items form and then unload all the global form objects reopen the form
+[9:29] grab a static component from the toolbox and draw it on your form just under the
+[9:33] unit of measure field rename the component to static description give it a caption of s
+[9:40] description then grab an edit component from our toolbox and draw it to the right of our static
+[9:46] rename the component to edit description and then expand the data source section set the binding
+[9:52] type to property and let's bind it to our new um's description field we also want to add our
+[9:58] property to the grid select the grid component and hit the edit grid columns button in the top left
+[10:05] select the last column and then hit the add button to add it at the end rename this grid column
+[10:10] um description grid call expand the data source section and set the binding type to property and
+[10:17] let's select our um's description for the binding hit ok and save your form switch back to the
+[10:24] runtime mode tab and reopen your items form now if we switch through records you'll notice that the
+[10:30] description updates with each item if you change the unit measure the description isn't updated
+[10:36] until you save it we could use mongoose validators and component classes to change its functionality
+[10:41] but for now we're just going to move on let's look at what just happened with our new table join
+[10:46] [ __ ] sent a load collection request in the form of an xml to the ido runtime service the ido
+[10:52] runtime service processed that xml and converted it to a sql statement that included a table join
+[10:59] the results were then sent back to mongoose which returned the description for the unit of measure
+[11:04] field to provide drill down from the items to unit measure table we'll use a property class
+[11:09] extension remember that property class extensions are another level of the inheritance model
+[11:14] suppose i want my user to be able to right click on the unit of measure field and be able to
+[11:18] drill into it to do so we'll use our property class extension to set the right-click menu
+[11:24] switch back to the design mode tab and select our unit of measure combo box
+[11:29] scroll down to inheritance in the properties panel and expand it click on the ellipsis for the edit
+[11:34] property class extensions field it will prompt you asking if you want to create the property class
+[11:40] extension say yes expand the behavior section and under the add details and find form section
+[11:46] we can specify the form for the user to drill into select our um's form for both the add
+[11:51] details form as well as the find form then select or type in um as our property then scroll down to
+[11:58] the right-click menu field and select the standard details add find menu click ok and save your form
+[12:05] then reopen the form in runtime mode now when we right-click on our unit of measure field
+[12:11] we should see our custom right-click menu however we don't why is this because our right-click menu
+[12:17] is here on the property class extension level it's possible that it's being overwritten either
+[12:22] on the component class level or on the component level since we haven't created a component class
+[12:26] it's a safe bet that it's being overridden here on the component level so let's check that out
+[12:32] go back to the design mode tab and reselect our um combobox component expand the behavior section
+[12:39] and as you can see there's a standard default right-click menu defined on the component level
+[12:43] let's clear this right-click menu and save it let's reopen our form to test it
+[12:49] now that there isn't anything assigned on the component level our property class
+[12:52] extension should dictate our right-click menu right-click on the um combo box and now we see
+[12:57] our right-click menu that we assigned on the property class extension mongoose now has the
+[13:02] metadata for providing things like drill down when the user selects details for example this
+[13:06] functionality will automatically be applied to any components that are bound to the um property class
+[13:12] close the items form and let's switch gears we haven't built anything to allow
+[13:16] our customers to actually place an order in our store so let's finish up by building an
+[13:21] orders facility before that let's create some property classes that we can use for it open
+[13:25] the ido property classes form hit the filter and place icon to exit filter in place mode then hit
+[13:32] new from the toolbar let's name this first class customer id let's give it a data type of string
+[13:38] a length of 50 a label string id of sid and for the domain ido let's provide the customer table
+[13:45] for domain property select id and additional list properties select name let's add another class
+[13:54] and let's name this one item let's use a base class on this one so we can inherit attributes
+[14:00] select our item base property class for the domain ido select items for the domain property select
+[14:08] item and for additional list properties select description let's add one more class hit new from
+[14:14] the toolbar and name this one order num base give it a data type of long integer and in the default
+[14:22] value field type in all caps auto number open parentheses close parentheses autonumber is a
+[14:28] win studio substitution keyword which it resolves by querying the next order number from the table
+[14:34] as well as any other data in the collection that hasn't yet been saved to the database set the
+[14:38] column data type to int and give it a label string id of s order number and set justify to write
+[14:45] save and close your form make sure to unload the global form objects from form definition
+[14:51] switch back to the design mode tab and make sure you unload the global form objects there as well
+[14:56] next let's use the new data maintenance wizard to create our new orders facility select the new
+[15:00] form definition icon from the toolbar and select new data for the category and maintenance for the
+[15:06] wizard name our ido orders and let's use our hello world project give it a table alias of ords let's
+[15:14] add properties below the first one being order number let's use our order num base property class
+[15:20] for this property this will automatically inherit the data attributes that we need
+[15:24] go ahead and check the primary key and required fields hit the add row button to
+[15:29] add another property let's name this one customer id and let's use our customer id property class
+[15:35] since this property class is missing a sql data type set it to end varchar and then check the
+[15:40] required field add another row and let's name this one item let's use our item property class
+[15:48] let's override the length here and set it to 50 instead let's also set this field to be required
+[15:54] let's add one more row and let's name this one count set the data type to long integer give it
+[16:00] a label string id of s count and let's set the default value to 1. hit next and then finish to
+[16:06] create your table and ido select yes to create our orders form this will launch the new form wizard
+[16:11] let's accept the defaults and hit next let's leave the selected properties as is and hit next use the
+[16:18] buttons on the right to rearrange the properties on your form i'm going to set it to order number
+[16:22] customer id item and then count i also notice that my caption is not defined for my item
+[16:28] go ahead and set the caption for item as s item hit next and then finish to create your form let's
+[16:34] switch back to the runtime mode tab and let's open our form there our form will automatically
+[16:39] open in add mode notice that our order number is defaulting to 1. this is because it's using
+[16:44] the autonumber keyword which will automatically increment the value by 1. notice that the id and
+[16:49] item fields both have their associated list source attached to them this is because we use the domain
+[16:54] ido information in the property classes that we created go ahead and add a couple records onto
+[16:59] your orders table notice that the order number increments by one each time when you're finished
+[17:04] hit save well that wraps up part 4. in part 5 we will build onto our orders facility by adding
+[17:10] more property class extensions to support drill downs we will also start building in validations
+[17:15] creating derived properties and we'll even add in some form script to our form for more
+[17:19] tutorials and documentation check out the mongoose portal at mongoose.infor.com thanks for watching
