@@ -1,7 +1,69 @@
 # Claude harness: Phase 0 inspection and implementation plan
 
 Date: 2026-10-08 (Asia/Singapore). Branch: `claude-harness`.
-Status: **Phase 0 complete; awaiting operator approval. No implementation authorized yet.**
+Status: **Phases 1–3 approved with amendments below. STOP after Phase 1 and report
+the installed MCP CDP cleanup finding before Phase 2.**
+
+## Approved amendments and execution order
+
+These operator amendments supersede conflicting Phase 0 proposals below.
+First commit this updated plan; at the start of Phase 1 commit existing untracked
+`docs/mongoose/` and `docs/prompts/` as-is in a separate commit. Never edit their
+contents. Preserve all old `tools/learning-harness/` edits untouched/uncommitted.
+Then complete and commit Phase 1, and STOP for review of the CDP finding.
+No real model calls, browser launches or Mongoose operations; no push/main merge.
+
+- Configurable defaults: worker **haiku/high**, coordinator **sonnet/high**,
+  specialist **opus/high**. Claude Pro five-hour/weekly limits are expected;
+  `usage_limit` is a normal pause preserving all sessions, journals, partial
+  events, transcripts, evidence and browser state. Wait for operator recovery;
+  never automatically resubmit, restart the backend or switch models.
+- Before Phase 2, inspect installed Playwright MCP `--cdp-endpoint` cleanup:
+  trace last-client disposal, context/browser close and transport disconnect;
+  report browser/context/page survival with exact file/line references. If an
+  external harness-owned Chrome survives WITH pages, use CDP and **drop the
+  gateway**. Otherwise retain it. Adapt the ownership pattern in the old
+  `scripts/Start-HarnessChrome.ps1`: loopback-only debugging, dedicated profile,
+  verified process identity. Static inspection only in Phase 1; then STOP.
+- Explicitly embed current AGENTS.md (or applicable worker excerpt) in **each
+  role's appended system prompt**, including standalone tasks; journal its hash.
+  Do not rely on CLAUDE.md discovery with empty setting sources.
+- `--setting-sources ""` selects none of user (`~/.claude/settings.json`), project
+  (`.claude/settings.json`), local (`.claude/settings.local.json`) settings,
+  excluding their permissions, hooks, environment and other settings. Explicit
+  `--settings`, CLI flags and managed policies remain applicable; this does not
+  reset subscription authentication or replace strict MCP configuration. This
+  is documented behavior, not native model-call verification. See the
+  [CLI reference](https://code.claude.com/docs/en/cli-reference) and
+  [settings precedence](https://code.claude.com/docs/en/settings#settings-precedence).
+- Generated settings use built-in permission deny rules wherever possible for
+  secrets directory, `.git`, `tools/`, Claude authentication storage and other
+  protected paths. Specialist file access is limited to read-only knowledge
+  folders. Test native Windows path, traversal and junction behavior; report
+  limitations rather than adding a custom file-boundary hook. Custom PreToolUse
+  has **only** key-chord text, exact_values, identical consecutive calls.
+- Specialist read-only folders: `recipes/`, `experiments/`, `environments/`,
+  `claims/`, `docs/mongoose/`, including structured and raw transcripts. Allow
+  WebFetch only for `docs.infor.com`, `developer.infor.com`, `support.infor.com`
+  using built-in domain permissions; deny/exclude all other web tools and test
+  other domains/redirects fail closed. Do not grant broad WebFetch permission.
+  Reference existing operator-maintained `docs/mongoose/sources.md`; never
+  overwrite it. Prefer sources for **Mongoose 2026.09.08**, as recorded in
+  `environments/current-environment.md`. Label source rank in every answer:
+  verified recipes/records > observed records > documentation/video transcripts
+  (unverified) > model knowledge (unverified). Structured transcripts are
+  paraphrases; check raw transcripts for exact steps/spellings.
+- By the end of Phase 3 add
+  `claude-harness worker task <EXP-ID> "<instruction>"`: one bounded task without
+  coordinator, with brief boundaries, preamble, explicit AGENTS.md, guards,
+  tool policy, evidence diff and transcript. Configurable worker model/effort
+  enables operator-directed Haiku-vs-Sonnet replay; never auto-switch.
+- Phase 1 copies the baseline, preserving current source edits in the fork,
+  excludes dependency/build/runtime/local-config directories, rewrites every
+  old harness path, separates data, builds and runs fake/core tests before
+  adapter changes. Preserve fixture-browser suites behind explicit opt-in and
+  do not run them: all browser activity is prohibited. Report omitted suites.
+  Phases 4–6 and live smoke require subsequent approval.
 
 ## Scope and inspection record
 
@@ -24,11 +86,13 @@ and outside all phase commits:
 - Modified old harness: `README.md`, `briefs/EXP-035.brief.json`,
   `harness.config.example.json`, `src/shadow/cli.ts`, `src/shadow/runner.ts`,
   `test/shadow.test.ts`.
-- Untracked `docs/prompts/`.
+- Untracked `docs/prompts/` and `docs/mongoose/` are the explicit exception:
+  commit their existing operator-authored contents separately, as-is.
 
 The fork must reflect the inspected working tree, including existing edits, without
 writing to the source. Phase commits stage only explicitly selected new-harness
-files (and later the requested root `CLAUDE.md` / documentation directory marker).
+files (and later the requested root `CLAUDE.md`), plus the authorized separate
+operator-docs commit. No documentation directory marker is needed.
 Never push or merge this engineering branch. Preserve experiment Git finalize
 behavior as code; do not invoke it in the real factory during this build.
 
@@ -177,8 +241,8 @@ Planned additions: `src/adapters/claude/{process,events,transcripts,worker,chat,
 `protocol/specialist-knowledge.md`, fake executable and MCP fixtures/tests,
 local `.gitignore`. Runtime settings, MCP configs, process journals and hook state
 live under ignored `tools/claude-harness/claude-data/`, never the old `data/`.
-Phase 5 adds root `CLAUDE.md` containing only `@AGENTS.md` and empty
-`docs/mongoose/` (use `.gitkeep` if Git must retain the empty directory).
+Phase 5 adds root `CLAUDE.md` containing only `@AGENTS.md`; preserve existing
+`docs/mongoose/` contents and operator-maintained index.
 
 ## Process environment and exact role invocations
 
@@ -195,15 +259,15 @@ provider/custom API routing settings in subscription mode rather than silently
 changing billing. Verify authMethod via stripped-environment auth status.
 Report presence/absence, never values; no credentials in Markdown or logs.
 
-Generated worker settings and the file-tool guard must deny access to the
+Generated worker settings use built-in permission deny rules to deny access to the
 configured secrets file/directory and Claude authentication storage; model-facing
 file tools remain within the factory's permitted paths. Protect hook/settings,
 controller runtime state, `.git`, the old harness and AGENTS.md from worker writes.
-Resolve canonical paths before checking Read/Glob/Grep/Write/Edit requests; test
-traversal and junction escapes. Only the Playwright server consumes its configured
+Test Read/Glob/Grep/Write/Edit path rules, traversal and junction escapes; no
+custom file-path hook. Only the Playwright server consumes its configured
 secrets file. Controller transcript reconciliation uses the dedicated parser, not
 model file access. Optional Bash or browser code requires explicit task scope;
-these file-tool checks alone are not an OS sandbox for arbitrary code.
+these permission rules alone are not an OS sandbox for arbitrary code.
 
 Generated files (not created in Phase 0):
 
@@ -215,7 +279,7 @@ Generated files (not created in Phase 0):
 ```
 
 The comments label separate files and are not part of the generated JSON.
-Defaults proposed for effort: worker `low`, coordinator/specialist `high`;
+Approved defaults for effort: worker/coordinator/specialist `high`;
 each is configurable or null (omit the flag to use CLI default). Model aliases
 default to `haiku`, `sonnet`, `opus`; optional worker/specialist `sonnet`.
 Do not claim aliases resolve to the prompt's 5.5 models until actual init metadata
@@ -224,7 +288,7 @@ confirms this. Store configured alias plus resolved model separately.
 Worker first call (substitute only config/controller-owned values):
 
 ```text
-claude -p --session-id {WORKER_UUID} --output-format stream-json --verbose --input-format text --model haiku --effort low --append-system-prompt {FILLED_WORKER_PREAMBLE} --system-prompt-snapshot off --mcp-config {WORKER_MCP_JSON} --strict-mcp-config --tools "Read,Write,Edit,Glob,Grep" --allowedTools "Read,Write,Edit,Glob,Grep,mcp__playwright__*" --disallowedTools "Bash" --permission-mode dontAsk --permission-prompts none --settings {WORKER_SETTINGS_JSON} --setting-sources "" --disable-slash-commands
+claude -p --session-id {WORKER_UUID} --output-format stream-json --verbose --input-format text --model haiku --effort high --append-system-prompt {FILLED_WORKER_PREAMBLE_WITH_AGENTS} --system-prompt-snapshot off --mcp-config {WORKER_MCP_JSON} --strict-mcp-config --tools "Read,Write,Edit,Glob,Grep" --allowedTools "Read,Write,Edit,Glob,Grep,mcp__playwright__*" --disallowedTools "Bash" --permission-mode dontAsk --permission-prompts none --settings {WORKER_SETTINGS_JSON} --setting-sources "" --disable-slash-commands
 ```
 
 Subsequent worker calls use the identical policy arguments, replacing
@@ -245,13 +309,13 @@ policy. Preserve the full controller payload for auditing and fakes.
 Coordinator first call:
 
 ```text
-claude -p --session-id {COORDINATOR_UUID} --output-format json --verbose --input-format text --model sonnet --effort high --append-system-prompt {COORDINATOR_ROLE_PREAMBLE} --mcp-config {EMPTY_MCP_JSON} --strict-mcp-config --tools "" --permission-mode dontAsk --permission-prompts none --settings {COORDINATOR_SETTINGS_JSON} --setting-sources "" --disable-slash-commands
+claude -p --session-id {COORDINATOR_UUID} --output-format json --verbose --input-format text --model sonnet --effort high --append-system-prompt {COORDINATOR_ROLE_PREAMBLE_WITH_AGENTS} --mcp-config {EMPTY_MCP_JSON} --strict-mcp-config --tools "" --permission-mode dontAsk --permission-prompts none --settings {COORDINATOR_SETTINGS_JSON} --setting-sources "" --disable-slash-commands
 ```
 
 Specialist first call:
 
 ```text
-claude -p --session-id {SPECIALIST_UUID} --output-format json --verbose --input-format text --model opus --effort high --append-system-prompt {SPECIALIST_KNOWLEDGE_PREAMBLE} --mcp-config {EMPTY_MCP_JSON} --strict-mcp-config --tools "Read,Glob,Grep" --allowedTools "Read,Glob,Grep" --disallowedTools "Write,Edit,Bash" --permission-mode dontAsk --permission-prompts none --settings {SPECIALIST_SETTINGS_JSON} --setting-sources "" --disable-slash-commands
+claude -p --session-id {SPECIALIST_UUID} --output-format json --verbose --input-format text --model opus --effort high --append-system-prompt {SPECIALIST_KNOWLEDGE_PREAMBLE_WITH_AGENTS} --mcp-config {EMPTY_MCP_JSON} --strict-mcp-config --tools "Read,Glob,Grep,WebFetch" --disallowedTools "Write,Edit,Bash,WebSearch" --permission-mode dontAsk --permission-prompts none --settings {SPECIALIST_SETTINGS_JSON} --setting-sources "" --disable-slash-commands
 ```
 
 Continuations replace session-id with `--resume` for that role. Protocol text and
@@ -283,7 +347,7 @@ Version pin is the version whose help/source was inspected. Reverify flags when
 upgrading. Profile/output/secrets paths come from config populated from the
 existing Playwright MCP arguments; the secrets file is never read by the harness.
 
-**Proposed persistence correction for approval:** expose a harness-owned gateway
+**Fallback only if CDP cleanup does not preserve pages:** expose a harness-owned gateway
 at `127.0.0.1:8931/mcp` and keep one upstream MCP session to the backend at 8932.
 List schemas and forward permitted tool calls through that session. Claude clients
 get their own downstream sessions but cannot dispose the upstream session when
@@ -389,13 +453,14 @@ do not manufacture ChatGPT URLs to preserve a browser parser. Keep all checkpoin
 duplicate-reply and item-bound approval semantics. Neutralize browser-prefixed
 pause messages while retaining meaningful existing failure categories.
 
-Specialist gets only Read/Glob/Grep and no MCP. A PreToolUse file-path gate in its
-generated settings must enforce canonical paths under `recipes/`, `experiments/`,
+Specialist gets Read/Glob/Grep/WebFetch and no MCP. Built-in permission rules in
+generated settings must restrict reads under `recipes/`, `experiments/`,
 `environments/`, `claims/`, `docs/mongoose/`. Resolve Windows case/separators,
 symlinks/junctions and traversal; reject external targets and searches without an
 allowed explicit directory. `--allowedTools` and `--add-dir` do not impose this
 boundary; reads in cwd can otherwise be automatic. Prompts require knowledge
-folder precedence, labels for documented/model assumptions, and evidence limits.
+source ranking/version/raw-transcript policy from the approved amendments above.
+Allow WebFetch only to the three approved Infor domains; deny other web tools.
 No implicit access to evidence images: retain the attachment/manual-review gate.
 Read/deny path semantics and hook format are documented in
 [permissions](https://code.claude.com/docs/en/permissions#read-and-edit) and
@@ -438,25 +503,29 @@ runtime hook-failure behavior instead of assuming a nonzero exit is a denial.
 
 ## Phase sequence and validation gates (after approval)
 
-1. **Fork:** baseline copy/identity/path rename, local ignore rules, package name,
+1. **Fork:** separate as-is operator-docs commit, then baseline copy/identity/path rename, local ignore rules, package name,
    data separation. `npm ci`, `npm run build`, `npm test` in the new harness before
-   adapter changes. Existing browser tests use routed fixture pages; real smoke
-   remains opt-in and disabled. No Mongoose or real model. Commit.
-2. **Owned MCP service:** scripts, gateway/retained upstream session, generated
+   adapter changes. Gate fixture-browser tests explicitly and omit them; real
+   smoke remains disabled. Inspect CDP cleanup. No browser/Mongoose/real model.
+   Commit Phase 1 and **STOP/report before Phase 2**.
+2. **Owned MCP service:** after the Phase 1 report and permission to continue,
+   scripts, CDP/external-Chrome ownership if pages survive (drop gateway),
+   otherwise gateway/retained upstream session, generated
    configs and process ownership checks. Fake MCP verifies last-downstream exit
    preserves upstream state, listing creates no browser, port conflicts and PID
    reuse are refused, stop targets only owned trees. Commit.
 3. **Worker:** process/event/transcript adapters, markers, policy/hook, Git
    fingerprints, loop/limit handling, usage-limit pause and crash-safe controller
    adjustments. Fake Claude/MCP tests for submit/resume/abort and partial output;
-   build/typecheck/controller regressions. Commit.
+   build/typecheck/controller regressions. Add standalone bounded
+   `claude-harness worker task <EXP-ID> "<instruction>"` as specified above. Commit.
 4. **Chat roles:** role session references, JSON reply adapter, knowledge policy,
    readiness/model handling, remove ChatGPT/DeepSeek/shadow runtime. Port all
    applicable controller/proposal/autopilot scenarios; session recovery and file
    boundary tests. Commit.
 5. **Config/CLI/docs:** per-role model/effort/billing, executable+argv-prefix for
    fake Node CLI, MCP gateway/backend ports and path settings, task/chat/turn limits,
-   loop thresholds, allowBash; CLAUDE.md and docs/mongoose marker. Doctor validates
+   loop thresholds, allowBash; CLAUDE.md and preserve existing docs index. Doctor validates
    CLI/auth/service/config/hook/child environment/Git without calling a model or
    starting a browser. Rewrite verified/not-verified table honestly. Commit.
 6. **Final fake regression suite:** success, tool loop, hook denial, usage limit,
@@ -483,13 +552,12 @@ remain outside harness-engineering authorization.
 
 ## Remaining questions / approval decision
 
-- Approve the plan and Phase 1 only, or the subsequent engineering phases as well;
-  this Phase 0 turn ends here. The real smoke always requires its separate opt-in.
+- Phases 1–3 approved with amendments above; this turn ends after Phase 1 and
+  CDP findings. Phases 4–6/live smoke require subsequent explicit approval.
 - Actual installed baseline is 2.1.294. Proposed implementation targets this
   observed version; 2.1.289 flag/behavior compatibility is unverified.
-- Approve retained-upstream MCP gateway design to address observed last-client
-  browser disposal; two loopback ports are a proposed addition to the simple-server
-  description. A tools/list-only keeper cannot resolve that source behavior.
+- Select CDP versus gateway from Phase 1 installed-source cleanup evidence.
+  A tools/list-only keeper cannot resolve non-CDP last-client disposal.
 - Native stream/json event schema, usage-limit signatures, effort/model resolution,
   hook enforcement, empty setting-sources behavior, marker durability after CLI
   compaction/resume, and actual browser persistence cannot be live-confirmed within
@@ -498,5 +566,5 @@ remain outside harness-engineering authorization.
   account identifiers, authentication tokens and secrets were not copied into
   this plan. The plan is the only repository file created in Phase 0.
 
-Next permitted action: operator reviews this PLAN.md. Do not start Phase 1 or
-any experiment until approval arrives.
+Next permitted action: commit this amended plan, commit operator docs separately
+as-is, complete/commit Phase 1, then STOP and report CDP findings for review.
