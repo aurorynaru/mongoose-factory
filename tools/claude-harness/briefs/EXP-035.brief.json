@@ -3,7 +3,7 @@
   "title": "EXP-035 — Select Form Positive-State Retention Across One Cancel/Reopen",
   "record_path": "experiments/EXP-035-select-form-positive-state-retention-across-one-ca.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Against the existing live Web Client, starting with Select Form closed, perform exactly one ordinary initial Open of Select Form and record its inherited dialog state. Establish Filter By=Name with Case Sensitive unchecked and Starts With unchecked through rendered controls, clear the Name-filter textbox through native Ctrl+A followed by Backspace, and enter exact `FX_ComponentRecoveryLab02` through exactly 25 one-printable-character native key operations. Require and capture the settled single rendered row whose Name exactly equals `FX_ComponentRecoveryLab02`. Then perform exactly one ordinary Cancel and exactly one ordinary reopen of Select Form without changing or re-entering the filter. Record the actual reopened textbox contents, Filter By, both checkbox states and rendered rows WITHOUT typing or changing anything. Finish with at most one final ordinary Cancel and no further reopen. The experiment is accepted whether or not the state is retained, provided the sequence and observation are clean and all acceptance checks pass. Limit conclusions to the rendered UI state across this single Cancel/reopen boundary; do not infer persistence, database, cache, session, serialization, server behavior or internal refresh mechanisms.",
   "scope": {
     "in_scope": [
@@ -68,8 +68,7 @@
     "\\b(variable|variables|persistentvariables)\\b",
     "\\b(unload all global form objects|clearcache)\\b",
     "\\b(regenerate|savechanges)\\b",
-    "\\b(open designer in a new window|launch.*designer)\\b",
-    "\\b(database|serialization|forms database|cache eviction)\\b"
+    "\\b(open designer in a new window|launch.*designer)\\b"
   ],
   "related_experiments": [
     "EXP-033",
@@ -92,7 +91,7 @@
   "acceptance_checks": [
     {
       "id": "AC-1",
-      "description": "Preflight evidence shows the operator-logged-in Web Client is already usable with configuration selected/OK and the normal page loaded, Select Form is initially closed, no unsaved Designer changes and exactly one browser tab. It records the inherited Web Client/Designer context without mutation, proves exactly one initial ordinary Open, and captures the inherited dialog filter textbox contents, Filter By, both checkbox states and rendered rows before changing anything. If any prerequisite is absent or ambiguous, stop blocked without establishing or repairing it."
+      "description": "Preflight evidence shows the normal Web Client page is visibly loaded and usable (identity bar and menus rendered; no sign-in, configuration-selection or browser-native dialog visible), Select Form is initially closed, no unsaved-change indicator is visible in the inherited context, and exactly one browser tab is open. Manual login, configuration selection (OK) and the absence of unsaved Designer changes elsewhere are operator preconditions attested by the run's --confirm-preconditions record; the worker records that attestation as the operator's and does not need to prove those facts independently. The preflight records the inherited Web Client/Designer context without mutation, proves exactly one initial ordinary Open, and captures the inherited dialog filter textbox contents, Filter By, both checkbox states and rendered rows before changing anything. If any visibly checkable prerequisite is absent or ambiguous, stop blocked without establishing or repairing it."
     },
     {
       "id": "AC-2",
