@@ -77,6 +77,13 @@ if (-not (Test-Path -LiteralPath harness.config.json)) {
    services during an experiment. Profiles remain separate; production Chrome
    uses `C:\AI\mongoose-playwright-profile`, never default Chrome user data.
 
+   `mcp.caps` defaults to `["vision"]`. Changing caps requires a manual MCP
+   stop/start; the controller does not apply changes to a running service.
+   Stop must match that service's running configuration. If you already changed
+   caps, temporarily restore the old caps, run `mcp stop`, restore the new caps,
+   then run `mcp start`. Preserve any other running-service settings needed for
+   the ownership check. Do this only between experiments.
+
 5. Review exactly one brief yourself. Default worker is haiku/high; for new or
    complex mutation experiments use `"worker": { "model": "sonnet", "effort": "high" }`.
    A model-only brief override inherits high effort. Replace `<EXP-ID>` below:
@@ -266,15 +273,39 @@ use of type/fill_form/press_sequentially/evaluate/run_code. It reconstructs
 contiguous single-printable-key runs, lists their native key sequence and compares
 each string with the brief's `exact_values` exactly, including case. Failed or
 missing key results are marked; attempted strings do not prove textbox contents.
+`EXACT MISMATCH` means a string matches an exact value ignoring case but differs
+in case. Other strings are labelled `not an exact_value (informational)`; they
+do not count as exact mismatches.
 Flagged tools require interpretation against the brief; their presence alone is
 not an automatic acceptance failure. Rendered-state evidence and acceptance
 checks still apply.
 
-Each WORKER_REPORT includes a reserved, bounded **controller-generated audit
+Every worker report, including WORKER_FAILURE and forwarded turn-limit or loop
+results, includes a reserved, bounded **controller-generated audit
 (not worker prose)** section, so the coordinator can assess actions without an
 attachment. Long sequences use counts, shortened strings and hashes; full details
 stay in the audit files. Routine clean audits need no outside reviewer. Existing
 denial, usage-limit and scope-review pauses still require their operator action.
+
+The coordinator's first message puts the complete brief before context: objective,
+scope, prohibitions and every acceptance check are never clipped, including when
+an initial worker task makes WORKER_REPORT the first message. A long records digest/
+context is clipped explicitly with a pointer to its saved full text under the run's
+`messages/` directory. If the required brief/protocol cannot fit
+`browser.maxMessageChars`, the run pauses before sending; increase the limit.
+
+Coordinator `requires_attachments` and PAUSE file requests are answered automatically
+with an **ATTACHMENTS** message labelled **controller-attached file content** when
+every requested file is safe repo-relative text (`.md`, `.txt`, `.json`, `.yml`)
+inside this experiment's evidence directory or its exact record. Accessibility
+snapshots include dialog/grid/textbox/combobox/checkbox/gridcell lines; other text
+is inlined. Paths, original line numbers/ranges and clipping/omissions are explicit.
+The controller saves the attached excerpts, source hashes and line ranges in
+`claude-data/runs/<RUN-ID>/attachments/inbound-<ID>.json`. Files remain unchanged.
+The coordinator must reassess and issue a new envelope; attachment handling does
+not execute its pending action or verify acceptance claims. Images, unsupported
+types, missing files, unsafe paths (including symlinks/junctions), unreadable text
+or excerpts that cannot fit still pause for operator review.
 
 `claude-harness status --summary` reads local saved state only and shows every task
 headline, latest coordinator action/reason, pending item and the exact resume
@@ -1046,9 +1077,11 @@ npm run test:smoke       # starts/stops real `opencode serve` on ports 4196/4197
 
 - ChatGPT selectors are unverified against the live site until you run `doctor` after `setup`. They
   live in `src/adapters/chatgpt/selectors.ts` for quick repair (see TROUBLESHOOTING.md).
-- The harness cannot upload files or screenshots to ChatGPT; such requests pause the run.
-- Very long messages are clipped to `browser.maxMessageChars` with a pointer to the full text in
-  `claude-data/runs/...`; Tab 1/Tab 2 cannot open that path, so the clip is stated explicitly.
+- The harness cannot upload screenshots to ChatGPT; image requests pause. Scoped text file
+  requests are inlined automatically as described above.
+- Very long optional context and reports are clipped to `browser.maxMessageChars` with a pointer
+  to full text in `claude-data/runs/...`; the complete required kickoff brief is protected.
+  Tab 1/Tab 2 cannot open that path, so the clip is stated explicitly.
 - The worker report is whatever OpenCode's model writes; the harness adds the deterministic list of
   changed files but cannot verify the prose.
 - Your OpenCode config allows the worker any shell command (`"bash": {"*": "allow"}`). The worker can

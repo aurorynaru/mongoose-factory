@@ -71,6 +71,8 @@ export function briefForCoordinator(b: Brief): string {
     `In scope:\n${list(b.scope.in_scope)}`,
     `Out of scope:\n${list(b.scope.out_of_scope)}`,
     `Prohibited actions:\n${list(b.prohibited_actions)}`,
+    `Prohibited pattern rules:\n${list(b.prohibited_patterns)}`,
+    `Exact values (case and spelling): ${JSON.stringify(b.exact_values??[])}`,
     `Enforced worker tools: doom-loop permission denied; browser JavaScript ${workerPolicyForBrief(b).denyBrowserJavaScript ? "denied (evaluate/run-code tools)" : "not additionally restricted"}.`,
     `Editing scope: ${b.environment.editing_scope}${b.environment.notes ? ` (${b.environment.notes})` : ""}`,
     `Target form: ${b.target.form ?? "(none)"}; artifacts: ${b.target.artifacts.join(", ") || "(none)"}`,

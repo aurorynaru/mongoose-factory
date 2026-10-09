@@ -65,7 +65,7 @@ export function actionAudit(transcript:string,task:string,status:string,exactVal
   for(const call of calls)if(call.result==="unknown")issues.push(`#${call.order} result missing; success unproven`);
   const spelledStrings:SpelledString[]=[],keySequence:ActionAudit["keySequence"]=[];
   let current:SpelledString|null=null;
-  const flush=()=>{if(current){current.matchingValues=exactValues.filter(v=>v===current!.text);current.exactMatch=exactValues.length?current.matchingValues.length>0:null;spelledStrings.push(current);current=null;}};
+  const flush=()=>{if(current){current.matchingValues=exactValues.filter(v=>v===current!.text);const sameIgnoringCase=exactValues.some(v=>v.toLowerCase()===current!.text.toLowerCase());current.exactMatch=current.matchingValues.length?true:sameIgnoringCase?false:null;spelledStrings.push(current);current=null;}};
   for(const call of calls) {
     if(/(?:^|__)browser_press_key$/.test(call.tool)) {
       const key=call.key??"(missing key)";keySequence.push({order:call.order,key,result:call.result});
@@ -83,9 +83,10 @@ function shortString(text:string,max=100) {
   if(text.length<=max)return JSON.stringify(text);
   return `${JSON.stringify(text.slice(0,max/2))}…${JSON.stringify(text.slice(-max/2))} (${[...text].length} chars, sha256=${createHash("sha256").update(text).digest("hex")})`;
 }
+function caseMismatch(s:SpelledString,a:ActionAudit) {return !a.exactValues.includes(s.text)&&a.exactValues.some(v=>v.toLowerCase()===s.text.toLowerCase());}
 export function auditHeadline(a:ActionAudit):string {
-  const strings=a.spelledStrings.slice(0,3).map(s=>`${shortString(s.text)}${s.exactMatch===null?"":s.exactMatch?" [exact match]":" [EXACT MISMATCH]"}${s.allOk?"":" [not all keys succeeded]"}`).join(" / ")||"(none)";
-  return `${a.actions} actions, ${a.reads} reads; prohibited-tool hits=${a.prohibitedToolHits}; errors=${a.errors.length}; turns=${a.turns}${a.issues.length?`; audit issues=${a.issues.length}`:""}; key string ${strings}${a.spelledStrings.length>3?` (${a.spelledStrings.length-3} more printable runs)`:""}${a.exactValues.length?`; exact mismatches=${a.spelledStrings.filter(s=>s.exactMatch===false).length}`:""}`;
+  const strings=a.spelledStrings.slice(0,3).map(s=>`${shortString(s.text)}${a.exactValues.includes(s.text)?" [exact match]":caseMismatch(s,a)?" [EXACT MISMATCH]":" [not an exact_value (informational)]"}${s.allOk?"":" [not all keys succeeded]"}`).join(" / ")||"(none)";
+  return `${a.actions} actions, ${a.reads} reads; prohibited-tool hits=${a.prohibitedToolHits}; errors=${a.errors.length}; turns=${a.turns}${a.issues.length?`; audit issues=${a.issues.length}`:""}; key string ${strings}${a.spelledStrings.length>3?` (${a.spelledStrings.length-3} more printable runs)`:""}${a.exactValues.length?`; exact mismatches=${a.spelledStrings.filter(s=>caseMismatch(s,a)).length}`:""}`;
 }
 /** Budget the audit independently so worker prose cannot push it out of the chat message. */
 export function compactAudit(a:ActionAudit,max=6000):string {

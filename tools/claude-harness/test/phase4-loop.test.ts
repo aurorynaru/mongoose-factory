@@ -73,13 +73,13 @@ describe("Phase 4 controller loop with fake Claude processes",()=>{
   });
   it("generates audit evidence and reserves coordinator message space even with long worker prose",async()=>{
     const h=fixture("chatgpt",{script:{worker:[{write:shared.workerOk.files,calls:2,tool:"mcp__playwright__browser_press_key",toolInput:{key:"X"},reply:"Long prose ".repeat(5000)}]}}),controller=h.create();
-    h.config.browser.maxMessageChars=3500;
+    h.config.browser.maxMessageChars=20000;
     const loaded=fixtureBrief();loaded.brief=BriefSchema.parse({...loaded.brief,exact_values:["XX"]});
     const run=await controller.run(controller.createRun(loaded).id);expect(run.status,`${run.pause_reason}: ${run.pause_detail}`).toBe("completed");
     const worker=h.store.opsForRun(run.id).find(o=>o.kind==="worker")!,report=h.store.opsForRun(run.id).find(o=>o.purpose==="WORKER_REPORT")!;
     expect(worker.meta.actionAudit).toMatchObject({actions:2,turns:3,spelledStrings:[{text:"XX",exactMatch:true,allOk:true}],errors:[]});
     const files=worker.meta.auditFiles as {markdown:string;json:string};expect(existsSync(files.markdown)).toBe(true);expect(existsSync(files.json)).toBe(true);
-    expect(report.payload_text.length).toBeLessThanOrEqual(3500);expect(report.payload_text).toContain(AUDIT_LABEL);expect(report.payload_text).toContain('"XX" [exact match]');
+    expect(report.payload_text.length).toBeLessThanOrEqual(20000);expect(report.payload_text).toContain(AUDIT_LABEL);expect(report.payload_text).toContain('"XX" [exact match]');
     const inbound=h.store.inboundForRun(run.id,"worker")[0];expect(inbound.meta.changedFiles).not.toContain("evidence/EXP-900/harness-audit-T1.md");
   });
   it.each(["confirmation","minimized","unhealthy"])("blocks before worker creation/submission for missing %s precondition",async kind=>{

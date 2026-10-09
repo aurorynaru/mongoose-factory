@@ -2,7 +2,7 @@ import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { actionAudit, compactAudit, persistAudit, AUDIT_LABEL } from "../src/controller/action-audit.js";
+import { actionAudit, auditHeadline, compactAudit, persistAudit, AUDIT_LABEL } from "../src/controller/action-audit.js";
 import { clip } from "../src/protocol/prompts.js";
 const native=(events:unknown[])=>events.map(e=>JSON.stringify(e)).join("\n")+"\n";
 const call=(id:string,name:string,input:unknown)=>({type:"assistant",message:{id:`turn-${id}`,content:[{type:"tool_use",id,name,input}]}});
@@ -42,6 +42,15 @@ describe("deterministic saved-event action audit",()=>{
     const audit=actionAudit(text,"T3","usage_limit");
     expect(audit.calls[0].result).toBe("unknown");expect(audit.errors).toHaveLength(2);expect(audit.issues).toHaveLength(2);
     expect(actionAudit("","T0","blocked").issues).toContain("No saved event transcript available");
+  });
+  it("flags only case-equivalent misspellings and treats unrelated input as informational",()=>{
+    const events=[...key("a","F"),...key("b","X"),...key("clear1","Backspace"),...key("c","f"),...key("d","x"),...key("clear2","Backspace"),...key("e","Y"),terminal];
+    const audit=actionAudit(native(events),"T1","completed",["FX"]);
+    expect(audit.spelledStrings.map(s=>s.exactMatch)).toEqual([true,false,null]);
+    expect(auditHeadline(audit)).toContain('"FX" [exact match]');expect(auditHeadline(audit)).toContain('"fx" [EXACT MISMATCH]');
+    expect(auditHeadline(audit)).toContain('"Y" [not an exact_value (informational)]');expect(auditHeadline(audit)).toContain("exact mismatches=1");
+    // Headlines of cached audits also apply the new classification without rewriting old evidence.
+    audit.spelledStrings[2].exactMatch=false;expect(auditHeadline(audit)).toContain('"Y" [not an exact_value (informational)]');
   });
   it("summarises long sequences within the budget and keeps hashes/length instead of attaching files",()=>{
     const value="X".repeat(300),audit=actionAudit(native([...Array.from({length:300},(_,i)=>key(`k${i}`,"X")).flat(),terminal]),"T4","completed",[value]);

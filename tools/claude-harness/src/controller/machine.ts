@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import type { ChatPort, ChatRole, InterpreterPort, WorkerPort } from "../adapters/types.js";
 import { briefProblems, summarizeRecord, type Brief, type LoadedBrief } from "../brief.js";
@@ -17,6 +17,7 @@ import { workerPolicyForBrief } from "../adapters/claude/tool-policy.js";
 import { recordConversation } from "../adapters/conversation.js";
 import { actionAudit, compactAudit, persistAudit, type ActionAudit } from "./action-audit.js";
 import { prepareWorkerWindow } from "./window-preflight.js";
+import { attachmentRequests, attachTextFiles } from "./attachments.js";
 
 export interface ControllerDeps {
   store: Store;
@@ -290,14 +291,7 @@ export class Controller {
         : "(experiment record could not be read)";
     }
     const body = [
-      protocolBlock(this.d.protocolDir, "coordinator-protocol.md"),
-      "",
-      "EXPERIMENT BRIEF (reviewed by the operator; this is the complete scope for this run):",
-      briefForCoordinator(b),
-      "",
       record,
-      "",
-      this.projectContext(run),
       "",
       `Remaining limits: ${remainingLimits(run.counters, run.limits, this.activeMs(run))}`,
       "",
@@ -307,7 +301,7 @@ export class Controller {
       "",
       "Decide the first step. Usually that is SEND_TO_OPENCODE with one bounded instruction.",
     ].join("\n");
-    this.planCoordinator(run, "KICKOFF", body, { fullProtocol: true });
+    this.planCoordinator(run, "KICKOFF", body);
   }
 
   /** Durable context for (fresh) coordinator chats: reviewed context file + records digest from disk. */
@@ -320,24 +314,43 @@ export class Controller {
   // ---------- planning (payload saved + state checkpointed BEFORE any submission)
 
   private planCoordinator(run: RunRow, kind: string, body: string, opts: { fullProtocol?: boolean; review?: OpReview; extra?: Record<string, string | number>; audit?:ActionAudit } = {}): OpRow {
+    if((kind==="WORKER_REPORT"||kind==="WORKER_FAILURE")&&!opts.audit) {
+      const workerOp=this.d.store.opsForRun(run.id).filter(op=>op.kind==="worker"&&(!opts.extra?.task||op.purpose===opts.extra.task)).at(-1);
+      if(!workerOp)throw Error("Worker report has no worker operation to audit");
+      opts={...opts,audit:this.auditForReport(run,workerOp,kind==="WORKER_REPORT"?"completed":"failed")};
+    }
     const cycle = run.cycle_id + 1;
     const nonce = newNonce();
     // Whatever reaches Tab 1 first in a run (normally KICKOFF; a WORKER_REPORT when the brief has an
     // initial_instruction) must carry the full protocol and the brief.
     const first = !this.d.store.opsForRun(run.id).some((o) => o.kind === "coordinator");
-    if (!opts.fullProtocol && first) {
-      body = [protocolBlock(this.d.protocolDir, "coordinator-protocol.md"), "", "EXPERIMENT BRIEF (reviewed by the operator; this is the complete scope for this run):", briefForCoordinator(this.brief(run)), "", this.projectContext(run), "", body].join("\n");
-      opts = { ...opts, fullProtocol: true };
-    }
+    const includeBrief=first||opts.fullProtocol;
+    const briefBlock=includeBrief?["EXPERIMENT BRIEF (reviewed by the operator; this is the complete scope for this run):",briefForCoordinator(this.brief(run)),"",protocolBlock(this.d.protocolDir,"coordinator-protocol.md"),""].join("\n"):"";
+    const context=includeBrief?this.projectContext(run):"";
     // A fresh coordinator chat: at the start of every run (config) or when the operator asked for one.
     const pendingNew = this.d.store.getSetting("new_chat:coordinator") === "1";
     const newConversation = (first && this.d.config.chats.newCoordinatorPerRun) || pendingNew;
     const head = header({ nonce, runId: run.id, experimentId: run.experiment_id, cycleId: cycle, kind, extra: opts.extra });
-    const tail = opts.fullProtocol ? "" : `\n\n${protocolBlock(this.d.protocolDir, "coordinator-protocol.md", "REMINDER")}`;
+    const tail = includeBrief ? "" : `\n\n${protocolBlock(this.d.protocolDir, "coordinator-protocol.md", "REMINDER")}`;
     const auditText=opts.audit?compactAudit(opts.audit,Math.min(6000,Math.floor(this.d.config.browser.maxMessageChars*0.4))):"";
-    const fullText = `${head}\n${body}${tail}${auditText?`\n\n${auditText}`:""}`;
+    const prefix=`${head}\n${briefBlock}`;
+    const auditSuffix=auditText?`\n\n${auditText}`:"";
+    const fullText = `${prefix}${body}${tail}${context?`\n\n${context}`:""}${auditSuffix}`;
     const file = this.write(run.id, `messages/${String(cycle).padStart(3, "0")}-to-coordinator-${kind}.md`, fullText);
-    const text = auditText?`${clip(`${head}\n${body}${tail}`,this.d.config.browser.maxMessageChars-auditText.length-2,this.refOf(file))}\n\n${auditText}`:clip(fullText, this.d.config.browser.maxMessageChars, this.refOf(file));
+    const max=this.d.config.browser.maxMessageChars;
+    let text:string;
+    if(includeBrief) {
+      const contextFile=this.write(run.id,`messages/${String(cycle).padStart(3,"0")}-context-full.md`,context);
+      const omitted=`[Records digest/context clipped to fit; full text preserved at ${this.refOf(contextFile)}]`;
+      const reserved=prefix.length+tail.length+auditSuffix.length+(context?omitted.length+2:0);
+      if(reserved>max||kind==="KICKOFF"&&reserved+body.length>max)
+        throw Error(`Required brief/protocol${kind==="KICKOFF"?"/kickoff":""} exceeds browser.maxMessageChars=${max}. Increase the limit; objective, scope, prohibitions and acceptance checks will not be clipped. Full message: ${this.refOf(file)}`);
+      const boundedBody=kind==="KICKOFF"?body:clip(body,max-reserved,this.refOf(file));
+      const available=max-prefix.length-boundedBody.length-tail.length-auditSuffix.length-2;
+      const contextExcerpt=context.slice(0,Math.max(0,available-omitted.length-1));
+      const boundedContext=context.length<=available?context:omitted+(contextExcerpt?"\n"+contextExcerpt:"");
+      text=`${prefix}${boundedBody}${tail}${context?`\n\n${boundedContext}`:""}${auditSuffix}`;
+    }else text= auditText?`${clip(`${head}\n${body}${tail}`,max-auditSuffix.length,this.refOf(file))}${auditSuffix}`:clip(fullText,max,this.refOf(file));
     return this.d.store.tx(() => {
       const meta: Record<string, unknown> = opts.review ? { review: opts.review } : {};
       if (newConversation) meta.newConversation = true;
@@ -601,6 +614,7 @@ export class Controller {
     const prior = store.decisions(run.id).filter((x) => x.inbound_id === inbound.id && x.status === "review" && x.method === "deepseek" && x.envelope);
     if (prior.length && run.approvals.candidate === inbound.id) {
       const v = validateEnvelope(prior[prior.length - 1].envelope as Envelope, ctx);
+      if((v.ok||v.disposition==="review"&&v.reasons.every(r=>r.startsWith("attachment_required:")))&&this.tryAttachments(run,inbound,v.envelope,"deepseek"))return;
       if (v.ok) return this.route(run, v.envelope, inbound, "deepseek");
       return this.reviewPause(run, inbound, v.reasons, "deepseek", v.envelope);
     }
@@ -608,6 +622,7 @@ export class Controller {
     const ex = extractEnvelope(raw);
     if (ex.status === "found") {
       const v = validateEnvelope(ex.value, ctx);
+      if((v.ok||v.disposition==="review"&&v.reasons.every(r=>r.startsWith("attachment_required:")))&&this.tryAttachments(run,inbound,v.envelope,"deterministic"))return;
       if (v.ok) return this.route(run, v.envelope, inbound, "deterministic");
       if (v.disposition === "review") {
         if (this.tryScopeRephrase(run, inbound, v.reasons, v.envelope)) return;
@@ -632,6 +647,7 @@ export class Controller {
         const vet = vetCandidate(res, raw, expected);
         if (vet.accept && this.d.config.deepseek.autoAcceptValidated) {
           const v = validateEnvelope(vet.envelope, ctx);
+          if((v.ok||v.disposition==="review"&&v.reasons.every(r=>r.startsWith("attachment_required:")))&&this.tryAttachments(run,inbound,v.envelope,"deepseek"))return;
           if (v.ok) return this.route(run, v.envelope, inbound, "deepseek");
           reasons.push(...v.reasons);
         } else if (!vet.accept) reasons.push(...vet.reasons);
@@ -645,6 +661,19 @@ export class Controller {
     }
     store.addDecision({ run_id: run.id, cycle_id: run.cycle_id, inbound_id: inbound.id, action: null, method: "none", status: "rejected", envelope: null, reasons });
     return this.invalidResponse(store.getRun(run.id)!, inbound, reasons);
+  }
+
+  private tryAttachments(run:RunRow,inbound:InboundRow,env:Envelope,method:"deterministic"|"deepseek"):boolean {
+    const requests=attachmentRequests(env);if(!requests.length)return false;
+    const budget=this.d.config.browser.maxMessageChars-protocolBlock(this.d.protocolDir,"coordinator-protocol.md","REMINDER").length-700;
+    const attached=attachTextFiles(this.d.factoryRoot,this.brief(run),requests,budget);
+    if(!attached.ok){this.d.log.log("info","attachments.unavailable",{run_id:run.id,inbound:inbound.id,requests,reason:attached.reason});return false;}
+    const logFile=this.write(run.id,`attachments/inbound-${inbound.id}.json`,JSON.stringify({label:"controller-attached file content",inboundId:inbound.id,requested:requests,files:attached.files},null,2));
+    this.d.store.addDecision({run_id:run.id,cycle_id:run.cycle_id,inbound_id:inbound.id,action:env.action,method,status:"accepted",envelope:env,reasons:["attachments_inlined; requested action not executed"]});
+    const op=this.planCoordinator(run,"ATTACHMENTS",`${attached.message}\n\nThese files answer your attachment request. Reassess the prior decision and return one envelope for this message's header. No worker task or mutation was performed; the reviewed scope and remaining limits still apply.`);
+    this.d.store.updateOp(op.id,{meta:{...op.meta,attachmentsLog:logFile,attachedPaths:attached.files.map(file=>file.path)}});
+    this.d.log.log("info","attachments.inlined",{run_id:run.id,inbound:inbound.id,log:logFile,files:attached.files.map(({path,lineRanges,filteredSnapshot,clipped})=>({path,lineRanges,filteredSnapshot,clipped}))});
+    return true;
   }
 
   /**
@@ -965,7 +994,19 @@ export class Controller {
     ]
       .filter((x) => x !== "")
       .join("\n");
-    this.planCoordinator(run, "WORKER_REPORT", body, { extra: { task: op.purpose },audit:op.meta.actionAudit as ActionAudit });
+    this.planCoordinator(run, "WORKER_REPORT", body, { extra: { task: op.purpose },audit:this.auditForReport(run,op,"completed") });
+  }
+
+  private auditForReport(run:RunRow,op:OpRow,status:string,transcript?:string):ActionAudit {
+    // A forwarding/resume path may hold an older OpRow. Prefer the durable audit.
+    const current=this.d.store.getOp(op.id)??op;
+    const existing=current.meta.actionAudit as ActionAudit|undefined;
+    if(existing)return existing;
+    const file=join(this.d.runsDir,run.id,"worker",`${op.purpose}-transcript.md`);
+    const audit=actionAudit(transcript??(existsSync(file)?readFileSync(file,"utf8"):""),op.purpose,status,this.brief(run).exact_values);
+    const auditFiles=persistAudit(this.d.factoryRoot,this.brief(run).evidence_dir,join(this.d.runsDir,run.id),audit);
+    this.d.store.updateOp(op.id,{meta:{...current.meta,actionAudit:audit,auditFiles}});
+    return audit;
   }
 
   private workerFailed(run: RunRow, op: OpRow, error: string, text: string, transcript: string, ids: string[] = []): void {
@@ -984,7 +1025,7 @@ export class Controller {
       "",
       "Decide the next step. Do not assume any part of the task took effect; ask the worker to inspect state first. After recurring loops/interrupted recovery, use NEW_OPENCODE_SESSION with a concise handoff if another inspection is authorized. Preserve browser state, evidence, unresolved facts, restrictions, and all remaining budgets. A fresh conversation is not permission for another recovery loop; if the allowance is exhausted or inspection remains unresolved, PAUSE or complete blocked.",
     ].join("\n");
-    this.planCoordinator(run, "WORKER_FAILURE", body, { extra: { task: op.purpose },audit:op.meta.actionAudit as ActionAudit });
+    this.planCoordinator(run, "WORKER_FAILURE", body, { extra: { task: op.purpose },audit:this.auditForReport(run,op,"failed",transcript) });
   }
 
   private async backendTrouble(run: RunRow, detail: string): Promise<void> {

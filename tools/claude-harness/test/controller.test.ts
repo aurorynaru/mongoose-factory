@@ -7,6 +7,7 @@ import { fixtureBrief, harness, loadScenarios, runScenario, type Harnessed } fro
 import { Store } from "../src/store.js";
 import { HARNESS_DIR } from "../src/config.js";
 import { parseHeader } from "../src/protocol/prompts.js";
+import { AUDIT_LABEL } from "../src/controller/action-audit.js";
 
 const open: Harnessed[] = [];
 afterEach(() => {
@@ -129,6 +130,7 @@ describe("worker turn limit", () => {
     const report = h.chat.submissions.filter((s) => s.role === "coordinator").map((s) => s.text).find((t) => t.includes("agent turn limit"));
     expect(report).toBeDefined();
     expect(report).toContain("Do not replay the original task");
+    expect(report).toContain(AUDIT_LABEL);
     expect(second.pause_reason).toBe("coordinator_requested_pause");
   });
 });
@@ -360,6 +362,7 @@ describe("OpenCode task failure", () => {
     const failure = h.chat.submissions.find((s) => kindOf(s.text) === "WORKER_FAILURE")!;
     expect(failure.text).toContain("Repeated missing snapshot refs");
     expect(failure.text).toContain("Scope unresolved");
+    expect(failure.text).toContain(AUDIT_LABEL);
     expect(run.pause_reason).toBe("coordinator_requested_pause");
   });
 
@@ -384,6 +387,7 @@ describe("OpenCode task failure", () => {
     const run = await h.controller.run(h.controller.createRun(fixtureBrief()).id);
     const failMsg = h.chat.submissions.find((s) => kindOf(s.text) === "WORKER_FAILURE")!.text;
     expect(failMsg).toContain("APIError: boom");
+    expect(failMsg).toContain(AUDIT_LABEL);
     expect(failMsg).toContain("Do not assume any part of the task took effect");
     expect(run.counters.totalFailures).toBe(1);
     expect(run.counters.consecutiveFailures).toBe(0);
