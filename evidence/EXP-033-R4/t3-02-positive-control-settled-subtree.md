@@ -1,0 +1,28 @@
+- dialog "Select Form" [ref=f1e77]:
+  - button "Close Window" [ref=f1e79] [cursor=pointer]
+  - grid [ref=f1e80]:
+    - row [ref=f1e81]:
+      - columnheader "Caption" [ref=f1e82]
+      - columnheader "Name" [ref=f1e87]
+    - grid [ref=f1e92]:
+      - table [ref=f1e425]:
+        - rowgroup [ref=f1e426]:
+          - row [ref=f1e427]:
+            - gridcell "FX_ComponentRecoveryLab02" [ref=f1e428]
+            - gridcell "FX_ComponentRecoveryLab02" [ref=f1e430]
+  - generic [ref=f1e395]: "Filter:"
+  - textbox [active] [ref=f1e400]: FX_ComponentRecoveryLab02
+  - generic [ref=f1e401]: "Filter By:"
+  - generic [ref=f1e404]:
+    - combobox [ref=f1e406]: Name
+    - generic [ref=f1e407] [cursor=pointer]
+  - generic [ref=f1e409]:
+    - checkbox "Case Sensitive" [ref=f1e410]
+    - generic [ref=f1e412]: Case Sensitive
+  - generic [ref=f1e414]:
+    - checkbox "Starts With" [ref=f1e415]
+    - generic [ref=f1e417]: Starts With
+  - toolbar [ref=f1e418]:
+    - button "OK" [ref=f1e419] [cursor=pointer]
+    - button "Cancel" [ref=f1e421] [cursor=pointer]
+    - button "Help" [ref=f1e423] [cursor=pointer]

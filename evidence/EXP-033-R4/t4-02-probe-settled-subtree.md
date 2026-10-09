@@ -1,0 +1,23 @@
+- dialog "Select Form" [ref=f1e77]:
+  - button "Close Window" [ref=f1e79] [cursor=pointer]
+  - grid [ref=f1e80]:
+    - row [ref=f1e81]:
+      - columnheader "Caption" [ref=f1e82]
+      - columnheader "Name" [ref=f1e87]
+    - grid [ref=f1e92]
+  - generic [ref=f1e101]: "Filter:"
+  - textbox [active] [ref=f1e106]: FX_SelectFormKeyboardProbe01
+  - generic [ref=f1e107]: "Filter By:"
+  - generic [ref=f1e110]:
+    - combobox [ref=f1e112]: Name
+    - generic [ref=f1e113] [cursor=pointer]
+  - generic [ref=f1e115]:
+    - checkbox "Case Sensitive" [ref=f1e116]
+    - generic [ref=f1e118]: Case Sensitive
+  - generic [ref=f1e120]:
+    - checkbox "Starts With" [ref=f1e121]
+    - generic [ref=f1e123]: Starts With
+  - toolbar [ref=f1e124]:
+    - button "OK" [ref=f1e125] [cursor=pointer]
+    - button "Cancel" [ref=f1e127] [cursor=pointer]
+    - button "Help" [ref=f1e129] [cursor=pointer]

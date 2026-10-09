@@ -3,7 +3,7 @@
   "title": "EXP-033-R4 — Claude sonnet/high Replay: Select Form Native Keyboard Filter Refresh",
   "record_path": "experiments/EXP-033-R4-clean-replay-select-form-native-keyboard-filter-re.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Independently replay EXP-033 against the existing live Web Client using one Select Form dialog and no tested Cancel/reopen cycle. Record the inherited dialog state, establish Filter By=Name with Case Sensitive unchecked and Starts With unchecked, clear the current Name-filter textbox through native Ctrl+A followed by Backspace, and enter `FX_ComponentRecoveryLab02` using exactly one printable native key operation per character. Require the settled rendered grid to visibly contain the exact known-positive Name row before proceeding. Then clear the textbox through the same native path and enter the exact literal `FX_SelectFormKeyboardProbe01`, including lowercase `b` in `Keyboard`, again one printable character per native key operation, and require the settled rendered grid to show zero visible case-insensitive Name matches. Keep all conclusions limited to the rendered UI state; do not infer database absence, uniqueness, serialization, or a server refresh/requery mechanism. Finish with at most one ordinary Cancel solely to dismiss Select Form and no subsequent reopen.",
   "scope": {
     "in_scope": [
