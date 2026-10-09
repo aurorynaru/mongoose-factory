@@ -50,6 +50,66 @@ so they rank with documentation (unverified) and never authorize an action.
 - [CloudSuite Industrial help library](https://docs.infor.com/csi/10.x/es-es/csbiolh/default.html?helpcontent=tzh1598607376046.html) (CSI 10.x, Spanish locale): administrator, user and developer guide index.
 - [Factory Track (M3) library](https://docs.infor.com/factorytrack/2026.10/en-us/ftm3olh/default.html?helpcontent=ezc1598609317633.html) (2026.10): links to Mongoose Administration, Basics and Core Extensibility guides.
 
+## Local copies: read these first
+
+`guides/` holds **35 Markdown files (341 pages)** converted from the Infor Mongoose
+2026.x online guides, listed in [guides/INDEX.md](guides/INDEX.md). Conversion kept
+Infor's wording (formatting only) and was checked against the saved source pages; each
+page keeps its `Source:` URL. Source metadata reports release 2026.07 under the 2026.x
+URLs. Trust: **unverified**. The conversion is faithful, but behaviour in this
+environment is not confirmed.
+
+Three section pages had no article body and carry `[NOT RETRIEVED]` markers in
+`guides/ido-extension-classes.md`; their sub-pages are converted.
+
+Guides covered: Application and Form Development, Core Extensibility, Administration,
+IDO Integration with External Applications, IDO Development. Converted with the tool in
+`C:\AI\getData` (conversion report: `artifacts/completion-report.md` there).
+
+Known gap: no standalone reference for `UserControl.js` was found.
+
+## Mongoose 2026.x guides (match this environment)
+
+Library: https://docs.infor.com/mg/2026.x/en-us/mongooseolh/default.html
+(guides: `mgwsolh_mg` Application and Form Development, `mgsdug_mg` Core Extensibility,
+`mgbaug_mg` Basics, `mgaug_mg` Administration, `config_mgt_mg` / `config_mgt_gl_mg`
+configuration management). Each guide's `default.html` holds its full table of contents.
+
+### Original conversion list (done: superseded by `guides/INDEX.md`)
+
+Base A = `https://docs.infor.com/mg/2026.x/en-us/mongooseolh/mgwsolh_mg/`
+Base C = `https://docs.infor.com/mg/2026.x/en-us/mongooseolh/mgsdug_mg/`
+"Section" means the page plus its child pages in that guide's table of contents.
+Titles come from the guides' navigation; page contents were not reviewed yet.
+
+Priority 1:
+
+| Topic | Page |
+|---|---|
+| Using the Web Designer (section: about, toolbar, launching, modifying a form, creating a form, bound components, global objects) | A + `wik1708998460833.html` |
+| Creating a Build from Scratch form (Web Designer) | A + `isi1501810350675.html` |
+| Adding an IDO collection to a form | A + `lsm1454148019049.html` |
+| Working with collections (section: binding collections and components, refreshing, query form filters) | A + `hkd1710463091518.html` |
+| Form events and event handlers (section: event model, standard/custom events, working with handlers, response types) | A + `udt1710823677133.html` |
+| Portal-type shell forms (section: creating one, its form variable) | A + `lsm1454148018659.html` |
+| Form Control: about, checking out, checking in, unlocking | C + `lsm1454147708525.html`, `lsm1454147708884.html`, `lsm1454147709399.html`, `lsm1454147709726.html` |
+
+Priority 2:
+
+| Topic | Page |
+|---|---|
+| Working with components (section), Framework Components | A + `aai1717101804884.html`, `cur1717118354110.html` |
+| Binding components to collections or properties | A + `lsm1454148034805.html` |
+| About scripts; script editing in the Web Designer | A + `lsm1454148040187.html`, `atm1601017723754.html` |
+| Variables | A + `lsm1454148044414.html` |
+| Managing master and derived forms | A + `lsm1454148018191.html` |
+| About IDOs; extending and replacing IDOs | C + `lsm1454147697855.html`, `lsm1454147698026.html` |
+| Application Event System (overview only) | C + `bqb1500867558215.html` |
+| Extending and replacing forms | C + `laf1525402966322.html` |
+
+Not converted (out of current scope): Design Mode (Windows client) pages, Responsive
+Form Builder, IDS forms, Report forms, Runtime Builder, themes, deployment.
+
 ## Finding more guides
 
 [docs.infor.com search](https://docs.infor.com/en-us/search) with the product filter
