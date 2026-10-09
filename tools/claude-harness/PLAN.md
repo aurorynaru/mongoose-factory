@@ -14,8 +14,11 @@ about:blank tab via CDP, disconnect the last client, verify Chrome/both tabs via
 No secrets/login/Mongoose URL. Production uses configured
 C:\AI\mongoose-playwright-profile, refuses an in-use profile, and never uses
 default Chrome user data. Each worker task starts with a fresh visible-tab/scope
-snapshot and ends stable without dialogs/unsaved prompts (disconnect dismisses
-beforeunload dialogs; installed coreBundle.js:40014). Known risk: any local
+snapshot and ends without browser-native dialogs/unsaved-change prompts. Leave
+in-page Mongoose dialogs open only when the current task explicitly says to;
+otherwise finish without them. Never discard unsaved work; report a blocker.
+Disconnect dismisses beforeunload dialogs (installed coreBundle.js:40014).
+Known risk: any local
 process reaching CDP controls the session. Loopback only, worker Bash denied
 by default, stop owned Chrome when not in use. No other browser launches or
 real model/Mongoose calls, no secrets-file reads, no gateway, no push/main merge.
@@ -34,9 +37,12 @@ Production Chrome adds configurable `chromeWindowStyle` normal/minimized/hidden,
 default normal for manual login/observation and to avoid hidden-window background
 rendering/timer throttling. The Phase 2 scratch-check script stays unchanged.
 EXP-033-R3 (haiku/high) and R4 (sonnet/high) remain unreviewed; scripts preserve
-accepted coordinator instructions except IDs, paths and worker identity wording.
-Review their inherited-state/recovery assumptions and the global stable-page
-rule conflict before live execution. No state reset or invented recovery use.
+accepted coordinator instructions except IDs, paths, worker identity wording and
+the subsequently approved state/recovery clauses. The stable-finish conflict is
+resolved by distinguishing browser-native/unsaved prompts from explicitly
+required in-page dialogs. T2 checks T1's recorded state; T2–T5 continue actual
+recorded recovery counts. No state reset or invented recovery use. See
+PREPARATION.md for every clause change and operator preconditions.
 
 Phase 4 specialist must consult `docs/mongoose/sources.md` (including "Local
 copies: read these first"), then `docs/mongoose/guides/INDEX.md` and relevant

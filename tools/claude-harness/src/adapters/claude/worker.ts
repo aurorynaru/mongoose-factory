@@ -73,7 +73,7 @@ export class ClaudeWorker implements WorkerPort {
     if(!s.policy.preamble)return {status:"rejected",detail:"Bounded task preamble is required"};
     const preamble=[s.policy.preamble,"\nAGENTS.md (explicit authoritative instructions):",agents,
       "Start each task with a fresh snapshot of the visible tab; verify Form identity and editing scope before acting. Never reuse old accessibility refs.",
-      "End each task in a stable page state: no open dialogs or unsaved prompts. CDP disconnect dismisses beforeunload dialogs. If reaching stability requires an out-of-scope action, stop and report the blocker; do not discard unsaved work.",
+      'End each task in a stable page state with no browser-native dialogs (alert, confirm, prompt, or beforeunload "leave page") and no unsaved-change prompts. CDP disconnect dismisses beforeunload dialogs. In-page Mongoose dialogs (such as Select Form) may remain open only when the current task instruction explicitly says to leave them open; otherwise end without open in-page dialogs. Never discard unsaved work or take an out-of-scope lifecycle action to achieve stability; checkpoint and report a blocker instead.',
       "Only this bounded task is authorized. Tools, a fresh session and usage-limit resets never expand scope. On a limit preserve state and report; never resubmit or switch models."].join("\n");
     const policy=generatedPolicy(cfg,paths,sid,s.policy,mid),mcp=this.service.generateWorkerConfig();
     const args=["-p",s.started?"--resume":"--session-id",sid,"--output-format","stream-json","--verbose","--input-format","text","--model",s.model,

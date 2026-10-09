@@ -19,15 +19,16 @@ Use [R3 task scripts](replays/EXP-033-R3.tasks.md),
    deliberately `reviewed: false`. R3 is haiku/high, R4 sonnet/high. They inherit
    R2's scope, prohibitions and AC-1..AC-8, with new record/evidence paths,
    fresh Claude session UUIDs, exact values and enforced no-JavaScript policy.
-   Mark each reviewed only after resolving the following blockers.
-2. The extracted instructions preserve R2's historical assumptions: T2 expects
-   Select Form closed; T2–T5 describe a corrected inspection used in T1 and T5
-   expects one initial Open. These are preconditions, not facts about either new
-   replay. Record actual inherited state and recovery use; do not reset state,
-   fabricate an inspection, or relabel repeated reads. Stop if they differ.
-   T2–T4 also require Select Form left open, conflicting with the current global
-   no-open-dialog worker preamble. Resolve that policy explicitly before live
-   execution. Preparation preserves both texts and does not grant an exception.
+   The documented state/recovery and stable-finish conflicts are resolved.
+2. Before each run: owned Chrome visible and logged in to the Web Client;
+   Select Form closed; no unsaved Designer changes; old harness/OpenCode not
+   running; same starting state for R3 and R4 (record it if it differs). T2 checks
+   current Select Form state against T1 and uses an already-open dialog without
+   another Open. Later tasks continue the actual recovery counts in the record;
+   never fabricate an inspection or reset the shared allowance. Browser-native
+   dialogs and unsaved-change prompts must be absent at every task end. In-page
+   Mongoose dialogs may remain open only when the current instruction explicitly
+   requires it, as T2–T4 do. Never discard unsaved work to finish; report a blocker.
 3. From the new harness directory, build and prepare local config as below.
    Retain the configured Mongoose profile. Set `chromeWindowStyle: "normal"`
    (the default), keep worker Bash denied and automatic backend restart off,
@@ -111,8 +112,10 @@ new sessions do not reset browser/Designer state. Optional brief `worker` model/
 effort defaults override config, and explicit CLI flags override the brief.
 Default worker/coordinator/
 specialist models are haiku/sonnet/opus, all effort high, all configurable.
-Every task starts with a fresh snapshot and ends stable without dialogs/unsaved
-prompts; never discard work or expand scope to stabilize a page.
+Every task starts with a fresh snapshot and ends without browser-native dialogs
+or unsaved-change prompts. Leave an in-page Mongoose dialog open only when the
+current instruction explicitly requires it; otherwise finish without open
+in-page dialogs. Never discard work or expand scope to stabilize a page.
 
 Output gives session/message IDs, report excerpt, changed files/evidence and
 manifest/event/native-transcript paths. Full reports/settings/brief/AGENTS hash

@@ -83,6 +83,14 @@ describe("Claude worker fake-process integration",()=>{
     if(r.result.status==="completed")expect(r.result.touchedFiles).toContain("experiments/EXP-900-fixture-experiment.md");
     expect(r.journal.agentsHash).toMatch(/^[\da-f]{64}$/);expect(r.journal.preamble).toContain(readFileSync(join(h.root,"AGENTS.md"),"utf8"));
     expect(r.journal.preamble).toContain("fresh snapshot");expect(r.journal.preamble).toContain("stable page state");
+    const protocol=readFileSync(join(HARNESS_DIR,"protocol/worker-preamble.md"),"utf8").replace(/\s+/g," ");
+    for(const required of ['no browser-native dialogs (alert, confirm, prompt, or beforeunload "leave page") and no unsaved-change prompts',
+      'CDP disconnect dismisses beforeunload dialogs',
+      'In-page Mongoose dialogs (such as Select Form) may remain open only when the current task instruction explicitly says to leave them open; otherwise end without open in-page dialogs',
+      'Never discard unsaved work or take an out-of-scope lifecycle action to achieve stability; checkpoint and report a blocker instead']) {
+      expect(r.journal.preamble).toContain(required);expect(protocol).toContain(required);
+    }
+    expect(r.journal.preamble).not.toContain("no open dialogs or unsaved prompts");
     const argv=read<{argv:string[]}>(h.capture).argv;
     expect(argv[argv.indexOf("--setting-sources")+1]).toBe("");expect(argv[argv.indexOf("--effort")+1]).toBe("high");
     expect(argv).toContain("--strict-mcp-config");expect(argv).toContain("--session-id");expect(argv).not.toContain("--max-turns");

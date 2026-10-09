@@ -72,10 +72,13 @@ Browser task boundaries:
 - Begin EVERY task with a fresh snapshot of the visible tab; establish selected
   Form identity and editing scope before acting. Earlier accessibility refs and
   MCP tab-selection metadata are stale after a client disconnect.
-- End in a stable page state with no open dialogs or unsaved prompts. CDP
-  disconnect dismisses beforeunload dialogs. Never discard unsaved work or take
-  an out-of-scope lifecycle action to achieve stability; checkpoint and report
-  a blocker if the scope does not permit a stable finish.
+- End in a stable page state with no browser-native dialogs (alert, confirm,
+  prompt, or beforeunload "leave page") and no unsaved-change prompts. CDP
+  disconnect dismisses beforeunload dialogs. In-page Mongoose dialogs (such as
+  Select Form) may remain open only when the current task instruction explicitly
+  says to leave them open; otherwise end without open in-page dialogs. Never
+  discard unsaved work or take an out-of-scope lifecycle action to achieve
+  stability; checkpoint and report a blocker instead.
 - A usage limit is an expected Claude Pro pause. Preserve all state and partial
   evidence; never automatically resubmit, restart Chrome/MCP or change models.
 
