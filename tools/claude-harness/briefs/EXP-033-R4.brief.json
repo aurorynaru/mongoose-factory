@@ -1,0 +1,140 @@
+{
+  "experiment_id": "EXP-033-R4",
+  "title": "EXP-033-R4 — Claude sonnet/high Replay: Select Form Native Keyboard Filter Refresh",
+  "record_path": "experiments/EXP-033-R4-clean-replay-select-form-native-keyboard-filter-re.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Independently replay EXP-033 against the existing live Web Client using one Select Form dialog and no tested Cancel/reopen cycle. Record the inherited dialog state, establish Filter By=Name with Case Sensitive unchecked and Starts With unchecked, clear the current Name-filter textbox through native Ctrl+A followed by Backspace, and enter `FX_ComponentRecoveryLab02` using exactly one printable native key operation per character. Require the settled rendered grid to visibly contain the exact known-positive Name row before proceeding. Then clear the textbox through the same native path and enter the exact literal `FX_SelectFormKeyboardProbe01`, including lowercase `b` in `Keyboard`, again one printable character per native key operation, and require the settled rendered grid to show zero visible case-insensitive Name matches. Keep all conclusions limited to the rendered UI state; do not infer database absence, uniqueness, serialization, or a server refresh/requery mechanism. Finish with at most one ordinary Cancel solely to dismiss Select Form and no subsequent reopen.",
+  "scope": {
+    "in_scope": [
+      "Read the completed EXP-033 record and decisive evidence before browser interaction, including the reconciled 25-character positive-control sequence, the T4 wrong-literal correction history, the exact 28-character corrected probe sequence, recovery-budget accounting, and final dismissed-dialog state",
+      "Before browser interaction, record the harness-provided Claude worker session UUID (fresh and distinct from all earlier worker sessions, including the sibling replay) and establish that it is fresh and distinct from EXP-033 worker `ses_ee9768333ffeV8zFkrUtEv19U6`; preserve the existing browser, Web Client, and Designer context. A new worker does not establish a new browser/client session or reset any limit. If worker freshness cannot be established, stop blocked and do not promote replay verification",
+      "Inspect the inherited Web Client and Designer state read-only and preserve all existing Forms and components untouched",
+      "Use only the supported rendered Web Client Select Form dialog",
+      "If Select Form is initially closed and the existing Web Client session is already usable, perform at most one ordinary Open solely to enter this replay; if already open, use it without an extra lifecycle reset",
+      "Record initial filter text, Filter By value, Case Sensitive state, Starts With state, and visibly rendered rows",
+      "Establish Filter By=Name, Case Sensitive unchecked, and Starts With unchecked through supported rendered controls when needed",
+      "Resolve and focus the current rendered Name-filter textbox using current accessibility/rendered references",
+      "Clear each tested string using native Ctrl+A followed by native Backspace",
+      "Enter exact `FX_ComponentRecoveryLab02` as 25 successful one-printable-character native key operations: `F X _ C o m p o n e n t R e c o v e r y L a b 0 2`",
+      "Require a settled visible row whose Name exactly equals `FX_ComponentRecoveryLab02` before the probe begins",
+      "Only after the positive control passes, clear through the same native keyboard path and enter exact `FX_SelectFormKeyboardProbe01` as 28 successful one-printable-character native key operations: `F X _ S e l e c t F o r m K e y b o a r d P r o b e 0 1`, with lowercase `b` after `Key`",
+      "Capture the settled exact-probe result and count visible case-insensitive Name matches",
+      "Use rendered screenshots and accessibility observations as decisive evidence; naturally available request/response evidence may be retained only as corroboration",
+      "Planned preflight, current-reference/focus checks, settled positive-control and probe captures, and final audit captures are allowed evidence operations. Extra ambiguity recovery is limited to one additional fresh untargeted snapshot plus one corrected visible inspection total across the full experiment; worker/session boundaries do not reset it. Repeated stale or ambiguous reads must not be relabeled as planned evidence to bypass this shared budget",
+      "After all result evidence is captured, perform at most one ordinary final Cancel solely to dismiss Select Form, with no subsequent reopen",
+      "Write repository evidence only under `evidence/EXP-033-R4/` and the EXP-033-R4 experiment record"
+    ],
+    "out_of_scope": [
+      "Changing, repairing, or reinterpreting EXP-033",
+      "Testing filter retention across Cancel/reopen",
+      "Creating or modifying any Mongoose Form, component, variable, event, script, binding, validator, or other artifact",
+      "Creating `FX_SelectFormKeyboardProbe01`; it remains only a filter probe string",
+      "Form-property, component-property, persistence, serialization, variable, FormSync, unload, or cache experiments",
+      "Database absence, database uniqueness, Forms-database durability, or serialization claims",
+      "Proving a particular server refresh, requery, request, Ext-store, or internal filtering mechanism",
+      "User Preferences changes",
+      "Launching another Designer client",
+      "Direct cold MGForm navigation",
+      "Reusable recipe modification",
+      "Any other experiment or replay"
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ Mongoose artifact; repository writes are explicitly permitted only to `experiments/EXP-033-R4-clean-replay-select-form-native-keyboard-filter-re.md` and `evidence/EXP-033-R4/`",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Create, modify, delete, Save, Regenerate, close, or reopen any Mongoose Form or component",
+    "Create `FX_SelectFormKeyboardProbe01` or any other Mongoose object for the probe",
+    "Use bulk textbox value replacement, bulk typing, clipboard paste, or a fill-style action in place of the required individual native printable-key operations",
+    "Use JavaScript, browser evaluate/run-code, synthetic DOM mutation, or internal Ext stores to enter text, force refresh, or inspect filtering",
+    "Press Enter or OK in Select Form",
+    "Interact with any result row so as to open or activate a Form",
+    "Perform any tested Cancel/reopen cycle between the positive-control and probe tests",
+    "Reopen Select Form after the at-most-one initial Open used to enter the replay",
+    "Retype either tested string after a settled matching, stale, or ambiguous result; use only the single shared ambiguity-recovery inspection allowance",
+    "Treat textbox contents alone as proof that rendered filtering occurred",
+    "Infer database absence, uniqueness, persistence, or serialization from a zero-row result",
+    "Authenticate, reauthenticate, log out, or establish a replacement session as a recovery technique",
+    "Invoke `Unload All Global Form Objects`",
+    "Change or Save any User Preference",
+    "Modify any repository path outside the EXP-033-R4 record and `evidence/EXP-033-R4/`",
+    "Start another experiment or replay"
+  ],
+  "prohibited_patterns": [
+    "\\b(fill|paste)\\b",
+    "\\b((?:playwright_)?browser_(?:evaluate|run_code(?:_unsafe)?)|run[-_ ]?code(?:_unsafe)?|javascript)\\b|\\bevaluate\\s*\\(",
+    "\\bUnload All Global Form Objects\\b",
+    "\\bUser Preferences\\b[^.\\n]{0,40}\\b(change|save|modify)\\b",
+    "\\b(create|add|delete|regenerate)\\b[^.\\n]{0,60}\\b(form|component|variable|event|script|binding|validator)\\b",
+    "\\b(Sign In|reauthenticate|log out|logout)\\b"
+  ],
+  "related_experiments": [
+    "EXP-033",
+    "EXP-031",
+    "EXP-033-R2",
+    "EXP-033-R3"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": null,
+    "artifacts": [
+      "FX_ComponentRecoveryLab02",
+      "FX_SelectFormKeyboardProbe01"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Before browser interaction, record the harness-provided fresh Claude worker session UUID distinct from all earlier worker sessions, including the sibling replay, and distinct from EXP-033 worker `ses_ee9768333ffeV8zFkrUtEv19U6`; this must preserve the existing browser/Web Client/Designer context rather than replace it. If freshness cannot be demonstrated, stop blocked without replay promotion. Preflight evidence proves the inherited Web Client is already usable without session-establishment action, records whether Select Form was initially open, records its inherited filter text/settings/rendered rows, accounts for at most one initial ordinary Open if needed, and shows the inherited Web Client/Designer Form state remained untouched."
+    },
+    {
+      "id": "AC-2",
+      "description": "Positive-control action evidence proves the current Name-filter textbox was cleared with native Ctrl+A then Backspace and exact `FX_ComponentRecoveryLab02` was entered through exactly 25 successful one-printable-character native key operations, with Filter By=Name and both checkboxes unchecked; no bulk input, paste, JavaScript, Enter, OK, or result-row interaction occurred."
+    },
+    {
+      "id": "AC-3",
+      "description": "Settled positive-control evidence visibly shows a rendered row whose Name exactly equals `FX_ComponentRecoveryLab02`. If this cannot be established within the shared recovery budget, the replay stops blocked before entering the probe."
+    },
+    {
+      "id": "AC-4",
+      "description": "Only after AC-3 passes, probe action evidence proves the textbox was cleared with native Ctrl+A then Backspace and exact `FX_SelectFormKeyboardProbe01` was entered through exactly 28 successful one-printable-character native key operations, including lowercase `b` in `Keyboard`, with Filter By=Name and both checkboxes unchecked."
+    },
+    {
+      "id": "AC-5",
+      "description": "Settled probe evidence visibly shows zero case-insensitive Name matches for exact `FX_SelectFormKeyboardProbe01`; the finding is explicitly limited to this rendered UI state and makes no database-absence, uniqueness, serialization, or server-refresh claim. Matching rows or unresolved stale/ambiguous rendering causes a blocked outcome without retyping or lifecycle retry."
+    },
+    {
+      "id": "AC-6",
+      "description": "The complete action audit proves the replay used only the required native keyboard clears and one-printable-character key operations for both exact strings, with no prohibited bulk input, clipboard paste, JavaScript/internal-store access, Enter, OK, result-row opening, tested Cancel/reopen cycle, Form mutation, Save, Regenerate, unload, preference change, or session-establishment action."
+    },
+    {
+      "id": "AC-7",
+      "description": "The entire run separately accounts for planned preflight/current-reference/focus checks, settled-result and final-audit evidence captures, and extra ambiguity recovery. Extra ambiguity recovery is limited to one additional fresh untargeted snapshot plus one corrected visible inspection total across both strings and all tasks; record used/remaining allowance, do not relabel repeated stale reads as planned evidence, and do not reset the allowance on worker/session changes. Any ambiguity remaining afterward produces a blocked result."
+    },
+    {
+      "id": "AC-8",
+      "description": "Final audit captures the last settled probe state, performs at most one ordinary final Cancel solely to dismiss Select Form, confirms no subsequent reopen, confirms inherited Web Client/Designer Forms remain untouched, and proves this experiment's repository writes are confined to the EXP-033-R4 record plus `evidence/EXP-033-R4/`; record pre-existing unrelated changes separately without modifying them. If AC-1 through AC-8 pass under the independently established fresh worker identity, the EXP-033 native-keyboard Select Form filtering procedure may be classified `replay_verified` only for the tested environment and UI workflow."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-033-R4",
+  "replay_of": "EXP-033",
+  "initial_instruction": null,
+  "notes": "Proposed by the coordinator after run R-20261007-212336-By3J. Rationale: EXP-033 completed successfully but its native-keyboard Select Form filtering behavior is only observed/candidate_procedure, not replay_verified. The smallest next learning step is an independent clean replay of that exact UI procedure in a fresh worker context, preserving the same positive-control and probe semantics while avoiding the original run's corrected uppercase-B detour. A successful replay would establish that the supported native Ctrl+A/Backspace plus one-printable-character-per-key path reproducibly drives the rendered Select Form result in the tested environment. This follows the project's preferred observed-to-replay_verified progression and does not depend on any blocked experiment. This replay uses a fresh Claude worker session UUID distinct from all earlier sessions. Its inherited Select Form state may differ from EXP-033-R2; record it, do not reset it.",
+  "worker": {
+    "model": "sonnet",
+    "effort": "high"
+  },
+  "exact_values": [
+    "FX_ComponentRecoveryLab02",
+    "FX_SelectFormKeyboardProbe01"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  }
+}

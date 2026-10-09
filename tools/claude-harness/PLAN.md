@@ -27,6 +27,28 @@ validation and limits. The Phase 2 scratch observation supports this selection.
 
 ## Approved amendments and execution order
 
+### Replay preparation and Phase 4 local documentation
+
+2026-10-09: preparation only; no new live run or Phase 4 implementation.
+Production Chrome adds configurable `chromeWindowStyle` normal/minimized/hidden,
+default normal for manual login/observation and to avoid hidden-window background
+rendering/timer throttling. The Phase 2 scratch-check script stays unchanged.
+EXP-033-R3 (haiku/high) and R4 (sonnet/high) remain unreviewed; scripts preserve
+accepted coordinator instructions except IDs, paths and worker identity wording.
+Review their inherited-state/recovery assumptions and the global stable-page
+rule conflict before live execution. No state reset or invented recovery use.
+
+Phase 4 specialist must consult `docs/mongoose/sources.md` (including "Local
+copies: read these first"), then `docs/mongoose/guides/INDEX.md` and relevant
+local guide pages **before WebFetch**. The directory contains 35 converted Infor
+Mongoose 2026.x guides plus INDEX.md. Conversions changed formatting only and
+remain **unverified**; cite each page's **Source URL**, not just its local path.
+Prefer the actual environment version 2026.09.08. Keep answer labels/ranking:
+verified recipes/records > observed records > documentation/video transcripts
+(unverified) > model knowledge (unverified). Check raw transcripts for exact
+steps/spelling. Read-only local guides do not broaden technology or editing scope.
+No specialist code changes in this preparation turn.
+
 These operator amendments supersede conflicting Phase 0 proposals below.
 First commit this updated plan; at the start of Phase 1 commit existing untracked
 `docs/mongoose/` and `docs/prompts/` as-is in a separate commit. Never edit their

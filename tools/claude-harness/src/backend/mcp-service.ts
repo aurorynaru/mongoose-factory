@@ -13,6 +13,7 @@ export type ServiceResult = { ok: boolean; [key: string]: unknown };
 export interface ServiceRequest {
   kind: ServiceKind; executable: string; argv: string[]; port: number;
   cwd: string; profile: string | null; logDir: string; requestHash: string;
+  windowStyle?: "normal" | "minimized" | "hidden";
 }
 const require = createRequire(import.meta.url);
 
@@ -39,7 +40,8 @@ export function serviceRequest(cfg: HarnessConfig, paths: ResolvedPaths, kind: S
     if (cfg.mcp.secretsFile) argv.push("--secrets", resolve(cfg.mcp.secretsFile));
   }
   const base = { kind, executable: resolve(executable), argv, port: kind === "chrome" ? cfg.mcp.cdpPort : cfg.mcp.port,
-    cwd, profile, logDir: join(paths.dataDir, "services", "logs", kind) };
+    cwd, profile, logDir: join(paths.dataDir, "services", "logs", kind),
+    ...(kind === "chrome" ? { windowStyle: cfg.chromeWindowStyle } : {}) };
   return { ...base, requestHash: createHash("sha256").update(JSON.stringify(base)).digest("hex") };
 }
 

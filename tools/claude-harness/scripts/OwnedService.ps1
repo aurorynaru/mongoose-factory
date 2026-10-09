@@ -31,7 +31,12 @@ try {
             [IO.Directory]::CreateDirectory($r.logDir) | Out-Null
             $stamp = [guid]::NewGuid().ToString()
             $arguments = @($r.argv | ForEach-Object { '"' + ($_ -replace '(\\*)"', '$1$1\"' -replace '(\\+)$', '$1$1') + '"' })
-            $p = Start-Process -FilePath $r.executable -ArgumentList $arguments -WorkingDirectory $r.cwd -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $r.logDir "$stamp.out.log") -RedirectStandardError (Join-Path $r.logDir "$stamp.err.log")
+            $windowStyle = 'Hidden'
+            if ($Kind -eq 'chrome' -and $r.windowStyle) {
+                if ($r.windowStyle -notin @('normal','minimized','hidden')) { throw 'invalid_chrome_window_style' }
+                $windowStyle = $r.windowStyle
+            }
+            $p = Start-Process -FilePath $r.executable -ArgumentList $arguments -WorkingDirectory $r.cwd -WindowStyle $windowStyle -PassThru -RedirectStandardOutput (Join-Path $r.logDir "$stamp.out.log") -RedirectStandardError (Join-Path $r.logDir "$stamp.err.log")
             $identity = Process-Identity $p.Id
             if (-not $identity) { throw 'service_exited_at_start' }
             $identity.kind = $Kind; $identity.port = $r.port; $identity.requestHash = $r.requestHash

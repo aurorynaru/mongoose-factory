@@ -21,6 +21,8 @@ export interface TaskJournal {
   argv:string[]; createdAt:string; result?:WorkerResult; process?:Record<string,unknown>;
   permissionSettings:string; eventFile:string; stderrFile:string; nativeTranscript:string;
   recoveryEvidence?:Record<string,unknown>;
+  finishedAt?:string; guardDenialsFile?:string;
+  metrics?:{assistantTurns:number;wallTimeSeconds:number|null;guardDenials:{total:number;byGuard:Record<string,number>;auditError?:string}};
 }
 interface Active { child:ChildProcessWithoutNullStreams; events:TaskEvents; journal:TaskJournal; finished:Promise<void>; resolve:()=>void; stopReason?:"timeout"|"interrupted"|"turn_limit"|"loop"|"model_mismatch"|"invalid"; detail?:string; exit:number|null; timer:ReturnType<typeof setTimeout>; monitor:ReturnType<typeof setInterval>; stopping:boolean; identityReady:Promise<void>; stopPromise?:Promise<void> }
 export interface WorkerOptions { config:HarnessConfig; paths:ResolvedPaths; healthCheck?:()=>Promise<{ok:boolean;version?:string;detail?:string}>; restartOwned?:()=>Promise<boolean> }
@@ -73,7 +75,7 @@ export class ClaudeWorker implements WorkerPort {
       "Start each task with a fresh snapshot of the visible tab; verify Form identity and editing scope before acting. Never reuse old accessibility refs.",
       "End each task in a stable page state: no open dialogs or unsaved prompts. CDP disconnect dismisses beforeunload dialogs. If reaching stability requires an out-of-scope action, stop and report the blocker; do not discard unsaved work.",
       "Only this bounded task is authorized. Tools, a fresh session and usage-limit resets never expand scope. On a limit preserve state and report; never resubmit or switch models."].join("\n");
-    const policy=generatedPolicy(cfg,paths,sid,s.policy),mcp=this.service.generateWorkerConfig();
+    const policy=generatedPolicy(cfg,paths,sid,s.policy,mid),mcp=this.service.generateWorkerConfig();
     const args=["-p",s.started?"--resume":"--session-id",sid,"--output-format","stream-json","--verbose","--input-format","text","--model",s.model,
       ...(cfg.claude.models.worker.effort?["--effort",cfg.claude.models.worker.effort]:[]),"--append-system-prompt",preamble,"--system-prompt-snapshot","off",
       "--mcp-config",mcp,"--strict-mcp-config","--tools",policy.tools.join(","),"--allowedTools",[...policy.tools,"mcp__playwright__*"].join(","),
@@ -81,6 +83,8 @@ export class ClaudeWorker implements WorkerPort {
     const dir=join(paths.dataDir,"workers",sid,"tasks");mkdirSync(dir,{recursive:true});
     const payload=marker(mid)+"\n"+text;
     const journal:TaskJournal={sessionId:sid,messageId:mid,payload,preamble,agentsHash:hash(agents),before:gitState(paths.factoryRoot),state:"planned",argv:args,createdAt:new Date().toISOString(),permissionSettings:policy.settingsFile,eventFile:join(dir,`${mid}.events.jsonl`),stderrFile:join(dir,`${mid}.stderr.txt`),nativeTranscript:transcriptPath(cfg.claude.configDir??join(homedir(),".claude"),paths.factoryRoot,sid)};
+    journal.guardDenialsFile=policy.denialFile;
+    writeFileSync(policy.denialFile,"");
     const lease=join(paths.dataDir,"workers","active-task.json");
     try{writeFileSync(lease,JSON.stringify({sessionId:sid,messageId:mid}),{flag:"wx"});}
     catch{return {status:"rejected",detail:"Another task or expected usage-limit pause holds the worker lease. Reconcile it; do not start a concurrent browser task."};}
@@ -151,6 +155,20 @@ export class ClaudeWorker implements WorkerPort {
     else if(e.permissionDenied)result={status:"blocked",kind:"permission",detail:"Claude reported denied tool permissions; task completion is not established"};
     else if((a.exit!==0&&!a.recovered)||e.terminal.is_error||e.terminal.subtype!=="success")result={status:"failed",error:String(e.terminal.result??e.terminal.errors??"Claude failed"),...base};
     else {j.after=gitState(this.o.paths.factoryRoot);result={status:"completed",...base,text:typeof e.terminal.result==="string"?e.terminal.result:e.text,touchedFiles:touched(j.before,j.after),cost:Number(e.terminal.total_cost_usd??0),tokens:Number(e.terminal.usage?.input_tokens??0)+Number(e.terminal.usage?.output_tokens??0)};}
+    j.finishedAt=new Date().toISOString();
+    const byGuard:Record<string,number>={};let auditError:string|undefined;
+    try {
+      if(!j.guardDenialsFile)throw Error("missing guard audit path");
+      const raw=readFileSync(j.guardDenialsFile,"utf8");
+      if(raw&&!raw.endsWith("\n"))throw Error("incomplete guard audit");
+      for(const line of raw.split("\n").filter(Boolean)) {
+        const item=JSON.parse(line);
+        if(item.sessionId!==j.sessionId||typeof item.guard!=="string")throw Error("guard audit scope mismatch");
+        byGuard[item.guard]=(byGuard[item.guard]??0)+1;
+      }
+    }catch{auditError="Guard denial audit unavailable/incomplete; inspect native transcript. Count is a lower bound.";}
+    j.metrics={assistantTurns:e.turns.size,wallTimeSeconds:a.recovered?null:(Date.parse(j.finishedAt)-Date.parse(j.createdAt))/1000,
+      guardDenials:{total:Object.values(byGuard).reduce((n,v)=>n+v,0),byGuard,...(auditError?{auditError}:{})}};
     j.result=result;j.state="terminal";save(this.taskFile(j.sessionId,j.messageId),j);
     if(result.status!=="usage_limit") {
       const lease=join(this.o.paths.dataDir,"workers","active-task.json");

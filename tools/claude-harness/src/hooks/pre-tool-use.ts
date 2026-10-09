@@ -1,7 +1,7 @@
-import { closeSync, existsSync, openSync, readFileSync, unlinkSync } from "node:fs";
+import { appendFileSync, closeSync, existsSync, openSync, unlinkSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { hash, read, save } from "../adapters/claude/files.js";
-export interface GuardConfig { sessionId: string; stateFile: string; threshold: number; allowLiteralKeyText: boolean; exactValues: string[] }
+export interface GuardConfig { sessionId: string; stateFile: string; denialFile?: string; threshold: number; allowLiteralKeyText: boolean; exactValues: string[] }
 export function canonical(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
   if (value && typeof value === "object") return `{${Object.entries(value).sort(([a],[b])=>a.localeCompare(b)).map(([k,v])=>JSON.stringify(k)+":"+canonical(v)).join(",")}}`;
@@ -40,10 +40,21 @@ export function guard(event: { session_id: string; tool_name: string; tool_input
   finally { if (fd !== undefined) { closeSync(fd); unlinkSync(lockFile); } }
 }
 export function decision(reason: string) { return { hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: "deny", permissionDecisionReason: reason } }; }
+export function guardName(reason: string) {
+  if(reason.startsWith("Key-like text"))return "key_text";
+  if(reason.startsWith("Exact value required"))return "exact_values";
+  if(reason.startsWith("Identical consecutive"))return "identical_calls";
+  return "guard_state";
+}
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
     const cfg = read<GuardConfig>(process.argv[process.argv.indexOf("--config")+1]);
     let input=""; for await (const chunk of process.stdin) { input += chunk; if(input.length>16_000_000)throw Error("input too large"); }
-    const reason = guard(JSON.parse(input),cfg); if(reason)process.stdout.write(JSON.stringify(decision(reason)));
+    const event=JSON.parse(input),reason = guard(event,cfg);
+    if(reason) {
+      // Audit only guard identity/time/tool; never persist text or secret values.
+      if(cfg.denialFile)appendFileSync(cfg.denialFile,JSON.stringify({at:new Date().toISOString(),sessionId:cfg.sessionId,tool:event.tool_name,guard:guardName(reason)})+"\n");
+      process.stdout.write(JSON.stringify(decision(reason)));
+    }
   } catch { process.stdout.write(JSON.stringify(decision("Guard invocation/config/input failed; stop and preserve partial results."))); }
 }

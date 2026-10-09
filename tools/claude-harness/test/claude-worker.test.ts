@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { ConfigSchema, HARNESS_DIR, resolvePaths } from "../src/config.js";
 import { ClaudeWorker, type TaskJournal } from "../src/adapters/claude/worker.js";
-import { boundedTask } from "../src/adapters/claude/cli.js";
+import { boundedTask, taskOutput } from "../src/adapters/claude/cli.js";
 import { childEnvironment, diagnostic } from "../src/adapters/claude/process.js";
 import { read, save } from "../src/adapters/claude/files.js";
 import { findMarker, marker, transcriptPath } from "../src/adapters/claude/transcripts.js";
@@ -34,6 +34,23 @@ async function task(h:ReturnType<typeof fixture>,policy={denyBrowserJavaScript:t
   return {sid,mid,submission,result,journal:read<TaskJournal>(h.worker.taskFile(sid,mid))};
 }
 describe("Claude worker fake-process integration",()=>{
+  it("reports task-local guard counts, turns and wall time across resumed tasks",async()=>{
+    const h=fixture({calls:1,tool:"mcp__playwright__browser_type",toolInput:{text:"Ctrl+A"},invokeHook:true});
+    const briefFile=join(h.paths.briefsDir,"EXP-900.brief.json"),brief=read<Record<string,unknown>>(briefFile);
+    save(briefFile,{...brief,worker:{model:"sonnet",effort:"high"}});
+    const first=await boundedTask(h.cfg,h.paths,"EXP-900","Inspect FX_FixtureForm01",{},h.worker);
+    const j=read<TaskJournal>(h.worker.taskFile(first.sessionId,first.messageId)),manifest=read<Record<string,any>>(first.manifest),output=taskOutput(first,j,manifest);
+    expect(first.result.status).toBe("blocked");expect(output.assistantTurns).toBe(2);expect(output.wallTimeSeconds).toBeGreaterThan(0);
+    expect(output.guardDenials).toEqual({total:1,byGuard:{key_text:1}});expect(manifest.metrics).toEqual(j.metrics);
+    expect(read<{argv:string[]}>(h.capture).argv).toContain("sonnet");
+    expect(readFileSync(j.guardDenialsFile!,"utf8")).not.toContain("Ctrl+A");
+    writeFileSync(h.file,JSON.stringify({capture:h.capture}));
+    const next=await boundedTask(h.cfg,h.paths,"EXP-900","Inspect FX_FixtureForm01",{session:first.sessionId},h.worker);
+    const nextJournal=read<TaskJournal>(h.worker.taskFile(next.sessionId,next.messageId));
+    expect(nextJournal.metrics?.guardDenials).toEqual({total:0,byGuard:{}});
+    expect(read<{argv:string[]}>(h.capture).argv).toContain("--resume");
+    expect(j.guardDenialsFile).not.toBe(nextJournal.guardDenialsFile);
+  });
   it.runIf(process.platform==="win32")("owned task abort preserves a sibling fake MCP process and recovers its durable checkpoint",async()=>{
     const h=fixture({mode:"hang"}),listener=createServer();await new Promise<void>(r=>listener.listen(0,"127.0.0.1",r));
     h.cfg.mcp.port=(listener.address() as {port:number}).port;await new Promise<void>(r=>listener.close(()=>r()));

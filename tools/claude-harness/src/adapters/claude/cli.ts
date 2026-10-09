@@ -12,6 +12,11 @@ import { read, save } from "./files.js";
 import { workerPolicyForBrief } from "./tool-policy.js";
 
 export interface TaskOptions { model?:string;effort?:string;session?:string;continueFrom?:string }
+export function taskOutput(task:{sessionId:string;messageId:string;manifest:string;result:import("../types.js").WorkerResult},journal:TaskJournal,manifest:Record<string,any>) {
+  return {sessionId:task.sessionId,messageId:task.messageId,status:task.result.status,manifest:task.manifest,eventTranscript:journal.eventFile,nativeTranscript:journal.nativeTranscript,
+    assistantTurns:journal.metrics?.assistantTurns??null,wallTimeSeconds:journal.metrics?.wallTimeSeconds??null,guardDenials:journal.metrics?.guardDenials??null,guardDenialsFile:journal.guardDenialsFile??null,
+    evidenceDiff:manifest.evidenceDiff,...("touchedFiles" in task.result?{touchedFiles:task.result.touchedFiles}:{}),...("text" in task.result?{report:task.result.text.slice(0,4000)}:{}),...("detail" in task.result?{detail:task.result.detail}:{})};
+}
 export async function boundedTask(cfg:HarnessConfig,paths:ResolvedPaths,experimentId:string,instruction:string,opts:TaskOptions={},worker?:ClaudeWorker) {
   if(!/^EXP-\d{3,}(?:-R\d+)?$/.test(experimentId)||!instruction.trim())throw Error("Task needs an experiment ID and nonempty instruction");
   const loaded=loadBrief(experimentId,paths.briefsDir),brief=BriefSchema.parse(loaded.brief);
@@ -20,6 +25,7 @@ export async function boundedTask(cfg:HarnessConfig,paths:ResolvedPaths,experime
   const evidence=resolve(paths.factoryRoot,brief.evidence_dir),expected=resolve(paths.factoryRoot,"evidence",experimentId);
   if(evidence!==expected&&!evidence.startsWith(expected+sep))problems.push("Evidence directory is outside selected experiment");
   if(problems.length)throw Error(`Task blocked before model submission: ${problems.join("; ")}`);
+  if(brief.worker)cfg.claude.models.worker={...brief.worker};
   if(opts.model)cfg.claude.models.worker.model=opts.model;
   if(opts.effort){if(!["low","medium","high","xhigh","max"].includes(opts.effort))throw Error("Invalid effort");cfg.claude.models.worker.effort=opts.effort as "high";}
   worker??=new ClaudeWorker({config:cfg,paths});
@@ -40,7 +46,8 @@ export async function boundedTask(cfg:HarnessConfig,paths:ResolvedPaths,experime
     if(submission.status==="rejected")throw Error(submission.detail??"Task rejected");
     const result=await worker.waitForCompletion(sid,mid,{timeoutMs:cfg.worker.taskTimeoutMinutes*60_000,shouldStop:()=>interrupted});
     const after=snapshotDirs(paths.factoryRoot,watchedDirs(brief.evidence_dir));
-    save(manifest,{...read<Record<string,unknown>>(manifest),state:result.status==="usage_limit"?"paused":"finished",pauseReason:result.status==="usage_limit"?"usage_limit":null,result,evidenceAfter:after,evidenceDiff:diffSnapshots(before,after)});
+    const journal=read<TaskJournal>(worker.taskFile(sid,mid));
+    save(manifest,{...read<Record<string,unknown>>(manifest),state:result.status==="usage_limit"?"paused":"finished",pauseReason:result.status==="usage_limit"?"usage_limit":null,result,metrics:journal.metrics??null,evidenceAfter:after,evidenceDiff:diffSnapshots(before,after)});
     return {sessionId:sid,messageId:mid,manifest,result};
   }finally{process.off("SIGINT",onInterrupt);}
 }
@@ -52,8 +59,7 @@ export function registerWorkerCommands(program:Command) {
     .option("--continue-from <messageId>","Operator continuation after an expected usage pause; does not replay the old task")
     .action(async(id,instruction,opts)=>{const {config}=loadConfig(program.opts().config);const task=await boundedTask(config,resolvePaths(config),id,instruction,opts);
       const manifest=read<Record<string,any>>(task.manifest),journal=read<TaskJournal>(new ClaudeWorker({config,paths:resolvePaths(config)}).taskFile(task.sessionId,task.messageId));
-      console.log(JSON.stringify({sessionId:task.sessionId,messageId:task.messageId,status:task.result.status,manifest:task.manifest,eventTranscript:journal.eventFile,nativeTranscript:journal.nativeTranscript,
-        evidenceDiff:manifest.evidenceDiff,...("touchedFiles" in task.result?{touchedFiles:task.result.touchedFiles}:{}),...("text" in task.result?{report:task.result.text.slice(0,4000)}:{}),...("detail" in task.result?{detail:task.result.detail}:{})},null,2));
+      console.log(JSON.stringify(taskOutput(task,journal,manifest),null,2));
       if(task.result.status!=="completed")process.exitCode=2;});
   group.command("reconcile <sessionId> <messageId>").description("Inspect marker and durable task journal; never launches Claude/browser")
     .action(async(sid,mid)=>{const {config}=loadConfig(program.opts().config),paths=resolvePaths(config),worker=new ClaudeWorker({config,paths});

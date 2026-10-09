@@ -106,5 +106,6 @@
     "maxRepeatedBrowserReads": 6,
     "maxRepeatedShellCalls": 6,
     "allowBackendRestart": false
-  }
+  },
+  "chromeWindowStyle": "normal"
 }

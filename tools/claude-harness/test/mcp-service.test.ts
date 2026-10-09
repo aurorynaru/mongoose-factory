@@ -8,6 +8,14 @@ import { ConfigSchema, HARNESS_DIR, resolvePaths } from "../src/config.js";
 import { McpService, listMcpTools, serviceRequest } from "../src/backend/mcp-service.js";
 
 describe("CDP service configuration", () => {
+  it("defaults production Chrome to visible normal and supports minimized/hidden without showing MCP", () => {
+    for(const style of [undefined,"normal","minimized","hidden"] as const) {
+      const cfg=ConfigSchema.parse({chromeWindowStyle:style,mcp:{chromeExecutable:process.execPath,secretsFile:null}});
+      expect(serviceRequest(cfg,resolvePaths(cfg),"chrome").windowStyle).toBe(style??"normal");
+      expect(serviceRequest(cfg,resolvePaths(cfg),"mcp").windowStyle).toBeUndefined();
+    }
+    expect(ConfigSchema.safeParse({chromeWindowStyle:"invisible"}).success).toBe(false);
+  });
   it("uses the configured Mongoose profile and about:blank, with loopback only", () => {
     const cfg = ConfigSchema.parse({ mcp: { chromeExecutable: process.execPath } });
     const r = serviceRequest(cfg, resolvePaths(cfg), "chrome");

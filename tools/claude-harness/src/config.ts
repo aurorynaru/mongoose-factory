@@ -143,6 +143,7 @@ export const ConfigSchema = z.object({
     .prefault({}),
   limits: LimitsSchema.prefault({}),
   mongooseBrowserProfile: z.string().default("C:\\AI\\mongoose-playwright-profile"),
+  chromeWindowStyle: z.enum(["normal", "minimized", "hidden"]).default("normal"),
 });
 export type HarnessConfig = z.infer<typeof ConfigSchema>;
 

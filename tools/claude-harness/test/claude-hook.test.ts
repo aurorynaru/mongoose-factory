@@ -4,10 +4,16 @@ import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { guard, textDenial, type GuardConfig } from "../src/hooks/pre-tool-use.js";
+import { guard, guardName, textDenial, type GuardConfig } from "../src/hooks/pre-tool-use.js";
 import { ConfigSchema, HARNESS_DIR, resolvePaths } from "../src/config.js";
 import { generatedPolicy } from "../src/adapters/claude/tool-policy.js";
 describe("three-purpose PreToolUse guard",()=>{
+  it("labels denial reasons for the replay scorecard",()=>{
+    expect(guardName("Key-like text denied.")).toBe("key_text");
+    expect(guardName("Exact value required: Keyboard")).toBe("exact_values");
+    expect(guardName("Identical consecutive tool call 6 denied")).toBe("identical_calls");
+    expect(guardName("Guard state unavailable")).toBe("guard_state");
+  });
   const name="mcp__playwright__browser_type",cfg={allowLiteralKeyText:false,exactValues:["Keyboard"]};
   it.each(["Control+A","Ctrl+A","Shift+Tab","Alt+F4","Meta+K","Enter","Tab","Escape","Backspace","Delete","F1","F12"])("denies %s as text with key-press guidance",text=>{
     expect(textDenial(name,{text},cfg)).toContain("browser_press_key");

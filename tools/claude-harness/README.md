@@ -7,24 +7,92 @@ See [PLAN.md](PLAN.md), [PHASE-2.md](PHASE-2.md) and [PHASE-3.md](PHASE-3.md).
 Runtime defaults to `claude-data/`; the old harness remains untouched. `npm test`
 uses fake processes and excludes browser fixtures/real OpenCode smoke suites.
 
-## Operator replay commands
+## EXP-033 Haiku versus Sonnet comparison
 
-These commands are instructions for the operator's subsequent live replay;
-they were not run against the Mongoose profile or a real model during this build.
+This procedure is for a later operator-run comparison. No live replay, model
+call, Mongoose action or browser launch was performed during preparation.
+Use [R3 task scripts](replays/EXP-033-R3.tasks.md),
+[R4 task scripts](replays/EXP-033-R4.tasks.md), and
+[scorecard.md](replays/scorecard.md).
+
+1. Review `briefs/EXP-033-R3.brief.json` and `EXP-033-R4.brief.json`; both are
+   deliberately `reviewed: false`. R3 is haiku/high, R4 sonnet/high. They inherit
+   R2's scope, prohibitions and AC-1..AC-8, with new record/evidence paths,
+   fresh Claude session UUIDs, exact values and enforced no-JavaScript policy.
+   Mark each reviewed only after resolving the following blockers.
+2. The extracted instructions preserve R2's historical assumptions: T2 expects
+   Select Form closed; T2–T5 describe a corrected inspection used in T1 and T5
+   expects one initial Open. These are preconditions, not facts about either new
+   replay. Record actual inherited state and recovery use; do not reset state,
+   fabricate an inspection, or relabel repeated reads. Stop if they differ.
+   T2–T4 also require Select Form left open, conflicting with the current global
+   no-open-dialog worker preamble. Resolve that policy explicitly before live
+   execution. Preparation preserves both texts and does not grant an exception.
+3. From the new harness directory, build and prepare local config as below.
+   Retain the configured Mongoose profile. Set `chromeWindowStyle: "normal"`
+   (the default), keep worker Bash denied and automatic backend restart off,
+   keep CDP/MCP loopback-only, and keep Git push/merge disabled. For this manually
+   authenticated comparison, set local `mcp.secretsFile` to `null`; the workers
+   are prohibited from logging in or re-establishing sessions. Make config
+   changes only with the owned services stopped.
 
 ```powershell
 cd C:\AI\mongoose-factory\tools\claude-harness
-Copy-Item harness.config.example.json harness.config.json # only if no local config exists
+if (-not (Test-Path harness.config.json)) {
+    Copy-Item harness.config.example.json harness.config.json
+}
+# Review/edit local config as described above before starting services.
 npm ci --ignore-scripts --no-audit --no-fund
 npm run build
 .\claude-harness.ps1 chrome start
+```
+
+4. In the visible owned Chrome, manually open the intended Mongoose environment
+   and log in **before** starting a worker. Confirm the inherited Web Client is
+   usable and preserve its existing Web Client/Designer context. Record the
+   starting state rather than manufacturing a reset to match R2. Refusal for an
+   in-use profile means finish/stop its current owner through that owner's normal
+   workflow; never terminate unowned Chrome or use the default user profile.
+   Start MCP and confirm health:
+
+```powershell
 .\claude-harness.ps1 mcp start
 .\claude-harness.ps1 mcp health
-.\claude-harness.ps1 worker task <EXP-ID> "<instruction>" --model haiku --effort high
-.\claude-harness.ps1 worker task <REPLAY-EXP-ID> "<instruction>" --model sonnet --effort high
+```
+
+5. Open `replays/EXP-033-R3.tasks.md`. Paste **only T1's block** in a PowerShell
+   session. It starts a fresh haiku/high worker and saves its UUID in
+   `$replaySession`. Check the reported UUID is distinct from all earlier
+   sessions; record it. Inspect the complete report, stream/native transcript,
+   evidence diff and decisive screenshots. Copy turns, seconds and guard counts
+   from JSON into the R3/T1 scorecard row; manually score errors and recovery.
+   A completed CLI status is not proof an acceptance check passed.
+6. Proceed manually through T2, T3, T4, T5 only when the preceding report and the
+   next instruction's preconditions permit it. Their exact commands retain
+   `--session $replaySession`, `--model haiku --effort high`. Do not run all five
+   blocks unattended. Stop on a blocker, guard denial, loop interruption,
+   ambiguous state or nonzero exit; inspect effects before any continuation.
+   Checkpoints and the record carry recovery used/remaining across tasks.
+7. Complete the R3 AC-1..AC-8 pass/fail table from evidence, including the final
+   permitted Cancel/no-reopen audit. For R4, record the actual state inherited
+   after R3 and any differences from R2/R3 without resetting it. Repeat steps
+   5–6 using `EXP-033-R4.tasks.md`: T1 has **no --session** and creates a distinct
+   fresh sonnet/high UUID; T2–T5 reuse that new UUID with sonnet/high. Fill R4's
+   task rows/AC table and reviewer notes. Leave coordinator-error cells empty.
+   If inherited state or recovery assumptions prevent a comparable run, record
+   that limitation rather than modifying the instructions during the run.
+8. Stop the owned services when the comparison is finished or the operator ends
+   browser use. A usage-limit pause alone never stops services or the browser:
+
+```powershell
 .\claude-harness.ps1 mcp stop
 .\claude-harness.ps1 chrome stop
 ```
+
+Stopping Chrome during an incomplete task ends its browser session; it does not
+reset experimental limits. Preserve the checkpoint and confirm the next permitted
+action before manually restoring access. No restart, login or navigation is an
+automatic recovery action.
 
 Production Chrome uses configured `mongooseBrowserProfile`, default
 `C:\AI\mongoose-playwright-profile`, and starts on `about:blank`. It refuses an
@@ -38,8 +106,10 @@ owned Chrome when not in use. No gateway is used.
 
 `worker task` requires a reviewed brief under `briefs/` and validates its record,
 evidence directory and instruction scope. It creates a fresh session by default.
-For comparisons, prepare equivalent permitted browser starting states explicitly;
-new sessions do not reset browser/Designer state. Default worker/coordinator/
+For this comparison, record inherited browser state and its differences;
+new sessions do not reset browser/Designer state. Optional brief `worker` model/
+effort defaults override config, and explicit CLI flags override the brief.
+Default worker/coordinator/
 specialist models are haiku/sonnet/opus, all effort high, all configurable.
 Every task starts with a fresh snapshot and ends stable without dialogs/unsaved
 prompts; never discard work or expand scope to stabilize a page.
