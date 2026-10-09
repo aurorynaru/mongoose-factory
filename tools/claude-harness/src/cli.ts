@@ -112,7 +112,7 @@ async function runAutopilot(a: App, chat: ChatPort, previous: RunRow): Promise<s
   return r.briefPath;
 }
 
-async function proposeAndReport(a: App, chat: ChatPort, previous: RunRow | null, force = false): Promise<boolean> {
+async function proposeAndReport(a: App, chat: ChatPort, previous: RunRow | null, force = false, focus?: string): Promise<boolean> {
   const r = await requestProposal(
     {
       chat,
@@ -122,7 +122,9 @@ async function proposeAndReport(a: App, chat: ChatPort, previous: RunRow | null,
       proposalsDir: join(a.paths.dataDir, "proposals"),
       log: a.log,
       replyTimeoutMs: a.config.browser.replyTimeoutMinutes * 60_000,
-      contextText: contextBlock(a.paths.factoryRoot, contextFilePath(a), a.config.chats.maxDigestChars, a.config.chats.maxContextChars),
+      contextText: contextBlock(a.paths.factoryRoot, contextFilePath(a), a.config.chats.maxDigestChars, a.config.chats.maxContextChars) + (focus?.trim() ? `
+
+OPERATOR FOCUS for this proposal (direction only; every protocol rule, FX_ boundary and scope limit still applies): ${focus.trim()}` : ""),
       newChatHome: a.store.getSetting("new_chat:coordinator") === "1" ? a.config.browser.baseUrl.replace(/\/$/, "") + "/" : undefined,
       onNewConversation: (url) => {
         const p = parseConversationUrl(url)!;
@@ -147,12 +149,13 @@ program
   .command("next")
   .description("Ask the coordinator (Tab 1) to propose the next experiment; saves an UNREVIEWED draft brief, starts nothing")
   .option("--force", "overwrite an existing brief file for the proposed ID")
+  .option("--focus <text>", "operator direction for this proposal (scope rules still apply)")
   .action(async (o) => {
     const a = app();
     if (a.store.activeRuns().length) throw new Error(`Run ${a.store.activeRuns()[0].id} is still active. Finish or stop it first.`);
     const chats = await openChats(a,()=>null);
     try {
-      process.exitCode = (await proposeAndReport(a, chats.chat, a.store.latestRun(), !!o.force)) ? 0 : 1;
+      process.exitCode = (await proposeAndReport(a, chats.chat, a.store.latestRun(), !!o.force, o.focus)) ? 0 : 1;
     } finally {
       await chats.close();
     }
