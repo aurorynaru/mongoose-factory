@@ -95,6 +95,11 @@ Browser task boundaries:
 - Begin EVERY task with a fresh snapshot of the visible tab; establish selected
   Form identity and editing scope before acting. Earlier accessibility refs and
   MCP tab-selection metadata are stale after a client disconnect.
+- Several tabs (e.g. Web Client and Web Designer): Chrome does not render
+  background tabs, so clicks and screenshots there time out. Before acting on or
+  capturing a page, make its tab the selected tab with the tab-selection tool,
+  then take a fresh snapshot. Selecting a tab is navigation within the browser,
+  not a Mongoose lifecycle action.
 - End in a stable page state with no browser-native dialogs (alert, confirm,
   prompt, or beforeunload "leave page") and no unsaved-change prompts. CDP
   disconnect dismisses beforeunload dialogs. In-page Mongoose dialogs (such as
