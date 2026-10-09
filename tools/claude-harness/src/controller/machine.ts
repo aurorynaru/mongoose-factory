@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import type { ChatPort, ChatRole, InterpreterPort, WorkerPort } from "../adapters/types.js";
 import { briefProblems, summarizeRecord, type Brief, type LoadedBrief } from "../brief.js";
@@ -82,7 +82,7 @@ export class Controller {
    */
   applyResumeOptions(
     runId: string,
-    o: { approve?: string[]; limits?: Record<string, number>; brief?: LoadedBrief; reask?: string | boolean;confirmPreconditions?:boolean;continueAfterUsage?:string },
+    o: { approve?: string[]; limits?: Record<string, number>; brief?: LoadedBrief; reask?: string | boolean;confirmPreconditions?:boolean;continueAfterUsage?:string;note?:string },
   ): string[] {
     const { store } = this.d;
     let run = store.getRun(runId);
@@ -91,6 +91,22 @@ export class Controller {
     const notes: string[] = [];
     const approvals: Approvals = { ...run.approvals };
     const op = run.pending_op_id ? store.getOp(run.pending_op_id) : null;
+    if (o.note !== undefined) {
+      // An operator decision for a coordinator-requested PAUSE travels inside the still-unsent RESUMED_AFTER_PAUSE message.
+      const note = o.note.trim();
+      if (!note) throw new Error("--note needs non-empty text.");
+      if (run.status !== "paused" || !op || op.kind !== "coordinator" || op.purpose !== "RESUMED_AFTER_PAUSE" || op.status !== "planned")
+        throw new Error("--note is only possible while the run is paused after a coordinator PAUSE and its resume message is still unsent.");
+      const marker = `Decide the next step for ${run.experiment_id}.`;
+      const insert = (t: string) => {
+        const i = t.indexOf(marker);
+        if (i < 0) throw new Error("Pending resume message has an unexpected format; note not applied.");
+        return t.slice(0, i + marker.length) + `\n\nOperator decision: ${note}` + t.slice(i + marker.length);
+      };
+      writeFileSync(op.payload_path, insert(readFileSync(op.payload_path, "utf8")));
+      store.db.prepare(`UPDATE operations SET payload_text=?, updated_at=? WHERE id=?`).run(insert(op.payload_text), new Date().toISOString(), op.id);
+      notes.push("operator decision added to the pending resume message");
+    }
     if(o.confirmPreconditions){store.setSetting(`preconditions:${runId}`,JSON.stringify({at:new Date().toISOString(),source:"explicit operator confirmation",loggedIn:true,configurationSelected:true}));notes.push("Mongoose login/configuration preconditions confirmed");}
     if(o.continueAfterUsage) {
       if(run.pause_reason!=="usage_limit"||op?.kind!=="worker"||!op.meta.usageLimit)throw Error("--continue-after-usage requires the pending worker usage-limit pause");

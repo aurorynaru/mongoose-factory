@@ -95,6 +95,26 @@ describe("brief initial_instruction", () => {
   });
 });
 
+describe("operator note after a coordinator PAUSE", () => {
+  it("adds the operator's decision to the pending resume message and sends it once", async () => {
+    const h = track(harness({ coordinator: [{ envelope: { action: "PAUSE", reason: "needs operator decision" } }, { envelope: { action: "PAUSE", reason: "ack" } }] }));
+    const first = await h.controller.run(h.controller.createRun(fixtureBrief()).id);
+    expect(first.pause_reason).toBe("coordinator_requested_pause");
+    const notes = h.controller.applyResumeOptions(first.id, { note: "Waive the ordering rule for this run only." });
+    expect(notes).toContain("operator decision added to the pending resume message");
+    await h.controller.run(first.id);
+    const resumed = h.chat.submissions.filter((s) => s.role === "coordinator" && kindOf(s.text) === "RESUMED_AFTER_PAUSE");
+    expect(resumed).toHaveLength(1);
+    expect(resumed[0].text).toContain("Operator decision: Waive the ordering rule for this run only.");
+  });
+
+  it("refuses an empty note", async () => {
+    const h = track(harness({ coordinator: [{ envelope: { action: "PAUSE", reason: "p" } }] }));
+    const run = await h.controller.run(h.controller.createRun(fixtureBrief()).id);
+    expect(() => h.controller.applyResumeOptions(run.id, { note: "  " })).toThrow(/non-empty/);
+  });
+});
+
 describe("specialist consultation", () => {
   it("sends the question plus the latest worker observations to Tab 2 and returns the full reply to Tab 1", async () => {
     const h = track(

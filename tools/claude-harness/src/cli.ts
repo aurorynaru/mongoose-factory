@@ -494,6 +494,7 @@ program
   .option("--limit <k=v...>", "raise a limit, e.g. --limit maxWorkerTasks=20")
   .option("--reload-brief", "re-read the brief file (same experiment only)")
   .option("--reask [note]", "ask the coordinator to reconsider its last reply")
+  .option("--note <text>", "after a coordinator PAUSE, add the operator's decision to the pending resume message")
   .action(async (o) => {
     const a = app();
     const run = currentRun(a, o.run);
@@ -508,7 +509,7 @@ program
     // Controller constructed without live adapters just to apply options transactionally.
     const { Controller } = await import("./controller/machine.js");
     const offline = new Controller({ store: a.store, config: a.config, factoryRoot: a.paths.factoryRoot, runsDir: a.paths.runsDir, protocolDir: a.paths.protocolDir, chat: null as never, worker: { newMessageId: () => "" } as never, interpreter: null, log: a.log });
-    const notes = offline.applyResumeOptions(run.id, { approve: o.approve, limits, brief: loaded, reask: o.reask,confirmPreconditions:!!o.confirmPreconditions,continueAfterUsage:o.continueAfterUsage });
+    const notes = offline.applyResumeOptions(run.id, { approve: o.approve, limits, brief: loaded, reask: o.reask,confirmPreconditions:!!o.confirmPreconditions,continueAfterUsage:o.continueAfterUsage,note:o.note });
     notes.forEach((n) => console.log(`- ${n}`));
     if(o.continueChatAfterUsage) {
       const role=o.continueChatAfterUsage;
