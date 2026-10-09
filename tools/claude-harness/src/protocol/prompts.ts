@@ -3,7 +3,7 @@ import { join } from "node:path";
 import type { Brief } from "../brief.js";
 import type { Counters } from "../store.js";
 import type { Limits } from "../config.js";
-import { workerPolicyForBrief } from "../adapters/opencode/tool-policy.js";
+import { workerPolicyForBrief } from "../adapters/claude/tool-policy.js";
 
 export function protocolBlock(protocolDir: string, file: string, marker = "PROTOCOL"): string {
   const text = readFileSync(join(protocolDir, file), "utf8");

@@ -105,7 +105,7 @@ export function contextRequestText(nonce: string): string {
     "this chat. Write the handoff those fresh chats should read first. The experiment records on disk (statuses and",
     "results) will be supplied to them separately, so focus on what is NOT obvious from the records:",
     "",
-    "1. Project and workflow: what the factory is, roles (you, OpenCode worker, Mongoose specialist GPT), how you work.",
+    "1. Project and workflow: what the factory is, roles (you, Claude worker, Claude Opus Mongoose specialist; optional unverified Tab 2 second opinion), how you work.",
     "2. Environment facts that matter (versions, scope, quirks) — only ones you are confident about.",
     "3. Decisions and rules established so far (conventions, what to avoid, how evidence must be produced).",
     "4. Lessons learned and pitfalls per experiment (cite experiment IDs).",

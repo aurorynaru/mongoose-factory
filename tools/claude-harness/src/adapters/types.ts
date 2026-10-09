@@ -13,17 +13,20 @@ export type ChatProblem =
   | "visible_error"
   | "composer_missing"
   | "model_mismatch";
+// Claude roles preserve expected subscription pauses separately from browser errors.
+export type ClaudeChatProblem = ChatProblem | "usage_limit" | "permission_denied" | "submission_uncertain";
 
 export interface ReadyStatus {
   ok: boolean;
   /** Visible label of the model/effort selector, when the page shows one. */
   modelLabel?: string | null;
-  problem?: ChatProblem;
+  problem?: ClaudeChatProblem;
   detail?: string;
   url?: string;
 }
 
 export interface SubmissionCheck {
+  conversationUrl?: string;
   /** false when the conversation could not be inspected reliably (the answer is unknown). */
   reliable: boolean;
   found: boolean;
@@ -35,15 +38,16 @@ export type SubmitOutcome =
   | { status: "accepted"; userMessageId?: string }
   | { status: "not_submitted"; detail: string }
   | { status: "uncertain"; detail: string }
-  | { status: "blocked"; problem: ChatProblem; detail: string };
+  | { status: "blocked"; problem: ClaudeChatProblem; detail: string };
 
 export type ReplyOutcome =
   | { status: "complete"; messageId: string; markdown: string }
   | { status: "timeout"; detail: string }
   | { status: "interrupted" }
-  | { status: "blocked"; problem: ChatProblem; detail: string };
+  | { status: "blocked"; problem: ClaudeChatProblem; detail: string };
 
 export interface ChatPort {
+  transport?(role:ChatRole):"chatgpt"|"claude";
   checkReady(role: ChatRole): Promise<ReadyStatus>;
   /** Look for a user message carrying this nonce. Reloads/rechecks as needed to be definitive. */
   findSubmission(role: ChatRole, nonce: string): Promise<SubmissionCheck>;
@@ -87,6 +91,9 @@ export type WorkerResult =
   | { status: "backend_unavailable"; detail: string };
 
 export interface WorkerPort {
+  windowState?():Promise<import("../backend/chrome-window.js").ChromeWindow>;
+  selectModel?(model:{model:string;effort:"low"|"medium"|"high"|"xhigh"|"max"|null}):void;
+  releaseUsagePause?(sessionId:string,messageId:string):Promise<void>;
   /** Optional Claude task context; separate from the saved controller payload. */
   setTaskPreamble?(sessionId: string, preamble: string): Promise<void>;
   health(): Promise<{ ok: boolean; version?: string; detail?: string }>;

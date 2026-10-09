@@ -79,6 +79,7 @@ export type RefCheck = { ref: string; ok: boolean; problem?: "unsafe_path" | "mi
 
 export function checkEvidenceRef(ref: string, factoryRoot: string): RefCheck {
   const clean = ref.trim().replace(/^`|`$/g, "").replace(/\\/g, "/").replace(/^\.\//, "");
+  if(clean.split("/").includes("external-second-opinion"))return {ref,ok:false,problem:"unsafe_path"};
   if (!clean || isAbsolute(clean) || /^[a-z]+:/i.test(clean)) return { ref, ok: false, problem: "unsafe_path" };
   const abs = resolve(factoryRoot, clean);
   const rel = relative(resolve(factoryRoot), abs);

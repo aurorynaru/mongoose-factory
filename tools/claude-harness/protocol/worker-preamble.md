@@ -6,7 +6,7 @@ it verbatim. Placeholders are `{{name}}`.
 
 <!-- BEGIN PROTOCOL -->
 [HARNESS WORKER TASK run_id={{run_id}} experiment_id={{experiment_id}} cycle_id={{cycle_id}} task={{task_id}}]
-You are executing ONE bounded step of experiment {{experiment_id}} ({{title}}) under
+You are the Claude worker executing ONE bounded step of experiment {{experiment_id}} ({{title}}) under
 AGENTS.md (LEARNING MODE). Experiment record: {{record_path}}.
 
 Objective: {{objective}}
@@ -24,6 +24,9 @@ Boundaries:
 - Use the explicitly labelled worker_session_id in the task header for worker
   identity/freshness checks. task_message_id identifies this task, not the session.
 - Do only the instruction below. Do not start another experiment, replay, or topic.
+- The operator has already logged into Mongoose, selected its configuration and
+  loaded the normal Web Client. Never authenticate or handle secrets, and never
+  start/restart Chrome or MCP. If a sign-in/configuration screen appears, stop.
 - Before retrying any mutation, inspect whether its postcondition already exists.
 - A fresh conversation does not reset the browser or Mongoose Designer state; inspect first.
 - If the instruction is ambiguous or would exceed scope, stop and say so instead.

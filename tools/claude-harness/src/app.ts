@@ -3,7 +3,8 @@ import { ChatGptAdapter } from "./adapters/chatgpt/adapter.js";
 import { BrowserSession } from "./adapters/chatgpt/browser.js";
 import { OpenCodeClient } from "./adapters/opencode/client.js";
 import { ClaudeWorker } from "./adapters/claude/worker.js";
-import type { ChatRole, WorkerPort } from "./adapters/types.js";
+import type { ChatPort, ChatRole, WorkerPort } from "./adapters/types.js";
+import { ClaudeChat, ExternalSecondOpinion, RoutedChat } from "./adapters/claude/chat.js";
 import { BackendManager } from "./backend/process.js";
 import { configProblems, loadConfig, resolvePaths, type HarnessConfig, type ResolvedPaths } from "./config.js";
 import { Controller } from "./controller/machine.js";
@@ -69,16 +70,27 @@ export function chatAdapter(app: App, browser: BrowserSession, runId: () => stri
 
 export interface LiveController {
   controller: Controller;
-  chat: ChatGptAdapter;
+  chat: ChatPort;
+  claudeChat:ClaudeChat;
   worker: WorkerPort;
-  browser: BrowserSession;
+  browser: BrowserSession|null;
   close(): Promise<void>;
 }
 
-/** Phase 3 worker is Claude; coordinator browser transport remains until Phase 4. */
-export async function liveController(app: App, currentRun: () => string | null): Promise<LiveController> {
+/** Role transports also serve proposals/handoffs; no Mongoose service lifecycle. */
+export async function openChats(app:App,currentRun:()=>string|null) {
+  const {config}=app;
+  const browser=config.coordinator.transport==="chatgpt"||config.externalSecondOpinion.enabled?await BrowserSession.open(config.browser):null;
+  const browserChat=browser?chatAdapter(app,browser,currentRun):null;
+  const claudeChat=new ClaudeChat({config,paths:app.paths,external:new ExternalSecondOpinion(config,app.paths,browserChat)});
+  const chat=new RoutedChat(config,browserChat,claudeChat);
+  return {browser,claudeChat,chat,close:async()=>{await chat.close();await browser?.close();}};
+}
+
+/** No service lifecycle calls: operators prepare Chrome/MCP before starting a run. */
+export async function liveController(app: App, currentRun: () => string | null,preconditionsConfirmed=false): Promise<LiveController> {
   const { config } = app;
-  const worker = new ClaudeWorker({ config, paths: app.paths });
+  const worker = new ClaudeWorker({ config:structuredClone(config), paths: app.paths });
   const h = await worker.health();
   if (!h.ok) throw new Error(`Claude worker is not ready: ${h.detail ?? ""}`);
 
@@ -89,8 +101,8 @@ export async function liveController(app: App, currentRun: () => string | null):
     interpreter = new DeepSeekInterpreter(config.deepseek, key);
   }
 
-  const browser = await BrowserSession.open(config.browser);
-  const chat = chatAdapter(app, browser, currentRun);
+  const chats=await openChats(app,currentRun);
+  const {browser,claudeChat,chat}=chats;
   const controller = new Controller({
     store: app.store,
     config,
@@ -102,6 +114,7 @@ export async function liveController(app: App, currentRun: () => string | null):
     worker,
     interpreter,
     log: app.log,
+    preconditionsConfirmed,
   });
-  return { controller, chat, worker, browser, close: () => browser.close() };
+  return {controller,chat,claudeChat,worker,browser,close:chats.close};
 }

@@ -6,15 +6,15 @@ import type { HarnessConfig } from "../config.js";
 import { extractEnvelope, extractSpecialistEnvelope, type Envelope, type Extraction } from "../protocol/envelope.js";
 import { vetCandidate } from "../protocol/interpreter.js";
 import { briefForCoordinator, clip, fillWorkerPreamble, header, protocolBlock, remainingLimits } from "../protocol/prompts.js";
-import { asksForUpload, scopeMatches, validateEnvelope, type ValidationContext } from "../protocol/validate.js";
+import { asksForUpload, scopeMatches, scopeViolations, validateEnvelope, type ValidationContext } from "../protocol/validate.js";
 import { pidAlive, type Approvals, type InboundRow, type OpRow, type RunRow, type Store } from "../store.js";
 import { newNonce, newRunId } from "../util/ids.js";
 import type { LogSink } from "../util/log.js";
 import { diffSnapshots, snapshotDirs, watchedDirs, type DirSnapshot } from "./evidence.js";
 import { renderHandoff } from "./handoff.js";
 import { contextBlock } from "../context.js";
-import { parseConversationUrl } from "../adapters/chatgpt/selectors.js";
-import { workerPolicyForBrief } from "../adapters/opencode/tool-policy.js";
+import { workerPolicyForBrief } from "../adapters/claude/tool-policy.js";
+import { recordConversation } from "../adapters/conversation.js";
 
 export interface ControllerDeps {
   store: Store;
@@ -31,6 +31,7 @@ export interface ControllerDeps {
   now?: () => number;
   pid?: number;
   isAlive?: (pid: number) => boolean;
+  preconditionsConfirmed?:boolean;
 }
 
 interface OpReview {
@@ -38,8 +39,6 @@ interface OpReview {
   itemId: number;
   detail: string;
 }
-
-const MAX_BACKEND_RESTARTS = 3;
 
 export class Controller {
   private segStart = 0;
@@ -72,6 +71,7 @@ export class Controller {
       limits: { ...config.limits },
     });
     this.write(run.id, "brief.json", JSON.stringify(loaded.brief, null, 2));
+    if(this.d.preconditionsConfirmed)store.setSetting(`preconditions:${id}`,JSON.stringify({at:new Date().toISOString(),source:"explicit operator confirmation",loggedIn:true,configurationSelected:true}));
     this.d.log.log("info", "run.created", { run_id: id, experiment_id: loaded.brief.experiment_id });
     return run;
   }
@@ -82,7 +82,7 @@ export class Controller {
    */
   applyResumeOptions(
     runId: string,
-    o: { approve?: string[]; limits?: Record<string, number>; brief?: LoadedBrief; reask?: string | boolean },
+    o: { approve?: string[]; limits?: Record<string, number>; brief?: LoadedBrief; reask?: string | boolean;confirmPreconditions?:boolean;continueAfterUsage?:string },
   ): string[] {
     const { store } = this.d;
     let run = store.getRun(runId);
@@ -91,12 +91,18 @@ export class Controller {
     const notes: string[] = [];
     const approvals: Approvals = { ...run.approvals };
     const op = run.pending_op_id ? store.getOp(run.pending_op_id) : null;
+    if(o.confirmPreconditions){store.setSetting(`preconditions:${runId}`,JSON.stringify({at:new Date().toISOString(),source:"explicit operator confirmation",loggedIn:true,configurationSelected:true}));notes.push("Mongoose login/configuration preconditions confirmed");}
+    if(o.continueAfterUsage) {
+      if(run.pause_reason!=="usage_limit"||op?.kind!=="worker"||!op.meta.usageLimit)throw Error("--continue-after-usage requires the pending worker usage-limit pause");
+      store.updateOp(op.id,{meta:{...op.meta,usageContinuation:o.continueAfterUsage}});notes.push("explicit new bounded continuation saved; old task will not be replayed");
+    }
     for (const code of o.approve ?? []) {
       let itemId: number | null = null;
       if (code === "resubmit") itemId = op && op.status === "uncertain" ? op.id : null;
+      else if(code==="denials")itemId=op?.meta.permissionDenials?op.id:null;
       else if (code === "attachment") itemId = (op?.meta.review as OpReview | undefined)?.code === "attachment" ? (op!.meta.review as OpReview).itemId : run.pending_inbound_id;
       else if (code === "scope" || code === "candidate") itemId = run.state === "DECISION_PENDING" ? run.pending_inbound_id : null;
-      else throw new Error(`Unknown approval '${code}'. Use: scope | candidate | attachment | resubmit`);
+      else throw new Error(`Unknown approval '${code}'. Use: scope | candidate | attachment | resubmit | denials`);
       if (itemId == null) throw new Error(`Nothing pending that '${code}' could approve (state ${run.state}, pause ${run.pause_reason ?? "-"}).`);
       approvals[code as keyof Approvals] = itemId;
       notes.push(`approved ${code} for item ${itemId}`);
@@ -277,9 +283,9 @@ export class Controller {
       "",
       `Remaining limits: ${remainingLimits(run.counters, run.limits, this.activeMs(run))}`,
       "",
-      "IMPORTANT: from now on the worker is a NEW OpenCode session started by this controller. It has none of the",
-      "context of earlier, manually run OpenCode chats, and its Mongoose browser may be freshly opened (no form open,",
-      "possibly a login needed). Make the first instruction self-contained and start by inspecting the current state.",
+      "IMPORTANT: the worker is a NEW Claude session with no earlier chat context. Its browser is the already-owned",
+      "Chrome/MCP session, manually logged in with Mongoose configuration selected. Never ask the worker to authenticate",
+      "or start/restart services. Make the first instruction self-contained and inspect the visible state/scope first.",
       "",
       "Decide the first step. Usually that is SEND_TO_OPENCODE with one bounded instruction.",
     ].join("\n");
@@ -404,6 +410,15 @@ export class Controller {
       }
       // A first message that opens a NEW chat cannot be looked up in the old conversation.
       const openingNewChat = !!op.meta.newConversation && !op.meta.conversationUrl;
+      if(openingNewChat&&chat.transport?.(role)==="claude"&&op.status!=="planned") {
+        const chk=await chat.findSubmission(role,op.nonce!);
+        if(chk.found&&chk.conversationUrl) {
+          recordConversation(store,role,chk.conversationUrl);
+          store.updateOp(op.id,{status:"accepted",external_ref:chk.userMessageId??null,meta:{...op.meta,conversationUrl:chk.conversationUrl}});
+          return;
+        }
+        return this.pause(run,"submission_uncertain",`The Claude ${role} task is journaled but its native marker is unconfirmed. Inspect its saved operation/transcript; no request will be resubmitted automatically.`);
+      }
       if (openingNewChat && op.status !== "planned" && run.approvals.resubmit !== op.id) {
         return this.pause(run, "submission_uncertain", `The first message of a NEW ${role} chat (nonce ${op.nonce}) may or may not have been sent. Look in the ChatGPT sidebar for a new chat containing it. If it is there, register it with 'harness chat use ${role} <url>' and resume; if not, run 'harness resume --approve resubmit'.`);
       }
@@ -422,7 +437,7 @@ export class Controller {
       }
       let homeUrl: string | null = null;
       if (openingNewChat) {
-        homeUrl = role === "coordinator" ? this.d.config.browser.baseUrl.replace(/\/$/, "") + "/" : (store.getRole("specialist")?.url.replace(/\/c\/.*$/, "") ?? null);
+        homeUrl = chat.transport?.(role)==="claude"?`claude-role:${role}`:role === "coordinator" ? this.d.config.browser.baseUrl.replace(/\/$/, "") + "/" : (store.getRole("specialist")?.url.replace(/\/c\/.*$/, "") ?? null);
         if (!homeUrl) return this.pause(run, "browser:not_configured", "No specialist GPT conversation is registered, so its GPT page is unknown. Run: harness setup");
       } else {
         const ready = await chat.checkReady(role);
@@ -444,14 +459,13 @@ export class Controller {
         case "accepted": {
           const newUrl = (out as { conversationUrl?: string }).conversationUrl;
           if (homeUrl && newUrl) {
-            const parsed = parseConversationUrl(newUrl);
             const prev = store.getRole(role)?.url ?? null;
             store.tx(() => {
-              store.setRole(role, { url: parsed!.canonical, conversationId: parsed!.conversationId, gptId: parsed!.gptId ?? (role === "specialist" ? store.getRole("specialist")?.gpt_id ?? null : null), title: null });
-              op = store.updateOp(op.id, { meta: { ...op.meta, conversationUrl: parsed!.canonical, previousConversationUrl: prev } });
-              store.addTransition(run.id, run.state, run.state, run.status, run.status, "new_conversation", { role, url: parsed!.canonical, previous: prev });
+              recordConversation(store,role,newUrl);
+              op = store.updateOp(op.id, { meta: { ...op.meta, conversationUrl:newUrl, previousConversationUrl: prev } });
+              store.addTransition(run.id, run.state, run.state, run.status, run.status, "new_conversation", { role, url:newUrl, previous: prev });
             });
-            this.d.log.log("info", "chat.new_conversation", { run_id: run.id, role, url: parsed!.canonical, previous: prev });
+            this.d.log.log("info", "chat.new_conversation", { run_id: run.id, role, url:newUrl, previous: prev });
           }
           store.updateOp(op.id, { status: "accepted", external_ref: out.userMessageId ?? null });
           const cur = store.getRun(run.id)!;
@@ -484,6 +498,7 @@ export class Controller {
       if (reply.status === "interrupted") return;
       if (reply.status === "timeout") return this.pause(run, "reply_timeout", `${role}: ${reply.detail}`);
       if (reply.status === "blocked") {
+        if(reply.problem==="usage_limit")return this.pause(run,"usage_limit",`${role}: ${reply.detail}. Wait for reset, then resume to reconcile this nonce; no request is replayed automatically.`);
         if (reply.problem === "visible_error") run = this.failure(run, `browser_reply_error_${role}`, reply.detail);
         return this.pause(run, `browser:${reply.problem}`, `${role}: ${reply.detail}`);
       }
@@ -732,6 +747,15 @@ export class Controller {
         const lim = this.limitHit(run, "worker");
         if (lim) return this.pause(run, `limit:${lim}`, `Limit ${lim} reached before worker task ${op.purpose}. Task saved at ${op.payload_path}. Raise it with: harness resume --limit ${lim}=<n>`);
       }
+      if(!store.getSetting(`preconditions:${run.id}`))return this.pause(run,"operator_preconditions",`Confirm Mongoose is manually logged in, its configuration is selected and the normal Web Client is loaded: claude-harness resume --run ${run.id} --confirm-preconditions. The worker never authenticates.`);
+      try {
+        const ready=await worker.health();if(!ready.ok)throw Error(ready.detail??"Owned Chrome/MCP or Claude auth is not healthy");
+        if(!worker.windowState)throw Error("Worker window-state check is unavailable");
+        const window=await worker.windowState();if(window.windowState==="minimized")throw Error("restore the Chrome window first");
+        op=store.updateOp(op.id,{meta:{...op.meta,chromeWindow:window,windowState:window.windowState,bounds:window.bounds}});
+        const model=this.brief(run).worker??this.d.config.claude.models.worker;
+        worker.selectModel?.(model);op=store.updateOp(op.id,{meta:{...op.meta,workerModel:model}});
+      }catch(error){return this.pause(run,"worker_preflight",(error as Error).message);}
       if (!op.session_id) {
         let sid = op.new_session || !run.current_session_id ? null : run.current_session_id;
         if (!sid) {
@@ -787,7 +811,7 @@ export class Controller {
       }
       if (out.status === "rejected") {
         store.updateOp(op.id, { status: "failed", error: out.detail ?? "rejected" });
-        return this.workerFailed(store.getRun(run.id)!, op, `OpenCode rejected the task: ${out.detail ?? ""}`, "", "");
+        return this.pause(store.getRun(run.id)!,"worker_submission_rejected",`Claude rejected the task: ${out.detail??""}. Inspect the saved journal; never automatically replay it.`);
       }
       const pres = await worker.findMessage(sid, op.message_id!);
       if (pres === "present") {
@@ -808,7 +832,15 @@ export class Controller {
         case "usage_limit":
           store.updateOp(op.id, { meta: { ...op.meta, usageLimit: res.detail, partialText: res.text,
             partialTranscript: this.write(run.id, `worker/${op.purpose}-usage-limit-transcript.md`, res.transcript) } });
-          return this.pause(run, "usage_limit", `${res.detail}. Expected Claude Pro pause; preserve all state and wait for five-hour/weekly reset. No automatic resubmission, model switch or backend restart.`);
+          if(op.meta.usageContinuation) {
+            if(!worker.releaseUsagePause) return this.pause(run,"usage_limit","This worker cannot release its saved usage pause; preserve state.");
+            const message=String(op.meta.usageContinuation),violations=scopeViolations(message,this.brief(run));
+            if(violations.length)return this.pause(run,"review:scope",violations.join("; "));
+            await worker.releaseUsagePause(op.session_id!,op.message_id!);
+            store.updateOp(op.id,{status:"completed",meta:{...op.meta,usageLimit:res.detail,usageContinuationConsumed:true}});
+            this.planWorker(run,message,{newSession:false,reason:`explicit operator continuation after ${op.message_id}`});return;
+          }
+          return this.pause(run, "usage_limit", `${res.detail}. Expected Claude Pro pause; preserve all state and wait for five-hour/weekly reset. No automatic resubmission, model switch or backend restart. After reset: claude-harness resume --run ${run.id} --continue-after-usage "new bounded instruction to inspect state and continue". Plain resume only reconciles the cached pause.`);
         case "model_mismatch":
           return this.pause(run, "model_mismatch", res.detail);
         case "turn_limit":
@@ -818,14 +850,14 @@ export class Controller {
         case "interrupted":
           return;
         case "blocked":
-          return this.pause(run, `worker_blocked:${res.kind}`, `OpenCode is waiting for a ${res.kind} answer: ${res.detail}. Answer it with 'opencode attach ${this.d.config.opencode.baseUrl}' (session ${op.session_id}), then run 'harness resume'. The harness never auto-approves.`);
+          return this.pause(run, `worker_blocked:${res.kind}`, `Claude worker blocked: ${res.detail}. Inspect session ${op.session_id} and its saved transcript. The harness never auto-approves or resubmits.`);
         case "timeout":
           return this.pause(run, "worker_timeout", `${res.detail}. The task may still be running in session ${op.session_id}. 'harness resume' keeps waiting; 'harness stop --abort-worker' aborts it.`);
         case "stalled": {
           if (!res.aborted) {
             const transcript = this.write(run.id, `worker/${op.purpose}-loop-transcript.md`, res.transcript);
             store.updateOp(op.id, { meta: { ...op.meta, inspectionLoop: res.detail, transcript } });
-            return this.pause(run, "worker_inspection_loop", `${res.detail} The harness could not confirm the worker stopped. Attach with 'opencode attach ${this.d.config.opencode.baseUrl} -s ${op.session_id}', interrupt it and wait until idle, then 'harness resume'. Partial transcript: ${transcript}.`);
+            return this.pause(run, "worker_inspection_loop", `${res.detail} The harness could not confirm the Claude worker stopped. Inspect its owned process/session ${op.session_id}; no backend/browser restart. Partial transcript: ${transcript}.`);
           }
           const recover = this.d.config.opencode.autoRecoverInspectionLoops && run.counters.inspectionRecoveries < 1;
           const recoveryNote = recover
@@ -843,13 +875,7 @@ export class Controller {
           return this.pause(store.getRun(run.id)!, "worker_inspection_loop", `${res.detail} The worker session was interrupted and confirmed idle; its partial output is saved. Review it, then 'harness resume' forwards the failure to the coordinator without resubmitting the old task. The browser and backend were not restarted.`);
         }
         case "backend_unavailable": {
-          await this.tryRestart(run, res.detail);
-          const cur = store.getRun(run.id)!;
-          store.tx(() => {
-            store.updateOp(op.id, { status: "failed", error: res.detail });
-            this.workerFailed(cur, op, `OpenCode backend became unavailable during the task: ${res.detail}. The in-flight task was lost.`, "", "");
-          });
-          return;
+          return this.pause(run,"backend_unavailable",`${res.detail}. Restore owned Chrome/MCP manually; the controller never starts or restarts them.`);
         }
         case "failed":
           store.tx(() => {
@@ -858,6 +884,11 @@ export class Controller {
           });
           return;
         case "completed": {
+          if(res.permissionDenials?.length) {
+            op=store.updateOp(op.id,{meta:{...op.meta,permissionDenials:res.permissionDenials,exitCode:3,warning:res.warning}});
+            this.write(run.id,`worker/${op.purpose}-completed-with-denials.json`,JSON.stringify(res,null,2));
+            if(run.approvals.denials!==op.id)return this.pause(run,"completed_with_denials",`Worker completed with expected permission denials (exit 3). Review the saved report, denial list and evidence; then claude-harness resume --run ${run.id} --approve denials. No report is forwarded until review.`);
+          }
           const after = snapshotDirs(this.d.factoryRoot, watchedDirs(this.brief(run).evidence_dir));
           const diff = diffSnapshots((op.meta.before as DirSnapshot) ?? {}, after);
           const changed = [...diff.added, ...diff.modified];
@@ -887,7 +918,7 @@ export class Controller {
 
   private planWorkerReport(run: RunRow, op: OpRow, diff: { added: string[]; modified: string[]; removed: string[] }, text: string, file: string): void {
     const body = [
-      `Worker task ${op.purpose} completed (OpenCode session ${op.session_id}, message ${op.message_id}).`,
+      `Worker task ${op.purpose} completed (Claude worker_session_id: ${op.session_id}, task_message_id: ${op.message_id}).`,
       `Files added during the task: ${diff.added.join(", ") || "(none)"}`,
       `Files modified during the task: ${diff.modified.join(", ") || "(none)"}`,
       diff.removed.length ? `Files REMOVED during the task: ${diff.removed.join(", ")}` : "",
@@ -922,27 +953,8 @@ export class Controller {
     this.planCoordinator(run, "WORKER_FAILURE", body, { extra: { task: op.purpose } });
   }
 
-  private async tryRestart(run: RunRow, why: string): Promise<boolean> {
-    const cfg = this.d.config.opencode;
-    if (!cfg.manageBackend || !cfg.autoRestartOnFailure) return false;
-    if (run.counters.backendRestarts >= MAX_BACKEND_RESTARTS) return false;
-    const h = await this.d.worker.health();
-    if (h.ok) return true;
-    this.d.log.log("warn", "backend.restart", { run_id: run.id, why });
-    const ok = await this.d.worker.restartOwnedBackend();
-    const cur = this.d.store.getRun(run.id)!;
-    this.d.store.updateRun(run.id, { counters: { ...cur.counters, backendRestarts: cur.counters.backendRestarts + 1 } });
-    return ok;
-  }
-
   private async backendTrouble(run: RunRow, detail: string): Promise<void> {
-    run = this.failure(run, "backend_unavailable", detail);
-    if (run.counters.consecutiveFailures >= run.limits.maxConsecutiveFailures) {
-      return this.pause(run, "limit:maxConsecutiveFailures", `${detail}. Consecutive failure limit reached.`);
-    }
-    const restarted = await this.tryRestart(run, detail);
-    if (!restarted) return this.pause(this.d.store.getRun(run.id)!, "backend_unavailable", `${detail}. Check with 'harness backend health'; restart with 'harness backend restart'; then 'harness resume'.`);
-    // restarted: the loop reconciles (findMessage) before anything is resubmitted
+    return this.pause(run, "backend_unavailable", `${detail}. Inspect owned services and saved journals manually, then resume. The controller never starts/restarts Chrome or MCP.`);
   }
 }
 

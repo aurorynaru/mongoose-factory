@@ -166,6 +166,7 @@ export class FakeWorker implements WorkerPort {
   async health() {
     return { ok: this.healthy, version: "fake" };
   }
+  async windowState(){return {targetId:"fake-page",windowId:1,windowState:"normal" as const,bounds:{windowState:"normal",width:1920,height:1080},checkedAt:new Date().toISOString()};}
 
   async createSession(): Promise<string> {
     const id = `ses_fake${this.sessions.length + 1}`;

@@ -55,7 +55,7 @@ Harness browser is open (profile: ${app.config.browser.mode === "cdp" ? app.conf
 
  1. If ChatGPT asks you to log in, sign in MANUALLY in that window. The harness never handles credentials.
  2. Open your COORDINATOR conversation (ChatGPT Tab 1) in one tab.
- 3. Open your Mongoose custom GPT conversation (ChatGPT Tab 2) in another tab.
+ 3. Open Infor CloudSuite Assistant for EXTERNAL SECOND OPINIONS (ChatGPT Tab 2) in another tab.
     Both must be existing conversations (URL contains /c/...). Send any first message manually if needed.
 `);
       await rl.question("Press Enter when both conversations are open... ");
@@ -74,7 +74,7 @@ Harness browser is open (profile: ${app.config.browser.mode === "cdp" ? app.conf
         }
       };
       const c = await pick("COORDINATOR (Tab 1)");
-      const s = await pick("SPECIALIST / Mongoose GPT (Tab 2)");
+      const s = await pick("EXTERNAL SECOND OPINION / Infor CloudSuite Assistant (Tab 2)");
       coord = c.parsed;
       spec = s.parsed;
       coordTitle = c.title;
@@ -116,7 +116,8 @@ WARN  The specialist tab is a plain conversation URL (${spec!.canonical}), not t
 Roles saved. Nothing was sent to either conversation.
 Optional: paste the coordinator protocol into Tab 1 yourself first (harness protocol show coordinator);
 the harness also sends it in the kickoff message of every run.
-Next: harness doctor, then harness start <EXP-ID>.`);
+Tab 2 replies go only to the primary Claude Opus specialist; they are unverified.
+Next: harness doctor, prepare owned Chrome/MCP, then harness start <EXP-ID> --confirm-preconditions.`);
     }
     return ok;
   } finally {

@@ -2,9 +2,8 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { Command } from "commander";
-import { BrowserSession } from "./adapters/chatgpt/browser.js";
 import type { ChatPort } from "./adapters/types.js";
-import { chatAdapter, contextFilePath, liveController, openApp, openCodeClient, type App, type LiveController } from "./app.js";
+import { contextFilePath, liveController, openApp, openChats, openCodeClient, type App, type LiveController } from "./app.js";
 import { parseConversationUrl } from "./adapters/chatgpt/selectors.js";
 import { approveCoordinatorContext, contextBlock, contextRequestText, loadCoordinatorContext, writeCoordinatorContext } from "./context.js";
 import { newNonce } from "./util/ids.js";
@@ -21,11 +20,12 @@ import type { RunRow } from "./store.js";
 import { registerShadowCommands } from "./shadow/cli.js";
 import { registerServiceCommands } from "./backend/cli.js";
 import { registerWorkerCommands } from "./adapters/claude/cli.js";
+import { ClaudeWorker } from "./adapters/claude/worker.js";
 
 const program = new Command();
 registerServiceCommands(program);
 registerWorkerCommands(program);
-program.name("claude-harness").description("Mongoose learning-workflow harness: OpenCode worker <-> ChatGPT coordinator (Tab 1) <-> Mongoose GPT (Tab 2)").option("-c, --config <file>", "config file (default: harness.config.json next to package.json)").option("-v, --verbose", "debug output");
+program.name("claude-harness").description("Mongoose learning harness: Claude worker, ChatGPT/Claude coordinator, Opus specialist and optional Tab 2 second opinion").option("-c, --config <file>", "config file (default: harness.config.json next to package.json)").option("-v, --verbose", "debug output");
 
 const app = (): App => openApp(program.opts().config, program.opts().verbose ? "debug" : "info");
 
@@ -52,6 +52,7 @@ async function drive(a: App, runId: string, existing?: LiveController): Promise<
   try {
     const run = await live.controller.run(runId);
     finished = run;
+    if(run.pause_reason==="completed_with_denials")process.exitCode=3;
     console.log("\n" + renderStatus(a.store, run));
     if (run.status === "completed") {
       if (autopilotState(a.store).remaining > 0) {
@@ -71,8 +72,7 @@ async function drive(a: App, runId: string, existing?: LiveController): Promise<
     if (!g) nextBrief = null; // never start the next experiment on top of an unmerged one
   }
   if (nextBrief && interrupts === 0) {
-    console.log(`\nAutopilot: starting ${nextBrief}`);
-    await startRun(a, nextBrief);
+    console.log(`\nNext brief prepared: ${nextBrief}. Confirm the new experiment's operator preconditions, then start it manually with --confirm-preconditions.`);
   }
 }
 
@@ -150,11 +150,11 @@ program
   .action(async (o) => {
     const a = app();
     if (a.store.activeRuns().length) throw new Error(`Run ${a.store.activeRuns()[0].id} is still active. Finish or stop it first.`);
-    const browser = await BrowserSession.open(a.config.browser);
+    const chats = await openChats(a,()=>null);
     try {
-      process.exitCode = (await proposeAndReport(a, chatAdapter(a, browser, () => null), a.store.latestRun(), !!o.force)) ? 0 : 1;
+      process.exitCode = (await proposeAndReport(a, chats.chat, a.store.latestRun(), !!o.force)) ? 0 : 1;
     } finally {
-      await browser.close().catch(() => undefined);
+      await chats.close();
     }
   });
 
@@ -168,9 +168,9 @@ context
     if (a.store.activeRuns().length) throw new Error(`Run ${a.store.activeRuns()[0].id} is still active. Finish or stop it first.`);
     const file = contextFilePath(a);
     if (loadCoordinatorContext(file).exists && !o.force) throw new Error(`${file} exists. Use --force to replace it.`);
-    const browser = await BrowserSession.open(a.config.browser);
+    const chats = await openChats(a,()=>null);
     try {
-      const chat = chatAdapter(a, browser, () => null);
+      const chat = chats.chat;
       const ready = await chat.checkReady("coordinator");
       if (!ready.ok) throw new Error(`coordinator not ready: ${ready.problem} — ${ready.detail ?? ""}`);
       const nonce = newNonce();
@@ -183,7 +183,7 @@ context
       writeCoordinatorContext(file, reply.markdown, false);
       console.log(`\nSaved (NOT reviewed): ${file}\nRead and correct it (remove anything wrong or unverified), then: .\\claude-harness.ps1 context approve`);
     } finally {
-      await browser.close().catch(() => undefined);
+      await chats.close();
     }
   });
 context
@@ -204,11 +204,11 @@ context
     console.log(`Approved: ${contextFilePath(a)}`);
   });
 
-const auto = program.command("autopilot").description("Run several experiments unattended: after each completed run, refresh context + specialist review + next proposal + specialist check, all in new chats");
+const auto = program.command("autopilot").description("Bounded proposal/review cycles; each next experiment still requires manual precondition confirmation");
 auto
   .command("on")
   .description("Enable autopilot for the next N experiments")
-  .requiredOption("--experiments <n>", "how many further experiments may be started automatically")
+  .requiredOption("--experiments <n>", "how many further proposal/review cycles may be prepared")
   .action((o) => {
     const n = Number(o.experiments);
     if (!Number.isInteger(n) || n < 1 || n > 20) throw new Error("--experiments must be 1..20");
@@ -234,21 +234,21 @@ auto
   });
 auto
   .command("next")
-  .description("Run the autopilot cycle now for the latest COMPLETED run, then start the approved next experiment")
+  .description("Prepare the next brief from the latest COMPLETED run; start it manually after checking preconditions")
   .action(async () => {
     const a = app();
     if (a.store.activeRuns().length) throw new Error(`Run ${a.store.activeRuns()[0].id} is still active.`);
     const last = a.store.latestRun();
     if (!last || last.status !== "completed") throw new Error("The latest run is not completed.");
     if (autopilotState(a.store).remaining <= 0) throw new Error("Autopilot is off: harness autopilot on --experiments N");
-    const browser = await BrowserSession.open(a.config.browser);
+    const chats = await openChats(a,()=>null);
     let next: string | null = null;
     try {
-      next = await runAutopilot(a, chatAdapter(a, browser, () => null), last);
+      next = await runAutopilot(a, chats.chat, last);
     } finally {
-      await browser.close().catch(() => undefined);
+      await chats.close();
     }
-    if (next) await startRun(a, next);
+    if(next)console.log(`Next brief prepared: ${next}. Start it manually with --confirm-preconditions after checking the operator preconditions.`);
   });
 
 const chatCmd = program.command("chat").description("Which ChatGPT conversations the harness uses");
@@ -259,7 +259,7 @@ chatCmd
     if (role !== "coordinator" && role !== "specialist") throw new Error("role must be coordinator or specialist");
     const a = app();
     a.store.setSetting(`new_chat:${role}`, "1");
-    console.log(`The next ${role} message will start a new chat${role === "specialist" ? " with your Mongoose GPT" : ""}. The old chat is kept in ChatGPT.`);
+    console.log(`The next ${role} message will start a fresh ${role==="specialist"?"Claude Opus session":a.config.coordinator.transport+" conversation"}. Existing conversations are preserved.`);
   });
 chatCmd
   .command("use <role> <url>")
@@ -305,9 +305,9 @@ program
 
 program
   .command("doctor")
-  .description("Check config, directories, OpenCode, browser and selected conversations (never submits prompts)")
+  .description("Check config, Claude auth, owned services and ChatGPT bindings (never submits prompts)")
   .option("--no-browser", "skip opening the harness browser")
-  .option("--mcp", "also query OpenCode MCP server status (initialises the project instance on the backend)")
+  .option("--mcp", "also check the already-owned Chrome/MCP and window (never starts services)")
   .action(async (o) => {
     process.exitCode = (await doctor(app(), { browser: o.browser, mcp: !!o.mcp })) ? 0 : 1;
   });
@@ -349,6 +349,7 @@ brief
   .description('Show a (proposed) brief, ask for confirmation, set "reviewed": true; --start starts the run')
   .option("--yes", "do not ask for confirmation")
   .option("--start", "start the run right after approval")
+  .option("--confirm-preconditions","confirm manual Mongoose login/configuration and normal Web Client loaded")
   .action(async (x: string, o) => {
     const a = app();
     const b = loadBrief(x, a.paths.briefsDir);
@@ -372,16 +373,17 @@ brief
       writeFileSync(b.path, JSON.stringify(raw, null, 2) + "\n");
       console.log(`Approved: ${b.path}`);
     } else console.log("Already reviewed.");
-    if (o.start) await startRun(a, b.path);
+    if (o.start) await startRun(a, b.path,!!o.confirmPreconditions);
     else console.log(`Start it with: .\\claude-harness.ps1 start ${b.brief.experiment_id}`);
   });
 
-async function startRun(a: App, x: string): Promise<void> {
+async function startRun(a: App, x: string,confirmed=false): Promise<void> {
+  if(!confirmed)throw Error("Operator confirmation required: log in manually, select Mongoose configuration (OK) and load the normal Web Client; then start with --confirm-preconditions. The worker never authenticates.");
   const b = loadBrief(x, a.paths.briefsDir);
     const p = briefProblems(b.brief, a.paths.factoryRoot);
     if (p.length) throw new Error(`Brief not ready:\n - ${p.join("\n - ")}`);
     if (a.store.activeRuns().length) throw new Error(`A run is already active: ${a.store.activeRuns()[0].id}. Use resume or stop.`);
-    for (const role of ["coordinator", "specialist"] as const) if (!a.store.getRole(role)) throw new Error(`No ${role} conversation configured. Run: harness setup`);
+    for (const role of ["coordinator", "specialist"] as const) if ((role==="coordinator"?a.config.coordinator.transport==="chatgpt":a.config.externalSecondOpinion.enabled)&&!a.store.getRole(role)) throw new Error(`No ${role==="specialist"?"external Tab 2":"coordinator"} conversation configured. Run: claude-harness setup`);
     // Git: clean repo, up-to-date main, new branch for this experiment (before anything else happens).
     let gitBranch: string | null = null;
     if (a.config.git.enabled) {
@@ -392,7 +394,7 @@ async function startRun(a: App, x: string): Promise<void> {
     }
     // Pre-flight before a run exists: backend + both conversations must be ready.
     let runId: string | null = null;
-    const live = await liveController(a, () => runId);
+    const live = await liveController(a, () => runId,confirmed);
     try {
       for (const role of ["coordinator", "specialist"] as const) {
         // A run that opens its own new chat does not depend on the previously registered one.
@@ -440,7 +442,8 @@ gitCmd
 program
   .command("start <experimentIdOrBrief>")
   .description("Start a run for ONE explicitly selected experiment (runs in the foreground)")
-  .action(async (x: string) => startRun(app(), x));
+  .option("--confirm-preconditions","confirm manual Mongoose login/configuration and normal Web Client loaded")
+  .action(async (x: string,o) => startRun(app(), x,!!o.confirmPreconditions));
 
 program
   .command("status")
@@ -484,7 +487,10 @@ program
   .command("resume")
   .description("Reconcile pending submissions, then continue the paused (or interrupted) run")
   .option("--run <id>")
-  .option("--approve <code...>", "approve the specific pending item: scope | candidate | attachment | resubmit")
+  .option("--approve <code...>", "approve the specific pending item: scope | candidate | attachment | resubmit | denials")
+  .option("--confirm-preconditions","confirm manual Mongoose login/configuration and normal Web Client loaded")
+  .option("--continue-after-usage <instruction>","after reset, submit a NEW bounded worker continuation; never replay the old task")
+  .option("--continue-chat-after-usage <role>","after reset, explicitly continue the pending Claude coordinator/specialist response")
   .option("--limit <k=v...>", "raise a limit, e.g. --limit maxWorkerTasks=20")
   .option("--reload-brief", "re-read the brief file (same experiment only)")
   .option("--reask [note]", "ask the coordinator to reconsider its last reply")
@@ -502,22 +508,28 @@ program
     // Controller constructed without live adapters just to apply options transactionally.
     const { Controller } = await import("./controller/machine.js");
     const offline = new Controller({ store: a.store, config: a.config, factoryRoot: a.paths.factoryRoot, runsDir: a.paths.runsDir, protocolDir: a.paths.protocolDir, chat: null as never, worker: { newMessageId: () => "" } as never, interpreter: null, log: a.log });
-    const notes = offline.applyResumeOptions(run.id, { approve: o.approve, limits, brief: loaded, reask: o.reask });
+    const notes = offline.applyResumeOptions(run.id, { approve: o.approve, limits, brief: loaded, reask: o.reask,confirmPreconditions:!!o.confirmPreconditions,continueAfterUsage:o.continueAfterUsage });
     notes.forEach((n) => console.log(`- ${n}`));
-    await drive(a, run.id);
+    if(o.continueChatAfterUsage) {
+      const role=o.continueChatAfterUsage;
+      const pending=run.pending_op_id?a.store.getOp(run.pending_op_id):null;
+      if(!pending||!["coordinator","specialist"].includes(role)||run.pause_reason!=="usage_limit"||pending.kind!==role||!pending.nonce)throw Error("No matching pending Claude chat usage pause");
+      const live=await liveController(a,()=>run.id);
+      try{const out=await live.claudeChat.continueUsage(role,pending.nonce);if(out.status==="rejected")throw Error(out.detail??"Continuation rejected");await drive(a,run.id,live);}catch(error){await live.close();throw error;}
+    }else await drive(a, run.id);
   });
 
 program
   .command("stop")
   .description("End the run permanently (it cannot be resumed). Does not start any other experiment.")
-  .option("--abort-worker", "also abort the OpenCode task of this run if one is in flight")
+  .option("--abort-worker", "also abort the owned Claude task of this run if one is in flight")
   .option("--reason <text>", "", "operator stop")
   .action(async (o) => {
     const a = app();
     const run = currentRun(a);
     if (o.abortWorker && run.current_session_id) {
-      const ok = await openCodeClient(a).abort(run.current_session_id).catch(() => false);
-      console.log(`Abort OpenCode session ${run.current_session_id}: ${ok ? "requested" : "failed/not running"}`);
+      const ok = await new ClaudeWorker({config:a.config,paths:a.paths}).abort(run.current_session_id).catch(() => false);
+      console.log(`Abort Claude session ${run.current_session_id}: ${ok ? "requested" : "failed/not running"}`);
     }
     if (controllerAlive(a.store, run.id).alive) {
       a.store.requestControl(run.id, "stop", o.reason);
@@ -537,7 +549,7 @@ program
     process.exitCode = (await dryRun(o.scenario, o.keep)) ? 0 : 1;
   });
 
-const backend = program.command("backend").description("Harness-owned OpenCode backend (fixed PowerShell scripts; never touches other OpenCode processes)");
+const backend = program.command("backend").description("LEGACY OpenCode commands; not used by the Phase 4 controller or Claude worker");
 for (const [name, desc] of [
   ["start", "start `opencode serve` on 127.0.0.1 in the factory directory"],
   ["health", "health + ownership report"],

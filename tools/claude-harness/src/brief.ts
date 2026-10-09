@@ -14,7 +14,7 @@ export const BriefSchema = z.object({
   /** true for a brand-new experiment: the worker creates record_path during the run. */
   new_record: z.boolean().default(false),
   reviewed: z.boolean(),
-  worker: z.object({ model: z.string().min(1), effort: z.enum(["low","medium","high","xhigh","max"]).nullable() }).optional(),
+  worker: z.object({ model: z.string().min(1), effort: z.enum(["low","medium","high","xhigh","max"]).nullable().default("high") }).optional(),
   objective: z.string().min(1),
   scope: z.object({
     in_scope: z.array(z.string()).min(1),

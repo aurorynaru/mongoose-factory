@@ -2,7 +2,7 @@ import { appendFileSync, existsSync, readFileSync, renameSync, unlinkSync, write
 import { pathToFileURL } from "node:url";
 import { hash, read } from "../adapters/claude/files.js";
 import { acquireGuardLock, LockTimeout } from "./guard-lock.js";
-export interface GuardConfig { sessionId: string; stateFile: string; denialFile?: string; threshold: number; allowLiteralKeyText: boolean; exactValues: string[] }
+export interface GuardConfig { sessionId: string; stateFile: string; denialFile?: string; threshold: number; allowLiteralKeyText: boolean; exactValues: string[]; allowedWebDomains?:string[] }
 interface GuardState {key:string;count:number;sequence?:number;action?:{id:string;tool:string}}
 export interface HookEvent {session_id:string;tool_name:string;tool_input:Record<string,unknown>;tool_use_id?:string;hook_event_name?:string}
 /** Tabs listing is a read; tab creation/selection/closure and unknown browser tools are actions. */
@@ -78,7 +78,12 @@ export function guard(event:HookEvent, cfg: GuardConfig): string | null {
     const count = before?.key === key ? before.count + 1 : 1;
     const sequence=(before?.sequence??0)+1;
     if(!Number.isSafeInteger(count)||!Number.isSafeInteger(sequence))return "Guard state corrupt: counter overflow; preserve state and stop.";
-    const reason=textDenial(event.tool_name,event.tool_input,cfg) ?? (action&&before?.action
+    let webReason:string|null=null;
+    if(event.tool_name==="WebFetch"&&cfg.allowedWebDomains) {
+      try{const url=new URL(String(event.tool_input.url));if(!["https:","http:"].includes(url.protocol)||url.username||url.password||!cfg.allowedWebDomains.includes(url.hostname.toLowerCase().replace(/\.$/,"")))webReason="Specialist WebFetch domain denied: only the three configured Infor documentation domains are permitted.";}
+      catch{webReason="Specialist WebFetch domain denied: invalid URL.";}
+    }
+    const reason=webReason??textDenial(event.tool_name,event.tool_input,cfg) ?? (action&&before?.action
       ? "Parallel browser action denied: another browser action from this session is still in flight. Wait for its result before sending the next action; do not repeat a possibly effective mutation."
       : action&&!event.tool_use_id ? "Guard action identity missing: browser action requires a native tool_use_id; preserve state and stop."
       : cfg.threshold>0&&count>=cfg.threshold ? `Identical consecutive tool call ${count} denied (threshold ${cfg.threshold}). Inspect once with a different permitted call and report a blocker; do not repeat a possibly effective mutation.` : null);
@@ -94,6 +99,7 @@ export function guardName(reason: string) {
   if(reason.startsWith("Exact value required"))return "exact_values";
   if(reason.startsWith("Identical consecutive"))return "identical_calls";
   if(reason.startsWith("Parallel browser action"))return "parallel_browser_actions";
+  if(reason.startsWith("Specialist WebFetch domain"))return "web_domain";
   if(reason.startsWith("Guard lock timeout"))return "lock_timeout";
   if(reason.startsWith("Guard state corrupt"))return "state_corrupt";
   return "guard_state";

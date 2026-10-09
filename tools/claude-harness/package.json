@@ -2,7 +2,7 @@
   "name": "mongoose-claude-harness",
   "version": "0.1.0",
   "private": true,
-  "description": "Claude harness migration baseline: inherited OpenCode/ChatGPT adapters pending replacement.",
+  "description": "Mongoose controller with a Claude worker, ChatGPT or Claude coordinator, and Claude Opus specialist.",
   "type": "module",
   "engines": {
     "node": ">=22"

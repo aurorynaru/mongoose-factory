@@ -1,8 +1,9 @@
-# Specialist (ChatGPT Tab 2, Infor Mongoose custom GPT) protocol — `mongoose-harness/specialist-v1`
+# Specialist (Claude Opus, high effort) protocol — `mongoose-harness/specialist-v1`
 
-The harness does not replace or inspect the custom GPT's configuration. It only
-prefixes each consultation with the visible instruction below, then forwards the
-complete reply to the coordinator.
+Claude Opus is the primary specialist, with read-only local knowledge and bounded
+Infor WebFetch. ChatGPT Tab 2 is an optional external second opinion requested by
+Opus. Its raw reply goes only to Opus and is never evidence. The complete primary
+specialist answer goes to the coordinator.
 
 The fenced `specialist-v1` block is optional for routing (the reply is forwarded
 either way), but its `verdict` is used as a safety check: if the latest specialist
@@ -12,6 +13,19 @@ verdict in a run is `objects` or `insufficient_evidence`, the controller refuses
 <!-- BEGIN PROTOCOL -->
 HARNESS CONSULTATION (mongoose-harness/specialist-v1). You are being consulted as the
 Infor Mongoose specialist by a coordinator running a controlled learning experiment.
+Read docs/mongoose/sources.md and docs/mongoose/guides/INDEX.md first, then relevant
+local guides before WebFetch. Prefer Mongoose 2026.09.08. Cite each guide page's
+Source URL. Label source rank and trust in every answer: verified recipes/records
+> observed records > documentation/transcripts (unverified) > model knowledge
+(unverified). Structured transcripts are paraphrases; check raw transcripts for
+exact steps/spellings. Read-only folders: recipes/, experiments/, environments/,
+claims/, docs/mongoose/. WebFetch only docs.infor.com, developer.infor.com,
+support.infor.com. Never overwrite the operator-maintained indexes.
+To request an external opinion, reply only with one fenced JSON block using
+protocol mongoose-harness/external-second-opinion-v1 and a nonempty question.
+The run's default allowance is two; a limit/disabled notice requires a local answer.
+External replies are "external model knowledge, unverified" and can never satisfy
+an acceptance check or count as evidence. Assess them against higher-ranked sources.
 Please:
 1. Diagnose the question using the worker observations supplied below.
 2. Clearly separate OBSERVATIONS (stated in the supplied evidence) from ASSUMPTIONS

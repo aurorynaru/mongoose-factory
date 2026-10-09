@@ -20,6 +20,8 @@ export type Limits = z.infer<typeof LimitsSchema>;
 export const ConfigSchema = z.object({
   factoryRoot: z.string().min(1).default(resolve(HARNESS_DIR, "..", "..")),
   dataDir: z.string().min(1).default("claude-data"),
+  coordinator: z.object({transport:z.enum(["chatgpt","claude"]).default("chatgpt")}).prefault({}),
+  externalSecondOpinion: z.object({enabled:z.boolean().default(true),maxPerRun:z.number().int().nonnegative().default(2)}).prefault({}),
   claude: z.object({
     executable: z.string().default("claude"),
     argvPrefix: z.array(z.string()).default([]),
@@ -114,15 +116,15 @@ export const ConfigSchema = z.object({
        * Text that must appear in the visible model/effort selector before anything is sent
        * (e.g. "High"). null = no check. The model NAME is not shown without opening the picker.
        */
-      expectedModelLabel: z.object({ coordinator: z.string().nullable().default(null), specialist: z.string().nullable().default(null) }).prefault({}),
+      expectedModelLabel: z.object({ coordinator: z.string().nullable().default("High"), specialist: z.string().nullable().default("High") }).prefault({}),
       /**
-       * Model and effort the harness SELECTS (via the visible model menu) in new chats and whenever the
-       * label does not match. Names as shown in the menu, e.g. "GPT-5.6 Sol" / "High". null = leave as is.
+       * Model and effort confirmed through the visible menu before every send.
+       * Exact menu model label "6", effort "High". null = leave as is.
        */
       desiredModel: z
         .object({
-          coordinator: z.object({ model: z.string().nullable().default(null), effort: z.string().nullable().default(null) }).prefault({}),
-          specialist: z.object({ model: z.string().nullable().default(null), effort: z.string().nullable().default(null) }).prefault({}),
+          coordinator: z.object({ model: z.string().nullable().default("6"), effort: z.string().nullable().default("High") }).prefault({}),
+          specialist: z.object({ model: z.string().nullable().default("6"), effort: z.string().nullable().default("High") }).prefault({}),
         })
         .prefault({}),
       autoSelectModel: z.boolean().default(true),

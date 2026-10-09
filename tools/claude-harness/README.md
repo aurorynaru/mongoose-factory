@@ -1,12 +1,179 @@
-# Claude harness — Phase 3 bounded worker
+# Claude harness — Phase 4 controller loop
 
-The standalone Claude worker and owned Chrome/MCP CDP services are implemented.
-Coordinator/specialist transports remain inherited browser code until Phase 4;
-use `worker task` for the operator's replay comparison. Phase 3 is the stop gate.
-See [PLAN.md](PLAN.md), [PHASE-2.md](PHASE-2.md) and [PHASE-3.md](PHASE-3.md).
+The full controller uses a **Claude worker (haiku/high)**. The coordinator defaults
+to the existing **ChatGPT Tab 1 browser adapter**, with exact visible menu model
+**6**, effort **High**. `coordinator.transport: "claude"` selects the implemented
+sonnet/high alternative; it is off by default. **Claude Opus/high** is the primary
+Mongoose specialist. Tab 2 (**Infor CloudSuite Assistant**, 6/High) supplies only
+an external second opinion to Opus, enabled by default, at most two per run.
+Browser bindings identify conversations/GPTs by URL identity rather than tab order.
+
+Phase 4 was validated with fakes only; no live models, browsers, MCP or Mongoose
+were used. The actual live “6” menu label remains unverified until an approved
+operator run. Failure to confirm either label pauses `browser:model_mismatch`.
+See [PHASE-4.md](PHASE-4.md) and [PLAN.md](PLAN.md). STOP after Phase 4; later phases
+remain unapproved.
 Runtime defaults to `claude-data/`; the old harness remains untouched. `npm test`
 uses fake processes and excludes browser fixtures/real OpenCode smoke suites.
 Node.js 22 or newer is required for the native WebSocket window preflight.
+
+## Full Phase 4 run: operator procedure
+
+These are commands for a future approved run; they were not executed against live
+services during implementation. Keep autopilot off for one bounded experiment.
+
+1. Build and prepare config. Install only if dependencies are missing. Create
+   config only if absent; manually update existing settings from the example.
+
+```powershell
+Set-Location C:\AI\mongoose-factory\tools\claude-harness
+npm ci --ignore-scripts --no-audit --no-fund
+npm run build
+if (-not (Test-Path -LiteralPath harness.config.json)) {
+    Copy-Item -LiteralPath harness.config.example.json -Destination harness.config.json
+}
+```
+
+2. Keep `coordinator.transport: "chatgpt"`, Claude worker/coordinator/specialist
+   haiku/sonnet/opus with effort high, and `externalSecondOpinion` enabled with
+   `maxPerRun: 2`. For **both** browser roles set `chats.desiredModel` to
+   `{ "model": "6", "effort": "High" }` and `expectedModelLabel` to `"High"`.
+   Keep `git.enabled: false`, `git.push: false`, and
+   `protocol.proposeNextOnComplete: false` for a single run without automatic
+   commit/push/merge or post-completion prompts. Worker Bash stays denied and
+   service restart off. Authenticate Claude Code manually outside the worker;
+   subscription mode removes API key/token variables from its children.
+
+3. On first setup, log in to ChatGPT manually in its dedicated harness profile.
+   Register the coordinator conversation and Infor CloudSuite Assistant GPT
+   conversation (both must have `/c/` URLs). Select 6/High manually in each.
+   Setup sends no prompts. Before every send, the browser adapter opens the menu
+   to confirm exact model 6 and effort High; a “High” button alone is insufficient.
+
+```powershell
+.\claude-harness.ps1 login
+.\claude-harness.ps1 setup
+```
+
+4. Ensure old harness/OpenCode is not using the Mongoose profile. Start owned
+   Chrome yourself. In its visible window, navigate to the demo Web Client, log
+   in manually, select the Infor configuration and click **OK**. Wait for the
+   normal Web Client page, not sign-in/configuration. Keep Chrome visible and
+   uncovered (never minimized). Verify the brief's starting Form/scope, no unsaved
+   Designer changes and no browser-native dialogs. Never let the worker authenticate.
+
+```powershell
+.\claude-harness.ps1 chrome start
+# Operator: navigate, log in, select configuration/OK; confirm normal Web Client.
+.\claude-harness.ps1 mcp start
+.\claude-harness.ps1 mcp health
+.\claude-harness.ps1 doctor --mcp
+```
+
+   Health must show `ok: true`, healthy owned Chrome/MCP, Playwright tools and
+   readable non-minimized `windowState`/bounds. Inspect effective launch arguments
+   and any outdated-launch warning. Chrome start maximizes via browser-level CDP
+   and reports verified bounds. CDP cannot prove lack of occlusion. Do not restart
+   services during an experiment. Profiles remain separate; production Chrome
+   uses `C:\AI\mongoose-playwright-profile`, never default Chrome user data.
+
+5. Review exactly one brief yourself. Default worker is haiku/high; for new or
+   complex mutation experiments use `"worker": { "model": "sonnet", "effort": "high" }`.
+   A model-only brief override inherits high effort. Replace `<EXP-ID>` below:
+
+```powershell
+.\claude-harness.ps1 brief check <EXP-ID>
+.\claude-harness.ps1 start <EXP-ID> --confirm-preconditions
+```
+
+   Start refuses without the flag. It records explicit manual login/configuration/
+   normal-Web-Client attestation for this run only. Before every new worker task,
+   including handoffs/continuations, the loop checks owned Chrome/MCP health and
+   read-only browser-level CDP window state, refusing minimized/ambiguous/unreadable
+   state before worker creation/submission. Bounds/model are recorded in the
+   operation manifest. Every header labels worker_session_id and task_message_id.
+   The loop never starts/restarts Chrome/MCP. Login loss is an environment blocker.
+
+6. The foreground loop stops at EXPERIMENT_COMPLETE or a pause. Inspect the full
+   report, decisive evidence, transcripts and before/after evidence diff. Existing
+   brief acceptance checks remain mandatory; native success is not experiment proof.
+
+```powershell
+.\claude-harness.ps1 status
+.\claude-harness.ps1 status --run <RUN-ID> --json
+```
+
+   Native success with expected permission denials pauses `completed_with_denials`
+   (CLI exit **3**) and withholds the report from the coordinator. Review its saved
+   denial list, report and evidence, then approve the specific pending item:
+
+```powershell
+.\claude-harness.ps1 resume --run <RUN-ID> --approve denials
+```
+
+   This forwards the cached report once without another worker call. Unexpected
+   denials remain blocked. Fix window/service problems manually, then plain resume;
+   if explicit attestation is missing, use `resume --confirm-preconditions`.
+
+7. `usage_limit` is an expected Pro five-hour/weekly pause. Preserve all browser
+   state, records, journals, transcripts and leases. Plain resume reconciles the
+   cached terminal pause; it never replays or switches models. After reset, inspect
+   the checkpoint and explicitly submit a **new bounded instruction** in the same
+   worker session with a new message UUID, or continue the pending Claude chat role:
+
+```powershell
+.\claude-harness.ps1 resume --run <RUN-ID> --continue-after-usage "<next permitted bounded instruction; inspect current state first>"
+.\claude-harness.ps1 resume --run <RUN-ID> --continue-chat-after-usage specialist
+# Use coordinator instead only when that pending role uses Claude.
+```
+
+   Old requests/partial output remain intact. Unknown markers/submissions require
+   inspection, never automatic resend. Scope and recovery/task/time limits persist.
+
+8. Stop owned services yourself when browser use ends. A usage pause alone leaves
+   services intact; checkpoint before closing an incomplete browser session.
+
+```powershell
+.\claude-harness.ps1 mcp stop
+.\claude-harness.ps1 chrome stop
+```
+
+## Primary specialist and external second opinions
+
+Opus has read-only Read/Glob/Grep in recipes/, experiments/, environments/, claims/
+and docs/mongoose/ (including guides and structured/raw transcripts). A separate
+empty workspace, native read boundaries, denied shell/mutations/delegation and
+empty strict MCP config enforce this role. AGENTS.md is explicitly appended to
+every Claude role; instruction discovery is never relied upon with setting-sources
+empty. The harness supplies sources.md and guides/INDEX.md first. Opus must consult
+relevant local guides before WebFetch, cite each page's Source URL, prefer
+2026.09.08, and check raw transcripts for exact steps/spellings. Operator indexes
+are never overwritten. Every answer labels: verified recipes/records > observed
+records > documentation/transcripts (unverified) > model knowledge (unverified).
+Formatting-only guide conversions remain unverified.
+
+WebFetch has native domain rules only for docs.infor.com, developer.infor.com and
+support.infor.com; other web tools are denied. A specialist-only domain guard also
+blocks other domains because native WebFetch may preapprove documentation sites.
+It never grants permission; file boundaries remain native. See the official
+[Claude permissions reference](https://code.claude.com/docs/en/permissions).
+Actual native enforcement remains a future live check, not a fake-test claim.
+
+Opus may return one fenced JSON request:
+`{"protocol":"mongoose-harness/external-second-opinion-v1","question":"..."}`.
+The broker sends it to the registered Tab 2 GPT, logs requests/receipts/replies
+under `claude-data/runs/<RUN-ID>/external-second-opinion/`, persists its per-run
+allowance across restart and reconciles uncertain nonces without replaying them.
+Raw replies go only to Opus in its same Claude session, labelled **external model
+knowledge, unverified**. They never enter controller inbound or worker instructions
+directly, satisfy an acceptance check or count as evidence. Evidence validation
+rejects external log paths. Only Opus's assessed answer reaches the coordinator.
+Disabled/exhausted opinions return a notice to finish from local sources. Claude
+role references/journals are separate and never overwrite the external Tab 2 binding.
+Proposal/handoff/autopilot consultations use the same transports; starting the
+next experiment still requires manual precondition confirmation.
+
+## Browser and worker safeguards
 
 Parallel tool calls are expected from Sonnet and Opus. PreToolUse hook processes
 allow parallel reads but deny overlapping browser actions with the audit label
@@ -228,8 +395,11 @@ is no automatic resubmit/model switch. Only one task may own the browser lease.
 
 ## Inherited baseline reference
 
-The remainder describes historical OpenCode/ChatGPT features pending Phase 4–5
-migration. It does not describe the standalone Claude replay path above.
+The remainder is a historical OpenCode/ChatGPT reference. **The Phase 4 procedure
+above supersedes its backend, specialist, model, start and restart instructions.**
+Explicit OpenCode backend commands remain for compatibility/tests only and are
+never used by the default Claude controller. SEND_TO_OPENCODE and
+NEW_OPENCODE_SESSION remain action tokens designating the Claude worker.
 
 Baseline validation and source references are recorded in
 [PHASE-1.md](PHASE-1.md). On this installation use

@@ -43,7 +43,7 @@ export const ZERO_COUNTERS: Counters = {
 };
 
 /** Operator approvals for a specific pending item (keyed by review code -> item id). */
-export type Approvals = Partial<Record<"scope" | "candidate" | "attachment" | "resubmit", number>>;
+export type Approvals = Partial<Record<"scope" | "candidate" | "attachment" | "resubmit" | "denials", number>>;
 
 export interface RunRow {
   id: string;

@@ -381,12 +381,12 @@ describe("OpenCode task failure", () => {
     expect(run.pause_reason).toBe("coordinator_requested_pause");
   });
 
-  it("restarts only via the owned-backend hook when the backend dies mid-task", async () => {
+  it("pauses without restarting services when the backend becomes unavailable mid-task", async () => {
     const h = track(harness({ coordinator: [SEND("t1"), { envelope: { action: "PAUSE", reason: "p" } }], worker: [{ status: "backend_unavailable", detail: "ECONNREFUSED" }] }));
     const run = await h.controller.run(h.controller.createRun(fixtureBrief()).id);
-    expect(h.worker.restarts).toBe(1);
-    expect(h.chat.submissions.some((s) => kindOf(s.text) === "WORKER_FAILURE" && s.text.includes("backend became unavailable"))).toBe(true);
-    expect(run.counters.backendRestarts).toBe(1);
+    expect(h.worker.restarts).toBe(0);
+    expect(h.chat.submissions.some((s) => kindOf(s.text) === "WORKER_FAILURE")).toBe(false);
+    expect(run.counters.backendRestarts).toBe(0);expect(run.pause_reason).toBe("backend_unavailable");
   });
 });
 

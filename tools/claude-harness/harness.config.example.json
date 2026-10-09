@@ -1,5 +1,5 @@
 {
-  "$comment": "Phase 3: standalone Claude worker is available. Coordinator/specialist browser transport remains until Phase 4. Subscription billing; credentials stay outside config.",
+  "$comment": "Phase 4: ChatGPT Tab 1 coordinator by default, Claude haiku/high worker and Opus/high specialist; Tab 2 only supplies unverified second opinions. Owned Chrome/MCP must be prepared manually. Subscription billing.",
   "factoryRoot": "C:\\AI\\mongoose-factory",
   "dataDir": "claude-data",
   "mongooseBrowserProfile": "C:\\AI\\mongoose-playwright-profile",
@@ -32,8 +32,8 @@
     "maxRepeatedBrowserReads": 6,
     "maxRepeatedShellCalls": 6,
     "autoRecoverInspectionLoops": true,
-    "manageBackend": true,
-    "autoRestartOnFailure": true
+    "manageBackend": false,
+    "autoRestartOnFailure": false
   },
   "deepseek": {
     "enabled": false,
@@ -48,17 +48,28 @@
   "protocol": {
     "reaskOnInvalid": 1,
     "pauseOnSpecialistAttachmentRequest": true,
-    "proposeNextOnComplete": true
+    "proposeNextOnComplete": false
   },
   "chats": {
     "newCoordinatorPerRun": true,
     "expectedModelLabel": {
-      "coordinator": null,
-      "specialist": null
+      "coordinator": "High",
+      "specialist": "High"
     },
     "contextFile": "context/coordinator-context.md",
     "maxDigestChars": 9000,
-    "maxContextChars": 14000
+    "maxContextChars": 14000,
+    "desiredModel": {
+      "coordinator": {
+        "model": "6",
+        "effort": "High"
+      },
+      "specialist": {
+        "model": "6",
+        "effort": "High"
+      }
+    },
+    "autoSelectModel": true
   },
   "limits": {
     "maxCycles": 30,
@@ -109,5 +120,17 @@
   },
   "chromeWindowStyle": "normal",
   "chromeWindowSize": "1920,1080",
-  "chromeStartMaximized": true
+  "chromeStartMaximized": true,
+  "coordinator": {
+    "transport": "chatgpt"
+  },
+  "externalSecondOpinion": {
+    "enabled": true,
+    "maxPerRun": 2
+  },
+  "git": {
+    "enabled": false,
+    "push": false,
+    "mergeBlocked": false
+  }
 }

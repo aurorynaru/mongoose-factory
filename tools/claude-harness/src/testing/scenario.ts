@@ -93,6 +93,7 @@ export function harness(opts: {
     log,
     pid: opts.pid,
     isAlive: opts.isAlive,
+    preconditionsConfirmed:true, // Explicit fixture operator confirmation; never a production default.
   });
   return { dir, factoryRoot, store, chat, worker, config, controller, log, runsDir };
 }

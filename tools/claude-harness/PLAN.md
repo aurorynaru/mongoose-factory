@@ -1,8 +1,9 @@
 # Claude harness: Phase 0 inspection and implementation plan
 
 Date: 2026-10-08 (Asia/Singapore). Branch: `claude-harness`.
-Status: **Phases 2–3 implemented and validated. STOP before Phase 4 for the
-operator's live worker replay comparison.** See [PHASE-2.md](PHASE-2.md) and
+Status: **Phase 4 implemented and validated with fakes after explicit approval.
+STOP after its commit; Phases 5–6 and live activity remain unapproved.** See
+[PHASE-4.md](PHASE-4.md), [PHASE-2.md](PHASE-2.md) and
 [PHASE-3.md](PHASE-3.md). The authorized scratch CDP check passed: both blank
 tabs survived last-client disconnect. Owned Chrome/MCP were stopped; automatic
 approval review blocked scratch-profile deletion, leaving manual cleanup pending.
@@ -29,6 +30,60 @@ gateway.** See [PHASE-1.md](PHASE-1.md) for exact installed-source references,
 validation and limits. The Phase 2 scratch observation supports this selection.
 
 ## Approved amendments and execution order
+
+### Phase 4 approved hybrid controller (2026-10-09)
+
+This amendment supersedes the earlier all-Claude/removal proposals below. Keep the
+existing ChatGPT Tab 1 coordinator as default; `coordinator.transport: "claude"`
+selects the implemented sonnet/high alternative. Both browser roles use exact
+menu model `6` and effort `High`, confirmed before each send; failure pauses
+`browser:model_mismatch`. No live label verification now.
+
+The full loop's WorkerPort is Claude haiku/high, with per-brief worker.model
+override and high default effort. OpenCode remains only for legacy tests/explicit
+commands, never the default. Require run-specific explicit --confirm-preconditions
+for manual Mongoose login, configuration selected/OK and normal Web Client loaded.
+Before every new worker task check already-owned Chrome/MCP and read-only
+browser-level CDP window state; refuse minimized/ambiguous/unreadable state and
+record bounds/model. Never authenticate, start or restart services in the loop.
+Preserve labelled worker_session_id, native deny policies and all R3/R4 guards:
+serialized browser actions, parallel reads, lock-safe counters, exact values,
+stale-ref fresh untargeted snapshot charged to the existing recovery allowance.
+
+Opus/high is the primary specialist: separate empty workspace, native read-only
+folders recipes/, experiments/, environments/, claims/, docs/mongoose/ including
+guides/raw transcripts, empty strict MCP and no shell/mutation/delegation. Supply
+sources.md and guides/INDEX.md first; read relevant local guides before WebFetch,
+cite each page's Source URL, prefer 2026.09.08 and label the original source ranking.
+Native WebFetch allow rules cover only the three approved Infor domains; a narrow
+specialist-only domain guard also denies other documentation sites that native
+WebFetch can preapprove. File boundaries remain native. Explicitly append AGENTS.md
+for every Claude role; do not rely on discovery with setting-sources empty.
+
+Enable externalSecondOpinion (default maxPerRun 2). Only Opus can request the
+registered Infor CloudSuite Assistant Tab 2 GPT (6/High) through the existing
+browser adapter. Journal actual requests/replies under the run directory, persist
+limits across restart and reconcile uncertain nonces without replay. Return raw
+replies only to Opus, labelled external model knowledge, unverified: never acceptance
+proof/evidence. Reject external log paths as evidence; only Opus's assessed answer
+reaches the coordinator. Keep Claude session references separate from ChatGPT
+browser bindings. Proposal/handoff consultations use the same role routing.
+
+Expected permission-denial completion (exit 3) pauses and withholds the report until
+item-bound review (resume --approve denials), then forwards it once from cache.
+Unexpected denials remain blocked. usage_limit is an expected Pro five-hour/weekly
+pause: preserve state/leases/partial output, no retry/resubmit/model switch/restart.
+Plain resume reconciles the cached pause. After reset an operator explicitly creates
+a new bounded same-session worker continuation (--continue-after-usage), or continues
+a pending Claude chat response (--continue-chat-after-usage); old requests remain.
+
+Keep SEND_TO_OPENCODE and NEW_OPENCODE_SESSION compatibility tokens, but describe
+the worker as Claude. README supplies the full operator sequence. Build/typecheck/
+tests use fakes only: both coordinator transports, menu policy, full kickoff through
+EXPERIMENT_COMPLETE with Claude worker, brief override, precondition gates, exit-3
+review, usage pauses and specialist/second-opinion isolation/limits/labels. Commit,
+then STOP. No live ChatGPT/Claude/Chrome/MCP/Mongoose, secrets-file reads, push/merge,
+operator record changes or tools/learning-harness changes. See PHASE-4.md.
 
 ### Replay preparation and Phase 4 local documentation
 
@@ -637,8 +692,9 @@ runtime hook-failure behavior instead of assuming a nonzero exit is a denial.
    adjustments. Fake Claude/MCP tests for submit/resume/abort and partial output;
    build/typecheck/controller regressions. Add standalone bounded
    `claude-harness worker task <EXP-ID> "<instruction>"` as specified above. Commit.
-4. **Chat roles:** role session references, JSON reply adapter, knowledge policy,
-   readiness/model handling, remove ChatGPT/DeepSeek/shadow runtime. Port all
+4. **Hybrid controller (approved amendment above):** retain ChatGPT default,
+   implement Claude coordinator alternative, Opus specialist and external broker;
+   Claude worker, precondition gates, denial review and usage pauses. Port all
    applicable controller/proposal/autopilot scenarios; session recovery and file
    boundary tests. Commit.
 5. **Config/CLI/docs:** per-role model/effort/billing, executable+argv-prefix for
@@ -670,8 +726,8 @@ remain outside harness-engineering authorization.
 
 ## Remaining questions / approval decision
 
-- Phases 1–3 approved with amendments above and implemented. This turn ends
-  after Phase 3. Phases 4–6/live smoke require subsequent explicit approval.
+- Phases 1–4 approved with amendments above and implemented. This turn ends
+  after Phase 4. Phases 5–6/live smoke require subsequent explicit approval.
 - Actual installed baseline is 2.1.294. Proposed implementation targets this
   observed version; 2.1.289 flag/behavior compatibility is unverified.
 - CDP selected from accepted Phase 1 source evidence and the authorized Phase 2
@@ -684,7 +740,7 @@ remain outside harness-engineering authorization.
   account identifiers, authentication tokens and secrets were not copied into
   this plan. The plan is the only repository file created in Phase 0.
 
-Next step belongs to the operator: live Haiku-versus-Sonnet replay through
-`claude-harness worker task`. Do not start Phase 4. Native model/permission/hook
-behavior remains unverified by the fake suite. Scratch-profile cleanup remains
+The R3/R4 comparison is recorded in replays/scorecard.md. Phase 4 now implements
+the hybrid loop. STOP after this phase; do not start Phase 5 or a live run.
+Native model/permission/hook behavior remains unverified by the fake suite. Scratch-profile cleanup remains
 pending as recorded in PHASE-2.md; do not rerun its one-off browser check.

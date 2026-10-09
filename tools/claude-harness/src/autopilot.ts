@@ -1,7 +1,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import type { ChatPort, ChatRole } from "./adapters/types.js";
-import { parseConversationUrl } from "./adapters/chatgpt/selectors.js";
+import { recordConversation } from "./adapters/conversation.js";
 import { loadBrief, findRecord } from "./brief.js";
 import type { HarnessConfig } from "./config.js";
 import { contextBlock, loadCoordinatorContext, writeCoordinatorContext } from "./context.js";
@@ -83,14 +83,12 @@ export async function autopilotCycle(d: AutopilotDeps, previous: RunRow): Promis
     const text = `${header({ nonce, runId: previous.id, experimentId: previous.experiment_id, cycleId: 0, kind, extra: { consultation_id: `${previous.id}-${kind}` } })}\n${body}`;
     save(`${kind}-request`, text);
     if (newChat) {
-      const home = role === "coordinator" ? d.config.browser.baseUrl.replace(/\/$/, "") + "/" : d.store.getRole("specialist")?.url.replace(/\/c\/.*$/, "");
+      const home = d.chat.transport?.(role)==="claude"?`claude-role:${role}`:role === "coordinator" ? d.config.browser.baseUrl.replace(/\/$/, "") + "/" : d.store.getRole("specialist")?.url.replace(/\/c\/.*$/, "");
       if (!home) throw new Stop("no specialist GPT registered (harness setup)");
       const out = await d.chat.submitNew(role, home, clip(text, d.config.browser.maxMessageChars, "data/autopilot"), nonce);
       if (out.status !== "accepted" || !out.conversationUrl) throw new Stop(`${kind}: could not open a new ${role} chat (${out.status}${"detail" in out ? `: ${out.detail}` : ""})`);
-      const p = parseConversationUrl(out.conversationUrl)!;
-      const prevGpt = d.store.getRole(role)?.gpt_id ?? null;
-      d.store.setRole(role, { url: p.canonical, conversationId: p.conversationId, gptId: role === "specialist" ? p.gptId ?? prevGpt : null, title: null });
-      d.log.log("info", "autopilot.new_chat", { role, url: p.canonical, step: kind });
+      recordConversation(d.store,role,out.conversationUrl);
+      d.log.log("info", "autopilot.new_chat", { role, url:out.conversationUrl, step: kind });
     } else {
       const out = await d.chat.submit(role, clip(text, d.config.browser.maxMessageChars, "data/autopilot"), nonce);
       if (out.status !== "accepted" && !(await d.chat.findSubmission(role, nonce)).found) throw new Stop(`${kind}: message not delivered (${out.status})`);

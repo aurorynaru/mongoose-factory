@@ -1,14 +1,15 @@
-import { exec } from "node:child_process";
-import { accessSync, constants, existsSync, mkdirSync, readdirSync, readFileSync } from "node:fs";
+import { accessSync, constants, existsSync, mkdirSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { BrowserSession } from "./adapters/chatgpt/browser.js";
 import type { ChatRole } from "./adapters/types.js";
-import { chatAdapter, contextFilePath, openCodeClient, type App } from "./app.js";
+import { chatAdapter, contextFilePath, type App } from "./app.js";
 import { loadCoordinatorContext } from "./context.js";
 import { briefProblems, loadBrief } from "./brief.js";
 import { configProblems } from "./config.js";
 import { protocolBlock } from "./protocol/prompts.js";
 import { controllerAlive } from "./status.js";
+import { diagnostic } from "./adapters/claude/process.js";
+import { McpService } from "./backend/mcp-service.js";
 
 type Level = "OK" | "WARN" | "FAIL" | "INFO";
 
@@ -25,7 +26,7 @@ export async function doctor(app: App, opts: { browser: boolean; mcp: boolean })
   line(app.configFile ? "OK" : "WARN", "config file", app.configFile ?? "none; using built-in defaults (copy harness.config.example.json to harness.config.json)");
   const cp = configProblems(config);
   cp.length ? cp.forEach((p) => line("FAIL", "config", p)) : line("OK", "config safety", "browser profiles separated; endpoints on localhost");
-  line(Number(process.versions.node.split(".")[0]) >= 20 ? "OK" : "FAIL", "node", process.versions.node);
+  line(Number(process.versions.node.split(".")[0]) >= 22 ? "OK" : "FAIL", "node", process.versions.node);
 
   console.log("== Directories");
   for (const [name, p] of [
@@ -33,7 +34,8 @@ export async function doctor(app: App, opts: { browser: boolean; mcp: boolean })
     ["AGENTS.md", join(paths.factoryRoot, "AGENTS.md")],
     ["experiments/", join(paths.factoryRoot, "experiments")],
     ["evidence/", join(paths.factoryRoot, "evidence")],
-    ["opencode.json", join(paths.factoryRoot, "opencode.json")],
+    ["sources.md", join(paths.factoryRoot, "docs/mongoose/sources.md")],
+    ["guides/INDEX.md", join(paths.factoryRoot, "docs/mongoose/guides/INDEX.md")],
   ] as const) {
     line(existsSync(p) ? "OK" : "FAIL", name, p);
   }
@@ -77,57 +79,35 @@ export async function doctor(app: App, opts: { browser: boolean; mcp: boolean })
     line("INFO", `run ${r.id}`, `${r.experiment_id} ${r.status} state=${r.state}${r.pause_reason ? ` pause=${r.pause_reason}` : ""} controller=${c.alive ? `pid ${c.pid}` : "not running"}`);
   }
 
-  console.log("== OpenCode");
-  const cli = await new Promise<string>((res) => exec("opencode --version", { timeout: 20000, windowsHide: true }, (e, out) => res(e ? `error: ${e.message}` : out.trim())));
-  line(cli.startsWith("error") ? "FAIL" : "OK", "opencode CLI", cli);
-  // The backend inherits this shell's environment. Only placeholders used by the selected
-  // provider (or by shared OpenCode settings) are required for this worker configuration.
+  console.log("== Claude / role routing");
   try {
-    const ocText = readFileSync(join(paths.factoryRoot, "opencode.json"), "utf8");
-    const oc = JSON.parse(ocText) as { model?: string; provider?: Record<string, { models?: Record<string, unknown> }> };
-    const defaultModel = typeof oc.model === "string" ? oc.model : "";
-    const slash = defaultModel.indexOf("/");
-    const selected = config.opencode.model ?? (slash > 0 ? { providerID: defaultModel.slice(0, slash), modelID: defaultModel.slice(slash + 1) } : null);
-    const provider = selected ? oc.provider?.[selected.providerID] : null;
-    if (selected && !provider?.models?.[selected.modelID]) line("FAIL", "OpenCode worker model", `${selected.providerID}/${selected.modelID} is not defined in opencode.json`);
-    else if (selected) line("OK", "OpenCode worker model", `${selected.providerID}/${selected.modelID}`);
-    const requiredText = JSON.stringify(selected ? { ...oc, provider: { [selected.providerID]: provider } } : oc);
-    const requiredNames = new Set([...requiredText.matchAll(/\{env:([A-Za-z_][A-Za-z0-9_]*)\}/g)].map((m) => m[1]));
-    const names = [...new Set([...ocText.matchAll(/\{env:([A-Za-z_][A-Za-z0-9_]*)\}/g)].map((m) => m[1]))];
-    for (const n of names) {
-      const required = requiredNames.has(n);
-      line(process.env[n] ? "OK" : required ? "FAIL" : "INFO", `env ${n}`, process.env[n] ? "set" : required ? `NOT set in this shell, but the selected OpenCode worker uses {env:${n}}. Set it ($env:${n} = '...'), then: harness backend restart` : "not set (only used by an inactive provider)");
-    }
-  } catch (e) {
-    line("FAIL", "opencode.json", (e as Error).message);
-  }
-  const bh = await app.backend.health();
-  const others = (bh.otherOpenCodePids as number[] | undefined) ?? [];
-  if (bh.healthy) line("OK", `backend ${config.opencode.baseUrl}`, `version ${String(bh.version)}; ${bh.owned ? `harness-owned pid ${String(bh.pid)}` : `NOT harness-owned (port pid ${String(bh.portOwnerPid)})`}`);
-  else line(config.opencode.manageBackend ? "INFO" : "FAIL", `backend ${config.opencode.baseUrl}`, config.opencode.manageBackend ? "not running (start/resume will start it; or: harness backend start)" : `unreachable: ${String(bh.error ?? bh.detail ?? "")}`);
-  if (bh.healthy && !cli.startsWith("error") && bh.version && String(bh.version) !== cli) line("WARN", "version mismatch", `CLI ${cli} vs server ${String(bh.version)}`);
-  if (others.length) {
-    line("WARN", "other OpenCode processes", `pids ${others.join(", ")} (not owned; never touched). If one of them has used the Playwright MCP browser, the backend's Mongoose browser may fail to start because ${config.mongooseBrowserProfile} is in use. Close that browser before starting a run.`);
-  }
-  if (bh.healthy && opts.mcp) {
-    try {
-      const mcp = await openCodeClient(app).mcpStatus();
-      for (const [name, s] of Object.entries(mcp ?? {})) line(s.status === "connected" ? "OK" : "WARN", `MCP ${name}`, `${s.status}${s.error ? ` ${s.error}` : ""}`);
-    } catch (e) {
-      line("WARN", "MCP status", (e as Error).message);
-    }
-  }
+    const version=await diagnostic(config,["--version"]),auth=await diagnostic(config,["auth","status"]);
+    line(version.code?"FAIL":"OK","Claude CLI",version.stdout.trim());
+    const status=auth.code?null:JSON.parse(auth.stdout);
+    const ok=status?.loggedIn && (config.claude.billing!=="subscription"||status.authMethod==="claude.ai");
+    line(ok?"OK":"FAIL","Claude auth",ok?`subscription login ready (${status.subscriptionType??"unknown plan"})`:"required login unavailable; sign in manually outside the worker");
+  } catch(error) {line("FAIL","Claude auth",(error as Error).message);}
+  line("INFO","coordinator",`${config.coordinator.transport}; Claude alternative ${config.claude.models.coordinator.model}/${config.claude.models.coordinator.effort}`);
+  line("INFO","worker",`${config.claude.models.worker.model}/${config.claude.models.worker.effort}; brief worker.model may override; OpenCode is legacy only`);
+  line("INFO","specialist",`${config.claude.models.specialist.model}/${config.claude.models.specialist.effort}; read-only local knowledge + three Infor WebFetch domains`);
+  line("INFO","external second opinion",`${config.externalSecondOpinion.enabled?"enabled":"disabled"}; max ${config.externalSecondOpinion.maxPerRun}/run; Tab 2 replies go only to Opus, unverified`);
+  if(opts.mcp) {
+    const health=await new McpService(config,paths).health();
+    line(health.ok?"OK":"FAIL","owned Chrome/MCP",JSON.stringify(health));
+    if(health.windowState==="minimized")line("FAIL","Chrome window","restore the Chrome window first");
+  } else line("INFO","owned services","skipped (use --mcp); start/resume never starts or restarts them");
 
   console.log("== DeepSeek (optional)");
   if (!config.deepseek.enabled) line("INFO", "deepseek", "disabled (unparseable coordinator replies pause for the operator)");
   else line(process.env[config.deepseek.apiKeyEnv] ? "OK" : "FAIL", "deepseek key", `${config.deepseek.apiKeyEnv} ${process.env[config.deepseek.apiKeyEnv] ? "is set" : "is NOT set"} (no API call made)`);
 
   console.log("== Browser (ChatGPT)");
-  for (const role of ["coordinator", "specialist"] as ChatRole[]) {
+  const browserRoles:ChatRole[]=[...(config.coordinator.transport==="chatgpt"?["coordinator" as const]:[]),...(config.externalSecondOpinion.enabled?["specialist" as const]:[])];
+  for (const role of browserRoles) {
     const r = app.store.getRole(role);
     line(r ? "OK" : "FAIL", `${role} conversation`, r ? `${r.url}${r.gpt_id ? ` (GPT ${r.gpt_id})` : ""}, validated ${r.validated_at}` : "not configured — run: harness setup");
   }
-  if (!opts.browser) {
+  if (!opts.browser || !browserRoles.length) {
     line("INFO", "browser connectivity", "skipped (--no-browser)");
   } else {
     let session: BrowserSession | null = null;
@@ -135,7 +115,7 @@ export async function doctor(app: App, opts: { browser: boolean; mcp: boolean })
       session = await BrowserSession.open(config.browser);
       line("OK", `browser (${config.browser.mode})`, config.browser.mode === "cdp" ? config.browser.cdpUrl : config.browser.userDataDir);
       const chat = chatAdapter(app, session, () => null);
-      for (const role of ["coordinator", "specialist"] as ChatRole[]) {
+      for (const role of browserRoles) {
         if (!app.store.getRole(role)) continue;
         const s = await chat.checkReady(role);
         line(s.ok ? "OK" : "FAIL", `${role} page`, s.ok ? `ready at ${s.url}` : `${s.problem}: ${s.detail ?? ""}`);

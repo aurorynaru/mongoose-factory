@@ -16,6 +16,8 @@ import { findMarker, marker, transcriptPath } from "./transcripts.js";
 import { generatedPolicy } from "./tool-policy.js";
 import { intentionallyDenied } from "./permissions.js";
 import { browserAction, finishAction, type GuardConfig } from "../../hooks/pre-tool-use.js";
+import { rolePolicy } from "./role-policy.js";
+import type { ChatRole } from "../types.js";
 
 export interface SessionState { id:string; title:string; cwd:string; started:boolean; model:string; policy:WorkerToolPolicy; active:string|null }
 export interface TaskJournal {
@@ -30,15 +32,18 @@ export interface TaskJournal {
   metrics?:{assistantTurns:number;wallTimeSeconds:number|null;guardDenials:{total:number;byGuard:Record<string,number>;auditError?:string}};
 }
 interface Active { child:ChildProcessWithoutNullStreams; events:TaskEvents; journal:TaskJournal; finished:Promise<void>; resolve:()=>void; stopReason?:"timeout"|"interrupted"|"turn_limit"|"loop"|"model_mismatch"|"invalid"; detail?:string; exit:number|null; timer:ReturnType<typeof setTimeout>; monitor:ReturnType<typeof setInterval>; stopping:boolean; identityReady:Promise<void>; stopPromise?:Promise<void> }
-export interface WorkerOptions { config:HarnessConfig; paths:ResolvedPaths; healthCheck?:()=>Promise<{ok:boolean;version?:string;detail?:string}>; windowCheck?:()=>Promise<ChromeWindow>; restartOwned?:()=>Promise<boolean> }
+export interface WorkerOptions { config:HarnessConfig; paths:ResolvedPaths; role?:ChatRole; workingDirectory?:string; healthCheck?:()=>Promise<{ok:boolean;version?:string;detail?:string}>; windowCheck?:()=>Promise<ChromeWindow>; restartOwned?:()=>Promise<boolean> }
 export class ClaudeWorker implements WorkerPort {
   private readonly active = new Map<string,Active>();
   private readonly service: McpService;
   constructor(readonly o:WorkerOptions) { this.service=new McpService(o.config,o.paths); }
+  private get cwd(){return this.o.workingDirectory??this.o.paths.factoryRoot;}
+  selectModel(model:HarnessConfig["claude"]["models"]["worker"]) {if(this.active.size)throw Error("Cannot change model while a task is active");this.o.config.claude.models.worker={...model};}
+  private policy(sid:string,policy:WorkerToolPolicy,mid?:string){return this.o.role?rolePolicy(this.o.config,this.o.paths,sid,this.o.role,this.cwd,mid):generatedPolicy(this.o.config,this.o.paths,sid,policy,mid);}
   sessionFile(id:string) { this.validateId(id);return join(this.o.paths.dataDir,"workers",id,"session.json"); }
   taskFile(sid:string,mid:string) { this.validateId(mid);return join(this.o.paths.dataDir,"workers",sid,"tasks",`${mid}.json`); }
   private validateId(id:string) { if(!/^[\da-f]{8}-(?:[\da-f]{4}-){3}[\da-f]{12}$/i.test(id))throw Error("Invalid owned UUID"); }
-  private session(id:string) { const s=read<SessionState>(this.sessionFile(id));if(s.id!==id||s.cwd!==this.o.paths.factoryRoot)throw Error("Worker session scope mismatch");return s; }
+  private session(id:string) { const s=read<SessionState>(this.sessionFile(id));if(s.id!==id||s.cwd!==this.cwd)throw Error("Worker session scope mismatch");return s; }
   async health() {
     if(this.o.healthCheck)return this.o.healthCheck();
     try {
@@ -46,12 +51,12 @@ export class ClaudeWorker implements WorkerPort {
       if(version.code||auth.code)return {ok:false,detail:"Claude diagnostic failed"};
       const status=JSON.parse(auth.stdout);
       if(!status.loggedIn||(this.o.config.claude.billing==="subscription"&&status.authMethod!=="claude.ai"))return {ok:false,detail:"Required Claude subscription login unavailable"};
-      if(!(await this.service.health(false)).ok)return {ok:false,detail:"Owned Chrome/MCP must already be healthy; worker health does not start them"};
+      if(!this.o.role&&!(await this.service.health(false)).ok)return {ok:false,detail:"Owned Chrome/MCP must already be healthy; worker health does not start them"};
       return {ok:true,version:version.stdout.trim()};
     }catch{return {ok:false,detail:"Claude/auth/owned MCP health failed"};}
   }
   async createSession(title:string) {
-    const id=randomUUID();save(this.sessionFile(id),{id,title,cwd:this.o.paths.factoryRoot,started:false,model:this.o.config.claude.models.worker.model,policy:{denyBrowserJavaScript:false},active:null} satisfies SessionState);return id;
+    const id=randomUUID();save(this.sessionFile(id),{id,title,cwd:this.cwd,started:false,model:this.o.config.claude.models.worker.model,policy:{denyBrowserJavaScript:false},active:null} satisfies SessionState);return id;
   }
   async windowState() { return this.o.windowCheck?this.o.windowCheck():this.service.windowState(); }
   async setTaskPreamble(id:string,preamble:string) { const s=this.session(id);if(this.active.has(id))throw Error("Worker session is busy");s.policy.preamble=preamble;save(this.sessionFile(id),s); }
@@ -60,12 +65,12 @@ export class ClaudeWorker implements WorkerPort {
     if(s.active){const previous=read<TaskJournal>(this.taskFile(id,s.active));if(!previous.result)throw Error("Previous worker task needs reconciliation");}
     s.policy={...s.policy,...policy,denyBrowserJavaScript:s.policy.denyBrowserJavaScript||policy.denyBrowserJavaScript};
     if(!existsSync(join(this.o.paths.harnessDir,"dist/hooks/pre-tool-use.js")))throw Error("Compiled guard hook missing; build before submission");
-    generatedPolicy(this.o.config,this.o.paths,id,s.policy);save(this.sessionFile(id),s);
+    this.policy(id,s.policy);save(this.sessionFile(id),s);
   }
   newMessageId() { return randomUUID(); }
   async findMessage(sid:string,mid:string) {
     this.session(sid);this.validateId(mid);
-    return findMarker(transcriptPath(this.o.config.claude.configDir??join(homedir(),".claude"),this.o.paths.factoryRoot,sid),this.o.paths.factoryRoot,sid,mid);
+    return findMarker(transcriptPath(this.o.config.claude.configDir??join(homedir(),".claude"),this.cwd,sid),this.cwd,sid,mid);
   }
   async submit(sid:string,mid:string,text:string):Promise<{status:"accepted"|"uncertain"|"rejected";detail?:string}> {
     const s=this.session(sid);this.validateId(mid);
@@ -78,8 +83,8 @@ export class ClaudeWorker implements WorkerPort {
     const agents=readFileSync(join(paths.factoryRoot,"AGENTS.md"),"utf8");
     if(!s.policy.preamble)return {status:"rejected",detail:"Bounded task preamble is required"};
     const identity=`worker_session_id: ${sid} (this is your worker session UUID for identity/freshness checks); task_message_id: ${mid}`;
-    const policy=generatedPolicy(cfg,paths,sid,s.policy,mid),mcp=this.service.generateWorkerConfig();
-    const preamble=[identity,s.policy.preamble,
+    const policy=this.policy(sid,s.policy,mid),mcp=this.o.role?(policy as ReturnType<typeof rolePolicy>).mcp:this.service.generateWorkerConfig();
+    const preamble=this.o.role?[`Claude role: ${this.o.role}; session_id: ${sid}`,s.policy.preamble,"AGENTS.md (explicit authoritative instructions):",agents].join("\n"):[identity,s.policy.preamble,
       "The brief's scope and prohibitions are already included in this task. tools/ (including briefs/) is intentionally unreadable; do not try to read these files.",
       policy.tools.includes("Bash")?"Bash is explicitly enabled for this task; use it only within the supplied scope and prohibitions.":"Bash is disabled for this task; do not try to use it. Bash is disabled unless explicitly enabled by the generated tool policy.",
       'If an action times out at "visible, enabled and stable" while the locator resolves, treat it as a possible rendering or environment problem. Do not repeat the same action more than the brief allows; record the exact error and report a suspected environment blocker.',
@@ -92,11 +97,11 @@ export class ClaudeWorker implements WorkerPort {
       "Only this bounded task is authorized. Tools, a fresh session and usage-limit resets never expand scope. On a limit preserve state and report; never resubmit or switch models."].join("\n");
     const args=["-p",s.started?"--resume":"--session-id",sid,"--output-format","stream-json","--verbose","--input-format","text","--model",s.model,
       ...(cfg.claude.models.worker.effort?["--effort",cfg.claude.models.worker.effort]:[]),"--append-system-prompt",preamble,"--system-prompt-snapshot","off",
-      "--mcp-config",mcp,"--strict-mcp-config","--tools",policy.tools.join(","),"--allowedTools",[...policy.tools,"mcp__playwright__*"].join(","),
+      "--mcp-config",mcp,"--strict-mcp-config","--tools",policy.tools.join(","),"--allowedTools",(this.o.role?policy.settings.permissions.allow:[...policy.tools,"mcp__playwright__*"]).join(","),
       "--disallowedTools",policy.deny.filter(r=>!r.includes("(")).join(","),"--permission-mode","dontAsk","--permission-prompts","none","--settings",policy.settingsFile,"--setting-sources","","--disable-slash-commands"];
     const dir=join(paths.dataDir,"workers",sid,"tasks");mkdirSync(dir,{recursive:true});
     const payload=marker(mid)+"\n"+identity+"\n"+text;
-    const journal:TaskJournal={sessionId:sid,messageId:mid,payload,preamble,agentsHash:hash(agents),before:gitState(paths.factoryRoot),state:"planned",argv:args,createdAt:new Date().toISOString(),permissionSettings:policy.settingsFile,eventFile:join(dir,`${mid}.events.jsonl`),stderrFile:join(dir,`${mid}.stderr.txt`),nativeTranscript:transcriptPath(cfg.claude.configDir??join(homedir(),".claude"),paths.factoryRoot,sid)};
+    const journal:TaskJournal={sessionId:sid,messageId:mid,payload,preamble,agentsHash:hash(agents),before:gitState(paths.factoryRoot),state:"planned",argv:args,createdAt:new Date().toISOString(),permissionSettings:policy.settingsFile,eventFile:join(dir,`${mid}.events.jsonl`),stderrFile:join(dir,`${mid}.stderr.txt`),nativeTranscript:transcriptPath(cfg.claude.configDir??join(homedir(),".claude"),this.cwd,sid)};
     journal.guardDenialsFile=policy.denialFile;
     journal.permissionDenyRules=[...policy.deny];
     journal.guardConfig=read<GuardConfig>(policy.guardConfig);
@@ -107,7 +112,7 @@ export class ClaudeWorker implements WorkerPort {
     save(this.taskFile(sid,mid),journal);s.active=mid;save(this.sessionFile(sid),s);
     journal.state="launching";save(this.taskFile(sid,mid),journal);
     const guardConfig=journal.guardConfig;
-    const child=launch(cfg,paths.factoryRoot,args);const events=new TaskEvents(sid,(id,name)=>{
+    const child=launch(cfg,this.cwd,args);const events=new TaskEvents(sid,(id,name)=>{
       // Read results cannot release an action. The exact action ID is checked under lock.
       if(browserAction(name,{}))finishAction({session_id:sid,tool_name:name,tool_use_id:id},guardConfig);
     });

@@ -40,7 +40,11 @@ describe("session browser action serialization",()=>{
     expect(h.read().action.id).toBe(a.tool_use_id);
     finishAction(a,h.cfg);finishAction(a,h.cfg);expect(h.read().action).toBeUndefined();
     expect(guard(b,h.cfg)).toBeNull();
-    expect(readFileSync(h.cfg.stateFile,"utf8")).not.toContain("e1");
+    // UUIDs/hashes can legitimately contain "e1". Check the stored schema,
+    // rather than confusing random identifier bytes with a raw browser ref.
+    expect(Object.keys(h.read()).sort()).toEqual(["action","count","key","sequence"]);
+    expect(h.read().action).toEqual({id:b.tool_use_id,tool:b.tool_name});
+    expect(readFileSync(h.cfg.stateFile,"utf8")).not.toContain('"ref"');
   });
   it("does not reserve rejected key text/exact values or identity-less actions",()=>{
     const h=fixture();h.cfg.exactValues=["FX_Exact"];

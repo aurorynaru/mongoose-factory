@@ -220,6 +220,7 @@ export class ChatGptAdapter implements ChatPort {
     const want = this.o.desiredModel?.(role) ?? { model: null, effort: null };
     if (!want.model && !want.effort) return { ok: true, model: null, effort: null };
     const norm = (x: string) => x.toLowerCase().replace(/[\s-]+/g, "");
+    const sameModel=(label:string)=>label.trim()===want.model?.trim();
     // The model button renders after the composer (observed live on a custom GPT's new-chat page).
     let btn: Locator | null = null;
     const btnDeadline = Date.now() + Math.min(20_000, this.o.navigationTimeoutMs);
@@ -257,15 +258,22 @@ export class ChatGptAdapter implements ChatPort {
       if (!(await open())) return { ok: false, detail: "model menu did not open" };
       let m = await read();
       if (!m) return { ok: false, detail: "model menu not readable" };
-      if (want.model && !m.models.some((x) => x.checked && norm(x.text).startsWith(norm(want.model!)))) {
-        const target = page.locator(`${SELECTORS.modelMenu} ${SELECTORS.modelMenuModel}`).filter({ hasText: want.model }).first();
-        if ((await target.count()) === 0) return { ok: false, detail: `model "${want.model}" is not offered (menu shows: ${m.models.map((x) => x.text).join(", ")})` };
+      if (want.model && !m.models.some((x) => x.checked && sameModel(x.text))) {
+        if(this.o.autoSelectModel===false)return {ok:false,detail:`visible selected model does not equal "${want.model}"`};
+        // The visible first line is the model name; descriptions may render as
+        // adjacent spans without a newline in textContent. Use the same radio
+        // ordering as the menu read instead of a substring/hasText match.
+        const index=m.models.findIndex(x=>sameModel(x.text));
+        const radios=page.locator(`${SELECTORS.modelMenu} ${SELECTORS.modelMenuModel}`);
+        if(index<0||index>=await radios.count())return {ok:false,detail:`model "${want.model}" is not offered (menu shows: ${m.models.map(x=>x.text).join(", ")})`};
+        const target=radios.nth(index);
         await target.click();
         if (!(await open())) return { ok: false, detail: "model menu did not reopen after selecting the model" };
-        m = await waitFor((x) => x.models.some((y) => y.checked && norm(y.text).startsWith(norm(want.model!))));
-        if (!m || !m.models.some((x) => x.checked && norm(x.text).startsWith(norm(want.model!)))) return { ok: false, detail: `could not select model "${want.model}"` };
+        m = await waitFor((x) => x.models.some((y) => y.checked && sameModel(y.text)));
+        if (!m || !m.models.some((x) => x.checked && sameModel(x.text))) return { ok: false, detail: `could not select model "${want.model}"` };
       }
       if (want.effort && norm(m.effort) !== norm(want.effort)) {
+        if(this.o.autoSelectModel===false)return {ok:false,detail:`visible effort does not equal "${want.effort}"`};
         const power = page.locator(`${SELECTORS.modelMenu} :is(${SELECTORS.modelMenuPower})`).first();
         if ((await power.count()) === 0) return { ok: false, detail: "effort control not found in the model menu" };
         await power.focus();
@@ -293,8 +301,9 @@ export class ChatGptAdapter implements ChatPort {
     const b = blockerOf(pre);
     if (b) return { status: "blocked", ...b };
     if (pre.streaming) return { status: "blocked", problem: "visible_error", detail: "A response is still streaming in this conversation; not submitting." };
-    // New chats always get the configured model/effort; existing chats only when the label is off.
-    if (this.o.autoSelectModel && (isNewChat || this.modelProblem(role, pre.modelLabel))) {
+    // Confirm configured model/effort on every send; a "High" button alone cannot prove model "6".
+    const desired=this.o.desiredModel?.(role);
+    if (desired?.model||desired?.effort||this.o.autoSelectModel && (isNewChat || this.modelProblem(role, pre.modelLabel))) {
       const sel = await this.ensureModel(role, page);
       if (!sel.ok) return { status: "blocked", problem: "model_mismatch", detail: `${role}: ${sel.detail}` };
       pre = await this.snapshot(page);
