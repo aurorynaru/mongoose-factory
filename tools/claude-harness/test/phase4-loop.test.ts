@@ -16,6 +16,7 @@ import { parseHeader } from "../src/protocol/prompts.js";
 import { BriefSchema } from "../src/brief.js";
 import type { ChatPort } from "../src/adapters/types.js";
 const shared=JSON.parse(readFileSync(join(HARNESS_DIR,"fixtures/scenarios/scenarios.json"),"utf8")).shared;
+function externalBroker(config:ReturnType<typeof ConfigSchema.parse>,paths:ReturnType<typeof resolvePaths>,chat:ChatPort|null){return new ExternalSecondOpinion(config,paths,chat,{registeredUrl:()=>"https://chatgpt.com/g/g-fakegpt-mongoose/c/registered-chat",chatForUrl:()=>chat!});}
 const SEND:ReplySpec={envelope:{action:"SEND_TO_OPENCODE",reason:"next",message:"Inspect FX_FixtureForm01"}};
 const COMPLETE:ReplySpec={envelope:shared.complete};
 const disposables:Array<()=>void>=[];afterEach(()=>{disposables.splice(0).forEach(close=>close());vi.restoreAllMocks();});
@@ -30,14 +31,14 @@ function fixture(transport:"chatgpt"|"claude"="chatgpt",spec:Record<string,unkno
   const paths=resolvePaths(config),window={targetId:"fake",windowId:1,windowState:"maximized" as const,bounds:{windowState:"maximized",width:1920,height:1080},checkedAt:new Date().toISOString()};
   const worker=new ClaudeWorker({config:structuredClone(config),paths,healthCheck:async()=>({ok:true}),windowCheck:async()=>window,restartOwned:async()=>{throw Error("No lifecycle calls allowed in a run");}});
   const externalChat=new FakeChat({coordinator:[],specialist:[]});
-  const claude=new ClaudeChat({config,paths,external:new ExternalSecondOpinion(config,paths,externalChat),workerFactory:options=>new ClaudeWorker({...options,healthCheck:async()=>({ok:true})})});
+  const claude=new ClaudeChat({config,paths,external:externalBroker(config,paths,externalChat),workerFactory:options=>new ClaudeWorker({...options,healthCheck:async()=>({ok:true})})});
   const chat=new RoutedChat(config,h.chat,claude);
   const create=(confirmed=true,overrideChat:ChatPort=chat)=>new Controller({store:h.store,config,factoryRoot:h.factoryRoot,runsDir:paths.runsDir,protocolDir:paths.protocolDir,chat:overrideChat,worker,interpreter:null,log:h.log,preconditionsConfirmed:confirmed});
   return {...h,config,paths,worker,claude,chat,externalChat,file,capture,scriptState,window,create};
 }
 describe("Phase 4 controller loop with fake Claude processes",()=>{
   it("defaults to ChatGPT 6/High, Claude haiku/high and Opus/high with two external opinions",()=>{
-    const cfg=ConfigSchema.parse({});expect(cfg.coordinator.transport).toBe("chatgpt");expect(cfg.externalSecondOpinion).toEqual({enabled:true,maxPerRun:2});
+    const cfg=ConfigSchema.parse({});expect(cfg.coordinator.transport).toBe("chatgpt");expect(cfg.externalSecondOpinion).toEqual({enabled:true,maxPerRun:2,newChatPerRun:true});
     expect(cfg.chats.desiredModel).toEqual({coordinator:{model:"6",effort:"High"},specialist:{model:"6",effort:"High"}});
     expect(cfg.claude.models).toEqual({worker:{model:"haiku",effort:"high"},coordinator:{model:"sonnet",effort:"high"},specialist:{model:"opus",effort:"high"}});
   });
@@ -99,7 +100,7 @@ describe("Phase 4 controller loop with fake Claude processes",()=>{
     const specialist={prose:"Source rank: model knowledge (unverified). Local fixture read first; external claim is unverified.",envelope:{protocol:"mongoose-harness/specialist-v1",consultation_id:"{{consultation_id}}",verdict:"informational",required_verifications:[]}};
     const h=fixture("chatgpt",{script:{specialist:[{reply:request},{reply:specialist}],worker:[{write:shared.workerOk.files}]}});
     const browser=new FakeChat({coordinator:[{envelope:{action:"ASK_SPECIALIST",reason:"question",message:"Explain Select Form."}},SEND,COMPLETE],specialist:[]});
-    const external=new FakeChat({coordinator:[],specialist:["external-secret-sentinel"]});h.claude.o.external=new ExternalSecondOpinion(h.config,h.paths,external);
+    const external=new FakeChat({coordinator:[],specialist:["external-secret-sentinel"]});h.claude.o.external=externalBroker(h.config,h.paths,external);
     h.store.setRole("specialist",{url:"https://chatgpt.com/g/g-fixture/c/external",conversationId:"external",gptId:"g-fixture",title:"Infor CloudSuite Assistant"});h.store.setSetting("new_chat:specialist","1");
     const controller=h.create(true,new RoutedChat(h.config,browser,h.claude)),run=await controller.run(controller.createRun(fixtureBrief()).id);expect(run.status).toBe("completed");expect(external.submissions).toHaveLength(1);
     const inbound=h.store.inboundForRun(run.id,"specialist");expect(inbound).toHaveLength(1);expect(inbound[0].content).not.toContain("external-secret-sentinel");
@@ -121,18 +122,18 @@ describe("specialist permissions and external broker",()=>{
     for(const url of ["https://docs.infor.com.evil.invalid/","https://example.invalid/","https://docs.python.org/","https://attacker@docs.infor.com/","javascript:alert(1)"])expect(guard({session_id:sid,tool_name:"WebFetch",tool_input:{url}},cfg)).toContain("domain denied");
   });
   it("logs and labels every external request/reply, persists the limit through restart and never treats logs as evidence",async()=>{
-    const h=fixture(),chat=new FakeChat({coordinator:[],specialist:["opinion one","opinion two"]}),broker=new ExternalSecondOpinion(h.config,h.paths,chat),opts={timeoutMs:100,shouldStop:()=>false};
+    const h=fixture(),chat=new FakeChat({coordinator:[],specialist:["opinion one","opinion two"]}),broker=externalBroker(h.config,h.paths,chat),opts={timeoutMs:100,shouldStop:()=>false};
     const one=await broker.ask("R-fixture","one","Question one",opts);expect(one).toMatchObject({status:"complete",markdown:expect.stringContaining(EXTERNAL_LABEL)});
     expect(await broker.ask("R-fixture","one","Question one",opts)).toEqual(one);expect(chat.submissions).toHaveLength(1);
-    await new ExternalSecondOpinion(h.config,h.paths,chat).ask("R-fixture","two","Question two",opts);
-    const limit=await new ExternalSecondOpinion(h.config,h.paths,chat).ask("R-fixture","three","Question three",opts);expect(limit).toMatchObject({status:"complete",markdown:expect.stringContaining("per-run limit reached")});expect(chat.submissions).toHaveLength(2);
+    await externalBroker(h.config,h.paths,chat).ask("R-fixture","two","Question two",opts);
+    const limit=await externalBroker(h.config,h.paths,chat).ask("R-fixture","three","Question three",opts);expect(limit).toMatchObject({status:"complete",markdown:expect.stringContaining("per-run limit reached")});expect(chat.submissions).toHaveLength(2);
     const ledger=read<Record<string,{nonce:string}>>(join(h.paths.runsDir,"R-fixture/external-second-opinion/ledger.json"));expect(Object.keys(ledger)).toHaveLength(2);
     for(const e of Object.values(ledger))for(const side of ["request","reply"])expect(read<Record<string,unknown>>(join(h.paths.runsDir,"R-fixture/external-second-opinion",`${e.nonce}-${side}.json`))).toMatchObject({label:EXTERNAL_LABEL,evidence:false});
     expect(checkEvidenceRef("tools/claude-harness/claude-data/runs/R-fixture/external-second-opinion/ledger.json",h.factoryRoot).ok).toBe(false);
   });
   it("disabled opinions make no browser calls; uncertain submissions never replay",async()=>{
     const h=fixture(),chat=new FakeChat({coordinator:[],specialist:[{submit:"uncertain_lost",prose:"unknown"}]}),opts={timeoutMs:100,shouldStop:()=>false};
-    h.config.externalSecondOpinion.enabled=false;expect(await new ExternalSecondOpinion(h.config,h.paths,null).ask("R-fixture","one","Q",opts)).toMatchObject({status:"complete",markdown:expect.stringContaining("disabled")});expect(chat.submissions).toHaveLength(0);
-    h.config.externalSecondOpinion.enabled=true;const broker=new ExternalSecondOpinion(h.config,h.paths,chat);expect((await broker.ask("R-fixture","one","Q",opts)).status).toBe("blocked");expect((await broker.ask("R-fixture","one","Q",opts)).status).toBe("blocked");expect(chat.submissions).toHaveLength(1);
+    h.config.externalSecondOpinion.enabled=false;expect(await externalBroker(h.config,h.paths,null).ask("R-fixture","one","Q",opts)).toMatchObject({status:"complete",markdown:expect.stringContaining("disabled")});expect(chat.submissions).toHaveLength(0);
+    h.config.externalSecondOpinion.enabled=true;const broker=externalBroker(h.config,h.paths,chat);expect((await broker.ask("R-fixture","one","Q",opts)).status).toBe("blocked");expect((await broker.ask("R-fixture","one","Q",opts)).status).toBe("blocked");expect(chat.submissions).toHaveLength(1);
   });
 });

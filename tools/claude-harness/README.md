@@ -36,7 +36,7 @@ if (-not (Test-Path -LiteralPath harness.config.json)) {
 
 2. Keep `coordinator.transport: "chatgpt"`, Claude worker/coordinator/specialist
    haiku/sonnet/opus with effort high, and `externalSecondOpinion` enabled with
-   `maxPerRun: 2`. For **both** browser roles set `chats.desiredModel` to
+   `maxPerRun: 2`, `newChatPerRun: true`. For **both** browser roles set `chats.desiredModel` to
    `{ "model": "6", "effort": "High" }` and `expectedModelLabel` to `"High"`.
    Keep `git.enabled: false`, `git.push: false`, and
    `protocol.proposeNextOnComplete: false` for a single run without automatic
@@ -164,6 +164,12 @@ Opus may return one fenced JSON request:
 The broker sends it to the registered Tab 2 GPT, logs requests/receipts/replies
 under `claude-data/runs/<RUN-ID>/external-second-opinion/`, persists its per-run
 allowance across restart and reconciles uncertain nonces without replaying them.
+With `externalSecondOpinion.newChatPerRun: true` (default), the first request
+starts a new conversation on the registered GPT's page through `submitNew`, with
+the same model/effort verification. `conversation.json` in that folder logs its
+URL and binds it only to that run. Later requests and resumed runs reuse it;
+setup's registered conversation remains unchanged. Set the option to `false` to
+reuse the registered conversation. An uncertain first send pauses without replay.
 Raw replies go only to Opus in its same Claude session, labelled **external model
 knowledge, unverified**. They never enter controller inbound or worker instructions
 directly, satisfy an acceptance check or count as evidence. Evidence validation

@@ -21,7 +21,7 @@ export const ConfigSchema = z.object({
   factoryRoot: z.string().min(1).default(resolve(HARNESS_DIR, "..", "..")),
   dataDir: z.string().min(1).default("claude-data"),
   coordinator: z.object({transport:z.enum(["chatgpt","claude"]).default("chatgpt")}).prefault({}),
-  externalSecondOpinion: z.object({enabled:z.boolean().default(true),maxPerRun:z.number().int().nonnegative().default(2)}).prefault({}),
+  externalSecondOpinion: z.object({enabled:z.boolean().default(true),maxPerRun:z.number().int().nonnegative().default(2),newChatPerRun:z.boolean().default(true)}).prefault({}),
   claude: z.object({
     executable: z.string().default("claude"),
     argvPrefix: z.array(z.string()).default([]),

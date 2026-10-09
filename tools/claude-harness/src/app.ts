@@ -1,5 +1,6 @@
 import { isAbsolute, join } from "node:path";
-import { ChatGptAdapter } from "./adapters/chatgpt/adapter.js";
+import { ChatGptAdapter, type RoleBinding } from "./adapters/chatgpt/adapter.js";
+import { parseConversationUrl } from "./adapters/chatgpt/selectors.js";
 import { BrowserSession } from "./adapters/chatgpt/browser.js";
 import { OpenCodeClient } from "./adapters/opencode/client.js";
 import { ClaudeWorker } from "./adapters/claude/worker.js";
@@ -48,12 +49,12 @@ export function roleBinding(app: App) {
   };
 }
 
-export function chatAdapter(app: App, browser: BrowserSession, runId: () => string | null): ChatGptAdapter {
+export function chatAdapter(app: App, browser: BrowserSession, runId: () => string | null, roles: (role: ChatRole) => RoleBinding | null = roleBinding(app)): ChatGptAdapter {
   const b = app.config.browser;
   return new ChatGptAdapter({
     pages: () => browser.pages(),
     newPage: () => browser.context.newPage(),
-    roles: roleBinding(app),
+    roles,
     log: app.log,
     submitConfirmMs: b.submitConfirmSeconds * 1000,
     stableMs: b.stableMs,
@@ -82,7 +83,15 @@ export async function openChats(app:App,currentRun:()=>string|null) {
   const {config}=app;
   const browser=config.coordinator.transport==="chatgpt"||config.externalSecondOpinion.enabled?await BrowserSession.open(config.browser):null;
   const browserChat=browser?chatAdapter(app,browser,currentRun):null;
-  const claudeChat=new ClaudeChat({config,paths:app.paths,external:new ExternalSecondOpinion(config,app.paths,browserChat)});
+  const external=new ExternalSecondOpinion(config,app.paths,browserChat,browser?{
+    registeredUrl:()=>app.store.getRole("specialist")?.url??null,
+    chatForUrl:(url,runId)=>{
+      const parsed=parseConversationUrl(url);
+      if(!parsed)throw Error("Invalid external conversation URL");
+      return chatAdapter(app,browser,()=>runId,role=>role==="specialist"?{url,conversationId:parsed.conversationId,gptId:parsed.gptId}:roleBinding(app)(role));
+    },
+  }:undefined);
+  const claudeChat=new ClaudeChat({config,paths:app.paths,external});
   const chat=new RoutedChat(config,browserChat,claudeChat);
   return {browser,claudeChat,chat,close:async()=>{await chat.close();await browser?.close();}};
 }

@@ -62,7 +62,11 @@ for every Claude role; do not rely on discovery with setting-sources empty.
 
 Enable externalSecondOpinion (default maxPerRun 2). Only Opus can request the
 registered Infor CloudSuite Assistant Tab 2 GPT (6/High) through the existing
-browser adapter. Journal actual requests/replies under the run directory, persist
+browser adapter. newChatPerRun defaults true: the first request uses submitNew
+on that GPT's page with the existing model/effort check, logs its conversation URL
+in external-second-opinion/conversation.json and registers it for that run only.
+Later requests/resume reuse that URL without changing the setup registration;
+false preserves registered-conversation reuse. Journal actual requests/replies under the run directory, persist
 limits across restart and reconcile uncertain nonces without replay. Return raw
 replies only to Opus, labelled external model knowledge, unverified: never acceptance
 proof/evidence. Reject external log paths as evidence; only Opus's assessed answer

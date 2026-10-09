@@ -7,6 +7,7 @@ import { parseHeader } from "../../protocol/prompts.js";
 import { ClaudeWorker, type WorkerOptions } from "./worker.js";
 import { read, save } from "./files.js";
 import { specialistKnowledge,knowledgeIndexes } from "./role-policy.js";
+import { parseConversationUrl } from "../chatgpt/selectors.js";
 
 export interface ChatOperation {sid:string;mid:string;nonce:string;role:ChatRole;text:string;runId:string;submission?:SubmitOutcome;reply?:ReplyOutcome;continuation?:string}
 export interface ClaudeChatOptions {config:HarnessConfig;paths:ResolvedPaths;external?:ExternalSecondOpinion;workerFactory?:(options:WorkerOptions)=>ClaudeWorker}
@@ -103,8 +104,14 @@ function externalQuestion(text:string):string|null {
   return null;
 }
 interface ExternalEntry {nonce:string;question:string;status:"planned"|"submitting"|"accepted"|"complete";reply?:ReplyOutcome}
+export interface ExternalConversation {registeredUrl:string;gptUrl:string;url:string|null;newChat:boolean;firstNonce:string}
+export interface ExternalConversationOptions {
+  registeredUrl:()=>string|null;
+  /** Create an adapter with a run-only role binding; never update the setup registration. */
+  chatForUrl:(url:string,runId:string)=>ChatPort;
+}
 export class ExternalSecondOpinion {
-  constructor(readonly cfg:HarnessConfig,readonly paths:ResolvedPaths,readonly chat:ChatPort|null){}
+  constructor(readonly cfg:HarnessConfig,readonly paths:ResolvedPaths,readonly chat:ChatPort|null,readonly conversations?:ExternalConversationOptions){}
   async ask(runId:string,key:string,question:string,opts:{timeoutMs:number;shouldStop:()=>boolean}):Promise<ReplyOutcome> {
     if(!this.cfg.externalSecondOpinion.enabled)return {status:"complete",messageId:"external-disabled",markdown:`${EXTERNAL_LABEL}: external second opinions are disabled. Answer using local sources; no external knowledge was supplied.`};
     if(!this.chat)return {status:"blocked",problem:"not_configured",detail:"External Tab 2 browser adapter unavailable"};
@@ -118,25 +125,50 @@ export class ExternalSecondOpinion {
     }
     if(e.question!==question)return {status:"blocked",problem:"submission_uncertain",detail:"External request key has a different saved question"};
     if(e.reply)return e.reply;
+    const conversationFile=join(this.paths.runsDir,runId,"external-second-opinion","conversation.json");
+    let conversation=existsSync(conversationFile)?read<ExternalConversation>(conversationFile):null;
+    if(!conversation&&this.conversations) {
+      const registeredUrl=this.conversations.registeredUrl(),parsed=registeredUrl?parseConversationUrl(registeredUrl):null;
+      if(!parsed?.gptId)return {status:"blocked",problem:"not_configured",detail:"Register the Infor CloudSuite Assistant GPT conversation with setup before requesting an external opinion"};
+      // Preserve the registered GPT's full page path (including its visible slug).
+      const gptUrl=parsed.canonical.replace(/\/c\/.*$/,"");
+      conversation={registeredUrl:parsed.canonical,gptUrl,url:this.cfg.externalSecondOpinion.newChatPerRun?null:parsed.canonical,newChat:this.cfg.externalSecondOpinion.newChatPerRun,firstNonce:e.nonce};
+      save(conversationFile,conversation);
+    }
+    if(!conversation&&this.cfg.externalSecondOpinion.newChatPerRun)return {status:"blocked",problem:"not_configured",detail:"Run-scoped external conversation bindings are unavailable"};
+    if(conversation&&!this.conversations)return {status:"blocked",problem:"not_configured",detail:"Saved external conversation requires a run-scoped browser adapter"};
+    if(conversation&&!conversation.url&&conversation.firstNonce!==e.nonce)return {status:"blocked",problem:"submission_uncertain",detail:"The first external request has no confirmed conversation URL; reconcile it before another request"};
+    if(conversation&&!conversation.url&&e.status==="accepted")return {status:"blocked",problem:"submission_uncertain",detail:"Accepted external request has no saved conversation URL; inspect Tab 2 manually. Do not replay it."};
+    let chat=conversation?.url&&this.conversations?this.conversations.chatForUrl(conversation.url,runId):this.chat;
     if(e.status==="submitting") {
-      const found=await this.chat.findSubmission("specialist",e.nonce);
+      if(conversation&&!conversation.url)return {status:"blocked",problem:"submission_uncertain",detail:"The new external conversation URL was not confirmed; inspect Tab 2 manually. The first request will not be replayed."};
+      const found=await chat.findSubmission("specialist",e.nonce);
       if(!found.found)return {status:"blocked",problem:"submission_uncertain",detail:"External request may have been submitted; inspect Tab 2 manually. It will not be replayed."};
       e.status="accepted";save(file,ledger);
     }
     if(e.status==="planned") {
-      const ready=await this.chat.checkReady("specialist");if(!ready.ok)return {status:"blocked",problem:ready.problem??"not_configured",detail:ready.detail??"Tab 2 unavailable"};
+      const openingNew=!!conversation?.newChat&&!conversation.url;
+      // submitNew verifies model/effort on the GPT's new-chat page itself.
+      if(!openingNew){const ready=await chat.checkReady("specialist");if(!ready.ok)return {status:"blocked",problem:ready.problem??"not_configured",detail:ready.detail??"Tab 2 unavailable"};}
       e.status="submitting";save(file,ledger);
-      const out=await this.chat.submit("specialist",`[HARNESS nonce=${e.nonce} run_id=${runId} kind=EXTERNAL_SECOND_OPINION]\nYou are Infor CloudSuite Assistant, consulted only for ${EXTERNAL_LABEL}. Mongoose 2026.09.08. Answer this bounded question; no actions or acceptance claims.\n${question}`,e.nonce);
+      const text=`[HARNESS nonce=${e.nonce} run_id=${runId} kind=EXTERNAL_SECOND_OPINION]\nYou are Infor CloudSuite Assistant, consulted only for ${EXTERNAL_LABEL}. Mongoose 2026.09.08. Answer this bounded question; no actions or acceptance claims.\n${question}`;
+      const out=openingNew?await chat.submitNew("specialist",conversation!.gptUrl,text,e.nonce):await chat.submit("specialist",text,e.nonce);
+      save(join(this.paths.runsDir,runId,"external-second-opinion",`${e.nonce}-receipt.json`),{label:EXTERNAL_LABEL,evidence:false,result:out});
       if(out.status!=="accepted") {
-        save(join(this.paths.runsDir,runId,"external-second-opinion",`${e.nonce}-receipt.json`),{label:EXTERNAL_LABEL,evidence:false,result:out});
         // The browser adapter's blocked/not_submitted outcomes establish that no
         // send occurred. An uncertain send retains its reconciliation-only state.
         if(out.status==="blocked"||out.status==="not_submitted"){e.status="planned";save(file,ledger);}
         return {status:"blocked",problem:out.status==="blocked"?out.problem:"submission_uncertain",detail:"External submission was not confirmed; inspect the saved request/Tab 2. Never replay an uncertain send."};
       }
+      if(openingNew) {
+        const url=(out as SubmitOutcome&{conversationUrl?:string}).conversationUrl,parsed=url?parseConversationUrl(url):null;
+        if(!parsed||parsed.gptId!==parseConversationUrl(conversation!.registeredUrl)?.gptId)return {status:"blocked",problem:"submission_uncertain",detail:"New external conversation URL is missing or belongs to another GPT; inspect Tab 2. Do not replay the first request."};
+        conversation!.url=parsed.canonical;save(conversationFile,conversation);
+        chat=this.conversations!.chatForUrl(parsed.canonical,runId);
+      }
       e.status="accepted";save(file,ledger);
     }
-    const out=await this.chat.waitForReply("specialist",e.nonce,opts);
+    const out=await chat.waitForReply("specialist",e.nonce,opts);
     save(join(this.paths.runsDir,runId,"external-second-opinion",`${e.nonce}-reply.json`),{label:EXTERNAL_LABEL,evidence:false,result:out});
     if(out.status==="complete") {e.status="complete";e.reply={...out,markdown:`${EXTERNAL_LABEL}\nCannot satisfy an acceptance check or count as evidence.\n\n${out.markdown}`};save(file,ledger);return e.reply;}
     return out;

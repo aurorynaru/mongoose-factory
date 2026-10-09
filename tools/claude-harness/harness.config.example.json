@@ -126,7 +126,8 @@
   },
   "externalSecondOpinion": {
     "enabled": true,
-    "maxPerRun": 2
+    "maxPerRun": 2,
+    "newChatPerRun": true
   },
   "git": {
     "enabled": false,
