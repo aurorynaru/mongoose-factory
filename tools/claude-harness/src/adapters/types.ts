@@ -68,11 +68,17 @@ export interface WorkerToolPolicy {
   maxIdenticalCalls?: number;
 }
 
+export interface PermissionDenial {
+  tool_name: string;
+  tool_use_id?: string;
+  tool_input?: Record<string, unknown>;
+}
+
 export type WorkerResult =
-  | { status: "completed"; text: string; transcript: string; assistantMessageIds: string[]; touchedFiles: string[]; cost: number; tokens: number }
+  | { status: "completed"; text: string; transcript: string; assistantMessageIds: string[]; touchedFiles: string[]; cost: number; tokens: number; permissionDenials?: PermissionDenial[]; warning?: string }
   | { status: "failed"; error: string; text: string; transcript: string; assistantMessageIds: string[] }
   | { status: "stalled"; detail: string; aborted: boolean; text: string; transcript: string; assistantMessageIds: string[] }
-  | { status: "blocked"; kind: "permission" | "question"; detail: string }
+  | { status: "blocked"; kind: "permission" | "question"; detail: string; permissionDenials?: PermissionDenial[] }
   | { status: "timeout"; detail: string }
   | { status: "interrupted" }
   | { status: "usage_limit"; detail: string; text: string; transcript: string; assistantMessageIds: string[] }

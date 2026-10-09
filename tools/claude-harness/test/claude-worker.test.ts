@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { ConfigSchema, HARNESS_DIR, resolvePaths } from "../src/config.js";
 import { ClaudeWorker, type TaskJournal } from "../src/adapters/claude/worker.js";
-import { boundedTask, taskOutput } from "../src/adapters/claude/cli.js";
+import { boundedTask, taskExitCode, taskOutput } from "../src/adapters/claude/cli.js";
 import { childEnvironment, diagnostic } from "../src/adapters/claude/process.js";
 import { read, save } from "../src/adapters/claude/files.js";
 import { findMarker, marker, transcriptPath } from "../src/adapters/claude/transcripts.js";
@@ -34,6 +34,37 @@ async function task(h:ReturnType<typeof fixture>,policy={denyBrowserJavaScript:t
   return {sid,mid,submission,result,journal:read<TaskJournal>(h.worker.taskFile(sid,mid))};
 }
 describe("Claude worker fake-process integration",()=>{
+  it.each(["brief Read","disabled Bash","denied JavaScript"])("completes with a review warning and exit 3 for intentional %s",async kind=>{
+    const h=fixture();
+    const denial=kind==="brief Read"?{tool_name:"Read",tool_use_id:"tool-0",tool_input:{file_path:join(h.root,"tools/claude-harness/briefs/EXP-900.brief.json")}}:
+      {tool_name:kind==="disabled Bash"?"Bash":"mcp__playwright__browser_evaluate",tool_use_id:"tool-0",tool_input:{}};
+    save(h.file,{capture:h.capture,calls:1,tool:denial.tool_name,toolInput:denial.tool_input,toolError:"Permission denied by configured policy",permissionDenials:[denial]});
+    const r=await task(h);expect(r.result.status).toBe("completed");
+    expect(taskExitCode(r.result)).toBe(3);
+    if(r.result.status!=="completed")throw Error("Expected completed");
+    expect(r.result.permissionDenials).toEqual([denial]);expect(r.result.warning).toContain("before continuing manually");
+    const output=taskOutput({sessionId:r.sid,messageId:r.mid,manifest:"fake",result:r.result},r.journal,{evidenceDiff:{}});
+    expect(output).toMatchObject({status:"completed",outcome:"completed_with_denials",exitCode:3,permissionDenials:[denial],warning:r.result.warning});
+    expect(r.journal.permissionDenyRules).toContain(denial.tool_name==="Read"?`Read(${absolutePattern(join(h.root,"tools"))}/**)`:denial.tool_name);
+    // Reconciliation uses the task's captured policy, not a subsequently overwritten settings file.
+    const j=read<TaskJournal>(h.worker.taskFile(r.sid,r.mid));delete j.result;j.state="running";
+    j.process={pid:2147483000,exe:process.execPath,startTicks:"1",commandHash:"different",kind:"worker"};save(h.worker.taskFile(r.sid,r.mid),j);
+    save(j.permissionSettings,{permissions:{deny:[]}});
+    const fresh=new ClaudeWorker({config:h.cfg,paths:h.paths});
+    const recovered=await fresh.waitForCompletion(r.sid,r.mid,{timeoutMs:10,shouldStop:()=>false});
+    expect(recovered.status).toBe("completed");expect(taskExitCode(recovered)).toBe(3);
+  });
+  it.each(["mixed","unknown Read","allowed Read","failed result","nonzero exit","Bash enabled"])("keeps %s denials blocked",async kind=>{
+    const h=fixture();if(kind==="Bash enabled")h.cfg.worker.allowBash=true;
+    const expected={tool_name:"Read",tool_input:{file_path:join(h.root,"tools/brief.json")}};
+    const denials=kind==="mixed"?[expected,{tool_name:"mcp__playwright__browser_type",tool_input:{text:"Ctrl+A"}}]:
+      kind==="unknown Read"?[{tool_name:"Read"}]:kind==="allowed Read"?[{tool_name:"Read",tool_input:{file_path:join(h.root,"evidence/EXP-900/allowed.txt")}}]:
+      kind==="Bash enabled"?[{tool_name:"Bash"}]:[expected];
+    save(h.file,{capture:h.capture,permissionDenials:denials,resultError:kind==="failed result",exitCode:kind==="nonzero exit"?1:0});
+    const r=await task(h,{denyBrowserJavaScript:kind!=="Bash enabled",preamble:"Bounded fake task"});
+    expect(r.result.status).toBe("blocked");expect(taskExitCode(r.result)).toBe(2);
+    expect(r.result).toMatchObject({permissionDenials:denials});
+  });
   it("reports task-local guard counts, turns and wall time across resumed tasks",async()=>{
     const h=fixture({calls:1,tool:"mcp__playwright__browser_type",toolInput:{text:"Ctrl+A"},invokeHook:true});
     const briefFile=join(h.paths.briefsDir,"EXP-900.brief.json"),brief=read<Record<string,unknown>>(briefFile);
@@ -91,6 +122,14 @@ describe("Claude worker fake-process integration",()=>{
       expect(r.journal.preamble).toContain(required);expect(protocol).toContain(required);
     }
     expect(r.journal.preamble).not.toContain("no open dialogs or unsaved prompts");
+    const identity=`worker_session_id: ${r.sid} (this is your worker session UUID for identity/freshness checks); task_message_id: ${r.mid}`;
+    expect(r.journal.payload.split("\n")[1]).toBe(identity);expect(r.journal.preamble.split("\n")[0]).toBe(identity);
+    for(const required of ["The brief's scope and prohibitions are already included in this task", "(including briefs/) is intentionally unreadable; do not try to read these files", "Bash is disabled unless explicitly enabled by the generated tool policy"]) {
+      expect(r.journal.preamble).toContain(required);expect(protocol).toContain(required);
+    }
+    expect(r.journal.preamble).toContain("Bash is disabled for this task; do not try to use it");
+    expect(read<{input:string}>(h.capture).input).toBe(r.journal.payload);
+    expect(taskExitCode(r.result)).toBe(0);
     const argv=read<{argv:string[]}>(h.capture).argv;
     expect(argv[argv.indexOf("--setting-sources")+1]).toBe("");expect(argv[argv.indexOf("--effort")+1]).toBe("high");
     expect(argv).toContain("--strict-mcp-config");expect(argv).toContain("--session-id");expect(argv).not.toContain("--max-turns");
@@ -101,6 +140,9 @@ describe("Claude worker fake-process integration",()=>{
     const mid=h.worker.newMessageId();await h.worker.configureSession(r.sid,{denyBrowserJavaScript:false});await h.worker.submit(r.sid,mid,"Next explicit bounded task");
     expect((await h.worker.waitForCompletion(r.sid,mid,{timeoutMs:10_000,shouldStop:()=>false})).status).toBe("completed");
     const resumed=read<{argv:string[]}>(h.capture).argv;expect(resumed).toContain("--resume");expect(resumed).not.toContain("--session-id");
+    const resumedIdentity=`worker_session_id: ${r.sid} (this is your worker session UUID for identity/freshness checks); task_message_id: ${mid}`;
+    expect(read<{input:string}>(h.capture).input.split("\n")[1]).toBe(resumedIdentity);
+    expect(resumed[resumed.indexOf("--append-system-prompt")+1].split("\n")[0]).toBe(resumedIdentity);
     expect(resumed[resumed.indexOf("--disallowedTools")+1]).toContain("browser_evaluate");
   });
   it("pauses normally on usage limit, preserves output/lease, reconciles without launch, and continues only explicitly",async()=>{

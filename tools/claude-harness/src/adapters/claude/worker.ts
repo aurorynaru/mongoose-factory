@@ -13,6 +13,7 @@ import { gitState, touched, type GitState } from "./git-state.js";
 import { childEnvironment, diagnostic, launch, taskProcess } from "./process.js";
 import { findMarker, marker, transcriptPath } from "./transcripts.js";
 import { generatedPolicy } from "./tool-policy.js";
+import { intentionallyDenied } from "./permissions.js";
 
 export interface SessionState { id:string; title:string; cwd:string; started:boolean; model:string; policy:WorkerToolPolicy; active:string|null }
 export interface TaskJournal {
@@ -20,6 +21,7 @@ export interface TaskJournal {
   before:GitState; after?:GitState; state:"planned"|"launching"|"running"|"terminal"|"unknown";
   argv:string[]; createdAt:string; result?:WorkerResult; process?:Record<string,unknown>;
   permissionSettings:string; eventFile:string; stderrFile:string; nativeTranscript:string;
+  permissionDenyRules?:string[];
   recoveryEvidence?:Record<string,unknown>;
   finishedAt?:string; guardDenialsFile?:string;
   metrics?:{assistantTurns:number;wallTimeSeconds:number|null;guardDenials:{total:number;byGuard:Record<string,number>;auditError?:string}};
@@ -71,19 +73,24 @@ export class ClaudeWorker implements WorkerPort {
     try { childEnvironment(cfg); }catch {return {status:"rejected",detail:"Subscription billing environment failed validation"};}
     const agents=readFileSync(join(paths.factoryRoot,"AGENTS.md"),"utf8");
     if(!s.policy.preamble)return {status:"rejected",detail:"Bounded task preamble is required"};
-    const preamble=[s.policy.preamble,"\nAGENTS.md (explicit authoritative instructions):",agents,
+    const identity=`worker_session_id: ${sid} (this is your worker session UUID for identity/freshness checks); task_message_id: ${mid}`;
+    const policy=generatedPolicy(cfg,paths,sid,s.policy,mid),mcp=this.service.generateWorkerConfig();
+    const preamble=[identity,s.policy.preamble,
+      "The brief's scope and prohibitions are already included in this task. tools/ (including briefs/) is intentionally unreadable; do not try to read these files.",
+      policy.tools.includes("Bash")?"Bash is explicitly enabled for this task; use it only within the supplied scope and prohibitions.":"Bash is disabled for this task; do not try to use it. Bash is disabled unless explicitly enabled by the generated tool policy.",
+      "\nAGENTS.md (explicit authoritative instructions):",agents,
       "Start each task with a fresh snapshot of the visible tab; verify Form identity and editing scope before acting. Never reuse old accessibility refs.",
       'End each task in a stable page state with no browser-native dialogs (alert, confirm, prompt, or beforeunload "leave page") and no unsaved-change prompts. CDP disconnect dismisses beforeunload dialogs. In-page Mongoose dialogs (such as Select Form) may remain open only when the current task instruction explicitly says to leave them open; otherwise end without open in-page dialogs. Never discard unsaved work or take an out-of-scope lifecycle action to achieve stability; checkpoint and report a blocker instead.',
       "Only this bounded task is authorized. Tools, a fresh session and usage-limit resets never expand scope. On a limit preserve state and report; never resubmit or switch models."].join("\n");
-    const policy=generatedPolicy(cfg,paths,sid,s.policy,mid),mcp=this.service.generateWorkerConfig();
     const args=["-p",s.started?"--resume":"--session-id",sid,"--output-format","stream-json","--verbose","--input-format","text","--model",s.model,
       ...(cfg.claude.models.worker.effort?["--effort",cfg.claude.models.worker.effort]:[]),"--append-system-prompt",preamble,"--system-prompt-snapshot","off",
       "--mcp-config",mcp,"--strict-mcp-config","--tools",policy.tools.join(","),"--allowedTools",[...policy.tools,"mcp__playwright__*"].join(","),
       "--disallowedTools",policy.deny.filter(r=>!r.includes("(")).join(","),"--permission-mode","dontAsk","--permission-prompts","none","--settings",policy.settingsFile,"--setting-sources","","--disable-slash-commands"];
     const dir=join(paths.dataDir,"workers",sid,"tasks");mkdirSync(dir,{recursive:true});
-    const payload=marker(mid)+"\n"+text;
+    const payload=marker(mid)+"\n"+identity+"\n"+text;
     const journal:TaskJournal={sessionId:sid,messageId:mid,payload,preamble,agentsHash:hash(agents),before:gitState(paths.factoryRoot),state:"planned",argv:args,createdAt:new Date().toISOString(),permissionSettings:policy.settingsFile,eventFile:join(dir,`${mid}.events.jsonl`),stderrFile:join(dir,`${mid}.stderr.txt`),nativeTranscript:transcriptPath(cfg.claude.configDir??join(homedir(),".claude"),paths.factoryRoot,sid)};
     journal.guardDenialsFile=policy.denialFile;
+    journal.permissionDenyRules=[...policy.deny];
     writeFileSync(policy.denialFile,"");
     const lease=join(paths.dataDir,"workers","active-task.json");
     try{writeFileSync(lease,JSON.stringify({sessionId:sid,messageId:mid}),{flag:"wx"});}
@@ -152,9 +159,12 @@ export class ClaudeWorker implements WorkerPort {
     else if(e.usageLimit)result={status:"usage_limit",detail:e.usageLimit,...base};
     else if(e.invalid||!e.terminal||!e.model||!modelMatches(this.o.config.claude.models.worker.model,e.model)||e.pending.size)
       result={status:"failed",error:e.invalid||"Missing terminal/init event or unfinished tools; completion unproven",...base};
-    else if(e.permissionDenied)result={status:"blocked",kind:"permission",detail:"Claude reported denied tool permissions; task completion is not established"};
+    else if(e.permissionDenied&&((a.exit!==0&&!a.recovered)||e.terminal.is_error||e.terminal.subtype!=="success"||!e.permissionDenials.length||
+      !e.permissionDenials.every(d=>intentionallyDenied(d,j.permissionDenyRules??[],this.o.paths.factoryRoot))))
+      result={status:"blocked",kind:"permission",detail:"Claude reported unexpected/unclassified denied tool permissions or no successful terminal result; task completion is not established",permissionDenials:e.permissionDenials};
     else if((a.exit!==0&&!a.recovered)||e.terminal.is_error||e.terminal.subtype!=="success")result={status:"failed",error:String(e.terminal.result??e.terminal.errors??"Claude failed"),...base};
-    else {j.after=gitState(this.o.paths.factoryRoot);result={status:"completed",...base,text:typeof e.terminal.result==="string"?e.terminal.result:e.text,touchedFiles:touched(j.before,j.after),cost:Number(e.terminal.total_cost_usd??0),tokens:Number(e.terminal.usage?.input_tokens??0)+Number(e.terminal.usage?.output_tokens??0)};}
+    else {j.after=gitState(this.o.paths.factoryRoot);result={status:"completed",...base,text:typeof e.terminal.result==="string"?e.terminal.result:e.text,touchedFiles:touched(j.before,j.after),cost:Number(e.terminal.total_cost_usd??0),tokens:Number(e.terminal.usage?.input_tokens??0)+Number(e.terminal.usage?.output_tokens??0),
+      ...(e.permissionDenied?{permissionDenials:e.permissionDenials,warning:"completed_with_denials: native task succeeded, but intentionally denied tools/paths were attempted. Review permissionDenials, the full report and evidence before continuing manually. Completed does not mean the experiment or acceptance checks passed."}:{})};}
     j.finishedAt=new Date().toISOString();
     const byGuard:Record<string,number>={};let auditError:string|undefined;
     try {

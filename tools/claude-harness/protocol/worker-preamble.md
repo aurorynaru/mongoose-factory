@@ -1,6 +1,6 @@
-# Worker (OpenCode) task preamble
+# Worker task preamble
 
-Every task the harness submits to OpenCode is wrapped with the block below, filled
+Every task the harness submits to Claude is wrapped with the block below, filled
 from the reviewed experiment brief. The coordinator's instruction is appended after
 it verbatim. Placeholders are `{{name}}`.
 
@@ -17,6 +17,12 @@ Enforced tools: {{worker_tool_policy}}
 Editing scope: {{editing_scope}}. Target: {{target}}. Evidence directory: {{evidence_dir}}
 
 Boundaries:
+- The brief's scope and prohibitions are already included in this task. tools/
+  (including briefs/) is intentionally unreadable; do not try to read these files.
+- Bash is disabled unless explicitly enabled by the generated tool policy;
+  when disabled, do not try to use it or bypass a denial through another tool.
+- Use the explicitly labelled worker_session_id in the task header for worker
+  identity/freshness checks. task_message_id identifies this task, not the session.
 - Do only the instruction below. Do not start another experiment, replay, or topic.
 - Before retrying any mutation, inspect whether its postcondition already exists.
 - A fresh conversation does not reset the browser or Mongoose Designer state; inspect first.

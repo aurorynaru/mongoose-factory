@@ -33,8 +33,9 @@ else {
     if(spec.delayMs)await new Promise(r=>setTimeout(r,spec.delayMs));
   }
   emit({type:'assistant',message:{id:'final',content:[{type:'text',text:'HARNESS REPORT: fake task complete; browser state untouched.'}]}});
-  const result={type:'result',subtype:'success',is_error:false,result:'HARNESS REPORT: fake task complete.',usage:{input_tokens:3,output_tokens:2},total_cost_usd:0,...(denied?{permission_denials:[{tool_name:spec.tool}]}:{})};
+  const result={type:'result',subtype:spec.resultError?'error_during_execution':'success',is_error:!!spec.resultError,result:'HARNESS REPORT: fake task complete.',usage:{input_tokens:3,output_tokens:2},total_cost_usd:0,...(denied?{permission_denials:[{tool_name:spec.tool}]}:{}),...(spec.permissionDenials?{permission_denials:spec.permissionDenials}:{})};
   if(spec.split){const raw=JSON.stringify({session_id:sid,...result})+'\n';process.stdout.write(raw.slice(0,13));await new Promise(r=>setTimeout(r,20));process.stdout.write(raw.slice(13));}
   else emit(result);
   if(spec.holdAfterResult)setInterval(()=>{},1000);
+  else if(spec.exitCode)process.exitCode=spec.exitCode;
 }

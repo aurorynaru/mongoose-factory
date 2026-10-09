@@ -12,10 +12,16 @@ import { read, save } from "./files.js";
 import { workerPolicyForBrief } from "./tool-policy.js";
 
 export interface TaskOptions { model?:string;effort?:string;session?:string;continueFrom?:string }
+export function taskExitCode(result:import("../types.js").WorkerResult):0|2|3 {
+  return result.status!=="completed"?2:result.permissionDenials?.length?3:0;
+}
 export function taskOutput(task:{sessionId:string;messageId:string;manifest:string;result:import("../types.js").WorkerResult},journal:TaskJournal,manifest:Record<string,any>) {
   return {sessionId:task.sessionId,messageId:task.messageId,status:task.result.status,manifest:task.manifest,eventTranscript:journal.eventFile,nativeTranscript:journal.nativeTranscript,
     assistantTurns:journal.metrics?.assistantTurns??null,wallTimeSeconds:journal.metrics?.wallTimeSeconds??null,guardDenials:journal.metrics?.guardDenials??null,guardDenialsFile:journal.guardDenialsFile??null,
-    evidenceDiff:manifest.evidenceDiff,...("touchedFiles" in task.result?{touchedFiles:task.result.touchedFiles}:{}),...("text" in task.result?{report:task.result.text.slice(0,4000)}:{}),...("detail" in task.result?{detail:task.result.detail}:{})};
+    evidenceDiff:manifest.evidenceDiff,exitCode:taskExitCode(task.result),
+    ...("permissionDenials" in task.result?{permissionDenials:task.result.permissionDenials}:{}),
+    ...("warning" in task.result?{outcome:"completed_with_denials",warning:task.result.warning}:{}),
+    ...("touchedFiles" in task.result?{touchedFiles:task.result.touchedFiles}:{}),...("text" in task.result?{report:task.result.text.slice(0,4000)}:{}),...("detail" in task.result?{detail:task.result.detail}:{})};
 }
 export async function boundedTask(cfg:HarnessConfig,paths:ResolvedPaths,experimentId:string,instruction:string,opts:TaskOptions={},worker?:ClaudeWorker) {
   if(!/^EXP-\d{3,}(?:-R\d+)?$/.test(experimentId)||!instruction.trim())throw Error("Task needs an experiment ID and nonempty instruction");
@@ -60,7 +66,7 @@ export function registerWorkerCommands(program:Command) {
     .action(async(id,instruction,opts)=>{const {config}=loadConfig(program.opts().config);const task=await boundedTask(config,resolvePaths(config),id,instruction,opts);
       const manifest=read<Record<string,any>>(task.manifest),journal=read<TaskJournal>(new ClaudeWorker({config,paths:resolvePaths(config)}).taskFile(task.sessionId,task.messageId));
       console.log(JSON.stringify(taskOutput(task,journal,manifest),null,2));
-      if(task.result.status!=="completed")process.exitCode=2;});
+      process.exitCode=taskExitCode(task.result);});
   group.command("reconcile <sessionId> <messageId>").description("Inspect marker and durable task journal; never launches Claude/browser")
     .action(async(sid,mid)=>{const {config}=loadConfig(program.opts().config),paths=resolvePaths(config),worker=new ClaudeWorker({config,paths});
       const presence=await worker.findMessage(sid,mid),file=worker.taskFile(sid,mid),journal=existsSync(file)?read<TaskJournal>(file):null;

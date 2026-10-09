@@ -21,6 +21,8 @@ Use [R3 task scripts](replays/EXP-033-R3.tasks.md),
    fresh Claude session UUIDs, exact values and enforced no-JavaScript policy.
    The documented state/recovery and stable-finish conflicts are resolved.
 2. Before each run: owned Chrome visible and logged in to the Web Client;
+   Mongoose configuration selected (click OK on the Infor configuration screen)
+   and the normal Web Client page loaded, rather than sign-in/configuration;
    Select Form closed; no unsaved Designer changes; old harness/OpenCode not
    running; same starting state for R3 and R4 (record it if it differs). T2 checks
    current Select Form state against T1 and uses an already-open dialog without
@@ -73,6 +75,13 @@ npm run build
    `--session $replaySession`, `--model haiku --effort high`. Do not run all five
    blocks unattended. Stop on a blocker, guard denial, loop interruption,
    ambiguous state or nonzero exit; inspect effects before any continuation.
+   Exit 3 is `completed_with_denials`: the native task succeeded and every
+   permission denial matches its saved generated deny policy. JSON includes
+   `permissionDenials` and a warning. Review these, the full report and evidence,
+   then continue manually only if permitted. Unexpected/unclassified denials
+   remain blocked (exit 2). Exit 0 means completed without permission denials.
+   Completion describes the worker invocation; its report may still identify
+   an experiment blocker. Never infer AC success from the exit code.
    Checkpoints and the record carry recovery used/remaining across tasks.
 7. Complete the R3 AC-1..AC-8 pass/fail table from evidence, including the final
    permitted Cancel/no-reopen audit. For R4, record the actual state inherited
