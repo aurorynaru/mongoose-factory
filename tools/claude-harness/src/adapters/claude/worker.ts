@@ -177,7 +177,9 @@ export class ClaudeWorker implements WorkerPort {
       if(raw&&!raw.endsWith("\n"))throw Error("incomplete guard audit");
       for(const line of raw.split("\n").filter(Boolean)) {
         const item=JSON.parse(line);
-        if(item.sessionId!==j.sessionId||typeof item.guard!=="string")throw Error("guard audit scope mismatch");
+        if(item.sessionId!==j.sessionId)throw Error("guard audit scope mismatch");
+        if(item.event==="call"||item.event==="stale_lock_recovered")continue;
+        if((item.event!==undefined&&item.event!=="denial")||typeof item.guard!=="string")throw Error("guard audit entry invalid");
         byGuard[item.guard]=(byGuard[item.guard]??0)+1;
       }
     }catch{auditError="Guard denial audit unavailable/incomplete; inspect native transcript. Count is a lower bound.";}

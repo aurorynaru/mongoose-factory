@@ -32,6 +32,23 @@ validation and limits. The Phase 2 scratch observation supports this selection.
 
 ### Replay preparation and Phase 4 local documentation
 
+2026-10-09, after operator-run R4 T1: expect parallel hook invocations from
+Sonnet/Opus. Replace immediate EEXIST denial with a 3-second acquisition bound
+and 20ms retry intervals. Store PID/timestamp/ownership token in lock files;
+recover dead owners or locks older than 60 seconds (beyond the generated hook's
+10-second execution timeout), and audit recovery. Serialize reclaimers, check
+ownership before committing, and retain atomic temporary-file/rename updates.
+Count consecutive calls in lock-acquisition order, comparing canonical tool
+name and inputs; never group different calls. Preserve existing state/counts.
+Validate state JSON and counters; distinguish `lock_timeout` from `state_corrupt`
+in messages and the audit. Add ordered successful-call audit entries; exclude
+calls/recoveries from denial totals, accepting earlier audit records. Corrupt
+state stays intact; unrecoverable I/O also fails closed. Verify with eight
+concurrent hook processes using mixed calls, eight identical calls, concurrent
+stale-owner recovery, and real timeout/corruption cases. Code/tests/docs only;
+no current R4 Chrome/MCP connection or lifecycle action, no browser/model run.
+See PARALLEL-GUARD-FIX.md for exact validation output. Phase 4 remains unstarted.
+
 2026-10-09, after operator-run R3 T3: production Chrome now always uses
 `--disable-backgrounding-occluded-windows`, `--disable-renderer-backgrounding`,
 and `--disable-background-timer-throttling`. Add configurable `chromeWindowSize`

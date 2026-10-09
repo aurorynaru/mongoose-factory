@@ -8,6 +8,26 @@ Runtime defaults to `claude-data/`; the old harness remains untouched. `npm test
 uses fake processes and excludes browser fixtures/real OpenCode smoke suites.
 Node.js 22 or newer is required for the native WebSocket window preflight.
 
+Parallel tool calls are expected from Sonnet and Opus. PreToolUse hook processes
+serialize their per-session counter update with an exclusive lock, retrying at
+20ms intervals for up to 3 seconds. Lock metadata records PID, timestamp and an
+ownership token. Dead owners or locks older than 60 seconds are recovered and
+logged; the age limit exceeds the generated hook's 10-second timeout. A reclaim
+gate serializes stale-lock cleanup. State is written to a temporary file and
+atomically renamed; a successor's lock is never intentionally released by an old
+owner. Identical consecutive calls count in **lock-acquisition order**, comparing
+the canonical tool name and all input values; different calls reset the count.
+Existing session counts survive the upgrade and stale-lock recovery.
+
+The guard audit includes successful `call` entries (PID, acquisition sequence,
+count; no raw inputs), `stale_lock_recovered` entries, and explicit `denial`
+entries. Worker denial totals count only denials and still accept older audit
+records. `lock_timeout` and `state_corrupt` are distinct audit labels/messages;
+a transient `EEXIST` is not a denial. Corrupt state is preserved, never reset.
+Unrecoverable state/audit I/O errors also fail closed. The guard's key-text,
+exact-value and identical-call rules retain their thresholds and behaviour.
+See [PARALLEL-GUARD-FIX.md](PARALLEL-GUARD-FIX.md) for validation.
+
 Production Chrome always adds `--disable-backgrounding-occluded-windows`,
 `--disable-renderer-backgrounding`, and `--disable-background-timer-throttling`.
 Config `chromeWindowSize` defaults to `"1920,1080"` (`--window-size`), and

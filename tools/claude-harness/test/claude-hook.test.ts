@@ -13,6 +13,8 @@ describe("three-purpose PreToolUse guard",()=>{
     expect(guardName("Exact value required: Keyboard")).toBe("exact_values");
     expect(guardName("Identical consecutive tool call 6 denied")).toBe("identical_calls");
     expect(guardName("Guard state unavailable")).toBe("guard_state");
+    expect(guardName("Guard lock timeout: held")).toBe("lock_timeout");
+    expect(guardName("Guard state corrupt: bad JSON")).toBe("state_corrupt");
   });
   const name="mcp__playwright__browser_type",cfg={allowLiteralKeyText:false,exactValues:["Keyboard"]};
   it.each(["Control+A","Ctrl+A","Shift+Tab","Alt+F4","Meta+K","Enter","Tab","Escape","Backspace","Delete","F1","F12"])("denies %s as text with key-press guidance",text=>{
