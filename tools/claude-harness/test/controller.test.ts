@@ -115,6 +115,24 @@ describe("operator note after a coordinator PAUSE", () => {
   });
 });
 
+describe("worker turn limit", () => {
+  it("pauses first, then on resume forwards the stop to the coordinator without resubmitting the task", async () => {
+    const h = track(harness({
+      coordinator: [SEND("Do the bounded step."), { envelope: { action: "PAUSE", reason: "got the failure" } }],
+      worker: [{ status: "turn_limit", detail: "Agent turn limit 40 exceeded at safe completed-tool boundary", text: "partial-marker-77" }],
+    }));
+    const first = await h.controller.run(h.controller.createRun(fixtureBrief()).id);
+    expect(first.pause_reason).toBe("worker_turn_limit");
+    const submitted = h.worker.submissions.length;
+    const second = await h.controller.run(first.id);
+    expect(h.worker.submissions.length).toBe(submitted);
+    const report = h.chat.submissions.filter((s) => s.role === "coordinator").map((s) => s.text).find((t) => t.includes("agent turn limit"));
+    expect(report).toBeDefined();
+    expect(report).toContain("Do not replay the original task");
+    expect(second.pause_reason).toBe("coordinator_requested_pause");
+  });
+});
+
 describe("specialist consultation", () => {
   it("sends the question plus the latest worker observations to Tab 2 and returns the full reply to Tab 1", async () => {
     const h = track(

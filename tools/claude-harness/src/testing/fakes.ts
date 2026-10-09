@@ -145,6 +145,7 @@ export type WorkerSpec =
   | { status: "blocked"; kind: "permission" | "question"; detail: string }
   | { status: "backend_unavailable"; detail: string }
   | { status: "usage_limit"; detail: string; text?: string }
+  | { status: "turn_limit"; detail: string; text?: string }
   | { submit: "uncertain_stored" | "uncertain_lost"; then: WorkerSpec };
 
 export class FakeWorker implements WorkerPort {
@@ -228,6 +229,9 @@ export class FakeWorker implements WorkerPort {
       case "usage_limit":
         this.idx--; // Reconciliation of the same paused task never consumes another scripted task.
         return { status: "usage_limit", detail: spec.detail, text: spec.text ?? "partial", transcript: "partial fake transcript", assistantMessageIds: [] };
+      case "turn_limit":
+        this.idx--; // The same stopped task is re-read on resume; it never consumes another scripted task.
+        return { status: "turn_limit", detail: spec.detail, text: spec.text ?? "partial", transcript: "partial fake transcript", assistantMessageIds: [`${messageId}-reply`] };
     }
   }
 

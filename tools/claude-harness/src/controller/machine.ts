@@ -860,9 +860,17 @@ export class Controller {
         case "model_mismatch":
           return this.pause(run, "model_mismatch", res.detail);
         case "turn_limit":
-          store.updateOp(op.id, { meta: { ...op.meta, partialText: res.text,
+          if (op.meta.turnLimitPaused) {
+            // Operator resumed after reviewing the stop: hand the partial result to the coordinator, never replay the task.
+            store.tx(() => {
+              store.updateOp(op.id, { status: "failed", error: res.detail });
+              this.workerFailed(run!, op, `Worker stopped at the agent turn limit: ${res.detail}. Its partial output and transcript are saved. Do not replay the original task: its earlier actions may already have taken effect. First verify the current state from the record, evidence and a planned current-state check, then give one bounded continuation.`, res.text, res.transcript, res.assistantMessageIds);
+            });
+            return;
+          }
+          store.updateOp(op.id, { meta: { ...op.meta, turnLimitPaused: true, partialText: res.text,
             partialTranscript: this.write(run.id, `worker/${op.purpose}-turn-limit-transcript.md`, res.transcript) } });
-          return this.pause(run, "worker_turn_limit", res.detail);
+          return this.pause(run, "worker_turn_limit", `${res.detail}. Review the partial transcript; 'harness resume' then forwards the stop to the coordinator without resubmitting the task.`);
         case "interrupted":
           return;
         case "blocked":
