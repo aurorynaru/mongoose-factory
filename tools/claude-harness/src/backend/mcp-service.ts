@@ -50,7 +50,7 @@ export function serviceRequest(cfg: HarnessConfig, paths: ResolvedPaths, kind: S
     const entrypoint = cfg.mcp.entrypoint ?? join(dirname(require.resolve("@playwright/mcp/package.json")), "cli.js");
     argv = [resolve(entrypoint), "--host", "127.0.0.1", "--port", String(cfg.mcp.port),
       "--allowed-hosts", `127.0.0.1:${cfg.mcp.port}`, "--cdp-endpoint", `http://127.0.0.1:${cfg.mcp.cdpPort}`,
-      "--idle-timeout", "0", "--output-dir", resolve(cwd, cfg.mcp.outputDir)];
+      "--idle-timeout", "0", "--output-dir", resolve(cwd, cfg.mcp.outputDir), ...(cfg.mcp.caps.length ? ["--caps", cfg.mcp.caps.join(",")] : [])];
     if (cfg.mcp.secretsFile) argv.push("--secrets", resolve(cfg.mcp.secretsFile));
   }
   const base = { kind, executable: resolve(executable), argv, port: kind === "chrome" ? cfg.mcp.cdpPort : cfg.mcp.port,

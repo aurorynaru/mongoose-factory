@@ -50,6 +50,8 @@ export const ConfigSchema = z.object({
     entrypoint: z.string().nullable().default(null),
     secretsFile: z.string().nullable().default("C:\\AI\\mongoose-secrets\\demo.env"),
     outputDir: z.string().default("evidence/playwright"),
+    /** Extra Playwright MCP capabilities. "vision" adds coordinate tools (browser_mouse_click_xy etc.), needed for canvas placement in the Web Designer. */
+    caps: z.array(z.enum(["vision", "pdf", "devtools"])).default(["vision"]),
   }).prefault({}),
   browser: z
     .object({
