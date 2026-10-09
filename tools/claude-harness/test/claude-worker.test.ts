@@ -37,6 +37,31 @@ async function task(h:ReturnType<typeof fixture>,policy={denyBrowserJavaScript:t
   return {sid,mid,submission,result,journal:read<TaskJournal>(h.worker.taskFile(sid,mid))};
 }
 describe("Claude worker fake-process integration",()=>{
+  it("reconciles missed action completion only from a complete stream after proving the original worker is gone",async()=>{
+    const h=fixture({calls:1,tool:"mcp__playwright__browser_click",toolInput:{ref:"e1"},invokeHook:true}),r=await task(h);
+    const j=read<TaskJournal>(h.worker.taskFile(r.sid,r.mid));delete j.result;j.state="running";
+    j.process={pid:2147483000,exe:process.execPath,startTicks:"1",commandHash:"different",kind:"worker"};save(h.worker.taskFile(r.sid,r.mid),j);
+    const state=read<Record<string,unknown>>(j.guardConfig!.stateFile);
+    save(j.guardConfig!.stateFile,{...state,action:{id:"tool-0",tool:"mcp__playwright__browser_click"}});
+    const fresh=new ClaudeWorker({config:h.cfg,paths:h.paths});
+    expect((await fresh.waitForCompletion(r.sid,r.mid,{timeoutMs:10,shouldStop:()=>false})).status).toBe("completed");
+    expect(read<Record<string,unknown>>(j.guardConfig!.stateFile).action).toBeUndefined();
+  });
+  it.each([false,true])("sequential browser actions release reservations with skipCompletionHook=%s",async skipCompletionHook=>{
+    const h=fixture({calls:2,tool:"mcp__playwright__browser_press_key",toolInput:{key:"X"},invokeHook:true,skipCompletionHook,delayMs:100});
+    const r=await task(h);expect(r.result.status).toBe("completed");
+    expect(read<Record<string,unknown>>(join(h.paths.dataDir,"workers",r.sid,"guard-state.json")).action).toBeUndefined();
+    expect(r.journal.metrics?.guardDenials).toEqual({total:0,byGuard:{}});
+    expect(r.journal.preamble).toContain("Never issue browser ACTIONS in parallel");
+    expect(r.journal.preamble).toContain("Send one action, wait for its result");
+    expect(r.journal.preamble).toContain("Parallel read-only calls");
+    expect(r.journal.preamble).toContain("counted against the fresh-snapshot recovery allowance");
+    expect(r.journal.preamble).toContain("A targeted find is not a substitute");
+    expect(r.journal.preamble).toContain("If that allowance is exhausted");
+    const protocol=readFileSync(join(HARNESS_DIR,"protocol/worker-preamble.md"),"utf8");
+    expect(protocol).toContain("Never issue browser ACTIONS in parallel");expect(protocol).toContain("A targeted find is not a substitute");
+    expect(protocol).toContain("counted against the fresh-snapshot recovery allowance");
+  });
   it("checks browser-level window state before each task/resume and records it; minimized never submits",async()=>{
     const h=fixture(),cdp=await fakeCdp();
     const worker=new ClaudeWorker({config:h.cfg,paths:h.paths,healthCheck:async()=>({ok:true}),windowCheck:()=>readChromeWindow(cdp.port)});
@@ -230,11 +255,12 @@ describe("metadata, billing and permission policy",()=>{
     expect((await diagnostic(h.cfg,["--version"])).stdout).toContain("fake Claude");
     expect(await h.worker.restartOwnedBackend()).toBe(false);
   });
-  it("generates native Read/Edit denies using normalized Windows drive paths and only the three-purpose hook",()=>{
+  it("generates native Read/Edit denies using normalized Windows drive paths and action lifecycle hooks",()=>{
     const h=fixture(),sid=randomUUID(),p=generatedPolicy(h.cfg,h.paths,sid,{denyBrowserJavaScript:true});
     expect(absolutePattern("C:/AI/mongoose-secrets")).toBe("//c/AI/mongoose-secrets");
     expect(p.settings.permissions.deny).toContain("Read(//c/AI/mongoose-secrets/**)");
     expect(p.settings.permissions.deny).toContain("Bash");expect(p.settings.hooks.PreToolUse).toHaveLength(1);
+    expect(p.settings.hooks.PostToolUse).toHaveLength(1);expect(p.settings.hooks.PostToolUseFailure).toHaveLength(1);
     expect(p.tools).toEqual(["Read","Write","Edit","Glob","Grep"]);
     expect(()=>generatedPolicy(h.cfg,h.paths,sid,{denyBrowserJavaScript:true,exactValues:["Keyboard","keyboard"]})).toThrow("Conflicting");
   });

@@ -6,7 +6,7 @@ import { dirname, join, resolve } from "node:path";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import type { HarnessConfig, ResolvedPaths } from "../config.js";
-import { readChromeWindow } from "./chrome-window.js";
+import { maximizeChromeWindow, readChromeWindow } from "./chrome-window.js";
 
 export type ServiceKind = "chrome" | "mcp";
 export type ServiceAction = "start" | "health" | "stop" | "restart";
@@ -84,7 +84,20 @@ export class McpService {
       writeFileSync(request, JSON.stringify(expected, null, 2));
       args.push("-RequestFile", request);
     }
-    const result=await new Promise<ServiceResult>((done) => {
+    const result=await this.runServiceScript(args,resultFile);
+    if(kind!=="chrome"||!result.ok)return result;
+    let window;
+    if(result.action==="started"&&["start","restart"].includes(action)) {
+      try {window=await (this.cfg.chromeStartMaximized?maximizeChromeWindow:readChromeWindow)(this.cfg.mcp.cdpPort);}
+      catch(error){return {...result,ok:false,error:"chrome_window_setup_failed",detail:error instanceof Error?error.message:String(error),warning:"Owned Chrome was started and remains running; inspect it manually before retrying. No automatic restart or stop was attempted."};}
+    }
+    return {...result,effectiveArguments:result.effectiveArguments??effectiveArguments??expected.argv,
+      ...(window?{windowState:window.windowState,bounds:window.bounds,chromeWindow:window}:{}),
+      ...(outdated&&result.action!=="started"&&["health","start"].includes(action)?{launchOptions:"outdated",warning:"running with outdated launch options; apply the new options at the next operator-controlled Chrome start"}:{launchOptions:"current"})};
+  }
+  /** Process boundary kept separate so tests never launch or contact a real service. */
+  async runServiceScript(args:string[],resultFile:string):Promise<ServiceResult> {
+    return new Promise<ServiceResult>((done) => {
       const child = spawn("pwsh", args, { stdio: "ignore", windowsHide: true, shell: false });
       const timer = setTimeout(() => { child.kill(); done({ ok: false, error: "service_script_timeout", detail: "Inspect ownership state before retrying." }); }, 60_000);
       child.on("error", () => { clearTimeout(timer); done({ ok: false, error: "service_script_spawn_failed" }); });
@@ -94,9 +107,6 @@ export class McpService {
         catch { done({ ok: false, error: "service_script_result_missing", detail: "Inspect ownership state before retrying." }); }
       });
     });
-    if(kind!=="chrome"||!result.ok)return result;
-    return {...result,effectiveArguments:result.effectiveArguments??effectiveArguments??expected.argv,
-      ...(outdated&&["health","start"].includes(action)?{launchOptions:"outdated",warning:"running with outdated launch options; apply the new options at the next operator-controlled Chrome start"}:{launchOptions:"current"})};
   }
   async windowState() {
     const chrome=await this.command("chrome","health");

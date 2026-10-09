@@ -26,8 +26,9 @@ export function generatedPolicy(cfg: HarnessConfig, paths: ResolvedPaths, sessio
   if(!allowBash)deny.push("Bash");
   if(policy.denyBrowserJavaScript)deny.push(...["browser_evaluate","browser_run_code","browser_run_code_unsafe"].map(t=>`mcp__playwright__${t}`));
   const tools=["Read","Write","Edit","Glob","Grep",...(allowBash?["Bash"]:[])];
+  const hook={matcher:"*",hooks:[{type:"command",command:process.execPath,args:[join(paths.harnessDir,"dist/hooks/pre-tool-use.js"),"--config",guardConfig],timeout:10}]};
   const settings={ permissions:{ defaultMode:"dontAsk", blockReadsOutsideWorkingDirectories:true, allow:[...tools,"mcp__playwright__*"], deny },
-    hooks:{ PreToolUse:[{matcher:"*",hooks:[{type:"command", command:process.execPath, args:[join(paths.harnessDir,"dist/hooks/pre-tool-use.js"),"--config",guardConfig],timeout:10}]}] } };
+    hooks:{PreToolUse:[hook],PostToolUse:[hook],PostToolUseFailure:[hook]} };
   save(settingsFile,settings);
   return { settingsFile, guardConfig, denialFile, settings, tools, deny };
 }

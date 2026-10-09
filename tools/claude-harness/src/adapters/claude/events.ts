@@ -9,7 +9,7 @@ export class TaskEvents {
   readonly turns = new Set<string>(); readonly pending = new Map<string, {name:string;input:Record<string,unknown>}>();
   readonly history: OcMessage[] = []; readonly ids: string[] = [];
   private buffer = "";
-  constructor(readonly sessionId: string) {}
+  constructor(readonly sessionId: string,private readonly toolFinished?:(id:string,name:string)=>void) {}
   feed(chunk: string) {
     this.buffer += chunk;
     if(this.buffer.length>32_000_000){this.invalid="Oversized JSON event";this.buffer="";return;}
@@ -49,6 +49,9 @@ export class TaskEvents {
       const body=typeof b.content==="string"?b.content:JSON.stringify(b.content);
       if(b.is_error&&/permission|denied|not allowed|rejected by.*hook/i.test(body))this.denial({tool_use_id:b.tool_use_id,tool_name:p?.name,tool_input:p?.input});
       if(!p)continue;
+      // Native results also cover pre-execution permission denials and cancellations
+      // for which Claude may not emit PostToolUse/PostToolUseFailure.
+      try{this.toolFinished?.(b.tool_use_id,p.name);}catch{this.invalid="Guard action completion failed; preserve state and stop";}
       this.history.push({info:{id:b.tool_use_id,role:"assistant",sessionID:this.sessionId,time:{created:Date.now(),completed:Date.now()}},parts:[{id:b.tool_use_id,type:"tool",tool:p.name,state:{status:b.is_error?"error":"completed",input:p.input,output:body,...(b.is_error?{error:body}:{})}}]});
       this.pending.delete(b.tool_use_id);
     }

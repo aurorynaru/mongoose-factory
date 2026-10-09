@@ -9,6 +9,17 @@ uses fake processes and excludes browser fixtures/real OpenCode smoke suites.
 Node.js 22 or newer is required for the native WebSocket window preflight.
 
 Parallel tool calls are expected from Sonnet and Opus. PreToolUse hook processes
+allow parallel reads but deny overlapping browser actions with the audit label
+`parallel_browser_actions`. Clicks, key presses, typing, selection, navigation,
+dragging, uploads and dialog handling must each finish before the next action.
+Tabs listing is a read; tab changes are actions. The reservation is per session,
+keyed by native `tool_use_id`, and released by `PostToolUse`, `PostToolUseFailure`
+or the matching native tool result (also covering permission denial/cancellation).
+It is never expired merely because a hook process exited. An action without a
+completion result remains reserved; preserve state and report the blocker.
+Read-only snapshot/find/screenshot/console and file reads may run in parallel.
+
+PreToolUse hook processes
 serialize their per-session counter update with an exclusive lock, retrying at
 20ms intervals for up to 3 seconds. Lock metadata records PID, timestamp and an
 ownership token. Dead owners or locks older than 60 seconds are recovered and
@@ -21,7 +32,8 @@ Existing session counts survive the upgrade and stale-lock recovery.
 
 The guard audit includes successful `call` entries (PID, acquisition sequence,
 count; no raw inputs), `stale_lock_recovered` entries, and explicit `denial`
-entries. Worker denial totals count only denials and still accept older audit
+entries, plus `action_completed` lifecycle entries. Worker denial totals count
+only denials and still accept older audit
 records. `lock_timeout` and `state_corrupt` are distinct audit labels/messages;
 a transient `EEXIST` is not a denial. Corrupt state is preserved, never reset.
 Unrecoverable state/audit I/O errors also fail closed. The guard's key-text,
@@ -32,6 +44,14 @@ Production Chrome always adds `--disable-backgrounding-occluded-windows`,
 `--disable-renderer-backgrounding`, and `--disable-background-timer-throttling`.
 Config `chromeWindowSize` defaults to `"1920,1080"` (`--window-size`), and
 `chromeStartMaximized` defaults to `true` (`--start-maximized`; omitted if false).
+Because Chrome can restore a saved normal placement despite that flag, a newly
+started owned Chrome is also maximized with browser-level CDP
+`Browser.setWindowBounds`, then verified with `Browser.getWindowBounds`.
+Start output includes the verified final `windowState`, `bounds` and
+`chromeWindow`; a failed verification returns an error while preserving the
+running owned Chrome for manual inspection. When `chromeStartMaximized` is false,
+start reports the observed placement without maximizing. An `already_running`
+start does not change window placement. Health/preflight remain read-only.
 These options apply at the next Chrome start. The saved service state includes
 `effectiveArguments`; the request hash includes all launch options, and the
 process command hash continues to verify the actual process identity. Existing
@@ -51,6 +71,13 @@ window also refuse submission. Otherwise the task manifest and output record
 window bounds; requested launch size can differ when maximized. CDP does not
 establish whether another window covers Chrome.
 
+The default worker remains **haiku/high**. Use `--model sonnet` for new or complex
+mutation experiments (for example, `claude-harness worker task EXP-ID "instruction" --model sonnet --effort high`).
+After a `Ref ... not found` error, the worker must take a fresh untargeted snapshot
+and charge it to the brief's fresh-snapshot recovery allowance before using new
+refs. A targeted find is not a substitute; an exhausted allowance means stop
+and report a blocker.
+
 ## EXP-033 Haiku versus Sonnet comparison
 
 This procedure is for a later operator-run comparison. No live replay, model
@@ -60,7 +87,7 @@ Use [R3 task scripts](replays/EXP-033-R3.tasks.md),
 [scorecard.md](replays/scorecard.md).
 
 1. Review `briefs/EXP-033-R3.brief.json` and `EXP-033-R4.brief.json`; both are
-   deliberately `reviewed: false`. R3 is haiku/high, R4 sonnet/high. They inherit
+   now operator-reviewed (`reviewed: true`). R3 is haiku/high, R4 sonnet/high. They inherit
    R2's scope, prohibitions and AC-1..AC-8, with new record/evidence paths,
    fresh Claude session UUIDs, exact values and enforced no-JavaScript policy.
    The documented state/recovery and stable-finish conflicts are resolved.

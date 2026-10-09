@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 import { guard, guardName, textDenial, type GuardConfig } from "../src/hooks/pre-tool-use.js";
 import { ConfigSchema, HARNESS_DIR, resolvePaths } from "../src/config.js";
 import { generatedPolicy } from "../src/adapters/claude/tool-policy.js";
-describe("three-purpose PreToolUse guard",()=>{
+describe("PreToolUse guard rules",()=>{
   it("labels denial reasons for the replay scorecard",()=>{
     expect(guardName("Key-like text denied.")).toBe("key_text");
     expect(guardName("Exact value required: Keyboard")).toBe("exact_values");
@@ -29,7 +29,7 @@ describe("three-purpose PreToolUse guard",()=>{
   });
   it("denies the sixth exact consecutive call, persists through resume, canonicalizes keys, and resets on different calls",()=>{
     const dir=mkdtempSync(join(tmpdir(),"claude-guard-")),sessionId=randomUUID(),cfg:GuardConfig={sessionId,stateFile:join(dir,"state.json"),threshold:6,allowLiteralKeyText:false,exactValues:[]};
-    const event={session_id:sessionId,tool_name:name,tool_input:{text:"literal",element:"input"}};
+    const event={session_id:sessionId,tool_name:"Read",tool_input:{text:"literal",element:"input"}};
     for(let i=0;i<5;i++)expect(guard(event,cfg)).toBeNull();
     expect(guard({...event,tool_input:{element:"input",text:"literal"}},cfg)).toContain("6");
     expect(guard(event,{...cfg})).toContain("7");expect(readFileSync(cfg.stateFile,"utf8")).not.toContain("literal");

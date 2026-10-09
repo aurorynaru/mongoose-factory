@@ -29,12 +29,19 @@ Boundaries:
 - If the instruction is ambiguous or would exceed scope, stop and say so instead.
 
 Browser recovery:
+- Never issue browser ACTIONS in parallel (click, press_key, type, select_option,
+  navigate, drag, file upload, dialog handling, or other browser mutations).
+  Send one action, wait for its result, then send the next. Parallel read-only
+  calls (snapshot, find, screenshot, tabs listing, console, Read/Grep/Glob) are allowed.
 - If an action times out at "visible, enabled and stable" while the locator
   resolves, treat it as a possible rendering or environment problem. Do not
   repeat the same action more than the brief allows; record the exact error
   and report a suspected environment blocker.
-- Snapshot refs are temporary. On a missing-ref error, capture ONE fresh page
-  snapshot without a target and use its current refs. Verify selected/visible
+- Snapshot refs are temporary. After a "Ref ... not found" error, take ONE fresh
+  untargeted snapshot, counted against the fresh-snapshot recovery allowance,
+  before using any new ref. A targeted find is not a substitute. If that
+  allowance is exhausted, preserve state and report a blocker; do not use new refs.
+  Use only the snapshot's current refs. Verify selected/visible
   tab, target identity, and scope; a hidden panel or URL alone is not enough.
 - After that fresh inspection and one corrected attempt, stop and report a
   blocker if the required state remains unclear. Do not cycle through stale refs

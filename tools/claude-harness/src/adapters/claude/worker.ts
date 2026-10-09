@@ -15,6 +15,7 @@ import { childEnvironment, diagnostic, launch, taskProcess } from "./process.js"
 import { findMarker, marker, transcriptPath } from "./transcripts.js";
 import { generatedPolicy } from "./tool-policy.js";
 import { intentionallyDenied } from "./permissions.js";
+import { browserAction, finishAction, type GuardConfig } from "../../hooks/pre-tool-use.js";
 
 export interface SessionState { id:string; title:string; cwd:string; started:boolean; model:string; policy:WorkerToolPolicy; active:string|null }
 export interface TaskJournal {
@@ -23,6 +24,7 @@ export interface TaskJournal {
   argv:string[]; createdAt:string; result?:WorkerResult; process?:Record<string,unknown>;
   permissionSettings:string; eventFile:string; stderrFile:string; nativeTranscript:string;
   permissionDenyRules?:string[];
+  guardConfig?:GuardConfig;
   recoveryEvidence?:Record<string,unknown>;
   finishedAt?:string; guardDenialsFile?:string;
   metrics?:{assistantTurns:number;wallTimeSeconds:number|null;guardDenials:{total:number;byGuard:Record<string,number>;auditError?:string}};
@@ -82,6 +84,8 @@ export class ClaudeWorker implements WorkerPort {
       policy.tools.includes("Bash")?"Bash is explicitly enabled for this task; use it only within the supplied scope and prohibitions.":"Bash is disabled for this task; do not try to use it. Bash is disabled unless explicitly enabled by the generated tool policy.",
       'If an action times out at "visible, enabled and stable" while the locator resolves, treat it as a possible rendering or environment problem. Do not repeat the same action more than the brief allows; record the exact error and report a suspected environment blocker.',
       "The harness computes repository confinement itself from before/after Git state and the evidence diff. You do not need git status; state only which files you wrote.",
+      "Never issue browser ACTIONS in parallel (click, press_key, type, select_option, navigate, drag, file upload, dialog handling, or other browser mutations). Send one action, wait for its result, then send the next. Parallel read-only calls (snapshot, find, screenshot, tabs listing, console, Read/Grep/Glob) are allowed.",
+      'After a "Ref ... not found" error, take one fresh untargeted snapshot, counted against the fresh-snapshot recovery allowance, before using any new ref. A targeted find is not a substitute. If that allowance is exhausted, preserve state and report a blocker; do not use new refs.',
       "\nAGENTS.md (explicit authoritative instructions):",agents,
       "Start each task with a fresh snapshot of the visible tab; verify Form identity and editing scope before acting. Never reuse old accessibility refs.",
       'End each task in a stable page state with no browser-native dialogs (alert, confirm, prompt, or beforeunload "leave page") and no unsaved-change prompts. CDP disconnect dismisses beforeunload dialogs. In-page Mongoose dialogs (such as Select Form) may remain open only when the current task instruction explicitly says to leave them open; otherwise end without open in-page dialogs. Never discard unsaved work or take an out-of-scope lifecycle action to achieve stability; checkpoint and report a blocker instead.',
@@ -95,13 +99,18 @@ export class ClaudeWorker implements WorkerPort {
     const journal:TaskJournal={sessionId:sid,messageId:mid,payload,preamble,agentsHash:hash(agents),before:gitState(paths.factoryRoot),state:"planned",argv:args,createdAt:new Date().toISOString(),permissionSettings:policy.settingsFile,eventFile:join(dir,`${mid}.events.jsonl`),stderrFile:join(dir,`${mid}.stderr.txt`),nativeTranscript:transcriptPath(cfg.claude.configDir??join(homedir(),".claude"),paths.factoryRoot,sid)};
     journal.guardDenialsFile=policy.denialFile;
     journal.permissionDenyRules=[...policy.deny];
+    journal.guardConfig=read<GuardConfig>(policy.guardConfig);
     writeFileSync(policy.denialFile,"");
     const lease=join(paths.dataDir,"workers","active-task.json");
     try{writeFileSync(lease,JSON.stringify({sessionId:sid,messageId:mid}),{flag:"wx"});}
     catch{return {status:"rejected",detail:"Another task or expected usage-limit pause holds the worker lease. Reconcile it; do not start a concurrent browser task."};}
     save(this.taskFile(sid,mid),journal);s.active=mid;save(this.sessionFile(sid),s);
     journal.state="launching";save(this.taskFile(sid,mid),journal);
-    const child=launch(cfg,paths.factoryRoot,args);const events=new TaskEvents(sid);
+    const guardConfig=journal.guardConfig;
+    const child=launch(cfg,paths.factoryRoot,args);const events=new TaskEvents(sid,(id,name)=>{
+      // Read results cannot release an action. The exact action ID is checked under lock.
+      if(browserAction(name,{}))finishAction({session_id:sid,tool_name:name,tool_use_id:id},guardConfig);
+    });
     let resolveFinish!:()=>void;const finished=new Promise<void>(resolve=>{resolveFinish=resolve;});
     const a:Active={child,events,journal,finished,resolve:resolveFinish,exit:null,stopping:false,identityReady:Promise.resolve(),timer:setTimeout(()=>{},1),monitor:setInterval(()=>{},60_000)};
     clearTimeout(a.timer);clearInterval(a.monitor);this.active.set(sid,a);
@@ -178,7 +187,7 @@ export class ClaudeWorker implements WorkerPort {
       for(const line of raw.split("\n").filter(Boolean)) {
         const item=JSON.parse(line);
         if(item.sessionId!==j.sessionId)throw Error("guard audit scope mismatch");
-        if(item.event==="call"||item.event==="stale_lock_recovered")continue;
+        if(item.event==="call"||item.event==="stale_lock_recovered"||item.event==="action_completed")continue;
         if((item.event!==undefined&&item.event!=="denial")||typeof item.guard!=="string")throw Error("guard audit entry invalid");
         byGuard[item.guard]=(byGuard[item.guard]??0)+1;
       }
@@ -214,6 +223,14 @@ export class ClaudeWorker implements WorkerPort {
       if(originalDead&&existsSync(j.eventFile)) {
         const raw=readFileSync(j.eventFile,"utf8");const events=new TaskEvents(sid);events.feed(raw);events.finish();
         if(raw.endsWith("\n")&&events.terminal&&!events.invalid&&!events.pending.size) {
+          // Reconcile a completion missed when the harness exited. Require native
+          // results plus proof the original worker is gone; never expire an action.
+          if(j.guardConfig)for(const result of events.history)for(const part of result.parts??[]) {
+            if(part.type==="tool"&&browserAction(part.tool??"",{})) {
+              try{finishAction({session_id:sid,tool_name:part.tool!,tool_use_id:part.id},j.guardConfig);}
+              catch{events.invalid="Guard action completion failed during reconciliation; preserve state and stop";}
+            }
+          }
           j.recoveryEvidence={marker:"present",originalProcess:"not_alive",source:"complete native stream terminal result",processExitCode:"unavailable",resubmitted:false};
           await this.complete({events,journal:j,exit:null,child:{exitCode:0},recovered:true});return j.result!;
         }
