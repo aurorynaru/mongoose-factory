@@ -32,7 +32,7 @@ export interface TaskJournal {
   metrics?:{assistantTurns:number;wallTimeSeconds:number|null;guardDenials:{total:number;byGuard:Record<string,number>;auditError?:string}};
 }
 interface Active { child:ChildProcessWithoutNullStreams; events:TaskEvents; journal:TaskJournal; finished:Promise<void>; resolve:()=>void; stopReason?:"timeout"|"interrupted"|"turn_limit"|"loop"|"model_mismatch"|"invalid"; detail?:string; exit:number|null; timer:ReturnType<typeof setTimeout>; monitor:ReturnType<typeof setInterval>; stopping:boolean; identityReady:Promise<void>; stopPromise?:Promise<void> }
-export interface WorkerOptions { config:HarnessConfig; paths:ResolvedPaths; role?:ChatRole; workingDirectory?:string; healthCheck?:()=>Promise<{ok:boolean;version?:string;detail?:string}>; windowCheck?:()=>Promise<ChromeWindow>; restartOwned?:()=>Promise<boolean> }
+export interface WorkerOptions { config:HarnessConfig; paths:ResolvedPaths; role?:ChatRole; workingDirectory?:string; healthCheck?:()=>Promise<{ok:boolean;version?:string;detail?:string}>; windowCheck?:()=>Promise<ChromeWindow>; windowRestore?:()=>Promise<ChromeWindow>; restartOwned?:()=>Promise<boolean> }
 export class ClaudeWorker implements WorkerPort {
   private readonly active = new Map<string,Active>();
   private readonly service: McpService;
@@ -59,6 +59,11 @@ export class ClaudeWorker implements WorkerPort {
     const id=randomUUID();save(this.sessionFile(id),{id,title,cwd:this.cwd,started:false,model:this.o.config.claude.models.worker.model,policy:{denyBrowserJavaScript:false},active:null} satisfies SessionState);return id;
   }
   async windowState() { return this.o.windowCheck?this.o.windowCheck():this.service.windowState(); }
+  async restoreWindow() { return this.o.windowRestore?this.o.windowRestore():this.service.restoreWindow(); }
+  async taskTranscript(sid:string,mid:string) {
+    const j=read<TaskJournal>(this.taskFile(sid,mid));
+    return existsSync(j.eventFile)?readFileSync(j.eventFile,"utf8"):"";
+  }
   async setTaskPreamble(id:string,preamble:string) { const s=this.session(id);if(this.active.has(id))throw Error("Worker session is busy");s.policy.preamble=preamble;save(this.sessionFile(id),s); }
   async configureSession(id:string,policy:WorkerToolPolicy) {
     const s=this.session(id);if(this.active.has(id))throw Error("Worker session is busy");

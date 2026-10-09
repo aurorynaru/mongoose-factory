@@ -15,6 +15,7 @@ import { checkEvidenceRef } from "../src/protocol/validate.js";
 import { parseHeader } from "../src/protocol/prompts.js";
 import { BriefSchema } from "../src/brief.js";
 import type { ChatPort } from "../src/adapters/types.js";
+import { AUDIT_LABEL } from "../src/controller/action-audit.js";
 const shared=JSON.parse(readFileSync(join(HARNESS_DIR,"fixtures/scenarios/scenarios.json"),"utf8")).shared;
 function externalBroker(config:ReturnType<typeof ConfigSchema.parse>,paths:ReturnType<typeof resolvePaths>,chat:ChatPort|null){return new ExternalSecondOpinion(config,paths,chat,{registeredUrl:()=>"https://chatgpt.com/g/g-fakegpt-mongoose/c/registered-chat",chatForUrl:()=>chat!});}
 const SEND:ReplySpec={envelope:{action:"SEND_TO_OPENCODE",reason:"next",message:"Inspect FX_FixtureForm01"}};
@@ -64,9 +65,26 @@ describe("Phase 4 controller loop with fake Claude processes",()=>{
     const ops=h.store.opsForRun(run.id).filter(o=>o.kind==="worker");expect(ops).toHaveLength(2);expect(ops[0].session_id).toBe(ops[1].session_id);expect(ops[0].message_id).not.toBe(ops[1].message_id);
     expect(h.store.inboundForRun(run.id,"worker")).toHaveLength(2);expect(run.counters.backendRestarts).toBe(0);
   });
+  it("restores a minimized window and logs its manifest before submitting a fake worker",async()=>{
+    const h=fixture();vi.spyOn(h.worker,"windowState").mockResolvedValue({...h.window,windowState:"minimized",bounds:{...h.window.bounds,windowState:"minimized"}});
+    const restore=vi.spyOn(h.worker,"restoreWindow").mockResolvedValue(h.window),controller=h.create();
+    const run=await controller.run(controller.createRun(fixtureBrief()).id);expect(run.status).toBe("completed");expect(restore).toHaveBeenCalledTimes(1);
+    expect(h.store.opsForRun(run.id).find(o=>o.kind==="worker")?.meta).toMatchObject({windowRestore:{status:"restored",before:{windowState:"minimized"},after:{windowState:"maximized"}},windowState:"maximized"});
+  });
+  it("generates audit evidence and reserves coordinator message space even with long worker prose",async()=>{
+    const h=fixture("chatgpt",{script:{worker:[{write:shared.workerOk.files,calls:2,tool:"mcp__playwright__browser_press_key",toolInput:{key:"X"},reply:"Long prose ".repeat(5000)}]}}),controller=h.create();
+    h.config.browser.maxMessageChars=3500;
+    const loaded=fixtureBrief();loaded.brief=BriefSchema.parse({...loaded.brief,exact_values:["XX"]});
+    const run=await controller.run(controller.createRun(loaded).id);expect(run.status,`${run.pause_reason}: ${run.pause_detail}`).toBe("completed");
+    const worker=h.store.opsForRun(run.id).find(o=>o.kind==="worker")!,report=h.store.opsForRun(run.id).find(o=>o.purpose==="WORKER_REPORT")!;
+    expect(worker.meta.actionAudit).toMatchObject({actions:2,turns:3,spelledStrings:[{text:"XX",exactMatch:true,allOk:true}],errors:[]});
+    const files=worker.meta.auditFiles as {markdown:string;json:string};expect(existsSync(files.markdown)).toBe(true);expect(existsSync(files.json)).toBe(true);
+    expect(report.payload_text.length).toBeLessThanOrEqual(3500);expect(report.payload_text).toContain(AUDIT_LABEL);expect(report.payload_text).toContain('"XX" [exact match]');
+    const inbound=h.store.inboundForRun(run.id,"worker")[0];expect(inbound.meta.changedFiles).not.toContain("evidence/EXP-900/harness-audit-T1.md");
+  });
   it.each(["confirmation","minimized","unhealthy"])("blocks before worker creation/submission for missing %s precondition",async kind=>{
     const h=fixture(),controller=h.create(kind!=="confirmation");
-    if(kind==="minimized")vi.spyOn(h.worker,"windowState").mockResolvedValue({...h.window,windowState:"minimized"});
+    if(kind==="minimized"){h.config.chrome.autoRestoreMinimized=false;vi.spyOn(h.worker,"windowState").mockResolvedValue({...h.window,windowState:"minimized"});}
     if(kind==="unhealthy")vi.spyOn(h.worker,"health").mockResolvedValue({ok:false,detail:"Owned MCP unhealthy"});
     const created=controller.createRun(fixtureBrief()),run=await controller.run(created.id);
     expect(run.pause_reason).toBe(kind==="confirmation"?"operator_preconditions":"worker_preflight");expect(run.counters.workerTasks).toBe(0);expect(run.current_session_id).toBeNull();expect(existsSync(h.capture)).toBe(false);
@@ -75,6 +93,7 @@ describe("Phase 4 controller loop with fake Claude processes",()=>{
   it("exit 3 pauses for item-bound operator review, then forwards once without another model call",async()=>{
     const h=fixture("chatgpt",{script:{worker:[{write:shared.workerOk.files,permissionDenials:[{tool_name:"Bash",tool_input:{command:"git status"}}]}]}}),controller=h.create();
     let run=await controller.run(controller.createRun(fixtureBrief()).id);expect(run.pause_reason).toBe("completed_with_denials");expect(run.counters.totalFailures).toBe(0);
+    expect(h.store.getOp(run.pending_op_id!)?.meta.actionAudit).toMatchObject({status:"completed"});
     const pending=run.pending_op_id!,stateBefore=read(h.scriptState);expect(h.store.inboundForRun(run.id,"worker")).toHaveLength(0);
     run=await controller.run(run.id);expect(run.pause_reason).toBe("completed_with_denials");expect(read(h.scriptState)).toEqual(stateBefore);
     controller.applyResumeOptions(run.id,{approve:["denials"]});run=await controller.run(run.id);expect(run.status).toBe("completed");expect(read(h.scriptState)).toEqual(stateBefore);expect(h.store.getRun(run.id)?.approvals.denials).toBe(pending);expect(h.store.inboundForRun(run.id,"worker")).toHaveLength(1);
@@ -82,6 +101,7 @@ describe("Phase 4 controller loop with fake Claude processes",()=>{
   it("usage_limit preserves the task and only an explicit new bounded continuation can proceed after reset",async()=>{
     const h=fixture("chatgpt",{script:{worker:[{mode:"usage"},{write:shared.workerOk.files}]}}),controller=h.create();
     let run=await controller.run(controller.createRun(fixtureBrief()).id),old=h.store.getOp(run.pending_op_id!)!;expect(run.pause_reason).toBe("usage_limit");expect(run.pause_detail).toContain("--continue-after-usage");expect(run.counters.totalFailures).toBe(0);
+    expect(old.meta.actionAudit).toMatchObject({status:"usage_limit",turns:1,errors:expect.any(Array)});
     run=await controller.run(run.id);expect(run.pause_reason).toBe("usage_limit");expect(read<Record<string,number>>(h.scriptState).worker).toBe(1);
     controller.applyResumeOptions(run.id,{continueAfterUsage:"Inspect current FX_FixtureForm01 state, then continue the permitted task."});
     run=await controller.run(run.id);expect(run.status).toBe("completed");const ops=h.store.opsForRun(run.id).filter(o=>o.kind==="worker");expect(ops).toHaveLength(2);expect(ops[1].message_id).not.toBe(old.message_id);expect(ops[1].session_id).toBe(old.session_id);expect(run.counters.backendRestarts).toBe(0);

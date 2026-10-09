@@ -89,8 +89,9 @@ if (-not (Test-Path -LiteralPath harness.config.json)) {
    Start refuses without the flag. It records explicit manual login/configuration/
    normal-Web-Client attestation for this run only. Before every new worker task,
    including handoffs/continuations, the loop checks owned Chrome/MCP health and
-   read-only browser-level CDP window state, refusing minimized/ambiguous/unreadable
-   state before worker creation/submission. Bounds/model are recorded in the
+   browser-level CDP window state. Minimized windows are restored and maximized
+   automatically by default, then verified; ambiguous/unreadable state or failed
+   restoration refuses submission. Bounds/model/restoration are recorded in the
    operation manifest. Every header labels worker_session_id and task_message_id.
    The loop never starts/restarts Chrome/MCP. Login loss is an environment blocker.
 
@@ -100,6 +101,7 @@ if (-not (Test-Path -LiteralPath harness.config.json)) {
 
 ```powershell
 .\claude-harness.ps1 status
+.\claude-harness.ps1 status --summary
 .\claude-harness.ps1 status --run <RUN-ID> --json
 ```
 
@@ -224,7 +226,8 @@ Start output includes the verified final `windowState`, `bounds` and
 `chromeWindow`; a failed verification returns an error while preserving the
 running owned Chrome for manual inspection. When `chromeStartMaximized` is false,
 start reports the observed placement without maximizing. An `already_running`
-start does not change window placement. Health/preflight remain read-only.
+start does not change window placement. Health remains read-only; task preflight
+may restore a minimized owned window as described below.
 These options apply at the next Chrome start. The saved service state includes
 `effectiveArguments`; the request hash includes all launch options, and the
 process command hash continues to verify the actual process identity. Existing
@@ -232,17 +235,56 @@ owned Chrome with only these options outdated remains healthy with a
 `running with outdated launch options` warning. Ownership/scope mismatches still
 fail. The Phase 2 scratch-check script is unchanged.
 
-Before every `worker task`, including resumed tasks, a read-only preflight checks
+Before every `worker task`, including resumed tasks, preflight checks
 owned Chrome through `/json/version` and the **browser-level** WebSocket endpoint:
 `Target.getTargets`, then `Browser.getWindowForTarget` for the single page target.
-It never attaches to a page, evaluates JavaScript, uses MCP for the window read,
-or focuses/restores a window. Minimized Chrome refuses the task with
-`restore the Chrome window first`; missing/ambiguous targets or an unreadable
-window also refuse submission. Otherwise the task manifest and output record
+It never attaches to a page, evaluates JavaScript or uses MCP for the window read.
+Config `chrome.autoRestoreMinimized` defaults to `true`: if minimized, recheck
+ownership, use browser-level `Browser.setWindowBounds` to restore then maximize,
+verify the same target/window and actual maximized bounds, log before/after in
+`windowRestore` in the task manifest and continue. Failed restoration blocks the
+task without starting/restarting Chrome. With the option `false`, minimized Chrome
+refuses with `restore the Chrome window first`. Missing/ambiguous targets or an
+unreadable window also refuse submission. The task manifest and output record
 `windowState` and `bounds`. `mcp health` shows these plus
 `chrome.effectiveArguments` and any launch-option warning. Bounds are observed
 window bounds; requested launch size can differ when maximized. CDP does not
 establish whether another window covers Chrome.
+
+### Automatic task audits and operator summary
+
+Every worker task in the loop and standalone `worker task` gets a deterministic
+audit of its saved event transcript, including partial/blocked results. Files:
+`evidence/<EXP>/harness-audit-<task>.md` and
+`claude-data/runs/<RUN-ID>/worker/harness-audit-<task>.json`. Loop task names are
+T1, T2, etc.; standalone task names are message UUIDs. Controller-created audits
+are identified separately from the worker's evidence diff.
+
+The audit lists tool calls in invocation order, key/element/filename arguments,
+native ok/error/unknown results, browser action/read counts, turns, errors and
+use of type/fill_form/press_sequentially/evaluate/run_code. It reconstructs
+contiguous single-printable-key runs, lists their native key sequence and compares
+each string with the brief's `exact_values` exactly, including case. Failed or
+missing key results are marked; attempted strings do not prove textbox contents.
+Flagged tools require interpretation against the brief; their presence alone is
+not an automatic acceptance failure. Rendered-state evidence and acceptance
+checks still apply.
+
+Each WORKER_REPORT includes a reserved, bounded **controller-generated audit
+(not worker prose)** section, so the coordinator can assess actions without an
+attachment. Long sequences use counts, shortened strings and hashes; full details
+stay in the audit files. Routine clean audits need no outside reviewer. Existing
+denial, usage-limit and scope-review pauses still require their operator action.
+
+`claude-harness status --summary` reads local saved state only and shows every task
+headline, latest coordinator action/reason, pending item and the exact resume
+command. Usage-limit continuation commands are shown for use after reset;
+uncertain submissions show reconciliation, without approving replay.
+
+Worker `maxTurns` defaults to **80**, also in the example config, to leave room
+for 25 individual key calls plus inspection and reporting. Update an existing
+local config's explicit old value if desired; this does not expand the brief's
+action or recovery allowance.
 
 The default worker remains **haiku/high**. Use `--model sonnet` for new or complex
 mutation experiments (for example, `claude-harness worker task EXP-ID "instruction" --model sonnet --effort high`).

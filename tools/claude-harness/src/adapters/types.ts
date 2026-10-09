@@ -92,6 +92,8 @@ export type WorkerResult =
 
 export interface WorkerPort {
   windowState?():Promise<import("../backend/chrome-window.js").ChromeWindow>;
+  restoreWindow?():Promise<import("../backend/chrome-window.js").ChromeWindow>;
+  taskTranscript?(sessionId:string,messageId:string):Promise<string>;
   selectModel?(model:{model:string;effort:"low"|"medium"|"high"|"xhigh"|"max"|null}):void;
   releaseUsagePause?(sessionId:string,messageId:string):Promise<void>;
   /** Optional Claude task context; separate from the saved controller payload. */

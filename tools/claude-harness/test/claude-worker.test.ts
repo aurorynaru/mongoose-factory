@@ -14,7 +14,7 @@ import { generatedPolicy, absolutePattern } from "../src/adapters/claude/tool-po
 import { TaskEvents } from "../src/adapters/claude/events.js";
 import { McpService } from "../src/backend/mcp-service.js";
 import { createServer } from "node:net";
-import { readChromeWindow } from "../src/backend/chrome-window.js";
+import { readChromeWindow, maximizeChromeWindow } from "../src/backend/chrome-window.js";
 import { fakeCdp } from "./fake-cdp.js";
 
 function fixture(spec:Record<string,unknown>={}) {
@@ -64,6 +64,7 @@ describe("Claude worker fake-process integration",()=>{
   });
   it("checks browser-level window state before each task/resume and records it; minimized never submits",async()=>{
     const h=fixture(),cdp=await fakeCdp();
+    h.cfg.chrome.autoRestoreMinimized=false;
     const worker=new ClaudeWorker({config:h.cfg,paths:h.paths,healthCheck:async()=>({ok:true}),windowCheck:()=>readChromeWindow(cdp.port)});
     try {
       cdp.state.windowState="minimized";
@@ -79,6 +80,17 @@ describe("Claude worker fake-process integration",()=>{
       const next=await boundedTask(h.cfg,h.paths,"EXP-900","Inspect FX_FixtureForm01",{session:first.sessionId},worker);
       expect(read<Record<string,any>>(next.manifest).windowState).toBe("normal");
       expect(cdp.commands.map(c=>c.method)).toEqual(Array.from({length:4},()=>["Target.getTargets","Browser.getWindowForTarget"]).flat());
+    }finally{await cdp.close();}
+  });
+  it("standalone task restores through fake browser CDP and saves the automatic action audit",async()=>{
+    const h=fixture({calls:2,tool:"mcp__playwright__browser_press_key",toolInput:{key:"X"}}),cdp=await fakeCdp();
+    cdp.state.windowState="minimized";
+    const worker=new ClaudeWorker({config:h.cfg,paths:h.paths,healthCheck:async()=>({ok:true}),windowCheck:()=>readChromeWindow(cdp.port),windowRestore:()=>maximizeChromeWindow(cdp.port)});
+    try {
+      const task=await boundedTask(h.cfg,h.paths,"EXP-900","Inspect FX_FixtureForm01",{},worker),manifest=read<Record<string,any>>(task.manifest);
+      expect(manifest).toMatchObject({windowState:"maximized",windowRestore:{before:{windowState:"minimized"},after:{windowState:"maximized"}},actionAudit:{actions:2,turns:3,spelledStrings:[{text:"XX",allOk:true}]}});
+      expect(existsSync(manifest.auditFiles.markdown)).toBe(true);expect(existsSync(manifest.auditFiles.json)).toBe(true);
+      expect(taskOutput(task,read<TaskJournal>(worker.taskFile(task.sessionId,task.messageId)),manifest).auditHeadline).toContain('key string "XX"');
     }finally{await cdp.close();}
   });
   it.each(["brief Read","disabled Bash","denied JavaScript"])("completes with a review warning and exit 3 for intentional %s",async kind=>{

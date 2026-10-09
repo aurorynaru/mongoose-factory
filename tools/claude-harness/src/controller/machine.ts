@@ -15,6 +15,8 @@ import { renderHandoff } from "./handoff.js";
 import { contextBlock } from "../context.js";
 import { workerPolicyForBrief } from "../adapters/claude/tool-policy.js";
 import { recordConversation } from "../adapters/conversation.js";
+import { actionAudit, compactAudit, persistAudit, type ActionAudit } from "./action-audit.js";
+import { prepareWorkerWindow } from "./window-preflight.js";
 
 export interface ControllerDeps {
   store: Store;
@@ -317,7 +319,7 @@ export class Controller {
 
   // ---------- planning (payload saved + state checkpointed BEFORE any submission)
 
-  private planCoordinator(run: RunRow, kind: string, body: string, opts: { fullProtocol?: boolean; review?: OpReview; extra?: Record<string, string | number> } = {}): OpRow {
+  private planCoordinator(run: RunRow, kind: string, body: string, opts: { fullProtocol?: boolean; review?: OpReview; extra?: Record<string, string | number>; audit?:ActionAudit } = {}): OpRow {
     const cycle = run.cycle_id + 1;
     const nonce = newNonce();
     // Whatever reaches Tab 1 first in a run (normally KICKOFF; a WORKER_REPORT when the brief has an
@@ -332,9 +334,10 @@ export class Controller {
     const newConversation = (first && this.d.config.chats.newCoordinatorPerRun) || pendingNew;
     const head = header({ nonce, runId: run.id, experimentId: run.experiment_id, cycleId: cycle, kind, extra: opts.extra });
     const tail = opts.fullProtocol ? "" : `\n\n${protocolBlock(this.d.protocolDir, "coordinator-protocol.md", "REMINDER")}`;
-    const fullText = `${head}\n${body}${tail}`;
+    const auditText=opts.audit?compactAudit(opts.audit,Math.min(6000,Math.floor(this.d.config.browser.maxMessageChars*0.4))):"";
+    const fullText = `${head}\n${body}${tail}${auditText?`\n\n${auditText}`:""}`;
     const file = this.write(run.id, `messages/${String(cycle).padStart(3, "0")}-to-coordinator-${kind}.md`, fullText);
-    const text = clip(fullText, this.d.config.browser.maxMessageChars, this.refOf(file));
+    const text = auditText?`${clip(`${head}\n${body}${tail}`,this.d.config.browser.maxMessageChars-auditText.length-2,this.refOf(file))}\n\n${auditText}`:clip(fullText, this.d.config.browser.maxMessageChars, this.refOf(file));
     return this.d.store.tx(() => {
       const meta: Record<string, unknown> = opts.review ? { review: opts.review } : {};
       if (newConversation) meta.newConversation = true;
@@ -766,9 +769,9 @@ export class Controller {
       if(!store.getSetting(`preconditions:${run.id}`))return this.pause(run,"operator_preconditions",`Confirm Mongoose is manually logged in, its configuration is selected and the normal Web Client is loaded: claude-harness resume --run ${run.id} --confirm-preconditions. The worker never authenticates.`);
       try {
         const ready=await worker.health();if(!ready.ok)throw Error(ready.detail??"Owned Chrome/MCP or Claude auth is not healthy");
-        if(!worker.windowState)throw Error("Worker window-state check is unavailable");
-        const window=await worker.windowState();if(window.windowState==="minimized")throw Error("restore the Chrome window first");
-        op=store.updateOp(op.id,{meta:{...op.meta,chromeWindow:window,windowState:window.windowState,bounds:window.bounds}});
+        const window=await prepareWorkerWindow(worker,this.d.config);
+        op=store.updateOp(op.id,{meta:{...op.meta,...window}});
+        if(window.windowRestore)this.d.log.log("info","worker.window_restored",{run_id:run.id,task:op.purpose,...window});
         const model=this.brief(run).worker??this.d.config.claude.models.worker;
         worker.selectModel?.(model);op=store.updateOp(op.id,{meta:{...op.meta,workerModel:model}});
       }catch(error){return this.pause(run,"worker_preflight",(error as Error).message);}
@@ -844,6 +847,10 @@ export class Controller {
         shouldStop: this.shouldStop(run.id),
       });
       run = store.getRun(run.id)!;
+      const transcript=worker.taskTranscript?await worker.taskTranscript(op.session_id!,op.message_id!):"transcript" in res?res.transcript:"";
+      const audit=actionAudit(transcript,op.purpose,res.status,this.brief(run).exact_values);
+      const auditFiles=persistAudit(this.d.factoryRoot,this.brief(run).evidence_dir,join(this.d.runsDir,run.id),audit);
+      op=store.updateOp(op.id,{meta:{...op.meta,actionAudit:audit,auditFiles}});
       switch (res.status) {
         case "usage_limit":
           store.updateOp(op.id, { meta: { ...op.meta, usageLimit: res.detail, partialText: res.text,
@@ -915,6 +922,9 @@ export class Controller {
           }
           const after = snapshotDirs(this.d.factoryRoot, watchedDirs(this.brief(run).evidence_dir));
           const diff = diffSnapshots((op.meta.before as DirSnapshot) ?? {}, after);
+          // Controller-written audit files are identified separately, not attributed to the worker.
+          const auditRef=this.refOf(auditFiles.markdown);
+          diff.added=diff.added.filter(p=>p!==auditRef);diff.modified=diff.modified.filter(p=>p!==auditRef);
           const changed = [...diff.added, ...diff.modified];
           const tfile = this.write(run.id, `worker/${op.purpose}-transcript.md`, res.transcript);
           const externalId = res.assistantMessageIds[res.assistantMessageIds.length - 1];
@@ -955,7 +965,7 @@ export class Controller {
     ]
       .filter((x) => x !== "")
       .join("\n");
-    this.planCoordinator(run, "WORKER_REPORT", body, { extra: { task: op.purpose } });
+    this.planCoordinator(run, "WORKER_REPORT", body, { extra: { task: op.purpose },audit:op.meta.actionAudit as ActionAudit });
   }
 
   private workerFailed(run: RunRow, op: OpRow, error: string, text: string, transcript: string, ids: string[] = []): void {
@@ -974,7 +984,7 @@ export class Controller {
       "",
       "Decide the next step. Do not assume any part of the task took effect; ask the worker to inspect state first. After recurring loops/interrupted recovery, use NEW_OPENCODE_SESSION with a concise handoff if another inspection is authorized. Preserve browser state, evidence, unresolved facts, restrictions, and all remaining budgets. A fresh conversation is not permission for another recovery loop; if the allowance is exhausted or inspection remains unresolved, PAUSE or complete blocked.",
     ].join("\n");
-    this.planCoordinator(run, "WORKER_FAILURE", body, { extra: { task: op.purpose } });
+    this.planCoordinator(run, "WORKER_FAILURE", body, { extra: { task: op.purpose },audit:op.meta.actionAudit as ActionAudit });
   }
 
   private async backendTrouble(run: RunRow, detail: string): Promise<void> {

@@ -1,5 +1,41 @@
 import type { Store, RunRow } from "./store.js";
 import { pidAlive } from "./store.js";
+import { auditHeadline, type ActionAudit } from "./controller/action-audit.js";
+
+export function resumeCommand(store:Store,run:RunRow):string|null {
+  if(run.status==="completed"||run.status==="stopped")return null;
+  const base=`claude-harness resume --run ${run.id}`,reason=run.pause_reason??"";
+  const op=run.pending_op_id?store.getOp(run.pending_op_id):null;
+  if(reason==="operator_preconditions")return `${base} --confirm-preconditions`;
+  if(reason==="completed_with_denials")return `${base} --approve denials`;
+  if(reason==="usage_limit")return op?.kind==="worker"?`${base} --continue-after-usage "Inspect current state and continue the saved bounded task; do not replay prior actions."`:
+    op?.kind==="coordinator"||op?.kind==="specialist"?`${base} --continue-chat-after-usage ${op.kind}`:base;
+  if(reason==="review:scope")return `${base} --approve scope`;
+  if(reason==="review:attachment"||reason==="review:attachment_required")return `${base} --approve attachment`;
+  if(reason==="review:candidate")return `${base} --approve candidate`;
+  if(reason==="invalid_coordinator_response"||reason.startsWith("review:"))return `${base} --reask`;
+  if(reason.startsWith("limit:")) {
+    const key=reason.slice(6),max=run.limits[key as keyof typeof run.limits];
+    if(typeof max==="number")return `${base} --limit ${key}=${Math.max(1,Math.ceil(max*2))}`;
+  }
+  // Uncertain submissions are reconciled first, never implicitly approved for replay.
+  return base;
+}
+
+export function renderSummary(store:Store,run:RunRow|null):string {
+  if(!run)return "No runs yet. Start one with: claude-harness start <EXP-ID> --confirm-preconditions";
+  const tasks=store.opsForRun(run.id).filter(op=>op.kind==="worker");
+  const decision=store.decisions(run.id).at(-1),envelope=decision?.envelope as {reason?:string}|undefined;
+  const pending=run.pending_op_id?store.getOp(run.pending_op_id):null,command=resumeCommand(store,run);
+  return [
+    `${run.id} / ${run.experiment_id}: ${run.status}${run.outcome?` (${run.outcome})`:""}`,
+    ...tasks.map(op=>`${op.purpose} [${op.status}]: ${op.meta.actionAudit?auditHeadline(op.meta.actionAudit as ActionAudit):"audit pending/unavailable"}`),
+    `Latest coordinator action: ${decision?.action??"(none)"}; reason: ${envelope?.reason??"(none)"}`,
+    `Pending: ${pending?`#${pending.id} ${pending.kind}/${pending.purpose} [${pending.status}]`:run.pending_inbound_id?`coordinator decision for inbound #${run.pending_inbound_id}`:"(none)"}${run.pause_reason?`; ${run.pause_reason}`:""}`,
+    ...(run.pause_detail?[run.pause_detail]:[]),
+    ...(command?[run.pause_reason==="usage_limit"?"After the usage-limit reset:":run.pause_reason?.startsWith("review:")||run.pause_reason==="completed_with_denials"?"After reviewing the pending item:":"Resume (reconciles saved state):",command]:["No resume command: run is finished."]),
+  ].join("\n");
+}
 
 function bar(used: number, max: number): string {
   const pct = max > 0 ? Math.min(1, used / max) : 1;

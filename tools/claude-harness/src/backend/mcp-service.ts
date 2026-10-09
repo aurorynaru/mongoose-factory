@@ -113,6 +113,11 @@ export class McpService {
     if(!chrome.ok)throw Error("Chrome window preflight requires a healthy owned Chrome; restore ownership/service health manually");
     return readChromeWindow(this.cfg.mcp.cdpPort);
   }
+  async restoreWindow() {
+    const chrome=await this.command("chrome","health");
+    if(!chrome.ok)throw Error("Chrome restore requires a healthy owned Chrome; no CDP command was sent");
+    return maximizeChromeWindow(this.cfg.mcp.cdpPort);
+  }
   async health(includeWindow=true): Promise<ServiceResult> {
     const [chrome, mcp] = await Promise.all([this.command("chrome", "health"), this.command("mcp", "health")]);
     if (!chrome.ok) return { ok: false, chrome, mcp };

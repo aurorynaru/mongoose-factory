@@ -110,7 +110,7 @@
   },
   "worker": {
     "allowBash": false,
-    "maxTurns": 40,
+    "maxTurns": 80,
     "taskTimeoutMinutes": 90,
     "maxIdenticalCalls": 6,
     "maxSnapshotRefFailures": 6,
@@ -121,6 +121,9 @@
   "chromeWindowStyle": "normal",
   "chromeWindowSize": "1920,1080",
   "chromeStartMaximized": true,
+  "chrome": {
+    "autoRestoreMinimized": true
+  },
   "coordinator": {
     "transport": "chatgpt"
   },

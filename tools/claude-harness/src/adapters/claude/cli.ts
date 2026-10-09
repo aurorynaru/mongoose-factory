@@ -10,6 +10,8 @@ import { scopeViolations } from "../../protocol/validate.js";
 import { ClaudeWorker, type TaskJournal } from "./worker.js";
 import { read, save } from "./files.js";
 import { workerPolicyForBrief } from "./tool-policy.js";
+import { actionAudit, auditHeadline, persistAudit, type ActionAudit } from "../../controller/action-audit.js";
+import { prepareWorkerWindow } from "../../controller/window-preflight.js";
 
 export interface TaskOptions { model?:string;effort?:string;session?:string;continueFrom?:string }
 export function taskExitCode(result:import("../types.js").WorkerResult):0|2|3 {
@@ -19,6 +21,7 @@ export function taskOutput(task:{sessionId:string;messageId:string;manifest:stri
   return {sessionId:task.sessionId,messageId:task.messageId,status:task.result.status,manifest:task.manifest,eventTranscript:journal.eventFile,nativeTranscript:journal.nativeTranscript,
     assistantTurns:journal.metrics?.assistantTurns??null,wallTimeSeconds:journal.metrics?.wallTimeSeconds??null,guardDenials:journal.metrics?.guardDenials??null,guardDenialsFile:journal.guardDenialsFile??null,
     evidenceDiff:manifest.evidenceDiff,windowState:manifest.windowState??null,bounds:manifest.bounds??null,exitCode:taskExitCode(task.result),
+    auditHeadline:manifest.actionAudit?auditHeadline(manifest.actionAudit as ActionAudit):null,auditFiles:manifest.auditFiles??null,windowRestore:manifest.windowRestore??null,
     ...("permissionDenials" in task.result?{permissionDenials:task.result.permissionDenials}:{}),
     ...("warning" in task.result?{outcome:"completed_with_denials",warning:task.result.warning}:{}),
     ...("touchedFiles" in task.result?{touchedFiles:task.result.touchedFiles}:{}),...("text" in task.result?{report:task.result.text.slice(0,4000)}:{}),...("detail" in task.result?{detail:task.result.detail}:{})};
@@ -36,8 +39,7 @@ export async function boundedTask(cfg:HarnessConfig,paths:ResolvedPaths,experime
   if(opts.effort){if(!["low","medium","high","xhigh","max"].includes(opts.effort))throw Error("Invalid effort");cfg.claude.models.worker.effort=opts.effort as "high";}
   worker??=new ClaudeWorker({config:cfg,paths});
   const ready=await worker.health();if(!ready.ok)throw Error(ready.detail??"Worker is not ready");
-  const chromeWindow=await worker.windowState();
-  if(chromeWindow.windowState==="minimized")throw Error("Worker task refused: restore the Chrome window first (it is minimized)");
+  const window=await prepareWorkerWindow(worker,cfg);
   const sid=opts.session??await worker.createSession(`${experimentId} standalone task`);
   if(opts.session&&!read<{title:string}>(worker.sessionFile(sid)).title.startsWith(experimentId+" "))throw Error("Session belongs to a different experiment");
   if(opts.continueFrom){if(!opts.session)throw Error("--continue-from requires --session and a new explicit instruction");await worker.releaseUsagePause(sid,opts.continueFrom);}
@@ -46,7 +48,7 @@ export async function boundedTask(cfg:HarnessConfig,paths:ResolvedPaths,experime
   await worker.configureSession(sid,{...workerPolicyForBrief(brief),preamble});
   const before=snapshotDirs(paths.factoryRoot,watchedDirs(brief.evidence_dir));
   const manifest=join(paths.dataDir,"worker-tasks",`${mid}.json`);
-  save(manifest,{sessionId:sid,messageId:mid,runId,experimentId,briefPath:loaded.path,briefHash:loaded.hash,brief, instruction,model:cfg.claude.models.worker,preamble,chromeWindow,windowState:chromeWindow.windowState,bounds:chromeWindow.bounds,evidenceBefore:before,state:"planned"});
+  save(manifest,{sessionId:sid,messageId:mid,runId,experimentId,briefPath:loaded.path,briefHash:loaded.hash,brief, instruction,model:cfg.claude.models.worker,preamble,...window,evidenceBefore:before,state:"planned"});
   let interrupted=false;const onInterrupt=()=>{interrupted=true;};process.on("SIGINT",onInterrupt);
   try {
     const submission=await worker.submit(sid,mid,`REVIEWED BRIEF:\n${briefForCoordinator(brief)}\n\nOPERATOR INSTRUCTION:\n${instruction}`);
@@ -55,7 +57,9 @@ export async function boundedTask(cfg:HarnessConfig,paths:ResolvedPaths,experime
     const result=await worker.waitForCompletion(sid,mid,{timeoutMs:cfg.worker.taskTimeoutMinutes*60_000,shouldStop:()=>interrupted});
     const after=snapshotDirs(paths.factoryRoot,watchedDirs(brief.evidence_dir));
     const journal=read<TaskJournal>(worker.taskFile(sid,mid));
-    save(manifest,{...read<Record<string,unknown>>(manifest),state:result.status==="usage_limit"?"paused":"finished",pauseReason:result.status==="usage_limit"?"usage_limit":null,result,metrics:journal.metrics??null,evidenceAfter:after,evidenceDiff:diffSnapshots(before,after)});
+    const audit=actionAudit(await worker.taskTranscript(sid,mid),mid,result.status,brief.exact_values);
+    const auditFiles=persistAudit(paths.factoryRoot,brief.evidence_dir,join(paths.runsDir,runId),audit);
+    save(manifest,{...read<Record<string,unknown>>(manifest),state:result.status==="usage_limit"?"paused":"finished",pauseReason:result.status==="usage_limit"?"usage_limit":null,result,metrics:journal.metrics??null,actionAudit:audit,auditFiles,evidenceAfter:after,evidenceDiff:diffSnapshots(before,after)});
     return {sessionId:sid,messageId:mid,manifest,result};
   }finally{process.off("SIGINT",onInterrupt);}
 }

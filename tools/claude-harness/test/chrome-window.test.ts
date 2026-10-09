@@ -7,6 +7,8 @@ import { maximizeChromeWindow } from "../src/backend/chrome-window.js";
 import { mkdtempSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
+import { prepareWorkerWindow } from "../src/controller/window-preflight.js";
+import type { WorkerPort } from "../src/adapters/types.js";
 
 describe("read-only browser CDP window preflight",()=>{
   it.each(["normal","maximized","fullscreen","minimized"])("reads %s and restored bounds without page interaction",async state=>{
@@ -75,5 +77,34 @@ describe("post-start window maximization (fake CDP only)",()=>{
     const fake=await fakeCdp({setError:true}),cfg=ConfigSchema.parse({dataDir:mkdtempSync(join(tmpdir(),"fake-failed-start-")),mcp:{cdpPort:fake.port,chromeExecutable:process.execPath,secretsFile:null}}),service=new McpService(cfg,resolvePaths(cfg));
     const script=vi.spyOn(service,"runServiceScript").mockResolvedValue({ok:true,action:"started"});
     try{expect(await service.command("chrome","start")).toMatchObject({ok:false,error:"chrome_window_setup_failed",warning:expect.stringContaining("remains running")});expect(script).toHaveBeenCalledTimes(1);}finally{await fake.close();}
+  });
+});
+
+describe("automatic minimized-window task restore (fake CDP only)",()=>{
+  it("defaults to automatic restore and an 80-turn budget",()=>{
+    const cfg=ConfigSchema.parse({});expect(cfg.chrome.autoRestoreMinimized).toBe(true);expect(cfg.worker.maxTurns).toBe(80);
+  });
+  it("restores only a minimized owned window, verifies it, and logs before/after",async()=>{
+    const fake=await fakeCdp(),cfg=ConfigSchema.parse({mcp:{cdpPort:fake.port,secretsFile:null}}),service=new McpService(cfg,resolvePaths(cfg));
+    vi.spyOn(service,"command").mockResolvedValue({ok:true});fake.state.windowState="minimized";
+    const worker={windowState:()=>service.windowState(),restoreWindow:()=>service.restoreWindow()} as WorkerPort;
+    try {
+      const result=await prepareWorkerWindow(worker,cfg);
+      expect(result).toMatchObject({windowState:"maximized",bounds:{width:2560,height:1440},windowRestore:{status:"restored",before:{windowState:"minimized"},after:{windowState:"maximized"}}});
+      expect(fake.commands.filter(c=>c.method==="Browser.setWindowBounds").map(c=>c.params.bounds)).toEqual([{windowState:"normal"},{windowState:"maximized"}]);
+      expect(fake.commands.some(c=>c.method.startsWith("Page.")||c.method.startsWith("Runtime."))).toBe(false);
+      fake.commands.length=0;await prepareWorkerWindow(worker,cfg);expect(fake.commands.some(c=>c.method==="Browser.setWindowBounds")).toBe(false);
+    }finally{await fake.close();}
+  });
+  it.each(["disabled","failed","wrong-window"])("refuses %s restore without page interaction",async kind=>{
+    const fake=await fakeCdp({setError:kind==="failed"}),cfg=ConfigSchema.parse({chrome:{autoRestoreMinimized:kind!=="disabled"}});
+    fake.state.windowState="minimized";
+    const worker={windowState:()=>readChromeWindow(fake.port),restoreWindow:async()=>kind==="wrong-window"?{...await maximizeChromeWindow(fake.port),windowId:99}:maximizeChromeWindow(fake.port)} as WorkerPort;
+    try{await expect(prepareWorkerWindow(worker,cfg)).rejects.toThrow(kind==="disabled"?"restore the Chrome window first":"Chrome window restore failed");if(kind==="disabled")expect(fake.commands).toHaveLength(2);}finally{await fake.close();}
+  });
+  it("never restores an unowned service",async()=>{
+    const fake=await fakeCdp(),cfg=ConfigSchema.parse({mcp:{cdpPort:fake.port,secretsFile:null}}),service=new McpService(cfg,resolvePaths(cfg));
+    vi.spyOn(service,"command").mockResolvedValue({ok:false});
+    try{await expect(service.restoreWindow()).rejects.toThrow("healthy owned Chrome");expect(fake.commands).toEqual([]);}finally{await fake.close();}
   });
 });

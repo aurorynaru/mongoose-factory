@@ -7,7 +7,7 @@ export interface ChromeWindow {
 export async function readChromeWindow(port:number,timeoutMs=5000):Promise<ChromeWindow> {
   return chromeWindow(port,timeoutMs,false);
 }
-/** Used only after a new owned Chrome start; never from health or task preflight. */
+/** Used after an owned Chrome start or an authorized minimized-window task restore; never from health. */
 export async function maximizeChromeWindow(port:number,timeoutMs=5000):Promise<ChromeWindow> {
   return chromeWindow(port,timeoutMs,true);
 }

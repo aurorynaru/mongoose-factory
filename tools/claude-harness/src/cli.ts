@@ -15,7 +15,7 @@ import { doctor } from "./doctor.js";
 import { dryRun } from "./dryrun.js";
 import { protocolBlock } from "./protocol/prompts.js";
 import { setup } from "./setup.js";
-import { controllerAlive, renderStatus } from "./status.js";
+import { controllerAlive, renderStatus, renderSummary } from "./status.js";
 import type { RunRow } from "./store.js";
 import { registerShadowCommands } from "./shadow/cli.js";
 import { registerServiceCommands } from "./backend/cli.js";
@@ -451,11 +451,13 @@ program
   .option("--run <id>")
   .option("--watch", "refresh every 5 s")
   .option("--json")
+  .option("--summary", "task action-audit headlines, coordinator decision and exact resume command")
   .action(async (o) => {
     const a = app();
     const show = () => {
       const run = o.run ? a.store.getRun(o.run) : a.store.latestRun();
       if (o.json) console.log(JSON.stringify(run, null, 2));
+      else if(o.summary) console.log(renderSummary(a.store,run));
       else console.log(renderStatus(a.store, run));
     };
     if (!o.watch) return show();

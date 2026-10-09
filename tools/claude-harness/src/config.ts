@@ -36,7 +36,7 @@ export const ConfigSchema = z.object({
   worker: z.object({
     allowBash: z.boolean().default(false),
     allowBackendRestart: z.boolean().default(false),
-    maxTurns: z.number().int().positive().default(40),
+    maxTurns: z.number().int().positive().default(80),
     taskTimeoutMinutes: z.number().positive().default(90),
     maxIdenticalCalls: z.number().int().min(0).max(24).default(6),
     maxSnapshotRefFailures: z.number().int().min(0).max(24).default(6),
@@ -148,6 +148,7 @@ export const ConfigSchema = z.object({
   chromeWindowStyle: z.enum(["normal", "minimized", "hidden"]).default("normal"),
   chromeWindowSize: z.string().regex(/^[1-9]\d{0,4},[1-9]\d{0,4}$/, "Use positive width,height integers").default("1920,1080"),
   chromeStartMaximized: z.boolean().default(true),
+  chrome: z.object({autoRestoreMinimized:z.boolean().default(true)}).prefault({}),
 });
 export type HarnessConfig = z.infer<typeof ConfigSchema>;
 

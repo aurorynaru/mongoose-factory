@@ -54,10 +54,12 @@ export function remainingLimits(c: Counters, l: Limits, activeMs: number): strin
 /** Keep messages under the chat limit without silently dropping context. */
 export function clip(text: string, max: number, fullPathNote: string): string {
   if (text.length <= max) return text;
-  const keep = Math.max(1000, max - 400);
+  const note=`\n\n[... characters omitted by the harness to fit the chat limit; full text preserved at ${fullPathNote} ...]\n\n`;
+  if(max<=note.length)return text.slice(0,Math.max(0,max));
+  const keep = max-note.length;
   const head = text.slice(0, Math.floor(keep * 0.6));
   const tail = text.slice(text.length - Math.floor(keep * 0.4));
-  return `${head}\n\n[... ${text.length - head.length - tail.length} characters omitted by the harness to fit the chat limit; full text preserved at ${fullPathNote} ...]\n\n${tail}`;
+  return `${head}${note}${tail}`;
 }
 
 export function briefForCoordinator(b: Brief): string {
