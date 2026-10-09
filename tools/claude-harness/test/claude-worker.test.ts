@@ -14,6 +14,8 @@ import { generatedPolicy, absolutePattern } from "../src/adapters/claude/tool-po
 import { TaskEvents } from "../src/adapters/claude/events.js";
 import { McpService } from "../src/backend/mcp-service.js";
 import { createServer } from "node:net";
+import { readChromeWindow } from "../src/backend/chrome-window.js";
+import { fakeCdp } from "./fake-cdp.js";
 
 function fixture(spec:Record<string,unknown>={}) {
   const dir=mkdtempSync(join(tmpdir(),"claude-worker-")),root=join(dir,"factory"),briefs=join(dir,"briefs");
@@ -24,7 +26,8 @@ function fixture(spec:Record<string,unknown>={}) {
   const file=join(dir,"fake.json"),capture=join(dir,"capture.json");writeFileSync(file,JSON.stringify({...spec,capture}));
   const cfg=ConfigSchema.parse({factoryRoot:root,dataDir:join(dir,"data"),claude:{executable:process.execPath,argvPrefix:[join(HARNESS_DIR,"fixtures/fake-claude.mjs"),"--fixture",file],configDir:join(dir,"fake-auth")},worker:{taskTimeoutMinutes:0.2}});
   const paths=resolvePaths(cfg);paths.briefsDir=briefs;
-  const worker=new ClaudeWorker({config:cfg,paths,healthCheck:async()=>({ok:true,version:"fake"})});
+  const worker=new ClaudeWorker({config:cfg,paths,healthCheck:async()=>({ok:true,version:"fake"}),
+    windowCheck:async()=>({targetId:"fake-page",windowId:1,windowState:"normal",bounds:{windowState:"normal",width:1920,height:1080},checkedAt:new Date().toISOString()})});
   return {dir,root,file,capture,cfg,paths,worker};
 }
 async function task(h:ReturnType<typeof fixture>,policy={denyBrowserJavaScript:true,preamble:"One reviewed bounded task only."}) {
@@ -34,6 +37,25 @@ async function task(h:ReturnType<typeof fixture>,policy={denyBrowserJavaScript:t
   return {sid,mid,submission,result,journal:read<TaskJournal>(h.worker.taskFile(sid,mid))};
 }
 describe("Claude worker fake-process integration",()=>{
+  it("checks browser-level window state before each task/resume and records it; minimized never submits",async()=>{
+    const h=fixture(),cdp=await fakeCdp();
+    const worker=new ClaudeWorker({config:h.cfg,paths:h.paths,healthCheck:async()=>({ok:true}),windowCheck:()=>readChromeWindow(cdp.port)});
+    try {
+      cdp.state.windowState="minimized";
+      await expect(boundedTask(h.cfg,h.paths,"EXP-900","Inspect FX_FixtureForm01",{},worker)).rejects.toThrow("restore the Chrome window first");
+      expect(existsSync(h.capture)).toBe(false);expect(existsSync(join(h.paths.dataDir,"workers"))).toBe(false);
+      cdp.state.windowState="maximized";
+      const first=await boundedTask(h.cfg,h.paths,"EXP-900","Inspect FX_FixtureForm01",{},worker);
+      expect(read<Record<string,any>>(first.manifest)).toMatchObject({windowState:"maximized",bounds:{width:1920,height:1080},chromeWindow:{targetId:"page-1",windowId:7}});
+      const before=readFileSync(h.capture,"utf8");cdp.state.windowState="minimized";
+      await expect(boundedTask(h.cfg,h.paths,"EXP-900","Inspect FX_FixtureForm01",{session:first.sessionId},worker)).rejects.toThrow("restore the Chrome window first");
+      expect(readFileSync(h.capture,"utf8")).toBe(before);
+      cdp.state.windowState="normal";
+      const next=await boundedTask(h.cfg,h.paths,"EXP-900","Inspect FX_FixtureForm01",{session:first.sessionId},worker);
+      expect(read<Record<string,any>>(next.manifest).windowState).toBe("normal");
+      expect(cdp.commands.map(c=>c.method)).toEqual(Array.from({length:4},()=>["Target.getTargets","Browser.getWindowForTarget"]).flat());
+    }finally{await cdp.close();}
+  });
   it.each(["brief Read","disabled Bash","denied JavaScript"])("completes with a review warning and exit 3 for intentional %s",async kind=>{
     const h=fixture();
     const denial=kind==="brief Read"?{tool_name:"Read",tool_use_id:"tool-0",tool_input:{file_path:join(h.root,"tools/claude-harness/briefs/EXP-900.brief.json")}}:
@@ -128,6 +150,11 @@ describe("Claude worker fake-process integration",()=>{
       expect(r.journal.preamble).toContain(required);expect(protocol).toContain(required);
     }
     expect(r.journal.preamble).toContain("Bash is disabled for this task; do not try to use it");
+    for(const required of ['If an action times out at "visible, enabled and stable" while the locator resolves, treat it as a possible rendering or environment problem',
+      'Do not repeat the same action more than the brief allows; record the exact error and report a suspected environment blocker',
+      'The harness computes repository confinement itself from before/after Git state and the evidence diff. You do not need git status; state only which files you wrote']) {
+      expect(r.journal.preamble).toContain(required);expect(protocol).toContain(required);
+    }
     expect(read<{input:string}>(h.capture).input).toBe(r.journal.payload);
     expect(taskExitCode(r.result)).toBe(0);
     const argv=read<{argv:string[]}>(h.capture).argv;

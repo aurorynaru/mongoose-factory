@@ -32,6 +32,37 @@ validation and limits. The Phase 2 scratch observation supports this selection.
 
 ### Replay preparation and Phase 4 local documentation
 
+2026-10-09, after operator-run R3 T3: production Chrome now always uses
+`--disable-backgrounding-occluded-windows`, `--disable-renderer-backgrounding`,
+and `--disable-background-timer-throttling`. Add configurable `chromeWindowSize`
+(`"1920,1080"` default, passed as `--window-size`) and `chromeStartMaximized`
+(`true` default, passed as `--start-maximized` when true). Store effective launch
+arguments in owned-service state and show them in `mcp health`. Hash every option
+in the request; retain the actual command hash in the process ownership identity.
+An owned Chrome with only these options outdated gives a `running with outdated
+launch options` warning, preserving health and its original identity; other
+scope/ownership mismatches fail. Apply new flags only at the next operator start.
+Never touch the Phase 2 scratch script or current R3 Chrome/MCP session.
+
+Before every standalone `worker task` (new or resumed), check owned Chrome using
+read-only browser-level CDP: `/json/version`, `Target.getTargets`, and
+`Browser.getWindowForTarget` for the single page target. No MCP window inspection,
+page JavaScript, page attachment or window restoration. Refuse minimized windows
+with `restore the Chrome window first`; refuse ambiguous/unreadable state.
+Record observed windowState/bounds in the task manifest/output and show them in
+`mcp health`. Use Node.js 22+ for the built-in WebSocket client.
+
+Both replay scripts require a visible, uncovered Chrome window for the entire
+run, no minimizing, and the same window size for R3/R4. Only after R3 finishes,
+the operator must `chrome stop` and `chrome start` before R4's preconditions to
+apply new launch options; record/re-establish the actual starting state manually.
+CDP cannot prove lack of occlusion. The worker preamble treats locator-resolved
+`visible, enabled and stable` timeouts as suspected environment blockers, records
+the exact error and retains the brief's retry limits. It explains that the harness
+computes repository confinement from Git state/evidence diffs, so the worker needs
+no git status and should state only files it wrote. Implementation/tests only;
+no live validation, no Phase 4. See RENDERING-FIX.md for validation output.
+
 2026-10-09: preparation only; no new live run or Phase 4 implementation.
 Production Chrome adds configurable `chromeWindowStyle` normal/minimized/hidden,
 default normal for manual login/observation and to avoid hidden-window background

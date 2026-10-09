@@ -5,7 +5,7 @@
   "description": "Claude harness migration baseline: inherited OpenCode/ChatGPT adapters pending replacement.",
   "type": "module",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "bin": {
     "claude-harness": "dist/cli.js"

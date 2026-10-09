@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { StringDecoder } from "node:string_decoder";
 import type { HarnessConfig, ResolvedPaths } from "../../config.js";
 import { McpService } from "../../backend/mcp-service.js";
+import type { ChromeWindow } from "../../backend/chrome-window.js";
 import type { WorkerPort, WorkerResult, WorkerToolPolicy } from "../types.js";
 import { TaskEvents, modelMatches } from "./events.js";
 import { hash, read, save } from "./files.js";
@@ -27,7 +28,7 @@ export interface TaskJournal {
   metrics?:{assistantTurns:number;wallTimeSeconds:number|null;guardDenials:{total:number;byGuard:Record<string,number>;auditError?:string}};
 }
 interface Active { child:ChildProcessWithoutNullStreams; events:TaskEvents; journal:TaskJournal; finished:Promise<void>; resolve:()=>void; stopReason?:"timeout"|"interrupted"|"turn_limit"|"loop"|"model_mismatch"|"invalid"; detail?:string; exit:number|null; timer:ReturnType<typeof setTimeout>; monitor:ReturnType<typeof setInterval>; stopping:boolean; identityReady:Promise<void>; stopPromise?:Promise<void> }
-export interface WorkerOptions { config:HarnessConfig; paths:ResolvedPaths; healthCheck?:()=>Promise<{ok:boolean;version?:string;detail?:string}>; restartOwned?:()=>Promise<boolean> }
+export interface WorkerOptions { config:HarnessConfig; paths:ResolvedPaths; healthCheck?:()=>Promise<{ok:boolean;version?:string;detail?:string}>; windowCheck?:()=>Promise<ChromeWindow>; restartOwned?:()=>Promise<boolean> }
 export class ClaudeWorker implements WorkerPort {
   private readonly active = new Map<string,Active>();
   private readonly service: McpService;
@@ -43,13 +44,14 @@ export class ClaudeWorker implements WorkerPort {
       if(version.code||auth.code)return {ok:false,detail:"Claude diagnostic failed"};
       const status=JSON.parse(auth.stdout);
       if(!status.loggedIn||(this.o.config.claude.billing==="subscription"&&status.authMethod!=="claude.ai"))return {ok:false,detail:"Required Claude subscription login unavailable"};
-      if(!(await this.service.health()).ok)return {ok:false,detail:"Owned Chrome/MCP must already be healthy; worker health does not start them"};
+      if(!(await this.service.health(false)).ok)return {ok:false,detail:"Owned Chrome/MCP must already be healthy; worker health does not start them"};
       return {ok:true,version:version.stdout.trim()};
     }catch{return {ok:false,detail:"Claude/auth/owned MCP health failed"};}
   }
   async createSession(title:string) {
     const id=randomUUID();save(this.sessionFile(id),{id,title,cwd:this.o.paths.factoryRoot,started:false,model:this.o.config.claude.models.worker.model,policy:{denyBrowserJavaScript:false},active:null} satisfies SessionState);return id;
   }
+  async windowState() { return this.o.windowCheck?this.o.windowCheck():this.service.windowState(); }
   async setTaskPreamble(id:string,preamble:string) { const s=this.session(id);if(this.active.has(id))throw Error("Worker session is busy");s.policy.preamble=preamble;save(this.sessionFile(id),s); }
   async configureSession(id:string,policy:WorkerToolPolicy) {
     const s=this.session(id);if(this.active.has(id))throw Error("Worker session is busy");
@@ -78,6 +80,8 @@ export class ClaudeWorker implements WorkerPort {
     const preamble=[identity,s.policy.preamble,
       "The brief's scope and prohibitions are already included in this task. tools/ (including briefs/) is intentionally unreadable; do not try to read these files.",
       policy.tools.includes("Bash")?"Bash is explicitly enabled for this task; use it only within the supplied scope and prohibitions.":"Bash is disabled for this task; do not try to use it. Bash is disabled unless explicitly enabled by the generated tool policy.",
+      'If an action times out at "visible, enabled and stable" while the locator resolves, treat it as a possible rendering or environment problem. Do not repeat the same action more than the brief allows; record the exact error and report a suspected environment blocker.',
+      "The harness computes repository confinement itself from before/after Git state and the evidence diff. You do not need git status; state only which files you wrote.",
       "\nAGENTS.md (explicit authoritative instructions):",agents,
       "Start each task with a fresh snapshot of the visible tab; verify Form identity and editing scope before acting. Never reuse old accessibility refs.",
       'End each task in a stable page state with no browser-native dialogs (alert, confirm, prompt, or beforeunload "leave page") and no unsaved-change prompts. CDP disconnect dismisses beforeunload dialogs. In-page Mongoose dialogs (such as Select Form) may remain open only when the current task instruction explicitly says to leave them open; otherwise end without open in-page dialogs. Never discard unsaved work or take an out-of-scope lifecycle action to achieve stability; checkpoint and report a blocker instead.',

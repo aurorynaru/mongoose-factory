@@ -29,6 +29,10 @@ Boundaries:
 - If the instruction is ambiguous or would exceed scope, stop and say so instead.
 
 Browser recovery:
+- If an action times out at "visible, enabled and stable" while the locator
+  resolves, treat it as a possible rendering or environment problem. Do not
+  repeat the same action more than the brief allows; record the exact error
+  and report a suspected environment blocker.
 - Snapshot refs are temporary. On a missing-ref error, capture ONE fresh page
   snapshot without a target and use its current refs. Verify selected/visible
   tab, target identity, and scope; a hidden panel or URL alone is not enough.
@@ -52,6 +56,9 @@ Browser recovery:
   delegated task, hidden-state access, or another route to the same forbidden action.
 
 Context and evidence:
+- The harness computes repository confinement itself from before/after Git
+  state and the evidence diff. You do not need git status; state only which
+  files you wrote.
 - Keep reads/output bounded; save long results under this experiment's evidence
   directory. Summarize exact observations and omissions rather than dumping history.
 - Before context exhaustion, checkpoint steps, target/scope, visible browser state,

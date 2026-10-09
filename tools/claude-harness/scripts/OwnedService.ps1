@@ -22,9 +22,16 @@ try {
         $s = Read-State $StateFile
         if ($s) {
             if (-not (Is-Owned $s $Kind)) { throw 'stale_state_requires_operator_review' }
-            if ($s.port -ne $r.port -or $s.requestHash -ne $r.requestHash) { throw 'owned_service_configuration_mismatch' }
+            $optionsMatch = $s.requestHash -eq $r.requestHash
+            $optionDrift = $Kind -eq 'chrome' -and $r.PSObject.Properties['launchScopeHash'] -and (
+                $s.requestHash -eq $r.launchScopeHash -or ($s.PSObject.Properties['launchScopeHash'] -and $s.launchScopeHash -eq $r.launchScopeHash))
+            if ($s.port -ne $r.port -or (-not $optionsMatch -and -not $optionDrift)) { throw 'owned_service_configuration_mismatch' }
             if (-not (Is-OwnedPort $s $Kind)) { throw 'owned_service_not_listening' }
             $result = @{ ok = $true; action = 'already_running'; kind = $Kind; pid = $s.pid }
+            if ($optionDrift -and -not $optionsMatch) {
+                $result.launchOptions = 'outdated'
+                $result.warning = 'running with outdated launch options; apply the new options at the next operator-controlled Chrome start'
+            }
         } else {
             if (@(Port-Listeners ([int]$r.port)).Count) { throw 'port_in_use_by_unowned_process' }
             if ($Kind -eq 'chrome') { $profile = Canonical-Profile $r.profile; Assert-ProfileFree $profile; [IO.Directory]::CreateDirectory($profile) | Out-Null }
@@ -41,6 +48,8 @@ try {
             if (-not $identity) { throw 'service_exited_at_start' }
             $identity.kind = $Kind; $identity.port = $r.port; $identity.requestHash = $r.requestHash
             $identity.profile = $r.profile; $identity.cwd = $r.cwd
+            $identity.effectiveArguments = @($r.argv)
+            if ($r.PSObject.Properties['launchScopeHash']) { $identity.launchScopeHash = $r.launchScopeHash }
             Write-State $StateFile $identity
             $deadline = (Get-Date).AddSeconds(30)
             while ((Get-Date) -lt $deadline -and -not (Is-OwnedPort $identity $Kind)) {
@@ -50,7 +59,7 @@ try {
                 if (Is-Owned $identity $Kind) { $null = Stop-Owned $StateFile $Kind }
                 throw 'service_start_failed_or_nonloopback_listener'
             }
-            $result = @{ ok = $true; action = 'started'; pid = $p.Id; kind = $Kind; port = $r.port }
+            $result = @{ ok = $true; action = 'started'; pid = $p.Id; kind = $Kind; port = $r.port; effectiveArguments = @($r.argv) }
         }
     }
 } catch { $result = @{ ok = $false; error = $_.Exception.Message; kind = $Kind } }

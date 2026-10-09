@@ -6,6 +6,30 @@ use `worker task` for the operator's replay comparison. Phase 3 is the stop gate
 See [PLAN.md](PLAN.md), [PHASE-2.md](PHASE-2.md) and [PHASE-3.md](PHASE-3.md).
 Runtime defaults to `claude-data/`; the old harness remains untouched. `npm test`
 uses fake processes and excludes browser fixtures/real OpenCode smoke suites.
+Node.js 22 or newer is required for the native WebSocket window preflight.
+
+Production Chrome always adds `--disable-backgrounding-occluded-windows`,
+`--disable-renderer-backgrounding`, and `--disable-background-timer-throttling`.
+Config `chromeWindowSize` defaults to `"1920,1080"` (`--window-size`), and
+`chromeStartMaximized` defaults to `true` (`--start-maximized`; omitted if false).
+These options apply at the next Chrome start. The saved service state includes
+`effectiveArguments`; the request hash includes all launch options, and the
+process command hash continues to verify the actual process identity. Existing
+owned Chrome with only these options outdated remains healthy with a
+`running with outdated launch options` warning. Ownership/scope mismatches still
+fail. The Phase 2 scratch-check script is unchanged.
+
+Before every `worker task`, including resumed tasks, a read-only preflight checks
+owned Chrome through `/json/version` and the **browser-level** WebSocket endpoint:
+`Target.getTargets`, then `Browser.getWindowForTarget` for the single page target.
+It never attaches to a page, evaluates JavaScript, uses MCP for the window read,
+or focuses/restores a window. Minimized Chrome refuses the task with
+`restore the Chrome window first`; missing/ambiguous targets or an unreadable
+window also refuse submission. Otherwise the task manifest and output record
+`windowState` and `bounds`. `mcp health` shows these plus
+`chrome.effectiveArguments` and any launch-option warning. Bounds are observed
+window bounds; requested launch size can differ when maximized. CDP does not
+establish whether another window covers Chrome.
 
 ## EXP-033 Haiku versus Sonnet comparison
 
@@ -21,6 +45,8 @@ Use [R3 task scripts](replays/EXP-033-R3.tasks.md),
    fresh Claude session UUIDs, exact values and enforced no-JavaScript policy.
    The documented state/recovery and stable-finish conflicts are resolved.
 2. Before each run: owned Chrome visible and logged in to the Web Client;
+   keep its window visible and uncovered for the whole run (do not minimize);
+   use the same window size for R3 and R4;
    Mongoose configuration selected (click OK on the Infor configuration screen)
    and the normal Web Client page loaded, rather than sign-in/configuration;
    Select Form closed; no unsaved Designer changes; old harness/OpenCode not
@@ -84,7 +110,12 @@ npm run build
    an experiment blocker. Never infer AC success from the exit code.
    Checkpoints and the record carry recovery used/remaining across tasks.
 7. Complete the R3 AC-1..AC-8 pass/fail table from evidence, including the final
-   permitted Cancel/no-reopen audit. For R4, record the actual state inherited
+   permitted Cancel/no-reopen audit. Only after R3 has finished, before R4's
+   preconditions, run `.\claude-harness.ps1 chrome stop` then
+   `.\claude-harness.ps1 chrome start` so R4 uses the new launch options.
+   Never do this while R3 is running. Re-establish the operator preconditions
+   manually and record the actual starting state rather than assuming restart
+   preserved the UI. For R4, record the actual state inherited
    after R3 and any differences from R2/R3 without resetting it. Repeat steps
    5–6 using `EXP-033-R4.tasks.md`: T1 has **no --session** and creates a distinct
    fresh sonnet/high UUID; T2–T5 reuse that new UUID with sonnet/high. Fill R4's
@@ -121,6 +152,11 @@ new sessions do not reset browser/Designer state. Optional brief `worker` model/
 effort defaults override config, and explicit CLI flags override the brief.
 Default worker/coordinator/
 specialist models are haiku/sonnet/opus, all effort high, all configurable.
+Worker prompts identify locator-resolved `visible, enabled and stable` timeouts
+as possible rendering/environment problems: retain the exact error, respect the
+brief's retry/recovery limits, and report a suspected environment blocker.
+The harness computes repository confinement from before/after Git state and the
+evidence diff; workers need no `git status` and should list only files they wrote.
 Every task starts with a fresh snapshot and ends without browser-native dialogs
 or unsaved-change prompts. Leave an in-page Mongoose dialog open only when the
 current instruction explicitly requires it; otherwise finish without open

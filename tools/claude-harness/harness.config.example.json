@@ -107,5 +107,7 @@
     "maxRepeatedShellCalls": 6,
     "allowBackendRestart": false
   },
-  "chromeWindowStyle": "normal"
+  "chromeWindowStyle": "normal",
+  "chromeWindowSize": "1920,1080",
+  "chromeStartMaximized": true
 }
