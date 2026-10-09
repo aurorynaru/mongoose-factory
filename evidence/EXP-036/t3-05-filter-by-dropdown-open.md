@@ -1,0 +1,362 @@
+- generic [ref=e5]:
+  - banner "Portal Top Navigation Bar" [ref=e6]:
+    - generic [ref=e8]:
+      - generic:
+        - generic [ref=e10]:
+          - generic:
+            - link "Home" [ref=e12] [cursor=pointer]
+            - button "Open navigation menu" [ref=e15] [cursor=pointer]
+        - generic [ref=e17]:
+          - tablist "Tabs" [ref=e18]:
+            - tab "System Administrator" [ref=e19] [cursor=pointer]:
+              - link "System Administrator" [ref=e20]
+              - button "Close tab System Administrator" [ref=e23]
+            - tab "Mongoose" [selected] [ref=e24] [cursor=pointer]:
+              - link "Mongoose" [ref=e25]
+              - button "Open tab menu" [ref=e28]
+              - button "Close tab Mongoose" [ref=e32]
+          - button "Tabs menu more" [ref=e36] [cursor=pointer]
+        - generic [ref=e38]:
+          - generic:
+            - generic [ref=e39]: DEM
+            - button "Health Notifications" [ref=e43] [cursor=pointer]
+            - button "User menu" [ref=e45] [cursor=pointer]
+            - button "Hide Smart Panel" [ref=e47] [cursor=pointer]
+    - generic:
+      - generic:
+        - generic: Infor OS Portal
+        - generic: 2026.10.01 (20260909-164316, 20260909-154143, 1062, 1582, 727)
+        - generic:
+          - generic:
+            - text: Copyright © 2026 Infor. All rights reserved. The word and design marks set forth herein are trademarks and/or registered trademarks of Infor and/or its affiliates and subsidiaries. All other trademarks listed herein are the property of their respective owners
+            - generic: www.infor.com
+            - text: .
+  - main [ref=e48]:
+    - iframe [active] [ref=e59]:
+      - generic [ref=f1e1]:
+        - banner [ref=f1e2]:
+          - heading "Infor Mongoose Application Development Framework" [level=1] [ref=f1e3]
+          - link "Skip to Main Content" [ref=f1e4] [cursor=pointer]:
+            - /url: "#formContainer"
+          - navigation [ref=f1e5]:
+            - button "Explorer" [ref=f1e6] [cursor=pointer]
+            - separator
+            - button "Form" [ref=f1e10] [cursor=pointer]
+            - separator
+            - separator
+            - button "Edit" [ref=f1e12] [cursor=pointer]
+            - separator
+            - button "View" [ref=f1e14] [cursor=pointer]
+            - separator
+            - button "Window" [ref=f1e16] [cursor=pointer]
+            - separator
+            - button "Help" [ref=f1e18] [cursor=pointer]
+            - button "anton.ramos@3mworks.com.ph | G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT" [ref=f1e20] [cursor=pointer]
+          - toolbar [ref=f1e22]:
+            - button "Open" [ref=f1e23] [cursor=pointer]:
+              - button "Open" [ref=f1e24]
+            - button "Save" [disabled] [ref=f1e26]:
+              - button "Save" [disabled]
+            - button "New" [disabled] [ref=f1e27]:
+              - button "New" [disabled]
+            - button "Delete" [disabled] [ref=f1e28]:
+              - button "Delete" [disabled]
+            - button "Refresh" [disabled] [ref=f1e29]:
+              - button "Refresh" [disabled]
+            - button "Filter in Place" [disabled] [ref=f1e30]:
+              - button "FiP" [disabled]
+            - button "Get More Rows" [disabled] [ref=f1e31]:
+              - button "Get More Rows" [disabled]
+            - button "System Notes" [disabled] [ref=f1e32]:
+              - button "System Notes" [disabled]
+            - button "Documents" [disabled] [ref=f1e33]:
+              - button "Documents" [disabled]
+            - button "Send email for the current object" [disabled] [ref=f1e34]:
+              - button "Send email for the current object" [disabled]
+            - button "Export To Excel" [disabled] [ref=f1e35]:
+              - button "Export To Excel" [disabled]
+            - button [ref=f1e36] [cursor=pointer]:
+              - button "Designer" [ref=f1e37]
+            - button "Designer" [ref=f1e39] [cursor=pointer]:
+              - button "Designer" [ref=f1e40]
+            - button "Help Current Form" [disabled] [ref=f1e42]:
+              - button "Help Current Form" [disabled]
+        - region [ref=f1e43]:
+          - heading "Explorer" [ref=f1e44]
+          - button "Collapse Panel"
+          - grid [ref=f1e45]:
+            - columnheader "Name"
+            - tree [ref=f1e50]:
+              - generic [ref=f1e51]:
+                - table [ref=f1e52]:
+                  - rowgroup [ref=f1e53]:
+                    - row [ref=f1e54]:
+                      - treeitem [ref=f1e55]:
+                        - treeitem "My Folders" [ref=f1e57]
+                - table [ref=f1e58]:
+                  - rowgroup [ref=f1e59]:
+                    - row [ref=f1e60]:
+                      - treeitem [ref=f1e61]:
+                        - treeitem "Master Explorer" [ref=f1e63]
+                - table [ref=f1e64]:
+                  - rowgroup [ref=f1e65]:
+                    - row [ref=f1e66]:
+                      - treeitem [ref=f1e67]:
+                        - treeitem "Public Folders" [ref=f1e69]
+                - table [ref=f1e70]:
+                  - rowgroup [ref=f1e71]:
+                    - row [ref=f1e72]:
+                      - treeitem [ref=f1e73]:
+                        - treeitem "User Folders" [ref=f1e75]
+        - main [ref=f1e76]
+        - dialog "Select Form" [ref=f1e78]:
+          - button "Close Window" [ref=f1e80] [cursor=pointer]
+          - grid [ref=f1e81]:
+            - row [ref=f1e82]:
+              - columnheader "Caption" [ref=f1e83]
+              - columnheader "Name" [ref=f1e88]
+            - grid [ref=f1e93]:
+              - generic [ref=f1e94]:
+                - table [ref=f1e95]:
+                  - rowgroup [ref=f1e96]:
+                    - row [ref=f1e97]:
+                      - gridcell "XML to IDO Wizard" [ref=f1e98]
+                      - gridcell "WSFormWizardNewDataXmlToIdo" [ref=f1e100]
+                - table [ref=f1e102]:
+                  - rowgroup [ref=f1e103]:
+                    - row [ref=f1e104]:
+                      - gridcell "WSFormBuilderWidgetRecordTemplate" [ref=f1e105]
+                      - gridcell "WSFormBuilderWidgetRecordTemplate" [ref=f1e107]
+                - table [ref=f1e109]:
+                  - rowgroup [ref=f1e110]:
+                    - row [ref=f1e111]:
+                      - gridcell "WSFormBuilderWidgetMenuTemplate" [ref=f1e112]
+                      - gridcell "WSFormBuilderWidgetMenuTemplate" [ref=f1e114]
+                - table [ref=f1e116]:
+                  - rowgroup [ref=f1e117]:
+                    - row [ref=f1e118]:
+                      - gridcell "WSFormBuilderWidgetListTemplate" [ref=f1e119]
+                      - gridcell "WSFormBuilderWidgetListTemplate" [ref=f1e121]
+                - table [ref=f1e123]:
+                  - rowgroup [ref=f1e124]:
+                    - row [ref=f1e125]:
+                      - gridcell "WSFormBuilderWidgetKPITemplate" [ref=f1e126]
+                      - gridcell "WSFormBuilderWidgetKPITemplate" [ref=f1e128]
+                - table [ref=f1e130]:
+                  - rowgroup [ref=f1e131]:
+                    - row [ref=f1e132]:
+                      - gridcell "WSFormBuilderWidgetGridTemplate" [ref=f1e133]
+                      - gridcell "WSFormBuilderWidgetGridTemplate" [ref=f1e135]
+                - table [ref=f1e137]:
+                  - rowgroup [ref=f1e138]:
+                    - row [ref=f1e139]:
+                      - gridcell "WSFormBuilderWidgetGreetingTemplate" [ref=f1e140]
+                      - gridcell "WSFormBuilderWidgetGreetingTemplate" [ref=f1e142]
+                - table [ref=f1e144]:
+                  - rowgroup [ref=f1e145]:
+                    - row [ref=f1e146]:
+                      - gridcell "WSFormBuilderWidgetFormTemplate" [ref=f1e147]
+                      - gridcell "WSFormBuilderWidgetFormTemplate" [ref=f1e149]
+                - table [ref=f1e151]:
+                  - rowgroup [ref=f1e152]:
+                    - row [ref=f1e153]:
+                      - gridcell "WSFormBuilderWidgetChartTemplate" [ref=f1e154]
+                      - gridcell "WSFormBuilderWidgetChartTemplate" [ref=f1e156]
+                - table [ref=f1e158]:
+                  - rowgroup [ref=f1e159]:
+                    - row [ref=f1e160]:
+                      - gridcell "WSFormBuilderListWithIconsTile_RB" [ref=f1e161]
+                      - gridcell "WSFormBuilderListWithIconsTile_RB" [ref=f1e163]
+                - table [ref=f1e165]:
+                  - rowgroup [ref=f1e166]:
+                    - row [ref=f1e167]:
+                      - gridcell "WSForm Builder Widget List Template Tile With Icons" [ref=f1e168]
+                      - gridcell "WSFormBuilderWidgetListTemplateTileWithIcons" [ref=f1e170]
+                - table [ref=f1e172]:
+                  - rowgroup [ref=f1e173]:
+                    - row [ref=f1e174]:
+                      - gridcell "WSForm Builder Widget Banner Template" [ref=f1e175]
+                      - gridcell "WSFormBuilderWidgetBannerTemplate" [ref=f1e177]
+                - table [ref=f1e179]:
+                  - rowgroup [ref=f1e180]:
+                    - row [ref=f1e181]:
+                      - gridcell "Workflow Wizard" [ref=f1e182]
+                      - gridcell "WorkflowWizard" [ref=f1e184]
+                - table [ref=f1e186]:
+                  - rowgroup [ref=f1e187]:
+                    - row [ref=f1e188]:
+                      - gridcell "Work Days" [ref=f1e189]
+                      - gridcell "WorkDays" [ref=f1e191]
+                - table [ref=f1e193]:
+                  - rowgroup [ref=f1e194]:
+                    - row [ref=f1e195]:
+                      - gridcell "WidgetViewer.ids" [ref=f1e196]
+                      - gridcell "WidgetViewer.ids" [ref=f1e198]
+                - table [ref=f1e200]:
+                  - rowgroup [ref=f1e201]:
+                    - row [ref=f1e202]:
+                      - gridcell "WidgetMenuTemplate" [ref=f1e203]
+                      - gridcell "WSFormBuilderMenuTemplate_RB" [ref=f1e205]
+                - table [ref=f1e207]:
+                  - rowgroup [ref=f1e208]:
+                    - row [ref=f1e209]:
+                      - gridcell "WidgetContextMessageMaintenance.ids" [ref=f1e210]
+                      - gridcell "WidgetContextMessageMaintenance.ids" [ref=f1e212]
+                - table [ref=f1e214]:
+                  - rowgroup [ref=f1e215]:
+                    - row [ref=f1e216]:
+                      - gridcell "WidgetConfigureDrillbackURL" [ref=f1e217]
+                      - gridcell "WidgetConfigureDrillbackURL" [ref=f1e219]
+                - table [ref=f1e221]:
+                  - rowgroup [ref=f1e222]:
+                    - row [ref=f1e223]:
+                      - gridcell "WidgetButtonConfigurationScreen" [ref=f1e224]
+                      - gridcell "WidgetButtonConfigurationScreen" [ref=f1e226]
+                - table [ref=f1e228]:
+                  - rowgroup [ref=f1e229]:
+                    - row [ref=f1e230]:
+                      - gridcell "Widget Viewer" [ref=f1e231]
+                      - gridcell "WidgetViewer" [ref=f1e233]
+                - table [ref=f1e235]:
+                  - rowgroup [ref=f1e236]:
+                    - row [ref=f1e237]:
+                      - gridcell "Widget Version Viewer" [ref=f1e238]
+                      - gridcell "WidgetVersionViewer" [ref=f1e240]
+                - table [ref=f1e242]:
+                  - rowgroup [ref=f1e243]:
+                    - row [ref=f1e244]:
+                      - gridcell "Widget Publication Wizard" [ref=f1e245]
+                      - gridcell "WidgetPublicationWizard" [ref=f1e247]
+                - table [ref=f1e249]:
+                  - rowgroup [ref=f1e250]:
+                    - row [ref=f1e251]:
+                      - gridcell "Widget Package Manager" [ref=f1e252]
+                      - gridcell "WidgetPackageManager" [ref=f1e254]
+                - table [ref=f1e256]:
+                  - rowgroup [ref=f1e257]:
+                    - row [ref=f1e258]:
+                      - gridcell "Widget Library" [ref=f1e259]
+                      - gridcell "WidgetLibrary" [ref=f1e261]
+                - table [ref=f1e263]:
+                  - rowgroup [ref=f1e264]:
+                    - row [ref=f1e265]:
+                      - gridcell "Widget Forms" [ref=f1e266]
+                      - gridcell "AppForm" [ref=f1e268]
+                - table [ref=f1e270]:
+                  - rowgroup [ref=f1e271]:
+                    - row [ref=f1e272]:
+                      - gridcell "Widget Context Message" [ref=f1e273]
+                      - gridcell "WidgetContextMessageWizard.ids" [ref=f1e275]
+                - table [ref=f1e277]:
+                  - rowgroup [ref=f1e278]:
+                    - row [ref=f1e279]:
+                      - gridcell "Widget Builder" [ref=f1e280]
+                      - gridcell "MongooseWidgetManager" [ref=f1e282]
+                - table [ref=f1e284]:
+                  - rowgroup [ref=f1e285]:
+                    - row [ref=f1e286]:
+                      - gridcell "View Management" [ref=f1e287]
+                      - gridcell "ViewManagement" [ref=f1e289]
+                - table [ref=f1e291]:
+                  - rowgroup [ref=f1e292]:
+                    - row [ref=f1e293]:
+                      - gridcell "Users Query" [ref=f1e294]
+                      - gridcell "UsersMaintQuery" [ref=f1e296]
+                - table [ref=f1e298]:
+                  - rowgroup [ref=f1e299]:
+                    - row [ref=f1e300]:
+                      - gridcell "Users Login Report" [ref=f1e301]
+                      - gridcell "UserLoginReport" [ref=f1e303]
+                - table [ref=f1e305]:
+                  - rowgroup [ref=f1e306]:
+                    - row [ref=f1e307]:
+                      - gridcell "Users" [ref=f1e308]
+                      - gridcell "UsersMaint" [ref=f1e310]
+                - table [ref=f1e312]:
+                  - rowgroup [ref=f1e313]:
+                    - row [ref=f1e314]:
+                      - gridcell "User Profile Portal" [ref=f1e315]
+                      - gridcell "UserProfilePortal" [ref=f1e317]
+                - table [ref=f1e319]:
+                  - rowgroup [ref=f1e320]:
+                    - row [ref=f1e321]:
+                      - gridcell "User Preferences" [ref=f1e322]
+                      - gridcell "UserPreferences" [ref=f1e324]
+                - table [ref=f1e326]:
+                  - rowgroup [ref=f1e327]:
+                    - row [ref=f1e328]:
+                      - gridcell "User Modules Query" [ref=f1e329]
+                      - gridcell "UserModulesQuery" [ref=f1e331]
+                - table [ref=f1e333]:
+                  - rowgroup [ref=f1e334]:
+                    - row [ref=f1e335]:
+                      - gridcell "User Modules" [ref=f1e336]
+                      - gridcell "UserModules" [ref=f1e338]
+                - table [ref=f1e340]:
+                  - rowgroup [ref=f1e341]:
+                    - row [ref=f1e342]:
+                      - gridcell "User Information" [ref=f1e343]
+                      - gridcell "ChangePassword" [ref=f1e345]
+                - table [ref=f1e347]:
+                  - rowgroup [ref=f1e348]:
+                    - row [ref=f1e349]:
+                      - gridcell "User Index Report" [ref=f1e350]
+                      - gridcell "UserIndexReport" [ref=f1e352]
+                - table [ref=f1e354]:
+                  - rowgroup [ref=f1e355]:
+                    - row [ref=f1e356]:
+                      - gridcell "User Fields Report" [ref=f1e357]
+                      - gridcell "UserFieldsReport" [ref=f1e359]
+                - table [ref=f1e361]:
+                  - rowgroup [ref=f1e362]:
+                    - row [ref=f1e363]:
+                      - gridcell "User Defined Types Query" [ref=f1e364]
+                      - gridcell "UserDefinedTypesQuery" [ref=f1e366]
+                - table [ref=f1e368]:
+                  - rowgroup [ref=f1e369]:
+                    - row [ref=f1e370]:
+                      - gridcell "User Defined Types" [ref=f1e371]
+                      - gridcell "UserDefinedTypes" [ref=f1e373]
+                - table [ref=f1e375]:
+                  - rowgroup [ref=f1e376]:
+                    - row [ref=f1e377]:
+                      - gridcell "User Defined Type Values Query" [ref=f1e378]
+                      - gridcell "UserDefinedTypeValuesQuery" [ref=f1e380]
+                - table [ref=f1e382]:
+                  - rowgroup [ref=f1e383]:
+                    - row [ref=f1e384]:
+                      - gridcell "User Defined Type Values" [ref=f1e385]
+                      - gridcell "UserDefinedTypeValues" [ref=f1e387]
+                - table [ref=f1e389]:
+                  - rowgroup [ref=f1e390]:
+                    - row [ref=f1e391]:
+                      - gridcell "User Defined Info" [ref=f1e392]
+                      - gridcell "UserDefinedInfo" [ref=f1e394]
+          - generic [ref=f1e396]: "Filter:"
+          - textbox [ref=f1e401]
+          - generic [ref=f1e402]: "Filter By:"
+          - generic [ref=f1e405]:
+            - combobox [expanded] [active] [ref=f1e407]:
+              - text: Caption
+              - listbox [ref=f1e426]:
+                - list [ref=f1e427]:
+                  - option "Name" [ref=f1e428] [cursor=pointer]
+                  - option "Caption" [ref=f1e429] [cursor=pointer]
+                  - option "Caption & Name" [ref=f1e430] [cursor=pointer]
+            - generic [ref=f1e408] [cursor=pointer]
+          - generic [ref=f1e410]:
+            - checkbox "Case Sensitive" [ref=f1e411]
+            - generic [ref=f1e413]: Case Sensitive
+          - generic [ref=f1e415]:
+            - checkbox "Starts With" [ref=f1e416]
+            - generic [ref=f1e418]: Starts With
+          - toolbar [ref=f1e419]:
+            - button "OK" [ref=f1e420] [cursor=pointer]
+            - button "Cancel" [ref=f1e422] [cursor=pointer]
+            - button "Help" [ref=f1e424] [cursor=pointer]
+    - complementary "Smart Panel" [ref=e60]:
+      - generic [ref=e61]:
+        - button "Insights" [ref=e64] [cursor=pointer]
+        - button "Inbox" [ref=e67] [cursor=pointer]
+        - button "Smart Help" [ref=e70] [cursor=pointer]
+        - button "Popout Smart Panel" [ref=e73] [cursor=pointer]
