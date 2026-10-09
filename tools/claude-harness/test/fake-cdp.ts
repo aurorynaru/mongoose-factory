@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { createServer } from "node:http";
 import type { Socket } from "node:net";
 
-export async function fakeCdp(options:{pages?:number;error?:boolean;invalid?:boolean;hang?:boolean;external?:boolean;ignoreMaximize?:boolean;setError?:boolean;delayMaximize?:boolean}={}) {
+export async function fakeCdp(options:{pages?:number;error?:boolean;invalid?:boolean;hang?:boolean;external?:boolean;ignoreMaximize?:boolean;setError?:boolean;delayMaximize?:boolean;splitWindows?:boolean}={}) {
   const commands:{method:string;params:Record<string,unknown>}[]=[],http:string[]=[],sockets=new Set<Socket>();
   const state={windowState:"normal",left:0,top:0,width:1920,height:1080};
   const frame=(body:string,opcode=1)=>{
@@ -46,7 +46,7 @@ export async function fakeCdp(options:{pages?:number;error?:boolean;invalid?:boo
           if(options.delayMaximize)setTimeout(change,100);else change();
         }
         const result=msg.method==="Target.getTargets"?{targetInfos:[...Array.from({length:options.pages??1},(_,i)=>({type:"page",targetId:`page-${i+1}`})),{type:"iframe",targetId:"frame-1"}]}:
-          {windowId:7,bounds:{...state,...(options.invalid?{windowState:"unknown"}:{})}};
+          {windowId:options.splitWindows&&msg.params?.targetId==="page-2"?8:7,bounds:{...state,...(options.invalid?{windowState:"unknown"}:{})}};
         socket.write(frame(JSON.stringify(options.error&&msg.method==="Browser.getWindowForTarget"||options.setError&&msg.method==="Browser.setWindowBounds"?{id:msg.id,error:{message:"window command failed"}}:{id:msg.id,result})));
       }
     });

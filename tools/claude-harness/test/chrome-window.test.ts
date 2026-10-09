@@ -19,8 +19,15 @@ describe("read-only browser CDP window preflight",()=>{
       expect(fake.commands).toEqual([{method:"Target.getTargets",params:{}},{method:"Browser.getWindowForTarget",params:{targetId:"page-1"}}]);
     }finally{await fake.close();}
   });
-  it.each([0,2])("refuses ambiguous page selection (%s pages)",async pages=>{
-    const fake=await fakeCdp({pages});try{await expect(readChromeWindow(fake.port)).rejects.toThrow("exactly one page target");expect(fake.commands).toHaveLength(1);}finally{await fake.close();}
+  it("refuses a browser with no page target",async()=>{
+    const fake=await fakeCdp({pages:0});try{await expect(readChromeWindow(fake.port)).rejects.toThrow("at least one valid page target");expect(fake.commands).toHaveLength(1);}finally{await fake.close();}
+  });
+  it("accepts several tabs in one window (e.g. Web Client plus Web Designer)",async()=>{
+    const fake=await fakeCdp({pages:2});
+    try{expect(await readChromeWindow(fake.port)).toMatchObject({windowId:7,targetId:"page-1"});expect(fake.commands.filter(c=>c.method==="Browser.getWindowForTarget")).toHaveLength(2);}finally{await fake.close();}
+  });
+  it("refuses tabs spread across several windows",async()=>{
+    const fake=await fakeCdp({pages:2,splitWindows:true});try{await expect(readChromeWindow(fake.port)).rejects.toThrow("2 windows");}finally{await fake.close();}
   });
   it.each(["error","invalid","external","hang"] as const)("refuses %s responses without changing the browser",async kind=>{
     const fake=await fakeCdp({[kind]:true});try{await expect(readChromeWindow(fake.port,200)).rejects.toThrow();}finally{await fake.close();}

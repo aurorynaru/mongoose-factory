@@ -29,17 +29,25 @@ async function chromeWindow(port:number,timeoutMs:number,maximize:boolean):Promi
     socket.addEventListener("error",()=>finish(Error("Chrome window preflight: browser CDP connection failed")));
     socket.addEventListener("close",()=>{if(!settled)finish(Error("Chrome window preflight: browser CDP disconnected before the window read completed"));});
     socket.addEventListener("open",()=>socket.send(JSON.stringify({id:1,method:"Target.getTargets",params:{}})));
-    socket.addEventListener("message",event=>{
-      try {
-        const reply=JSON.parse(String(event.data));
+    // Several tabs (e.g. the Web Client plus a Web Designer tab) are fine as long as they share ONE window.
+    let pageIds:string[]=[];const windows=new Map<string,{windowId:number;bounds:unknown}>();
+    const handle=(reply:any):void=>{
         if(reply.error)throw Error(`Chrome window preflight: ${reply.error.message??"CDP error"}`);
         if(reply.id===1) {
           if(!Array.isArray(reply.result?.targetInfos))throw Error("Chrome window preflight: invalid target list");
           const pages=reply.result.targetInfos.filter((t:{type?:string})=>t.type==="page");
-          if(pages.length!==1||typeof pages[0].targetId!=="string"||!pages[0].targetId)
-            throw Error(`Chrome window preflight requires exactly one page target; found ${pages.length}`);
-          targetId=pages[0].targetId;
-          socket.send(JSON.stringify({id:2,method:"Browser.getWindowForTarget",params:{targetId}}));
+          if(!pages.length||pages.some((p:{targetId?:unknown})=>typeof p.targetId!=="string"||!p.targetId))
+            throw Error(`Chrome window preflight requires at least one valid page target; found ${pages.length}`);
+          pageIds=pages.map((p:{targetId:string})=>p.targetId);
+          pageIds.forEach((id,i)=>socket.send(JSON.stringify({id:100+i,method:"Browser.getWindowForTarget",params:{targetId:id}})));
+        } else if(reply.id>=100&&reply.id<100+pageIds.length) {
+          if(typeof reply.result?.windowId!=="number")throw Error("Chrome window preflight: invalid window for a page target");
+          windows.set(pageIds[reply.id-100],{windowId:reply.result.windowId,bounds:reply.result.bounds});
+          if(windows.size<pageIds.length)return;
+          const ids=new Set([...windows.values()].map(w=>w.windowId));
+          if(ids.size!==1)throw Error(`Chrome window preflight: the owned Chrome has ${ids.size} windows; expected one window (tabs are fine)`);
+          targetId=pageIds[0];
+          handle({id:2,result:windows.get(targetId)});
         } else if(maximize&&reply.id===3) {
           verifying=true;socket.send(JSON.stringify({id:4,method:"Browser.getWindowBounds",params:{windowId}}));
         } else if(maximize&&reply.id===5) {
@@ -63,7 +71,10 @@ async function chromeWindow(port:number,timeoutMs:number,maximize:boolean):Promi
           for(const key of ["left","top","width","height"] as const)if(bounds[key]!==undefined)safeBounds[key]=bounds[key];
           finish(undefined,{targetId,windowId,windowState:bounds.windowState,bounds:safeBounds,checkedAt:new Date().toISOString()});
         }
-      }catch(error){finish(error instanceof Error?error:Error("Chrome window preflight: invalid CDP response"));}
+    };
+    socket.addEventListener("message",event=>{
+      try { handle(JSON.parse(String(event.data))); }
+      catch(error){finish(error instanceof Error?error:Error("Chrome window preflight: invalid CDP response"));}
     });
   });
 }
