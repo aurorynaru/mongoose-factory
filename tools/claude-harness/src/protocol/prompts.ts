@@ -100,6 +100,7 @@ export function fillWorkerPreamble(template: string, b: Brief, runId: string, cy
     editing_scope: b.environment.editing_scope,
     target: [b.target.form, ...b.target.artifacts].filter(Boolean).join(", ") || "(none)",
     evidence_dir: b.evidence_dir,
+    acceptance_checks: b.acceptance_checks.map((c) => `${c.id}${c.optional ? " (optional)" : ""}: ${c.description}`).join(" | ") || "(none)",
   };
   return template.replace(/\{\{(\w+)\}\}/g, (_, k: string) => vals[k] ?? `{{${k}}}`);
 }

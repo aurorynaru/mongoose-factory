@@ -73,6 +73,7 @@ describe("direct worker routing", () => {
     const task = h.worker.submissions[0].text;
     expect(task).toContain("[HARNESS WORKER TASK");
     expect(task).toContain("Out of scope: bindings; IDOs; events; scripts; portals; EXP-901");
+    expect(task).toMatch(/Acceptance checks \(use these exact IDs[^\n]*AC-1: /);
     expect(task.trim().endsWith("Create FX_FixtureVar and save.")).toBe(true);
     const report = h.chat.submissions.find((s) => kindOf(s.text) === "WORKER_REPORT")!.text;
     expect(report).toContain("evidence/EXP-900/after-save.png");

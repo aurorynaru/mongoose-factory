@@ -15,6 +15,7 @@ Out of scope: {{out_of_scope}}
 Prohibited: {{prohibited}}
 Enforced tools: {{worker_tool_policy}}
 Editing scope: {{editing_scope}}. Target: {{target}}. Evidence directory: {{evidence_dir}}
+Acceptance checks (use these exact IDs in reports and evidence matrices): {{acceptance_checks}}
 
 Boundaries:
 - The brief's scope and prohibitions are already included in this task. tools/
