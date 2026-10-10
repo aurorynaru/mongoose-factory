@@ -1,0 +1,277 @@
+- generic [ref=e5]:
+  - banner "Portal Top Navigation Bar" [ref=e6]:
+    - generic [ref=e8]:
+      - generic:
+        - generic [ref=e10]:
+          - generic:
+            - link "Home" [ref=e12] [cursor=pointer]
+            - button "Open navigation menu" [ref=e15] [cursor=pointer]
+        - generic [ref=e17]:
+          - tablist "Tabs" [ref=e18]:
+            - tab "System Administrator" [ref=e19] [cursor=pointer]:
+              - link "System Administrator" [ref=e20]
+              - button "Close tab System Administrator" [ref=e23]
+            - tab "Mongoose" [selected] [ref=e24] [cursor=pointer]:
+              - link "Mongoose" [ref=e25]
+              - button "Open tab menu" [ref=e28]
+              - button "Close tab Mongoose" [ref=e32]
+          - button "Tabs menu more" [ref=e36] [cursor=pointer]
+        - generic [ref=e38]:
+          - generic:
+            - generic [ref=e39]: DEM
+            - button "Health Notifications" [ref=e43] [cursor=pointer]
+            - button "User menu" [ref=e45] [cursor=pointer]
+            - button "Hide Smart Panel" [ref=e47] [cursor=pointer]
+    - generic:
+      - generic:
+        - generic: Infor OS Portal
+        - generic: 2026.10.01 (20260909-164316, 20260909-154143, 1062, 1582, 727)
+        - generic:
+          - generic:
+            - text: Copyright © 2026 Infor. All rights reserved. The word and design marks set forth herein are trademarks and/or registered trademarks of Infor and/or its affiliates and subsidiaries. All other trademarks listed herein are the property of their respective owners
+            - generic: www.infor.com
+            - text: .
+  - main [ref=e48]:
+    - iframe [active] [ref=e59]:
+      - generic [ref=f1e1]:
+        - banner [ref=f1e2]:
+          - heading "Infor Mongoose Application Development Framework" [level=1] [ref=f1e3]
+          - link "Skip to Main Content" [ref=f1e4] [cursor=pointer]:
+            - /url: "#formContainer"
+          - navigation [ref=f1e5]:
+            - button "Explorer" [ref=f1e6] [cursor=pointer]
+            - separator
+            - button "Form" [ref=f1e10] [cursor=pointer]
+            - separator
+            - button "Actions" [ref=f1e12] [cursor=pointer]
+            - separator
+            - button "Edit" [ref=f1e14] [cursor=pointer]
+            - separator
+            - button "View" [ref=f1e16] [cursor=pointer]
+            - separator
+            - button "Window" [ref=f1e18] [cursor=pointer]
+            - separator
+            - button "Help" [ref=f1e20] [cursor=pointer]
+            - button "anton.ramos@3mworks.com.ph | G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT" [ref=f1e22] [cursor=pointer]
+          - toolbar [ref=f1e24]:
+            - button "Open" [ref=f1e25] [cursor=pointer]:
+              - button "Open" [ref=f1e26]
+            - button "Save" [disabled] [ref=f1e28]:
+              - button "Save" [disabled]
+            - button "New" [disabled] [ref=f1e29]:
+              - button "New" [disabled]
+            - button "Delete" [disabled] [ref=f1e32]:
+              - button "Delete" [disabled]
+            - button "Refresh" [disabled] [ref=f1e35]:
+              - button "Refresh" [disabled]
+            - button "Filter in Place" [ref=f1e38] [cursor=pointer]:
+              - button "FiP" [ref=f1e39]
+            - button "Get More Rows" [disabled] [ref=f1e41]:
+              - button "Get More Rows" [disabled]
+            - button "System Notes" [disabled] [ref=f1e42]:
+              - button "System Notes" [disabled]
+            - button "Documents" [disabled] [ref=f1e43]:
+              - button "Documents" [disabled]
+            - button "Send email for the current object" [disabled] [ref=f1e44]:
+              - button "Send email for the current object" [disabled]
+            - button "Export To Excel" [disabled] [ref=f1e45]:
+              - button "Export To Excel" [disabled]
+            - button [ref=f1e48] [cursor=pointer]:
+              - button "Designer" [ref=f1e49]
+            - button "Designer" [ref=f1e51] [cursor=pointer]:
+              - button "Designer" [ref=f1e52]
+            - button "Help Current Form" [ref=f1e54] [cursor=pointer]:
+              - button "Help Current Form" [ref=f1e55]
+        - region [ref=f1e57]:
+          - heading "Explorer" [ref=f1e58]
+          - button "Collapse Panel"
+          - grid [ref=f1e59]:
+            - columnheader "Name"
+            - tree [ref=f1e64]:
+              - generic [ref=f1e65]:
+                - table [ref=f1e66]:
+                  - rowgroup [ref=f1e67]:
+                    - row [ref=f1e68]:
+                      - treeitem [ref=f1e69]:
+                        - treeitem "My Folders" [ref=f1e71]
+                - table [ref=f1e72]:
+                  - rowgroup [ref=f1e73]:
+                    - row [ref=f1e74]:
+                      - treeitem [ref=f1e75]:
+                        - treeitem "Master Explorer" [ref=f1e77]
+                - table [ref=f1e78]:
+                  - rowgroup [ref=f1e79]:
+                    - row [ref=f1e80]:
+                      - treeitem [ref=f1e81]:
+                        - treeitem "Public Folders" [ref=f1e83]
+                - table [ref=f1e84]:
+                  - rowgroup [ref=f1e85]:
+                    - row [ref=f1e86]:
+                      - treeitem [ref=f1e87]:
+                        - treeitem "User Folders" [ref=f1e89]
+        - region [ref=f1e90]:
+          - main [ref=f1e91]:
+            - tablist [ref=f1e92]:
+              - tab [ref=f1e96] [cursor=pointer]:
+                - heading "IDO Projects" [level=2] [ref=f1e97]
+                - button "Close Panel IDO Projects" [ref=f1e98]:
+                  - img "Close Panel IDO Projects"
+              - tab [selected] [ref=f1e4269] [cursor=pointer]:
+                - heading "IDOs" [level=2] [ref=f1e4270]
+                - button "Close Panel IDOs" [ref=f1e4271]:
+                  - img "Close Panel IDOs"
+            - tabpanel "IDOs" [ref=f1e4272]:
+              - form [ref=f1e4273]:
+                - generic [ref=f1e4274]:
+                  - grid [ref=f1e4275]:
+                    - grid [ref=f1e4276]:
+                      - row [ref=f1e4277]:
+                        - columnheader [ref=f1e4278]
+                        - columnheader [ref=f1e4283]
+                      - grid [ref=f1e4287]:
+                        - table [ref=f1e6001]:
+                          - rowgroup [ref=f1e6002]:
+                            - row [ref=f1e6003]:
+                              - gridcell "1" [ref=f1e6004]
+                              - checkbox [ref=f1e6007]:
+                                - img "checkbox not checked" [ref=f1e6009]
+                    - grid [ref=f1e4298]:
+                      - row [ref=f1e4299]:
+                        - columnheader "IDO Name" [ref=f1e4300]
+                        - columnheader "Description" [ref=f1e4306]
+                        - columnheader "Locked By" [ref=f1e4312]
+                        - columnheader "Revision Date" [ref=f1e4318]
+                        - columnheader "Revision Num" [ref=f1e4324]
+                      - grid [ref=f1e4330]:
+                        - table [ref=f1e6010]:
+                          - rowgroup [ref=f1e6011]:
+                            - row [ref=f1e6012]:
+                              - gridcell [ref=f1e6013]
+                              - gridcell [ref=f1e6015]
+                              - gridcell [ref=f1e6017]
+                              - gridcell [ref=f1e6019]
+                              - gridcell [ref=f1e6021]
+                  - separator [ref=f1e4345]: ⁞
+                  - button "New IDO" [disabled] [ref=f1e4347]
+                  - button "New Table" [disabled] [ref=f1e4349]
+                  - button "New Property" [disabled] [ref=f1e4351]
+                  - button "New Data Rule" [disabled] [ref=f1e4353]
+                  - button "New Method" [disabled] [ref=f1e4355]
+                  - generic [ref=f1e4356]: "IDO Name:"
+                  - generic [ref=f1e4358]:
+                    - generic [ref=f1e4359]: "IDO Name:"
+                    - textbox "IDO Name:" [active] [ref=f1e4364]
+                  - generic [ref=f1e4365]: "Extends:"
+                  - generic [ref=f1e4367]:
+                    - generic [ref=f1e4368]: "Extends:"
+                    - generic [ref=f1e4371]:
+                      - combobox "Extends:" [ref=f1e4373]
+                      - button "Open" [ref=f1e4374] [cursor=pointer]
+                  - generic [ref=f1e4375]: "Revision Num:"
+                  - generic [ref=f1e4377]:
+                    - generic [ref=f1e4378]: "Revision Num:"
+                    - textbox "Revision Num:" [ref=f1e4383]
+                  - generic [ref=f1e4384]: "Project Name:"
+                  - generic [ref=f1e4386]:
+                    - generic [ref=f1e4387]: "Project Name:"
+                    - generic [ref=f1e4390]:
+                      - combobox "Project Name:" [ref=f1e4392]
+                      - button "Open" [ref=f1e4393] [cursor=pointer]
+                  - generic [ref=f1e4395]:
+                    - checkbox "Replace" [ref=f1e4396]
+                    - generic [ref=f1e4398]: Replace
+                  - generic [ref=f1e4399]: "Revision Date:"
+                  - generic [ref=f1e4401]:
+                    - generic [ref=f1e4402]: "Revision Date:"
+                    - textbox "Revision Date:" [ref=f1e4407]
+                  - generic [ref=f1e4408]: "Description:"
+                  - generic [ref=f1e4410]:
+                    - generic [ref=f1e4411]: "Description:"
+                    - textbox "Description:" [ref=f1e4416]
+                  - generic [ref=f1e4417]: "IDO Assembly Name:"
+                  - generic [ref=f1e4419]:
+                    - generic [ref=f1e4420]: "IDO Assembly Name:"
+                    - generic [ref=f1e4423]:
+                      - combobox "IDO Assembly Name:" [ref=f1e4425]
+                      - button "Open" [ref=f1e4426] [cursor=pointer]
+                  - generic [ref=f1e4427]: "Locked By:"
+                  - generic [ref=f1e4429]:
+                    - generic [ref=f1e4430]: "Locked By:"
+                    - textbox "Locked By:" [ref=f1e4435]
+                  - generic [ref=f1e4436]: "Label String ID:"
+                  - generic [ref=f1e4438]:
+                    - generic [ref=f1e4439]: "Label String ID:"
+                    - generic [ref=f1e4442]:
+                      - combobox "Label String ID:" [ref=f1e4444]
+                      - button "Open" [ref=f1e4445] [cursor=pointer]
+                  - generic [ref=f1e4446]: "Ext Class Name:"
+                  - generic [ref=f1e4448]:
+                    - generic [ref=f1e4449]: "Ext Class Name:"
+                    - textbox "Ext Class Name:" [ref=f1e4454]
+                  - generic [ref=f1e4455]: "Access As:"
+                  - generic [ref=f1e4457]:
+                    - generic [ref=f1e4458]: "Access As:"
+                    - textbox "Access As:" [ref=f1e4463]
+                  - generic [ref=f1e4464]: "Profile Name:"
+                  - generic [ref=f1e4466]: "Caption:"
+                  - generic [ref=f1e4468]:
+                    - generic [ref=f1e4469]: "Caption:"
+                    - textbox "Caption:" [ref=f1e4474]
+                  - generic [ref=f1e4475]: "Ext Class Namespace:"
+                  - generic [ref=f1e4477]:
+                    - generic [ref=f1e4478]: "Ext Class Namespace:"
+                    - textbox "Ext Class Namespace:" [ref=f1e4483]
+                  - generic [ref=f1e4484]:
+                    - generic [ref=f1e4485]: "Profile Name:"
+                    - generic [ref=f1e4488]:
+                      - combobox "Profile Name:" [ref=f1e4490]
+                      - button "Open" [ref=f1e4491] [cursor=pointer]
+                  - button "Check Out" [disabled] [ref=f1e4493]
+                  - button "Undo Check Out" [disabled] [ref=f1e4495]
+                  - button "Tables" [disabled] [ref=f1e4497]
+                  - button "Properties" [disabled] [ref=f1e4499]
+                  - button "Methods" [disabled] [ref=f1e4501]
+                  - button "Data Rules" [disabled] [ref=f1e4503]
+                  - button "Filters" [disabled] [ref=f1e4505]
+                  - button "Referenced Property Classes" [disabled] [ref=f1e4507]
+                  - button "Advanced Attributes" [disabled] [ref=f1e4509]
+                  - tablist [ref=f1e4510]:
+                    - tab [selected] [ref=f1e4511] [cursor=pointer]:
+                      - heading "Tables" [level=2] [ref=f1e4512]
+                    - tab [ref=f1e4513] [cursor=pointer]:
+                      - heading "Properties" [level=2] [ref=f1e4514]
+                    - tab [ref=f1e4515] [cursor=pointer]:
+                      - heading "Methods" [level=2] [ref=f1e4516]
+                    - tab [ref=f1e4517] [cursor=pointer]:
+                      - heading "Filters" [level=2] [ref=f1e4518]
+                    - tab [ref=f1e4519] [cursor=pointer]:
+                      - heading "Deletion Rules" [level=2] [ref=f1e4520]
+                    - tab [ref=f1e4521] [cursor=pointer]:
+                      - heading "Data Rules" [level=2] [ref=f1e4522]
+                    - tab [ref=f1e4523] [cursor=pointer]:
+                      - heading "Cached Settings" [level=2] [ref=f1e4524]
+                    - tab [ref=f1e4525] [cursor=pointer]:
+                      - heading "Standard Operations" [level=2] [ref=f1e4526]
+                    - tab [ref=f1e4527] [cursor=pointer]:
+                      - heading "Workflow Summary" [level=2] [ref=f1e4528]
+                  - tabpanel "Tables" [ref=f1e4529]:
+                    - grid [ref=f1e4530]:
+                      - grid [ref=f1e4531]:
+                        - row [ref=f1e4532]:
+                          - columnheader [ref=f1e4533]
+                        - grid [ref=f1e4538]
+                      - grid [ref=f1e4540]:
+                        - row [ref=f1e4541]:
+                          - columnheader "Table Name" [ref=f1e4542]
+                          - columnheader "Table Alias" [ref=f1e4548]
+                          - columnheader "Table Type" [ref=f1e4554]
+                          - columnheader "Join Type" [ref=f1e4560]
+                          - columnheader "Join Text" [ref=f1e4566]
+                        - grid [ref=f1e4572]
+          - text: ⁞
+    - complementary "Smart Panel" [ref=e60]:
+      - generic [ref=e61]:
+        - button "Insights" [ref=e64] [cursor=pointer]
+        - button "Inbox" [ref=e67] [cursor=pointer]
+        - button "Smart Help" [ref=e70] [cursor=pointer]
+        - button "Popout Smart Panel" [ref=e73] [cursor=pointer]

@@ -1,0 +1,12 @@
+1. [POST] https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/AppApi/GenerateServerEvent => [200] 
+2. [POST] https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/AppApi/GenerateServerEvent => [200] 
+3. [POST] https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/AppApi/GenerateServerEvent => [200] 
+4. [POST] https://mingle-portal.se1.inforcloudsuite.com/sso/G6R8LJ9Q4E8C2Z8Y_DEM/session/timeout => [200] 
+5. [POST] https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/AppApi/GenerateServerEvent => [200] 
+6. [POST] https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/AppApi/GenerateServerEvent => [200] 
+7. [POST] https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/AppApi/GenerateServerEvent => [200] 
+8. [POST] https://yggdrasil.inforcloudservices.com/yggdrasil/activity/stream => [200] 
+9. [POST] https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/AppApi/GenerateServerEvent => [200] 
+11. [POST] https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/AppApi/GenerateServerEvent => [200] 
+
+Note: 2 static requests not shown, run with "static" option to see them.

@@ -1,0 +1,2 @@
+1. [POST] https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/AppApi/GenerateServerEvent => [200] 
+2. [POST] https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/AppApi/GenerateServerEvent => [200] 

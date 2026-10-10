@@ -1,0 +1,15 @@
+- dialog "Data Maintenance Wizard" [ref=f1e236]:
+  - button "Close Window" [ref=f1e238] [cursor=pointer]
+  - form [ref=f1e239]:
+    - generic [ref=f1e240]:
+      - generic [ref=f1e463]:
+        - checkbox "Create Scripts" [ref=f1e464]
+        - generic [ref=f1e466]: Create Scripts
+      - generic [ref=f1e467]: Click "Finish" to create the database table, IDO and optional form.
+      - textbox [disabled] [ref=f1e473]
+      - generic:
+        - button "Back" [ref=f1e453] [cursor=pointer]
+        - button "Next" [disabled] [active] [ref=f1e455]
+        - button "Finish" [ref=f1e457] [cursor=pointer]
+        - button "Cancel" [ref=f1e459] [cursor=pointer]
+        - button "Help" [ref=f1e461] [cursor=pointer]
