@@ -206,7 +206,7 @@ describe("Claude worker fake-process integration",()=>{
     const resumed=read<{argv:string[]}>(h.capture).argv;expect(resumed).toContain("--resume");expect(resumed).not.toContain("--session-id");
     const resumedIdentity=`worker_session_id: ${r.sid} (this is your worker session UUID for identity/freshness checks); task_message_id: ${mid}`;
     expect(read<{input:string}>(h.capture).input.split("\n")[1]).toBe(resumedIdentity);
-    expect(resumed[resumed.indexOf("--append-system-prompt")+1].split("\n")[0]).toBe(resumedIdentity);
+    expect(readFileSync(resumed[resumed.indexOf("--append-system-prompt-file")+1],"utf8").split("\n")[0]).toBe(resumedIdentity);expect(resumed).not.toContain("--append-system-prompt");
     expect(resumed[resumed.indexOf("--disallowedTools")+1]).toContain("browser_evaluate");
   });
   it("pauses normally on usage limit, preserves output/lease, reconciles without launch, and continues only explicitly",async()=>{

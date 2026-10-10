@@ -7,7 +7,7 @@ if(args.includes('--version')){console.log('2.1.294 (fake Claude Code)');process
 if(args.includes('auth')){console.log(JSON.stringify({loggedIn:true,authMethod:'claude.ai',subscriptionType:'pro'}));process.exit(0);}
 let spec=JSON.parse(readFileSync(value('--fixture'),'utf8'));
 if(spec.script){
-  const prompt=value('--append-system-prompt')??'',role=prompt.includes('Claude role: coordinator')?'coordinator':prompt.includes('Claude role: specialist')?'specialist':'worker';
+  const promptFile=value('--append-system-prompt-file'),prompt=promptFile?readFileSync(promptFile,'utf8'):'',role=prompt.includes('Claude role: coordinator')?'coordinator':prompt.includes('Claude role: specialist')?'specialist':'worker';
   const state=existsSync(spec.scriptState)?JSON.parse(readFileSync(spec.scriptState,'utf8')):{};
   const n=state[role]??0;state[role]=n+1;writeFileSync(spec.scriptState,JSON.stringify(state));
   spec={...spec,...(spec.script[role]?.[n]??{})};

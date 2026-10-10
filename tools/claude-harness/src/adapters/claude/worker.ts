@@ -100,11 +100,13 @@ export class ClaudeWorker implements WorkerPort {
       "Start each task with a fresh snapshot of the visible tab; verify Form identity and editing scope before acting. Never reuse old accessibility refs.",
       'End each task in a stable page state with no browser-native dialogs (alert, confirm, prompt, or beforeunload "leave page") and no unsaved-change prompts. CDP disconnect dismisses beforeunload dialogs. In-page Mongoose dialogs (such as Select Form) may remain open only when the current task instruction explicitly says to leave them open; otherwise end without open in-page dialogs. Never discard unsaved work or take an out-of-scope lifecycle action to achieve stability; checkpoint and report a blocker instead.',
       "Only this bounded task is authorized. Tools, a fresh session and usage-limit resets never expand scope. On a limit preserve state and report; never resubmit or switch models."].join("\n");
+    // The system prompt goes through a file: with AGENTS.md and a long brief it exceeds the Windows 32,767-character command line.
+    const dir=join(paths.dataDir,"workers",sid,"tasks");mkdirSync(dir,{recursive:true});
+    const promptFile=join(dir,`${mid}.system-prompt.md`);writeFileSync(promptFile,preamble,"utf8");
     const args=["-p",s.started?"--resume":"--session-id",sid,"--output-format","stream-json","--verbose","--input-format","text","--model",s.model,
-      ...(cfg.claude.models.worker.effort?["--effort",cfg.claude.models.worker.effort]:[]),"--append-system-prompt",preamble,"--system-prompt-snapshot","off",
+      ...(cfg.claude.models.worker.effort?["--effort",cfg.claude.models.worker.effort]:[]),"--append-system-prompt-file",promptFile,"--system-prompt-snapshot","off",
       "--mcp-config",mcp,"--strict-mcp-config","--tools",policy.tools.join(","),"--allowedTools",(this.o.role?policy.settings.permissions.allow:[...policy.tools,"mcp__playwright__*"]).join(","),
       "--disallowedTools",policy.deny.filter(r=>!r.includes("(")).join(","),"--permission-mode","dontAsk","--permission-prompts","none","--settings",policy.settingsFile,"--setting-sources","","--disable-slash-commands"];
-    const dir=join(paths.dataDir,"workers",sid,"tasks");mkdirSync(dir,{recursive:true});
     const payload=marker(mid)+"\n"+identity+"\n"+text;
     const journal:TaskJournal={sessionId:sid,messageId:mid,payload,preamble,agentsHash:hash(agents),before:gitState(paths.factoryRoot),state:"planned",argv:args,createdAt:new Date().toISOString(),permissionSettings:policy.settingsFile,eventFile:join(dir,`${mid}.events.jsonl`),stderrFile:join(dir,`${mid}.stderr.txt`),nativeTranscript:transcriptPath(cfg.claude.configDir??join(homedir(),".claude"),this.cwd,sid)};
     journal.guardDenialsFile=policy.denialFile;
