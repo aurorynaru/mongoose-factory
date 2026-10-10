@@ -1,0 +1,181 @@
+- generic [ref=e5]:
+  - banner "Portal Top Navigation Bar" [ref=e6]:
+    - generic [ref=e8]:
+      - generic:
+        - generic [ref=e10]:
+          - generic:
+            - link "Home" [ref=e12] [cursor=pointer]
+            - button "Open navigation menu" [ref=e15] [cursor=pointer]
+        - generic [ref=e17]:
+          - tablist "Tabs" [ref=e18]:
+            - tab "System Administrator" [ref=e19] [cursor=pointer]:
+              - link "System Administrator" [ref=e20]
+              - button "Close tab System Administrator" [ref=e23]
+            - tab "Mongoose" [selected] [ref=e24] [cursor=pointer]:
+              - link "Mongoose" [ref=e25]
+              - button "Open tab menu" [ref=e28]
+              - button "Close tab Mongoose" [ref=e32]
+          - button "Tabs menu more" [ref=e36] [cursor=pointer]
+        - generic [ref=e38]:
+          - generic:
+            - generic [ref=e39]: DEM
+            - button "Health Notifications" [ref=e43] [cursor=pointer]
+            - button "User menu" [ref=e45] [cursor=pointer]
+            - button "Hide Smart Panel" [ref=e47] [cursor=pointer]
+    - generic:
+      - generic:
+        - generic: Infor OS Portal
+        - generic: 2026.10.01 (20260909-164316, 20260909-154143, 1062, 1582, 727)
+        - generic:
+          - generic:
+            - text: Copyright © 2026 Infor. All rights reserved. The word and design marks set forth herein are trademarks and/or registered trademarks of Infor and/or its affiliates and subsidiaries. All other trademarks listed herein are the property of their respective owners
+            - generic: www.infor.com
+            - text: .
+  - main [ref=e48]:
+    - iframe [active] [ref=e59]:
+      - generic [ref=f1e1]:
+        - banner [ref=f1e2]:
+          - heading "Infor Mongoose Application Development Framework" [level=1] [ref=f1e3]
+          - link "Skip to Main Content" [ref=f1e4] [cursor=pointer]:
+            - /url: "#formContainer"
+          - navigation [ref=f1e5]:
+            - button "Explorer" [ref=f1e6] [cursor=pointer]
+            - separator
+            - button "Form" [ref=f1e10] [cursor=pointer]
+            - separator
+            - button "Actions" [ref=f1e12] [cursor=pointer]
+            - separator
+            - button "Edit" [ref=f1e14] [cursor=pointer]
+            - separator
+            - button "View" [ref=f1e16] [cursor=pointer]
+            - separator
+            - button "Window" [ref=f1e18] [cursor=pointer]
+            - separator
+            - button "Help" [ref=f1e20] [cursor=pointer]
+            - button "anton.ramos@3mworks.com.ph | G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT" [ref=f1e22] [cursor=pointer]
+          - toolbar [ref=f1e24]:
+            - button "Open" [ref=f1e25] [cursor=pointer]:
+              - button "Open" [ref=f1e26]
+            - button "Save" [disabled] [ref=f1e28]:
+              - button "Save" [disabled] [active]
+            - button "New" [ref=f1e31] [cursor=pointer]:
+              - button "New" [ref=f1e32]
+            - button "Delete" [ref=f1e34] [cursor=pointer]:
+              - button "Delete" [ref=f1e35]
+            - button "Refresh" [ref=f1e37] [cursor=pointer]:
+              - button "Refresh" [ref=f1e38]
+            - button "Filter in Place" [ref=f1e40] [cursor=pointer]:
+              - button "FiP" [ref=f1e41]
+            - button "Get More Rows" [disabled] [ref=f1e43]:
+              - button "Get More Rows" [disabled]
+            - button "System Notes" [ref=f1e44] [cursor=pointer]:
+              - button "System Notes" [ref=f1e197]
+            - button "Documents" [ref=f1e45] [cursor=pointer]:
+              - button "Documents" [ref=f1e199]
+            - button "Send email for the current object" [ref=f1e46] [cursor=pointer]:
+              - button "Send email for the current object" [ref=f1e201]
+            - button "Export To Excel" [ref=f1e47] [cursor=pointer]:
+              - button "Export To Excel" [ref=f1e48]
+            - button [ref=f1e50] [cursor=pointer]:
+              - button "Designer" [ref=f1e51]
+            - button "Designer" [ref=f1e53] [cursor=pointer]:
+              - button "Designer" [ref=f1e54]
+            - button "Help Current Form" [ref=f1e56] [cursor=pointer]:
+              - button "Help Current Form" [ref=f1e57]
+        - region [ref=f1e59]:
+          - heading "Explorer" [ref=f1e60]
+          - button "Collapse Panel"
+          - grid [ref=f1e61]:
+            - columnheader "Name"
+            - tree [ref=f1e66]:
+              - generic [ref=f1e67]:
+                - table [ref=f1e68]:
+                  - rowgroup [ref=f1e69]:
+                    - row [ref=f1e70]:
+                      - treeitem [ref=f1e71]:
+                        - treeitem "My Folders" [ref=f1e73]
+                - table [ref=f1e74]:
+                  - rowgroup [ref=f1e75]:
+                    - row [ref=f1e76]:
+                      - treeitem [ref=f1e77]:
+                        - treeitem "Master Explorer" [ref=f1e79]
+                - table [ref=f1e80]:
+                  - rowgroup [ref=f1e81]:
+                    - row [ref=f1e82]:
+                      - treeitem [ref=f1e83]:
+                        - treeitem "Public Folders" [ref=f1e85]
+                - table [ref=f1e86]:
+                  - rowgroup [ref=f1e87]:
+                    - row [ref=f1e88]:
+                      - treeitem [ref=f1e89]:
+                        - treeitem "User Folders" [ref=f1e91]
+        - region [ref=f1e92]:
+          - main [ref=f1e93]:
+            - tablist [ref=f1e94]:
+              - tab [ref=f1e95] [cursor=pointer]:
+                - heading "Sql Tables" [level=2] [ref=f1e96]
+                - button "Close Panel Sql Tables" [ref=f1e97]:
+                  - img "Close Panel Sql Tables"
+              - tab [selected] [ref=f1e98] [cursor=pointer]:
+                - heading "IDO Projects" [level=2] [ref=f1e99]
+                - button "Close Panel IDO Projects" [ref=f1e100]:
+                  - img "Close Panel IDO Projects"
+            - tabpanel "IDO Projects" [ref=f1e101]:
+              - form [ref=f1e102]:
+                - generic [ref=f1e103]:
+                  - grid [ref=f1e104]:
+                    - grid [ref=f1e105]:
+                      - row [ref=f1e106]:
+                        - columnheader [ref=f1e107]
+                      - grid [ref=f1e112]:
+                        - generic [ref=f1e113]:
+                          - table [ref=f1e114]:
+                            - rowgroup [ref=f1e115]:
+                              - row [ref=f1e116]:
+                                - gridcell "1" [ref=f1e117]
+                          - table [ref=f1e119]:
+                            - rowgroup [ref=f1e120]:
+                              - row [ref=f1e121]:
+                                - gridcell "2" [ref=f1e122]
+                    - grid [ref=f1e125]:
+                      - row [ref=f1e204]:
+                        - columnheader "Project Name" [ref=f1e205]
+                        - columnheader "Description" [ref=f1e133]
+                        - columnheader "Access As" [ref=f1e139]
+                      - grid [ref=f1e145]:
+                        - generic [ref=f1e146]:
+                          - table [ref=f1e147]:
+                            - rowgroup [ref=f1e148]:
+                              - row [ref=f1e149]:
+                                - gridcell "SDTest" [ref=f1e150]
+                                - gridcell "SDTest IDO" [ref=f1e152]
+                                - gridcell "G6R" [ref=f1e154]
+                          - table [ref=f1e156]:
+                            - rowgroup [ref=f1e157]:
+                              - row [ref=f1e158]:
+                                - gridcell "FX_HelloWorldProject01" [ref=f1e159]
+                                - gridcell "Factory Hello World test project" [ref=f1e161]
+                                - gridcell "G6R" [ref=f1e163]
+                  - separator [ref=f1e165]: ⁞
+                  - button "New IDO..." [ref=f1e167] [cursor=pointer]
+                  - button "IDOs" [ref=f1e169] [cursor=pointer]
+                  - generic [ref=f1e170]: "Project Name:"
+                  - generic [ref=f1e172]:
+                    - generic [ref=f1e173]: "Project Name:"
+                    - textbox "Project Name:" [ref=f1e178]: FX_HelloWorldProject01
+                  - generic [ref=f1e179]: "Description:"
+                  - generic [ref=f1e181]:
+                    - generic [ref=f1e182]: "Description:"
+                    - textbox "Description:" [ref=f1e187]: Factory Hello World test project
+                  - generic [ref=f1e188]: "Access As:"
+                  - generic [ref=f1e190]:
+                    - generic [ref=f1e191]: "Access As:"
+                    - textbox "Access As:" [ref=f1e196]: G6R
+          - text: ⁞
+        - tooltip [ref=f1e206]: Save
+    - complementary "Smart Panel" [ref=e60]:
+      - generic [ref=e61]:
+        - button "Insights" [ref=e64] [cursor=pointer]
+        - button "Inbox" [ref=e67] [cursor=pointer]
+        - button "Smart Help" [ref=e70] [cursor=pointer]
+        - button "Popout Smart Panel" [ref=e73] [cursor=pointer]
