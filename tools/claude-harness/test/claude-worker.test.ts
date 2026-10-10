@@ -130,7 +130,7 @@ describe("Claude worker fake-process integration",()=>{
     save(briefFile,{...brief,worker:{model:"sonnet",effort:"high"}});
     const first=await boundedTask(h.cfg,h.paths,"EXP-900","Inspect FX_FixtureForm01",{},h.worker);
     const j=read<TaskJournal>(h.worker.taskFile(first.sessionId,first.messageId)),manifest=read<Record<string,any>>(first.manifest),output=taskOutput(first,j,manifest);
-    expect(first.result.status).toBe("blocked");expect(output.assistantTurns).toBe(2);expect(output.wallTimeSeconds).toBeGreaterThan(0);
+    expect(first.result.status).toBe("completed");expect(output.assistantTurns).toBe(2); // guard denial: completed with denialsexpect(output.wallTimeSeconds).toBeGreaterThan(0);
     expect(output.guardDenials).toEqual({total:1,byGuard:{key_text:1}});expect(manifest.metrics).toEqual(j.metrics);
     expect(read<{argv:string[]}>(h.capture).argv).toContain("sonnet");
     expect(readFileSync(j.guardDenialsFile!,"utf8")).not.toContain("Ctrl+A");
@@ -230,7 +230,11 @@ describe("Claude worker fake-process integration",()=>{
   it("pauses on model mismatch and tool permission denial",async()=>{
     expect((await task(fixture({model:"claude-opus-5-5"}))).result.status).toBe("model_mismatch");
     const r=await task(fixture({calls:1,tool:"mcp__playwright__browser_type",toolInput:{text:"Control+A"},invokeHook:true}));
-    expect(r.result.status).toBe("blocked");expect(readFileSync(r.journal.eventFile,"utf8")).toContain("browser_press_key");
+    // A denial by the harness's own guard is expected: the task completes with its denials kept for operator review.
+    expect(r.result.status).toBe("completed");expect(r.result.status==="completed"&&r.result.permissionDenials?.[0]?.tool_name).toBe("mcp__playwright__browser_type");
+    expect(readFileSync(r.journal.eventFile,"utf8")).toContain("browser_press_key");
+    // An unexplained denial (no guard or deny-rule record) still blocks.
+    expect((await task(fixture({calls:1,tool:"mcp__playwright__browser_type",toolInput:{text:"x"},permissionDenials:[{tool_name:"mcp__playwright__browser_type",tool_use_id:"other"}]}))).result.status).toBe("blocked");
   });
   it("ports completed-read and missing-ref loop monitors",async()=>{
     expect((await task(fixture({calls:6}))).result.status).toBe("stalled");

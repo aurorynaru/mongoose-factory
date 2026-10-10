@@ -31,14 +31,14 @@ if(spec.mode==='usage'){emit({type:'assistant',message:{id:'partial',content:[{t
 if(spec.mode==='crash'){emit({type:'assistant',message:{id:'partial',content:[{type:'text',text:'Partial before crash'}]}});process.exit(1);}
 if(spec.mode==='hang'){emit({type:'assistant',message:{id:'partial',content:[{type:'text',text:'Waiting without tool execution'}]}});setInterval(()=>{},1000);}
 else {
-  let denied=false;
+  let denied=false,deniedId;
   for(let i=0;i<(spec.calls??0);i++){
     const name=spec.tool??'mcp__playwright__browser_snapshot',toolInput=spec.toolInput??{};
     emit({type:'assistant',message:{id:`assistant-${i}`,content:[{type:'tool_use',id:`tool-${i}`,name,input:toolInput}]}});
     let content=spec.toolError??'unchanged snapshot',is_error=!!spec.toolError,hookDenied=false;
     if(spec.invokeHook){const settings=JSON.parse(readFileSync(value('--settings'),'utf8')),hook=settings.hooks.PreToolUse[0].hooks[0];
       const result=spawnSync(hook.command,hook.args,{input:JSON.stringify({hook_event_name:'PreToolUse',tool_use_id:`tool-${i}`,session_id:sid,tool_name:name,tool_input:toolInput}),encoding:'utf8',windowsHide:true});
-      if(result.stdout.trim()){const reply=JSON.parse(result.stdout);if(reply.hookSpecificOutput?.permissionDecision==='deny'){content='permission denied: '+reply.hookSpecificOutput.permissionDecisionReason;is_error=true;denied=true;hookDenied=true;}}
+      if(result.stdout.trim()){const reply=JSON.parse(result.stdout);if(reply.hookSpecificOutput?.permissionDecision==='deny'){content='permission denied: '+reply.hookSpecificOutput.permissionDecisionReason;is_error=true;denied=true;hookDenied=true;deniedId=`tool-${i}`;}}
       if(!hookDenied&&!spec.skipCompletionHook){
         const event=is_error?'PostToolUseFailure':'PostToolUse',completion=settings.hooks[event][0].hooks[0];
         spawnSync(completion.command,completion.args,{input:JSON.stringify({hook_event_name:event,tool_use_id:`tool-${i}`,session_id:sid,tool_name:name,tool_input:toolInput}),encoding:'utf8',windowsHide:true});
@@ -48,7 +48,7 @@ else {
     if(spec.delayMs)await new Promise(r=>setTimeout(r,spec.delayMs));
   }
   emit({type:'assistant',message:{id:`final-${sid}-${mid}`,content:[{type:'text',text:report}]}});
-  const result={type:'result',subtype:spec.resultError?'error_during_execution':'success',is_error:!!spec.resultError,result:report,usage:{input_tokens:3,output_tokens:2},total_cost_usd:0,...(denied?{permission_denials:[{tool_name:spec.tool}]}:{}),...(spec.permissionDenials?{permission_denials:spec.permissionDenials}:{})};
+  const result={type:'result',subtype:spec.resultError?'error_during_execution':'success',is_error:!!spec.resultError,result:report,usage:{input_tokens:3,output_tokens:2},total_cost_usd:0,...(denied?{permission_denials:[{tool_name:spec.tool,...(deniedId?{tool_use_id:deniedId}:{})}]}:{}),...(spec.permissionDenials?{permission_denials:spec.permissionDenials}:{})};
   if(spec.split){const raw=JSON.stringify({session_id:sid,...result})+'\n';process.stdout.write(raw.slice(0,13));await new Promise(r=>setTimeout(r,20));process.stdout.write(raw.slice(13));}
   else emit(result);
   if(spec.holdAfterResult)setInterval(()=>{},1000);

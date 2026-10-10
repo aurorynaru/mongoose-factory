@@ -7,7 +7,7 @@ import { StringDecoder } from "node:string_decoder";
 import type { HarnessConfig, ResolvedPaths } from "../../config.js";
 import { McpService } from "../../backend/mcp-service.js";
 import type { ChromeWindow } from "../../backend/chrome-window.js";
-import type { WorkerPort, WorkerResult, WorkerToolPolicy } from "../types.js";
+import type { PermissionDenial, WorkerPort, WorkerResult, WorkerToolPolicy } from "../types.js";
 import { TaskEvents, modelMatches } from "./events.js";
 import { hash, read, save } from "./files.js";
 import { gitState, touched, type GitState } from "./git-state.js";
@@ -183,6 +183,12 @@ export class ClaudeWorker implements WorkerPort {
   private async complete(a:Pick<Active,"events"|"journal"|"exit"|"stopReason"|"detail">&{child:Pick<ChildProcessWithoutNullStreams,"exitCode">;recovered?:boolean}) {
     const e=a.events,j=a.journal,base={text:e.text,transcript:existsSync(j.eventFile)?readFileSync(j.eventFile,"utf8"):"",assistantMessageIds:e.ids};
     j.after=gitState(this.o.paths.factoryRoot);
+    // The harness's own PreToolUse guard is the only hook (user settings are off); a denial is expected when
+    // the guard logged a denial for that tool. Matched by count, because the guard log has no tool-use ID.
+    const guardLeft:Record<string,number>={};
+    try{for(const line of (j.guardDenialsFile&&existsSync(j.guardDenialsFile)?readFileSync(j.guardDenialsFile,"utf8"):"").split("\n").filter(Boolean)){
+      const item=JSON.parse(line);if(item.event==="denial"&&item.sessionId===j.sessionId&&typeof item.tool==="string")guardLeft[item.tool]=(guardLeft[item.tool]??0)+1;}}catch{/* unreadable audit: nothing counts as a guard denial */}
+    const guardDenied=(d:PermissionDenial)=>{if(!guardLeft[d.tool_name])return false;guardLeft[d.tool_name]--;return true;};
     let result:WorkerResult;
     if(a.stopReason==="model_mismatch")result={status:"model_mismatch",detail:a.detail!};
     else if(a.stopReason==="loop")result={status:"stalled",detail:a.detail!,aborted:a.child.exitCode!==null,...base};
@@ -193,7 +199,7 @@ export class ClaudeWorker implements WorkerPort {
     else if(e.invalid||!e.terminal||!e.model||!modelMatches(this.o.config.claude.models.worker.model,e.model)||e.pending.size)
       result={status:"failed",error:e.invalid||"Missing terminal/init event or unfinished tools; completion unproven",...base};
     else if(e.permissionDenied&&((a.exit!==0&&!a.recovered)||e.terminal.is_error||e.terminal.subtype!=="success"||!e.permissionDenials.length||
-      !e.permissionDenials.every(d=>intentionallyDenied(d,j.permissionDenyRules??[],this.o.paths.factoryRoot))))
+      !e.permissionDenials.every(d=>intentionallyDenied(d,j.permissionDenyRules??[],this.o.paths.factoryRoot)||guardDenied(d))))
       result={status:"blocked",kind:"permission",detail:"Claude reported unexpected/unclassified denied tool permissions or no successful terminal result; task completion is not established",permissionDenials:e.permissionDenials};
     else if((a.exit!==0&&!a.recovered)||e.terminal.is_error||e.terminal.subtype!=="success")result={status:"failed",error:String(e.terminal.result??e.terminal.errors??"Claude failed"),...base};
     else {j.after=gitState(this.o.paths.factoryRoot);result={status:"completed",...base,text:typeof e.terminal.result==="string"?e.terminal.result:e.text,touchedFiles:touched(j.before,j.after),cost:Number(e.terminal.total_cost_usd??0),tokens:Number(e.terminal.usage?.input_tokens??0)+Number(e.terminal.usage?.output_tokens??0),
