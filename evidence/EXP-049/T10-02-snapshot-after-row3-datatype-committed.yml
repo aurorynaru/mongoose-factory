@@ -1,0 +1,1052 @@
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - button "Form" [ref=e3] [cursor=pointer]
+    - button "Edit" [ref=e5] [cursor=pointer]
+    - button "View" [ref=e7] [cursor=pointer]
+    - button "Help" [ref=e9] [cursor=pointer]
+  - toolbar [ref=e11]:
+    - button [ref=e12] [cursor=pointer]:
+      - button "Design" [ref=e13]
+    - button "Save" [disabled] [ref=e15]:
+      - button "Save" [disabled]
+    - button "Regenerate Form" [disabled] [ref=e16]:
+      - button "Regenerate Form" [disabled]
+    - separator [ref=e17]
+    - button [ref=e18] [cursor=pointer]:
+      - button "New" [ref=e19]
+    - button [ref=e21] [cursor=pointer]:
+      - button "Copy" [ref=e22]
+    - button [ref=e24] [cursor=pointer]:
+      - button "Delete" [ref=e25]
+    - separator [ref=e27]
+    - button "Align Left" [disabled] [ref=e28]:
+      - button "Align Left" [disabled]
+    - button "Align Center" [disabled] [ref=e29]:
+      - button "Align Center" [disabled]
+    - button "Align Right" [disabled] [ref=e30]:
+      - button "Align Right" [disabled]
+    - button "Align Top" [disabled] [ref=e31]:
+      - button "Align Top" [disabled]
+    - button "Align Middle" [disabled] [ref=e32]:
+      - button "Align Middle" [disabled]
+    - button "Align Bottom" [disabled] [ref=e33]:
+      - button "Align Bottom" [disabled]
+    - separator [ref=e34]
+    - button "Make Same Width" [disabled] [ref=e35]:
+      - button "Make Same Width" [disabled]
+    - button "Make Same Height" [disabled] [ref=e36]:
+      - button "Make Same Height" [disabled]
+    - button "Make Same Size" [disabled] [ref=e37]:
+      - button "Make Same Size" [disabled]
+    - separator [ref=e38]
+    - button "Space Horizontally" [disabled] [ref=e39]:
+      - button "Space Horizontally" [disabled]
+    - button "Space Vertically" [disabled] [ref=e40]:
+      - button "Space Vertically" [disabled]
+    - separator [ref=e41]
+    - button [ref=e42] [cursor=pointer]:
+      - button "Tab Order" [ref=e43]
+    - button [ref=e45] [cursor=pointer]:
+      - button "Tab Order At" [ref=e46]
+    - separator [ref=e48]
+    - button "Undo" [disabled] [ref=e49]:
+      - button "Undo" [disabled]
+    - button "Redo" [disabled] [ref=e50]:
+      - button "Redo" [disabled]
+  - grid "Toolbox" [ref=e51]:
+    - text: 
+    - button "Collapse Panel" [ref=e53] [cursor=pointer]
+    - generic [ref=e54]:
+      - generic [ref=e55]: "Search Toolbox:"
+      - generic [ref=e58]:
+        - textbox "Search Toolbox:" [ref=e60]:
+          - /placeholder: Search Toolbox
+        - generic [ref=e61] [cursor=pointer]
+    - columnheader "Name"
+    - tree [ref=e66]:
+      - generic [ref=e67]:
+        - table [ref=e68]:
+          - rowgroup [ref=e69]:
+            - row [ref=e70]:
+              - treeitem "Framework Components" [ref=e71]
+        - table [ref=e73]:
+          - rowgroup [ref=e74]:
+            - row [ref=e75]:
+              - treeitem "Pointer" [ref=e76]
+        - table [ref=e78]:
+          - rowgroup [ref=e79]:
+            - row [ref=e80]:
+              - treeitem "Barcode" [ref=e81]
+        - table [ref=e83]:
+          - rowgroup [ref=e84]:
+            - row [ref=e85]:
+              - treeitem "Browser" [ref=e86]
+        - table [ref=e88]:
+          - rowgroup [ref=e89]:
+            - row [ref=e90]:
+              - treeitem "Button" [ref=e91]
+        - table [ref=e93]:
+          - rowgroup [ref=e94]:
+            - row [ref=e95]:
+              - treeitem "Calendar" [ref=e96]
+        - table [ref=e98]:
+          - rowgroup [ref=e99]:
+            - row [ref=e100]:
+              - treeitem "Chart" [ref=e101]
+        - table [ref=e103]:
+          - rowgroup [ref=e104]:
+            - row [ref=e105]:
+              - treeitem "CheckBox" [ref=e106]
+        - table [ref=e108]:
+          - rowgroup [ref=e109]:
+            - row [ref=e110]:
+              - treeitem "ComboBox" [ref=e111]
+        - table [ref=e113]:
+          - rowgroup [ref=e114]:
+            - row [ref=e115]:
+              - treeitem "DataView" [ref=e116]
+        - table [ref=e118]:
+          - rowgroup [ref=e119]:
+            - row [ref=e120]:
+              - treeitem "DateCombo" [ref=e121]
+        - table [ref=e123]:
+          - rowgroup [ref=e124]:
+            - row [ref=e125]:
+              - treeitem "Diagram" [ref=e126]
+        - table [ref=e128]:
+          - rowgroup [ref=e129]:
+            - row [ref=e130]:
+              - treeitem "DropList" [ref=e131]
+        - table [ref=e133]:
+          - rowgroup [ref=e134]:
+            - row [ref=e135]:
+              - treeitem "Edit" [ref=e136]
+        - table [ref=e138]:
+          - rowgroup [ref=e139]:
+            - row [ref=e140]:
+              - treeitem "FlexLayout" [ref=e141]
+        - table [ref=e143]:
+          - rowgroup [ref=e144]:
+            - row [ref=e145]:
+              - treeitem "FormPage" [ref=e146]
+        - table [ref=e148]:
+          - rowgroup [ref=e149]:
+            - row [ref=e150]:
+              - treeitem "Gauge" [ref=e151]
+        - table [ref=e153]:
+          - rowgroup [ref=e154]:
+            - row [ref=e155]:
+              - treeitem "Grid" [ref=e156]
+        - table [ref=e158]:
+          - rowgroup [ref=e159]:
+            - row [ref=e160]:
+              - treeitem "GroupBox" [ref=e161]
+        - table [ref=e163]:
+          - rowgroup [ref=e164]:
+            - row [ref=e165]:
+              - treeitem "HyperLinkButton" [ref=e166]
+        - table [ref=e168]:
+          - rowgroup [ref=e169]:
+            - row [ref=e170]:
+              - treeitem "Infocon" [ref=e171]
+        - table [ref=e173]:
+          - rowgroup [ref=e174]:
+            - row [ref=e175]:
+              - treeitem "Infor Chart" [ref=e176]
+        - table [ref=e178]:
+          - rowgroup [ref=e179]:
+            - row [ref=e180]:
+              - treeitem "List" [ref=e181]
+        - table [ref=e183]:
+          - rowgroup [ref=e184]:
+            - row [ref=e185]:
+              - treeitem "MenuItem" [ref=e186]
+        - table [ref=e188]:
+          - rowgroup [ref=e189]:
+            - row [ref=e190]:
+              - treeitem "MultiLineEdit" [ref=e191]
+        - table [ref=e193]:
+          - rowgroup [ref=e194]:
+            - row [ref=e195]:
+              - treeitem "NoteBook" [ref=e196]
+        - table [ref=e198]:
+          - rowgroup [ref=e199]:
+            - row [ref=e200]:
+              - treeitem "Process Intelligence" [ref=e201]
+        - table [ref=e203]:
+          - rowgroup [ref=e204]:
+            - row [ref=e205]:
+              - treeitem "RadioButton" [ref=e206]
+        - table [ref=e208]:
+          - rowgroup [ref=e209]:
+            - row [ref=e210]:
+              - treeitem "Static" [ref=e211]
+        - table [ref=e213]:
+          - rowgroup [ref=e214]:
+            - row [ref=e215]:
+              - treeitem "SubForm" [ref=e216]
+        - table [ref=e218]:
+          - rowgroup [ref=e219]:
+            - row [ref=e220]:
+              - treeitem "ToolbarButton" [ref=e221]
+        - table [ref=e223]:
+          - rowgroup [ref=e224]:
+            - row [ref=e225]:
+              - treeitem "Tree" [ref=e226]
+        - table [ref=e228]:
+          - rowgroup [ref=e229]:
+            - row [ref=e230]:
+              - treeitem "UserControl" [ref=e231]
+        - table [ref=e233]:
+          - rowgroup [ref=e234]:
+            - row [ref=e235]:
+              - treeitem "VerticalGrid" [ref=e236]
+        - table [ref=e238]:
+          - rowgroup [ref=e239]:
+            - row [ref=e240]:
+              - treeitem "User Components" [ref=e241]
+  - separator [ref=e243]
+  - text: 
+  - tablist [ref=e244]:
+    - tab [selected] [ref=e245] [cursor=pointer]:
+      - heading "Property Classes" [level=2] [ref=e246]
+      - button "closable Property Classes" [ref=e247]:
+        - img "closable Property Classes"
+  - tabpanel [ref=e248]:
+    - generic [ref=e249]:
+      - grid [ref=e250]:
+        - grid [ref=e251]:
+          - row [ref=e252]:
+            - columnheader [ref=e253]
+            - columnheader [ref=e258]
+          - grid [ref=e262]
+        - grid [ref=e264]:
+          - row [ref=e265]:
+            - columnheader "Class Name" [ref=e266]
+            - columnheader "Base Class" [ref=e272]
+            - columnheader "Description" [ref=e278]
+            - columnheader "Revision No" [ref=e284]
+            - columnheader "Locked By" [ref=e290]
+            - columnheader "Revision Date" [ref=e296]
+            - columnheader "Access As" [ref=e302]
+            - columnheader "Data Type" [ref=e308]
+            - columnheader "Length" [ref=e314]
+            - columnheader "Decimal Position" [ref=e320]
+            - columnheader "Default Value" [ref=e326]
+            - columnheader "Column Data Type" [ref=e332]
+            - columnheader "Required" [ref=e338]
+            - columnheader "Read Only Record" [ref=e344]
+            - columnheader "Domain IDO Name" [ref=e350]
+            - columnheader "Domain Property" [ref=e356]
+            - columnheader "Domain List Properties" [ref=e362]
+            - columnheader "Domain Additional Settings" [ref=e368]
+            - columnheader "Label String ID" [ref=e374]
+            - columnheader "Input Mask" [ref=e380]
+            - columnheader "Prompt Char" [ref=e386]
+            - columnheader "Justify" [ref=e392]
+            - columnheader "Date Format" [ref=e398]
+            - columnheader "Binary Format" [ref=e404]
+            - columnheader "IME Char Set" [ref=e410]
+            - columnheader "Boolean True" [ref=e416]
+            - columnheader "Boolean False" [ref=e422]
+            - columnheader "Display Decimal Position" [ref=e428]
+            - columnheader "Read Only" [ref=e434]
+            - columnheader "Upper Case" [ref=e440]
+            - columnheader "HTML" [ref=e446]
+            - columnheader "Inline List" [ref=e452]
+            - columnheader "Validators" [ref=e458]
+            - columnheader "Property Value" [ref=e464]
+            - columnheader "Validate Immediately" [ref=e470]
+            - columnheader "Validate Immediately Prompt" [ref=e476]
+            - columnheader "Hidden" [ref=e482]
+          - grid [ref=e488]
+        - generic [ref=e490] [cursor=pointer]: 
+      - separator [ref=e491]: ⁞
+      - generic [ref=e492]:
+        - generic [ref=e493]: "Domain Additional Settings:"
+        - textbox "Domain Additional Settings:" [ref=e498]
+        - generic [ref=e499] [cursor=pointer]
+      - generic [ref=e500]:
+        - generic [ref=e501]: "Hidden:"
+        - textbox "Hidden:" [ref=e506]
+        - generic [ref=e507] [cursor=pointer]
+      - generic [ref=e508]:
+        - generic [ref=e509]: "C(DerOrgEffDomainAdditionalSettingsStatic):"
+        - textbox "C(DerOrgEffDomainAdditionalSettingsStatic):" [ref=e514]
+        - generic [ref=e515] [cursor=pointer]
+      - generic [ref=e516]:
+        - generic [ref=e517]: "Hidden:"
+        - textbox "Hidden:" [ref=e522]
+        - generic [ref=e523] [cursor=pointer]
+      - generic [ref=e524]:
+        - generic [ref=e525]: "Validate Immediately:"
+        - textbox "Validate Immediately:" [ref=e530]
+        - generic [ref=e531] [cursor=pointer]
+      - generic [ref=e532]:
+        - generic [ref=e533]: "Validate Immediately Prompt:"
+        - textbox "Validate Immediately Prompt:" [ref=e538]
+        - generic [ref=e539] [cursor=pointer]
+      - generic [ref=e540]:
+        - generic [ref=e541]: "Validators:"
+        - textbox "Validators:" [ref=e546]
+        - generic [ref=e547] [cursor=pointer]
+      - generic [ref=e548]:
+        - generic [ref=e549]: "Inline List:"
+        - textbox "Inline List:" [ref=e554]
+        - generic [ref=e555] [cursor=pointer]
+      - generic [ref=e556]:
+        - generic [ref=e557]: "Inline List:"
+        - textbox "Inline List:" [ref=e562]
+        - generic [ref=e563] [cursor=pointer]
+      - generic [ref=e564]:
+        - generic [ref=e565]: "Property Value:"
+        - textbox "Property Value:" [disabled] [ref=e570]
+        - generic [ref=e571] [cursor=pointer]
+      - generic [ref=e572]:
+        - generic [ref=e573]: "Validators:"
+        - textbox "Validators:" [ref=e578]
+        - generic [ref=e579] [cursor=pointer]
+      - generic [ref=e580]:
+        - generic [ref=e581]: "Class Name:"
+        - generic [ref=e582] [cursor=pointer]
+      - generic [ref=e583]:
+        - generic [ref=e584]: "Class Name:"
+        - textbox "Class Name:" [ref=e589]
+        - generic [ref=e590] [cursor=pointer]
+      - generic [ref=e591]:
+        - generic [ref=e592]: "Base Class:"
+        - generic [ref=e593] [cursor=pointer]
+      - generic [ref=e594]:
+        - generic [ref=e595]: "Base Class:"
+        - combobox "Base Class:" [ref=e600]
+        - generic [ref=e601] [cursor=pointer]
+      - generic [ref=e602]:
+        - generic [ref=e603]: "Description:"
+        - generic [ref=e604] [cursor=pointer]
+      - generic [ref=e605]:
+        - generic [ref=e606]: "Description:"
+        - textbox "Description:" [ref=e611]
+        - generic [ref=e612] [cursor=pointer]
+      - generic [ref=e613]:
+        - generic [ref=e614]: "Revision No:"
+        - generic [ref=e615] [cursor=pointer]
+      - generic [ref=e616]:
+        - generic [ref=e617]: "Revision No:"
+        - textbox "Revision No:" [ref=e622]
+        - generic [ref=e623] [cursor=pointer]
+      - generic [ref=e624]:
+        - generic [ref=e625]: "Revision Date:"
+        - generic [ref=e626] [cursor=pointer]
+      - generic [ref=e627]:
+        - generic [ref=e628]: "Revision Date:"
+        - textbox "Revision Date:" [ref=e633]
+        - generic [ref=e634] [cursor=pointer]
+      - generic [ref=e635]:
+        - generic [ref=e636]: "Locked By:"
+        - generic [ref=e637] [cursor=pointer]
+      - generic [ref=e638]:
+        - generic [ref=e639]: "Locked By:"
+        - textbox "Locked By:" [ref=e644]
+        - generic [ref=e645] [cursor=pointer]
+      - generic [ref=e646]:
+        - generic [ref=e647]: "Access As:"
+        - generic [ref=e648] [cursor=pointer]
+      - generic [ref=e649]:
+        - generic [ref=e650]: "Access As:"
+        - textbox "Access As:" [ref=e655]
+        - generic [ref=e656] [cursor=pointer]
+      - button "Check In" [ref=e658] [cursor=pointer]
+      - button "Undo Check Out" [ref=e661] [cursor=pointer]
+      - group [ref=e663]:
+        - generic [ref=e666]:
+          - generic [ref=e667]:
+            - generic [ref=e668]: "Data Type:"
+            - generic [ref=e669] [cursor=pointer]
+          - generic [ref=e670]:
+            - generic [ref=e671]: "Data Type:"
+            - combobox "Data Type:" [ref=e676]
+            - generic [ref=e677] [cursor=pointer]
+          - generic [ref=e678]:
+            - generic [ref=e679]: "Length:"
+            - generic [ref=e680] [cursor=pointer]
+          - generic [ref=e681]:
+            - generic [ref=e682]: "Length:"
+            - textbox "Length:" [ref=e687]
+            - generic [ref=e688] [cursor=pointer]
+          - generic [ref=e689]:
+            - generic [ref=e690]: "Decimal Position:"
+            - generic [ref=e691] [cursor=pointer]
+          - generic [ref=e692]:
+            - generic [ref=e693]: "Decimal Position:"
+            - textbox "Decimal Position:" [ref=e698]
+            - generic [ref=e699] [cursor=pointer]
+          - generic [ref=e700]:
+            - generic [ref=e701]: "Default Value:"
+            - generic [ref=e702] [cursor=pointer]
+          - generic [ref=e703]:
+            - generic [ref=e704]: "Default Value:"
+            - textbox "Default Value:" [ref=e709]
+            - generic [ref=e710] [cursor=pointer]
+          - generic [ref=e711]:
+            - generic [ref=e712]: "Column Data Type:"
+            - generic [ref=e713] [cursor=pointer]
+          - generic [ref=e714]:
+            - generic [ref=e715]: "Column Data Type:"
+            - combobox "Column Data Type:" [ref=e720]
+            - generic [ref=e721] [cursor=pointer]
+          - generic [ref=e722]:
+            - generic [ref=e723]: "Inline List:"
+            - generic [ref=e724] [cursor=pointer]
+          - generic [ref=e725]:
+            - generic [ref=e726]: "Inline List:"
+            - textbox "Inline List:" [ref=e731]
+            - generic [ref=e732] [cursor=pointer]
+          - button "..." [ref=e734] [cursor=pointer]
+          - generic [ref=e736]:
+            - generic [ref=e737]: "Validators:"
+            - generic [ref=e738] [cursor=pointer]
+          - generic [ref=e739]:
+            - generic [ref=e740]: "Validators:"
+            - textbox "Validators:" [ref=e745]
+            - generic [ref=e746] [cursor=pointer]
+          - button "..." [ref=e748] [cursor=pointer]
+          - generic [ref=e750]:
+            - generic [ref=e751]:
+              - checkbox "Required" [disabled] [ref=e752]
+              - generic [ref=e754]: Required
+            - generic [ref=e755] [cursor=pointer]
+          - generic [ref=e756]:
+            - generic [ref=e757]: "Validate Immediately Prompt:"
+            - generic [ref=e758] [cursor=pointer]
+          - generic [ref=e759]:
+            - generic [ref=e760]:
+              - checkbox "Read Only Record" [disabled] [ref=e761]
+              - generic [ref=e763]: Read Only Record
+            - generic [ref=e764] [cursor=pointer]
+          - generic [ref=e765]:
+            - generic [ref=e766]:
+              - checkbox "Validate Immediately" [disabled] [ref=e767]
+              - generic [ref=e769]: Validate Immediately
+            - generic [ref=e770] [cursor=pointer]
+          - generic [ref=e771]:
+            - generic [ref=e772]: "Validate Immediately Prompt:"
+            - combobox "Validate Immediately Prompt:" [ref=e777]
+            - generic [ref=e778] [cursor=pointer]
+        - text: 
+      - group [ref=e779]:
+        - generic [ref=e782]:
+          - generic [ref=e783]:
+            - generic [ref=e784]: "Label String ID:"
+            - generic [ref=e785] [cursor=pointer]
+          - generic [ref=e786]:
+            - generic [ref=e787]: "Label String ID:"
+            - textbox "Label String ID:" [ref=e792]
+            - generic [ref=e793] [cursor=pointer]
+          - generic [ref=e794]:
+            - generic [ref=e795]: "Input Mask:"
+            - generic [ref=e796] [cursor=pointer]
+          - generic [ref=e797]:
+            - generic [ref=e798]: "Input Mask:"
+            - textbox "Input Mask:" [ref=e803]
+            - generic [ref=e804] [cursor=pointer]
+          - generic [ref=e805]:
+            - generic [ref=e806]: "Prompt Char:"
+            - generic [ref=e807] [cursor=pointer]
+          - generic [ref=e808]:
+            - generic [ref=e809]: "Prompt Char:"
+            - textbox "Prompt Char:" [ref=e814]
+            - generic [ref=e815] [cursor=pointer]
+          - generic [ref=e816]:
+            - generic [ref=e817]: "Justify:"
+            - generic [ref=e818] [cursor=pointer]
+          - generic [ref=e819]:
+            - generic [ref=e820]: "Justify:"
+            - combobox "Justify:" [ref=e825]
+            - generic [ref=e826] [cursor=pointer]
+          - generic [ref=e827]:
+            - generic [ref=e828]: "Binary Format:"
+            - generic [ref=e829] [cursor=pointer]
+          - generic [ref=e830]:
+            - generic [ref=e831]: "Binary Format:"
+            - combobox "Binary Format:" [ref=e836]
+            - generic [ref=e837] [cursor=pointer]
+          - generic [ref=e838]:
+            - generic [ref=e839]: "Date Format:"
+            - generic [ref=e840] [cursor=pointer]
+          - generic [ref=e841]:
+            - generic [ref=e842]: "Date Format:"
+            - combobox "Date Format:" [ref=e847]
+            - generic [ref=e848] [cursor=pointer]
+          - generic [ref=e849]:
+            - generic [ref=e850]: "IME Char Set:"
+            - generic [ref=e851] [cursor=pointer]
+          - generic [ref=e852]:
+            - generic [ref=e853]: "IME Char Set:"
+            - combobox "IME Char Set:" [ref=e858]
+            - generic [ref=e859] [cursor=pointer]
+          - generic [ref=e860]:
+            - generic [ref=e861]: "Boolean True:"
+            - generic [ref=e862] [cursor=pointer]
+          - generic [ref=e863]:
+            - generic [ref=e864]: "Boolean True:"
+            - textbox "Boolean True:" [ref=e869]
+            - generic [ref=e870] [cursor=pointer]
+          - generic [ref=e871]:
+            - generic [ref=e872]: "Boolean False:"
+            - generic [ref=e873] [cursor=pointer]
+          - generic [ref=e874]:
+            - generic [ref=e875]: "Boolean False:"
+            - textbox "Boolean False:" [ref=e880]
+            - generic [ref=e881] [cursor=pointer]
+          - generic [ref=e882]:
+            - generic [ref=e883]: "Display Decimal Position:"
+            - generic [ref=e884] [cursor=pointer]
+          - generic [ref=e885]:
+            - generic [ref=e886]: "Display Decimal Position:"
+            - textbox "Display Decimal Position:" [ref=e891]
+            - generic [ref=e892] [cursor=pointer]
+          - generic [ref=e893]:
+            - generic [ref=e894]:
+              - checkbox "Read Only" [disabled] [ref=e895]
+              - generic [ref=e897]: Read Only
+            - generic [ref=e898] [cursor=pointer]
+          - generic [ref=e899]:
+            - generic [ref=e900]:
+              - checkbox "Upper Case" [disabled] [ref=e901]
+              - generic [ref=e903]: Upper Case
+            - generic [ref=e904] [cursor=pointer]
+          - generic [ref=e905]:
+            - generic [ref=e906]:
+              - checkbox "HTML" [disabled] [ref=e907]
+              - generic [ref=e909]: HTML
+            - generic [ref=e910] [cursor=pointer]
+          - generic [ref=e911]:
+            - generic [ref=e912]:
+              - checkbox "UI hidden" [disabled] [ref=e913]
+              - generic [ref=e915]: UI hidden
+            - generic [ref=e916] [cursor=pointer]
+        - text: 
+      - group [ref=e917]:
+        - generic [ref=e920]:
+          - generic [ref=e921]:
+            - generic [ref=e922]: "Domain IDO Name:"
+            - generic [ref=e923] [cursor=pointer]
+          - generic [ref=e924]:
+            - generic [ref=e925]: "Domain IDO Name:"
+            - combobox "Domain IDO Name:" [ref=e930]
+            - generic [ref=e931] [cursor=pointer]
+          - generic [ref=e932]:
+            - generic [ref=e933]: "Domain Property:"
+            - generic [ref=e934] [cursor=pointer]
+          - generic [ref=e935]:
+            - generic [ref=e936]: "Domain Property:"
+            - combobox "Domain Property:" [ref=e941]
+            - generic [ref=e942] [cursor=pointer]
+          - generic [ref=e943]:
+            - generic [ref=e944]: "Domain List Properties:"
+            - generic [ref=e945] [cursor=pointer]
+          - generic [ref=e946]:
+            - generic [ref=e947]: "Domain List Properties:"
+            - combobox "Domain List Properties:" [ref=e952]
+            - generic [ref=e953] [cursor=pointer]
+          - button "..." [ref=e955] [cursor=pointer]
+          - generic [ref=e957]:
+            - generic [ref=e958]: "Domain Additional Settings:"
+            - generic [ref=e959] [cursor=pointer]
+          - button "..." [ref=e961] [cursor=pointer]
+          - generic [ref=e963]:
+            - generic [ref=e964]: "Domain Additional Settings:"
+            - textbox "Domain Additional Settings:" [ref=e969]
+            - generic [ref=e970] [cursor=pointer]
+        - text: 
+      - generic [ref=e971]:
+        - generic [ref=e972]: "Actual:"
+        - generic [ref=e973] [cursor=pointer]
+      - generic [ref=e974]:
+        - generic [ref=e975]: "Data Type:"
+        - textbox "Data Type:" [ref=e980]
+        - generic [ref=e981] [cursor=pointer]
+      - generic [ref=e982]:
+        - generic [ref=e983]: "Label String ID:"
+        - textbox "Label String ID:" [ref=e988]
+        - generic [ref=e989] [cursor=pointer]
+      - generic [ref=e990]:
+        - generic [ref=e991]: "Read Only:"
+        - textbox "Read Only:" [ref=e996]
+        - generic [ref=e997] [cursor=pointer]
+      - generic [ref=e998]:
+        - generic [ref=e999]: "Development Flag:"
+        - textbox "Development Flag:" [ref=e1004]
+        - generic [ref=e1005] [cursor=pointer]
+      - generic [ref=e1006]:
+        - generic [ref=e1007]: "Length:"
+        - textbox "Length:" [ref=e1012]
+        - generic [ref=e1013] [cursor=pointer]
+      - generic [ref=e1014]:
+        - generic [ref=e1015]: "Input Mask:"
+        - textbox "Input Mask:" [ref=e1020]
+        - generic [ref=e1021] [cursor=pointer]
+      - group [ref=e1022]:
+        - generic [ref=e1025]:
+          - generic [ref=e1026]:
+            - generic [ref=e1027]: "Property Value:"
+            - generic [ref=e1028] [cursor=pointer]
+          - generic [ref=e1029]:
+            - generic [ref=e1030]: "Property Value:"
+            - textbox "Property Value:" [disabled] [ref=e1035]
+            - generic [ref=e1036] [cursor=pointer]
+        - text: 
+      - generic [ref=e1037]:
+        - generic [ref=e1038]: "Display Decimal Position:"
+        - textbox "Display Decimal Position:" [ref=e1043]
+        - generic [ref=e1044] [cursor=pointer]
+      - generic [ref=e1045]:
+        - generic [ref=e1046]: "Prompt Char:"
+        - textbox "Prompt Char:" [ref=e1051]
+        - generic [ref=e1052] [cursor=pointer]
+      - generic [ref=e1053]:
+        - generic [ref=e1054]: "Default Value:"
+        - textbox "Default Value:" [ref=e1059]
+        - generic [ref=e1060] [cursor=pointer]
+      - generic [ref=e1061]:
+        - generic [ref=e1062]: "Justify:"
+        - textbox "Justify:" [ref=e1067]
+        - generic [ref=e1068] [cursor=pointer]
+      - generic [ref=e1069]:
+        - generic [ref=e1070]: "Column Type:"
+        - textbox "Column Type:" [ref=e1075]
+        - generic [ref=e1076] [cursor=pointer]
+      - generic [ref=e1077]:
+        - generic [ref=e1078]: "Date Format:"
+        - textbox "Date Format:" [ref=e1083]
+        - generic [ref=e1084] [cursor=pointer]
+      - generic [ref=e1085]:
+        - generic [ref=e1086]: "Required:"
+        - textbox "Required:" [ref=e1091]
+        - generic [ref=e1092] [cursor=pointer]
+      - generic [ref=e1093]:
+        - generic [ref=e1094]: "Binary Format:"
+        - textbox "Binary Format:" [ref=e1099]
+        - generic [ref=e1100] [cursor=pointer]
+      - generic [ref=e1101]:
+        - generic [ref=e1102]: "Read Only Record:"
+        - textbox "Read Only Record:" [ref=e1107]
+        - generic [ref=e1108] [cursor=pointer]
+      - generic [ref=e1109]:
+        - generic [ref=e1110]: "IME Charset:"
+        - textbox "IME Charset:" [ref=e1115]
+        - generic [ref=e1116] [cursor=pointer]
+      - generic [ref=e1117]:
+        - generic [ref=e1118]: "IDO Name:"
+        - textbox "IDO Name:" [ref=e1123]
+        - generic [ref=e1124] [cursor=pointer]
+      - generic [ref=e1125]:
+        - generic [ref=e1126]: "Read Only:"
+        - textbox "Read Only:" [ref=e1131]
+        - generic [ref=e1132] [cursor=pointer]
+      - generic [ref=e1133]:
+        - generic [ref=e1134]: "Property:"
+        - textbox "Property:" [ref=e1139]
+        - generic [ref=e1140] [cursor=pointer]
+      - generic [ref=e1141]:
+        - generic [ref=e1142]: "Upper Case:"
+        - textbox "Upper Case:" [ref=e1147]
+        - generic [ref=e1148] [cursor=pointer]
+      - generic [ref=e1149]:
+        - generic [ref=e1150]: "Additional List Properties:"
+        - textbox "Additional List Properties:" [ref=e1155]
+        - generic [ref=e1156] [cursor=pointer]
+      - generic [ref=e1157]:
+        - generic [ref=e1158]: "HTML:"
+        - textbox "HTML:" [ref=e1163]
+        - generic [ref=e1164] [cursor=pointer]
+      - generic [ref=e1165]:
+        - generic [ref=e1166]: "Boolean True Value:"
+        - textbox "Boolean True Value:" [ref=e1171]
+        - generic [ref=e1172] [cursor=pointer]
+      - generic [ref=e1173]:
+        - generic [ref=e1174]: "Decimal Position:"
+        - textbox "Decimal Position:" [ref=e1179]
+        - generic [ref=e1180] [cursor=pointer]
+      - generic [ref=e1181]:
+        - generic [ref=e1182]: "Boolean False Value:"
+        - textbox "Boolean False Value:" [ref=e1187]
+        - generic [ref=e1188] [cursor=pointer]
+      - generic [ref=e1189]:
+        - generic [ref=e1190]: "Validate Immediately:"
+        - textbox "Validate Immediately:" [ref=e1195]
+        - generic [ref=e1196] [cursor=pointer]
+      - generic [ref=e1197]:
+        - generic [ref=e1198]: "Validate Immediately Prompt:"
+        - textbox "Validate Immediately Prompt:" [ref=e1203]
+        - generic [ref=e1204] [cursor=pointer]
+      - generic [ref=e1205]:
+        - generic [ref=e1206]: "Original Effective:"
+        - generic [ref=e1207] [cursor=pointer]
+      - generic [ref=e1208]:
+        - generic [ref=e1209]: "Data Type:"
+        - textbox "Data Type:" [ref=e1214]
+        - generic [ref=e1215] [cursor=pointer]
+      - generic [ref=e1216]:
+        - generic [ref=e1217]: "Label String ID:"
+        - textbox "Label String ID:" [ref=e1222]
+        - generic [ref=e1223] [cursor=pointer]
+      - generic [ref=e1224]:
+        - generic [ref=e1225]: "Property Value:"
+        - textbox "Property Value:" [disabled] [ref=e1230]
+        - generic [ref=e1231] [cursor=pointer]
+      - generic [ref=e1232]:
+        - generic [ref=e1233]: "Length:"
+        - textbox "Length:" [ref=e1238]
+        - generic [ref=e1239] [cursor=pointer]
+      - generic [ref=e1240]:
+        - generic [ref=e1241]: "Input Mask:"
+        - textbox "Input Mask:" [ref=e1246]
+        - generic [ref=e1247] [cursor=pointer]
+      - generic [ref=e1248]:
+        - generic [ref=e1249]: "Display Decimal Position:"
+        - textbox "Display Decimal Position:" [ref=e1254]
+        - generic [ref=e1255] [cursor=pointer]
+      - generic [ref=e1256]:
+        - generic [ref=e1257]: "Prompt Char:"
+        - textbox "Prompt Char:" [ref=e1262]
+        - generic [ref=e1263] [cursor=pointer]
+      - generic [ref=e1264]:
+        - generic [ref=e1265]: "Default Value:"
+        - textbox "Default Value:" [ref=e1270]
+        - generic [ref=e1271] [cursor=pointer]
+      - generic [ref=e1272]:
+        - generic [ref=e1273]: "Justify:"
+        - textbox "Justify:" [ref=e1278]
+        - generic [ref=e1279] [cursor=pointer]
+      - generic [ref=e1280]:
+        - generic [ref=e1281]: "Column Data Type:"
+        - textbox "Column Data Type:" [ref=e1286]
+        - generic [ref=e1287] [cursor=pointer]
+      - generic [ref=e1288]:
+        - generic [ref=e1289]: "Date Format:"
+        - textbox "Date Format:" [ref=e1294]
+        - generic [ref=e1295] [cursor=pointer]
+      - generic [ref=e1296]:
+        - generic [ref=e1297]: "Required:"
+        - textbox "Required:" [ref=e1302]
+        - generic [ref=e1303] [cursor=pointer]
+      - generic [ref=e1304]:
+        - generic [ref=e1305]: "Binary Format:"
+        - textbox "Binary Format:" [ref=e1310]
+        - generic [ref=e1311] [cursor=pointer]
+      - generic [ref=e1312]:
+        - generic [ref=e1313]: "sRORecord:"
+        - textbox "sRORecord:" [ref=e1318]
+        - generic [ref=e1319] [cursor=pointer]
+      - generic [ref=e1320]:
+        - generic [ref=e1321]: "IME Char Set:"
+        - textbox "IME Char Set:" [ref=e1326]
+        - generic [ref=e1327] [cursor=pointer]
+      - generic [ref=e1328]:
+        - generic [ref=e1329]: "Domain IDO Name:"
+        - textbox "Domain IDO Name:" [ref=e1334]
+        - generic [ref=e1335] [cursor=pointer]
+      - generic [ref=e1336]:
+        - generic [ref=e1337]: "Read Only:"
+        - textbox "Read Only:" [ref=e1342]
+        - generic [ref=e1343] [cursor=pointer]
+      - generic [ref=e1344]:
+        - generic [ref=e1345]: "Domain Property:"
+        - textbox "Domain Property:" [ref=e1350]
+        - generic [ref=e1351] [cursor=pointer]
+      - generic [ref=e1352]:
+        - generic [ref=e1353]: "Upper Case:"
+        - textbox "Upper Case:" [ref=e1358]
+        - generic [ref=e1359] [cursor=pointer]
+      - generic [ref=e1360]:
+        - generic [ref=e1361]: "Domain List Properties:"
+        - textbox "Domain List Properties:" [ref=e1366]
+        - generic [ref=e1367] [cursor=pointer]
+      - generic [ref=e1368]:
+        - generic [ref=e1369]: "HTML:"
+        - textbox "HTML:" [ref=e1374]
+        - generic [ref=e1375] [cursor=pointer]
+      - generic [ref=e1376]:
+        - generic [ref=e1377]: "Boolean True:"
+        - textbox "Boolean True:" [ref=e1382]
+        - generic [ref=e1383] [cursor=pointer]
+      - generic [ref=e1384]:
+        - generic [ref=e1385]: "Decimal Position:"
+        - textbox "Decimal Position:" [ref=e1390]
+        - generic [ref=e1391] [cursor=pointer]
+      - generic [ref=e1392]:
+        - generic [ref=e1393]: "Boolean False:"
+        - textbox "Boolean False:" [ref=e1398]
+        - generic [ref=e1399] [cursor=pointer]
+    - separator [ref=e1400]
+    - text: 
+    - generic [ref=e1401]: Details
+    - button "Expand Panel" [ref=e1402] [cursor=pointer]
+    - text:  ⁞
+  - separator [ref=e1403]
+  - text: 
+  - generic [ref=e1404]: Properties
+  - button "Collapse Panel" [ref=e1405] [cursor=pointer]
+  - tabpanel [aria-hidden] [ref=e1406]:
+    - toolbar [ref=e1407]:
+      - button [ref=e1408] [cursor=pointer]: 
+      - generic [ref=e1409]:
+        - generic [ref=e1410]: "Search Properties:"
+        - generic [ref=e1413]:
+          - textbox [ref=e1415]
+          - generic [ref=e1416] [cursor=pointer]
+      - button [ref=e1417] [cursor=pointer]: 
+      - button [ref=e1418] [cursor=pointer]: 
+    - generic: Name
+    - generic [ref=e1419]: Value
+    - tree [ref=e1427]:
+      - generic [ref=e1428]:
+        - table [ref=e1429]:
+          - rowgroup [ref=e1430]:
+            - row [ref=e1431]:
+              - treeitem [ref=e1432]:
+                - generic [ref=e1433]: Design
+              - gridcell [ref=e1435]
+              - gridcell [ref=e1437]
+        - table [ref=e1438]:
+          - rowgroup [ref=e1439]:
+            - row [ref=e1440]:
+              - treeitem [ref=e1441]:
+                - generic [ref=e1442]: Name
+              - gridcell [ref=e1444]:
+                - generic [ref=e1445]: IdoPropertyClasses
+              - gridcell [ref=e1446]
+        - table [ref=e1447]:
+          - rowgroup [ref=e1448]:
+            - row [ref=e1449]:
+              - treeitem [ref=e1450]:
+                - generic [ref=e1451]: Description
+              - gridcell [ref=e1453]
+              - gridcell [ref=e1455]
+        - table [ref=e1456]:
+          - rowgroup [ref=e1457]:
+            - row [ref=e1458]:
+              - treeitem [ref=e1459]:
+                - generic [ref=e1460]: Caption
+              - gridcell [ref=e1462]:
+                - generic [ref=e1463]:
+                  - generic [ref=e1464]: fPropertyClasses
+                  - generic [ref=e1465] [cursor=pointer]
+              - gridcell [ref=e1466]:
+                - button [ref=e1468] [cursor=pointer]: 
+        - table [ref=e1469]:
+          - rowgroup [ref=e1470]:
+            - row [ref=e1471]:
+              - treeitem [ref=e1472]:
+                - generic [ref=e1473]: Version
+              - gridcell [ref=e1475]:
+                - generic [ref=e1476]: Vendor Default version
+              - gridcell [ref=e1477]
+        - table [ref=e1478]:
+          - rowgroup [ref=e1479]:
+            - row [ref=e1480]:
+              - treeitem [ref=e1481]:
+                - generic [ref=e1482]: Device Type
+              - gridcell [ref=e1484]:
+                - generic [ref=e1485]: Default
+              - gridcell [ref=e1486]
+        - table [ref=e1487]:
+          - rowgroup [ref=e1488]:
+            - row [ref=e1489]:
+              - treeitem [ref=e1490]:
+                - generic [ref=e1491]: Form Type
+              - gridcell [ref=e1493]:
+                - generic [ref=e1494]: Normal
+              - gridcell [ref=e1495]
+        - table [ref=e1496]:
+          - rowgroup [ref=e1497]:
+            - row [ref=e1498]:
+              - treeitem [ref=e1499]:
+                - generic [ref=e1500]: Is Master
+              - gridcell [ref=e1502]:
+                - generic [ref=e1503]: "True"
+              - gridcell [ref=e1504]
+        - table [ref=e1505]:
+          - rowgroup [ref=e1506]:
+            - row [ref=e1507]:
+              - treeitem [ref=e1508]:
+                - generic [ref=e1509]: Appearance
+              - gridcell [ref=e1511]
+              - gridcell [ref=e1513]
+        - table [ref=e1514]:
+          - rowgroup [ref=e1515]:
+            - row [ref=e1516]:
+              - treeitem [ref=e1517]:
+                - generic [ref=e1518]: Behavior
+              - gridcell [ref=e1520]
+              - gridcell [ref=e1522]
+        - table [ref=e1523]:
+          - rowgroup [ref=e1524]:
+            - row [ref=e1525]:
+              - treeitem [ref=e1526]:
+                - generic [ref=e1527]: Help
+              - gridcell [ref=e1529]
+              - gridcell [ref=e1531]
+        - table [ref=e1532]:
+          - rowgroup [ref=e1533]:
+            - row [ref=e1534]:
+              - treeitem [ref=e1535]:
+                - generic [ref=e1536]: Layout
+              - gridcell [ref=e1538]
+              - gridcell [ref=e1540]
+    - generic [ref=e1541]:
+      - generic [ref=e1542]: Empty Property Description Field
+      - textbox [ref=e1547]
+  - tablist [ref=e1548]:
+    - tab [selected] [ref=e1549] [cursor=pointer]:
+      - heading "Form" [level=2] [ref=e1550]
+    - tab [ref=e1551] [cursor=pointer]:
+      - heading "Component" [level=2] [ref=e1552]
+  - toolbar [ref=e1553]:
+    - generic [ref=e1554]: "[ ScopeType: User / ScopeName: anton.ramos@3mworks.com.ph ]"
+    - generic [ref=e1555]: en-US
+    - separator [ref=e1556]
+    - img "Powered by Infor" [ref=e1557]
+  - dialog "Data Maintenance Wizard" [ref=e1559]:
+    - button "Close Window" [ref=e1561] [cursor=pointer]
+    - form [ref=e1562]:
+      - generic [ref=e1563]:
+        - group [ref=e1564]:
+          - generic [ref=e1567]:
+            - generic:
+              - generic [ref=e1569]:
+                - checkbox "Site Split" [ref=e1570]
+                - generic [ref=e1572]: Site Split
+              - generic:
+                - generic [ref=e1573]: "Table Name:"
+                - textbox [ref=e1579]
+              - generic:
+                - generic [ref=e1580]: "View Name:"
+                - textbox [ref=e1586]
+        - generic:
+          - generic:
+            - generic [ref=e1587]: "IDO Name:"
+            - textbox [ref=e1593]: FX_Items
+          - generic:
+            - generic [ref=e1594]: "IDO Project Name:"
+            - generic [ref=e1598]:
+              - combobox [ref=e1600]: FX_HelloWorldProject01
+              - button "Open" [ref=e1601] [cursor=pointer]
+          - generic:
+            - generic [ref=e1602]: "Table Alias:"
+            - textbox [ref=e1608]: fxitms
+          - generic:
+            - generic [ref=e1609]: "Form Type:"
+            - generic [ref=e1613]:
+              - combobox [ref=e1615]: MultiView
+              - button "Open" [ref=e1616] [cursor=pointer]
+          - generic:
+            - generic:
+              - generic [ref=e1617]: "Form Layout:"
+              - generic [ref=e1621]:
+                - combobox [ref=e1623]: GridLeft
+                - button "Open" [ref=e1624] [cursor=pointer]
+          - generic:
+            - generic [ref=e1625]: "Device Type:"
+            - generic [ref=e1629]:
+              - combobox [ref=e1631]: Default
+              - button "Open" [ref=e1632] [cursor=pointer]
+        - button "Add Subcollection" [ref=e1634] [cursor=pointer]
+        - generic:
+          - button "Add Row" [ref=e1636] [cursor=pointer]
+          - button "Delete Row" [ref=e1638] [cursor=pointer]
+          - button "Delete All Rows" [ref=e1640] [cursor=pointer]
+          - button "Get Database Schema" [ref=e1642] [cursor=pointer]
+          - generic:
+            - grid [ref=e1643]:
+              - grid [ref=e1644]:
+                - row "Name" [ref=e1645]:
+                  - columnheader [ref=e1646]
+                  - columnheader "Name" [ref=e1651]
+                - grid [ref=e1656]:
+                  - generic [ref=e1657]:
+                    - table [ref=e1658]:
+                      - rowgroup [ref=e1659]:
+                        - row [ref=e1660]:
+                          - gridcell "1" [ref=e1661]
+                          - gridcell "FX_Item" [ref=e1663]
+                    - table [ref=e1665]:
+                      - rowgroup [ref=e1666]:
+                        - row [ref=e1667]:
+                          - gridcell "2" [ref=e1668]
+                          - gridcell "FX_Description" [ref=e1670]
+                    - table [ref=e1672]:
+                      - rowgroup [ref=e1673]:
+                        - row [ref=e1674]:
+                          - gridcell "3" [ref=e1675]
+                          - gridcell "FX_Cost" [ref=e1678]
+              - grid [ref=e1680]:
+                - row [ref=e1681]:
+                  - columnheader "Property Class" [ref=e1682]
+                  - columnheader "Data Type" [ref=e1687]
+                  - columnheader "SQL Data Type" [ref=e1692]
+                  - columnheader "Property Length" [ref=e1697]
+                  - columnheader "Decimal Precision" [ref=e1702]
+                  - columnheader "Primary Key" [ref=e1707]
+                  - columnheader "Required" [ref=e1712]
+                  - columnheader "Label String ID" [ref=e1717]
+                  - columnheader "Default Value" [ref=e1722]
+                - grid [ref=e1727]:
+                  - generic [ref=e1728]:
+                    - table [ref=e1729]:
+                      - rowgroup [ref=e1730]:
+                        - row "FX_ItemBase String nvarchar 20 checkbox checked checkbox checked FX_sItem" [ref=e1731]:
+                          - gridcell "FX_ItemBase" [selected] [ref=e1732]
+                          - gridcell "String" [ref=e1734]
+                          - gridcell "nvarchar" [ref=e1736]
+                          - gridcell "20" [ref=e1738]
+                          - gridcell [ref=e1740]
+                          - checkbox [checked] [ref=e1742]:
+                            - img "checkbox checked" [ref=e1744]
+                          - checkbox [checked] [ref=e1745]:
+                            - img "checkbox checked" [ref=e1747]
+                          - gridcell "FX_sItem" [ref=e1748]
+                          - gridcell [ref=e1750]
+                    - table [ref=e1752]:
+                      - rowgroup [ref=e1753]:
+                        - row "String nvarchar 150 checkbox not checked checkbox not checked FX_sDescription" [ref=e1754]:
+                          - gridcell [ref=e1755]
+                          - gridcell "String" [ref=e1757]
+                          - gridcell "nvarchar" [ref=e1759]
+                          - gridcell "150" [ref=e1761]
+                          - gridcell [ref=e1763]
+                          - checkbox [ref=e1765]:
+                            - img "checkbox not checked" [ref=e1767]
+                          - checkbox [ref=e1768]:
+                            - img "checkbox not checked" [ref=e1770]
+                          - gridcell "FX_sDescription" [ref=e1771]
+                          - gridcell [selected] [ref=e1773]
+                    - table [ref=e1775]:
+                      - rowgroup [ref=e1776]:
+                        - row [ref=e2247]:
+                          - gridcell "FX_Cost" [ref=e2237]
+                          - gridcell "Decimal" [ref=e2248]
+                          - gridcell [selected] [ref=e2249]
+                          - gridcell "18" [ref=e2232]
+                          - gridcell "2" [ref=e2233]
+                          - checkbox [ref=e1787]:
+                            - img "checkbox not checked" [ref=e1789]
+                          - checkbox [ref=e1790]:
+                            - img "checkbox not checked" [ref=e1792]
+                          - gridcell "FX_sCost" [ref=e2234]
+                          - gridcell "0" [ref=e2235]
+                  - generic [ref=e2253]:
+                    - combobox [active] [ref=e2255]: decimal
+                    - button "Open" [ref=e2256] [cursor=pointer]
+            - button [ref=e1805] [cursor=pointer]
+            - button [ref=e1807] [cursor=pointer]:
+              - img "Move Up" [ref=e1808]
+            - button [ref=e1810] [cursor=pointer]:
+              - img "Move Down" [ref=e1811]
+            - button [ref=e1813] [cursor=pointer]
+        - button "Back" [disabled] [ref=e1815]
+        - button "Next" [ref=e1817] [cursor=pointer]
+        - button "Finish" [disabled] [ref=e1819]
+        - button "Cancel" [ref=e1821] [cursor=pointer]
+        - button "Help" [ref=e1823] [cursor=pointer]

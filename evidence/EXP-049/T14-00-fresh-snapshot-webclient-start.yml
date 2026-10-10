@@ -1,0 +1,419 @@
+- generic [ref=e5]:
+  - banner "Portal Top Navigation Bar" [ref=e6]:
+    - generic [ref=e8]:
+      - generic:
+        - generic [ref=e10]:
+          - generic:
+            - link "Home" [ref=e12] [cursor=pointer]
+            - button "Open navigation menu" [ref=e15] [cursor=pointer]
+        - generic [ref=e17]:
+          - tablist "Tabs" [ref=e18]:
+            - tab "System Administrator" [ref=e19] [cursor=pointer]:
+              - link "System Administrator" [ref=e20]
+              - button "Close tab System Administrator" [ref=e23]
+            - tab "Mongoose" [selected] [ref=e24] [cursor=pointer]:
+              - link "Mongoose" [ref=e25]
+              - button "Open tab menu" [ref=e28]
+              - button "Close tab Mongoose" [ref=e32]
+          - button "Tabs menu more" [ref=e36] [cursor=pointer]
+        - generic [ref=e38]:
+          - generic:
+            - generic [ref=e39]: DEM
+            - button "Health Notifications" [ref=e43] [cursor=pointer]
+            - button "User menu" [ref=e45] [cursor=pointer]
+            - button "Hide Smart Panel" [ref=e47] [cursor=pointer]
+    - generic:
+      - generic:
+        - generic: Infor OS Portal
+        - generic: 2026.10.01 (20260909-164316, 20260909-154143, 1063, 1583, 727)
+        - generic:
+          - generic:
+            - text: Copyright © 2026 Infor. All rights reserved. The word and design marks set forth herein are trademarks and/or registered trademarks of Infor and/or its affiliates and subsidiaries. All other trademarks listed herein are the property of their respective owners
+            - generic: www.infor.com
+            - text: .
+  - main [ref=e48]:
+    - iframe [active] [ref=e59]:
+      - generic [ref=f1e1]:
+        - banner [ref=f1e2]:
+          - heading "Infor Mongoose Application Development Framework" [level=1] [ref=f1e3]
+          - link "Skip to Main Content" [ref=f1e4] [cursor=pointer]:
+            - /url: "#formContainer"
+          - navigation [ref=f1e5]:
+            - button "Explorer" [ref=f1e6] [cursor=pointer]
+            - separator
+            - button "Form" [ref=f1e10] [cursor=pointer]
+            - separator
+            - button "Actions" [ref=f1e12] [cursor=pointer]
+            - separator
+            - button "Edit" [ref=f1e14] [cursor=pointer]
+            - separator
+            - button "View" [ref=f1e16] [cursor=pointer]
+            - separator
+            - button "Window" [ref=f1e18] [cursor=pointer]
+            - separator
+            - button "Help" [ref=f1e20] [cursor=pointer]
+            - button "anton.ramos@3mworks.com.ph | G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT" [ref=f1e22] [cursor=pointer]
+          - toolbar [ref=f1e24]:
+            - button "Open" [ref=f1e25] [cursor=pointer]:
+              - button "Open" [ref=f1e26]
+            - button "Save" [disabled] [ref=f1e28]:
+              - button "Save" [disabled]
+            - button "New" [ref=f1e29] [cursor=pointer]:
+              - button "New" [ref=f1e30]
+            - button "Delete" [ref=f1e32] [cursor=pointer]:
+              - button "Delete" [ref=f1e33]
+            - button "Refresh" [ref=f1e35] [cursor=pointer]:
+              - button "Refresh" [ref=f1e36]
+            - button "Filter in Place" [ref=f1e38] [cursor=pointer]:
+              - button "FiP" [ref=f1e39]
+            - button "Get More Rows" [disabled] [ref=f1e41]:
+              - button "Get More Rows" [disabled]
+            - button "System Notes" [disabled] [ref=f1e42]:
+              - button "System Notes" [disabled]
+            - button "Documents" [disabled] [ref=f1e43]:
+              - button "Documents" [disabled]
+            - button "Send email for the current object" [disabled] [ref=f1e44]:
+              - button "Send email for the current object" [disabled]
+            - button "Export To Excel" [ref=f1e45] [cursor=pointer]:
+              - button "Export To Excel" [ref=f1e46]
+            - button [ref=f1e48] [cursor=pointer]:
+              - button "Designer" [ref=f1e49]
+            - button "Designer" [ref=f1e51] [cursor=pointer]:
+              - button "Designer" [ref=f1e52]
+            - button "Help Current Form" [ref=f1e54] [cursor=pointer]:
+              - button "Help Current Form" [ref=f1e55]
+        - region [ref=f1e57]:
+          - heading "Explorer" [ref=f1e58]
+          - button "Collapse Panel"
+          - grid [ref=f1e59]:
+            - columnheader "Name"
+            - tree [ref=f1e64]:
+              - generic [ref=f1e65]:
+                - table [ref=f1e66]:
+                  - rowgroup [ref=f1e67]:
+                    - row [ref=f1e68]:
+                      - treeitem [ref=f1e69]:
+                        - treeitem "My Folders" [ref=f1e71]
+                - table [ref=f1e72]:
+                  - rowgroup [ref=f1e73]:
+                    - row [ref=f1e74]:
+                      - treeitem [ref=f1e75]:
+                        - treeitem "Master Explorer" [ref=f1e77]
+                - table [ref=f1e78]:
+                  - rowgroup [ref=f1e79]:
+                    - row [ref=f1e80]:
+                      - treeitem [ref=f1e81]:
+                        - treeitem "Public Folders" [ref=f1e83]
+                - table [ref=f1e84]:
+                  - rowgroup [ref=f1e85]:
+                    - row [ref=f1e86]:
+                      - treeitem [ref=f1e87]:
+                        - treeitem "User Folders" [ref=f1e89]
+        - region [ref=f1e90]:
+          - main [ref=f1e91]:
+            - tablist [ref=f1e92]:
+              - tab [ref=f1e93] [cursor=pointer]:
+                - heading "Property Classes" [level=2] [ref=f1e94]
+                - button "Close Panel Property Classes" [ref=f1e95]:
+                  - img "Close Panel Property Classes"
+              - tab [ref=f1e96] [cursor=pointer]:
+                - heading "IDOs" [level=2] [ref=f1e97]
+                - button "Close Panel IDOs" [ref=f1e98]:
+                  - img "Close Panel IDOs"
+              - tab [ref=f1e99] [cursor=pointer]:
+                - heading "Sql Tables" [level=2] [ref=f1e100]
+                - button "Close Panel Sql Tables" [ref=f1e101]:
+                  - img "Close Panel Sql Tables"
+              - tab [ref=f1e102] [cursor=pointer]:
+                - heading "IDO Projects" [level=2] [ref=f1e103]
+                - button "Close Panel IDO Projects" [ref=f1e104]:
+                  - img "Close Panel IDO Projects"
+              - tab [ref=f1e105] [cursor=pointer]:
+                - heading "Export/Import Strings" [level=2] [ref=f1e106]
+                - button "Close Panel Export/Import Strings" [ref=f1e107]:
+                  - img "Close Panel Export/Import Strings"
+              - tab [ref=f1e108] [cursor=pointer]:
+                - heading "IDO Properties" [level=2] [ref=f1e109]
+                - button "Close Panel IDO Properties" [ref=f1e110]:
+                  - img "Close Panel IDO Properties"
+              - tab [selected] [ref=f1e111] [cursor=pointer]:
+                - heading "Sql Columns" [level=2] [ref=f1e112]
+                - button "Close Panel Sql Columns" [ref=f1e113]:
+                  - img "Close Panel Sql Columns"
+              - button "⏷" [ref=f1e114] [cursor=pointer]
+            - tabpanel "Sql Columns" [ref=f1e116]:
+              - form [ref=f1e117]:
+                - generic [ref=f1e118]:
+                  - grid [ref=f1e119]:
+                    - grid [ref=f1e120]:
+                      - row [ref=f1e121]:
+                        - columnheader [ref=f1e122]
+                      - grid [ref=f1e127]:
+                        - generic [ref=f1e128]:
+                          - table [ref=f1e129]:
+                            - rowgroup [ref=f1e130]:
+                              - row [ref=f1e131]:
+                                - gridcell "1" [ref=f1e132]
+                          - table [ref=f1e134]:
+                            - rowgroup [ref=f1e135]:
+                              - row [ref=f1e136]:
+                                - gridcell "2" [ref=f1e137]
+                          - table [ref=f1e139]:
+                            - rowgroup [ref=f1e140]:
+                              - row [ref=f1e141]:
+                                - gridcell "3" [ref=f1e142]
+                          - table [ref=f1e144]:
+                            - rowgroup [ref=f1e145]:
+                              - row [ref=f1e146]:
+                                - gridcell "4" [ref=f1e147]
+                          - table [ref=f1e149]:
+                            - rowgroup [ref=f1e150]:
+                              - row [ref=f1e151]:
+                                - gridcell "5" [ref=f1e152]
+                          - table [ref=f1e154]:
+                            - rowgroup [ref=f1e155]:
+                              - row [ref=f1e156]:
+                                - gridcell "6" [ref=f1e157]
+                          - table [ref=f1e159]:
+                            - rowgroup [ref=f1e160]:
+                              - row [ref=f1e161]:
+                                - gridcell "7" [ref=f1e162]
+                          - table [ref=f1e164]:
+                            - rowgroup [ref=f1e165]:
+                              - row [ref=f1e166]:
+                                - gridcell "8" [ref=f1e167]
+                          - table [ref=f1e169]:
+                            - rowgroup [ref=f1e170]:
+                              - row [ref=f1e171]:
+                                - gridcell "9" [selected] [ref=f1e172]
+                          - table [ref=f1e175]:
+                            - rowgroup [ref=f1e176]:
+                              - row [ref=f1e177]:
+                                - gridcell "10" [ref=f1e178]
+                          - table [ref=f1e180]:
+                            - rowgroup [ref=f1e181]:
+                              - row [ref=f1e182]:
+                                - gridcell "11" [ref=f1e183]
+                    - grid [ref=f1e185]:
+                      - row [ref=f1e186]:
+                        - columnheader "* Column Name" [ref=f1e187]
+                        - columnheader "Schema" [ref=f1e193]
+                        - columnheader "Table Name" [ref=f1e199]
+                        - columnheader "* Data Type" [ref=f1e205]
+                        - columnheader "System Data Type" [ref=f1e211]
+                        - columnheader "Length" [ref=f1e217]
+                        - columnheader "Decimal Position" [ref=f1e223]
+                        - columnheader "Default Value" [ref=f1e229]
+                        - columnheader "Is Nullable" [ref=f1e235]
+                        - columnheader "Primary Key" [ref=f1e241]
+                        - columnheader "Key Sequence" [ref=f1e247]
+                        - columnheader "Definition" [ref=f1e253]
+                        - columnheader "Is Computed" [ref=f1e259]
+                        - columnheader "Column Id" [ref=f1e265]
+                      - grid [ref=f1e271]:
+                        - generic [ref=f1e272]:
+                          - table [ref=f1e273]:
+                            - rowgroup [ref=f1e274]:
+                              - row "FX_Item dbo FX_Items nvarchar nvarchar 20 checkbox not checked checkbox checked 1 checkbox not checked 2" [ref=f1e275]:
+                                - gridcell "FX_Item" [ref=f1e276]
+                                - gridcell "dbo" [ref=f1e278]
+                                - gridcell "FX_Items" [ref=f1e280]
+                                - gridcell "nvarchar" [ref=f1e282]
+                                - gridcell "nvarchar" [ref=f1e284]
+                                - gridcell "20" [ref=f1e286]
+                                - gridcell [ref=f1e288]
+                                - gridcell [ref=f1e290]
+                                - checkbox [ref=f1e292]:
+                                  - img "checkbox not checked" [ref=f1e294]
+                                - checkbox [checked] [ref=f1e295]:
+                                  - img "checkbox checked" [ref=f1e297]
+                                - gridcell "1" [ref=f1e298]
+                                - gridcell [ref=f1e300]
+                                - checkbox [ref=f1e302]:
+                                  - img "checkbox not checked" [ref=f1e304]
+                                - gridcell "2" [ref=f1e305]
+                          - table [ref=f1e307]:
+                            - rowgroup [ref=f1e308]:
+                              - row "FX_Description dbo FX_Items nvarchar nvarchar 150 checkbox checked checkbox not checked checkbox not checked 3" [ref=f1e309]:
+                                - gridcell "FX_Description" [ref=f1e310]
+                                - gridcell "dbo" [ref=f1e312]
+                                - gridcell "FX_Items" [ref=f1e314]
+                                - gridcell "nvarchar" [ref=f1e316]
+                                - gridcell "nvarchar" [ref=f1e318]
+                                - gridcell "150" [ref=f1e320]
+                                - gridcell [ref=f1e322]
+                                - gridcell [ref=f1e324]
+                                - checkbox [checked] [ref=f1e326]:
+                                  - img "checkbox checked" [ref=f1e328]
+                                - checkbox [ref=f1e329]:
+                                  - img "checkbox not checked" [ref=f1e331]
+                                - gridcell [ref=f1e332]
+                                - gridcell [ref=f1e334]
+                                - checkbox [ref=f1e336]:
+                                  - img "checkbox not checked" [ref=f1e338]
+                                - gridcell "3" [ref=f1e339]
+                          - table [ref=f1e341]:
+                            - rowgroup [ref=f1e342]:
+                              - row "FX_Cost dbo FX_Items decimal decimal 18 2 checkbox checked checkbox not checked checkbox not checked 4" [ref=f1e343]:
+                                - gridcell "FX_Cost" [ref=f1e344]
+                                - gridcell "dbo" [ref=f1e346]
+                                - gridcell "FX_Items" [ref=f1e348]
+                                - gridcell "decimal" [ref=f1e350]
+                                - gridcell "decimal" [ref=f1e352]
+                                - gridcell "18" [ref=f1e354]
+                                - gridcell "2" [ref=f1e356]
+                                - gridcell [ref=f1e358]
+                                - checkbox [checked] [ref=f1e360]:
+                                  - img "checkbox checked" [ref=f1e362]
+                                - checkbox [ref=f1e363]:
+                                  - img "checkbox not checked" [ref=f1e365]
+                                - gridcell [ref=f1e366]
+                                - gridcell [ref=f1e368]
+                                - checkbox [ref=f1e370]:
+                                  - img "checkbox not checked" [ref=f1e372]
+                                - gridcell "4" [ref=f1e373]
+                          - table [ref=f1e375]:
+                            - rowgroup [ref=f1e376]:
+                              - row "FX_UM dbo FX_Items nvarchar nvarchar 10 checkbox checked checkbox not checked checkbox not checked 5" [ref=f1e377]:
+                                - gridcell "FX_UM" [ref=f1e378]
+                                - gridcell "dbo" [ref=f1e380]
+                                - gridcell "FX_Items" [ref=f1e382]
+                                - gridcell "nvarchar" [ref=f1e384]
+                                - gridcell "nvarchar" [ref=f1e386]
+                                - gridcell "10" [ref=f1e388]
+                                - gridcell [ref=f1e390]
+                                - gridcell [ref=f1e392]
+                                - checkbox [checked] [ref=f1e394]:
+                                  - img "checkbox checked" [ref=f1e396]
+                                - checkbox [ref=f1e397]:
+                                  - img "checkbox not checked" [ref=f1e399]
+                                - gridcell [ref=f1e400]
+                                - gridcell [ref=f1e402]
+                                - checkbox [ref=f1e404]:
+                                  - img "checkbox not checked" [ref=f1e406]
+                                - gridcell "5" [ref=f1e407]
+                          - table [ref=f1e409]:
+                            - rowgroup [ref=f1e410]:
+                              - row [ref=f1e411]:
+                                - gridcell "CreatedBy" [ref=f1e412]
+                                - gridcell "dbo" [ref=f1e414]
+                                - gridcell "FX_Items" [ref=f1e416]
+                                - cell
+                          - table [ref=f1e418]:
+                            - rowgroup [ref=f1e419]:
+                              - row [ref=f1e420]:
+                                - gridcell "UpdatedBy" [ref=f1e421]
+                                - gridcell "dbo" [ref=f1e423]
+                                - gridcell "FX_Items" [ref=f1e425]
+                                - cell
+                          - table [ref=f1e427]:
+                            - rowgroup [ref=f1e428]:
+                              - row [ref=f1e429]:
+                                - gridcell "CreateDate" [ref=f1e430]
+                                - gridcell "dbo" [ref=f1e432]
+                                - gridcell "FX_Items" [ref=f1e434]
+                                - cell
+                          - table [ref=f1e436]:
+                            - rowgroup [ref=f1e437]:
+                              - row [ref=f1e438]:
+                                - gridcell "RecordDate" [ref=f1e439]
+                                - gridcell "dbo" [ref=f1e441]
+                                - gridcell "FX_Items" [ref=f1e443]
+                                - cell
+                          - table [ref=f1e445]:
+                            - rowgroup [ref=f1e446]:
+                              - row [ref=f1e447]:
+                                - gridcell [selected] [ref=f1e448]
+                                - gridcell "dbo" [ref=f1e449]
+                                - gridcell "FX_Items" [ref=f1e451]
+                                - cell
+                          - table [ref=f1e453]:
+                            - rowgroup [ref=f1e454]:
+                              - row [ref=f1e455]:
+                                - gridcell "NoteExistsFlag" [ref=f1e456]
+                                - gridcell "dbo" [ref=f1e458]
+                                - gridcell "FX_Items" [ref=f1e460]
+                                - cell
+                          - table [ref=f1e462]:
+                            - rowgroup [ref=f1e463]:
+                              - row [ref=f1e464]:
+                                - gridcell "InWorkflow" [ref=f1e465]
+                                - gridcell "dbo" [ref=f1e467]
+                                - gridcell "FX_Items" [ref=f1e469]
+                                - cell
+                        - generic [ref=f1e474]:
+                          - combobox [active] [ref=f1e476]: RowPointer
+                          - button "Open" [ref=f1e477] [cursor=pointer]
+                  - separator [ref=f1e478]: ⁞
+                  - group [ref=f1e479]:
+                    - generic [ref=f1e482]:
+                      - generic [ref=f1e483]:
+                        - text: "*"
+                        - generic [ref=f1e484]: "Column Name:"
+                        - generic [ref=f1e487]:
+                          - combobox "Column Name:" [ref=f1e489]: RowPointer
+                          - button "Open" [ref=f1e490] [cursor=pointer]
+                      - generic [ref=f1e491]:
+                        - generic [ref=f1e492]: "Schema:"
+                        - combobox "Schema:" [ref=f1e497]: dbo
+                      - generic [ref=f1e498]:
+                        - generic [ref=f1e499]: "Table Name:"
+                        - combobox "Table Name:" [ref=f1e504]: FX_Items
+                      - generic [ref=f1e505]: "Column Name:"
+                      - generic [ref=f1e507]: "Schema:"
+                      - generic [ref=f1e509]: "Table Name:"
+                  - group [ref=f1e511]:
+                    - generic [ref=f1e514]:
+                      - generic [ref=f1e515]:
+                        - generic [ref=f1e516]: "Column Id:"
+                        - textbox "Column Id:" [ref=f1e521]: "10"
+                      - generic [ref=f1e522]: "Column Id:"
+                      - generic [ref=f1e524]:
+                        - text: "*"
+                        - generic [ref=f1e525]: "Data Type:"
+                        - generic [ref=f1e528]:
+                          - combobox "Data Type:" [ref=f1e530]: RowPointerType
+                          - button "Open" [ref=f1e531] [cursor=pointer]
+                      - generic [ref=f1e533]:
+                        - checkbox "Is Nullable" [ref=f1e534]
+                        - generic [ref=f1e536]: Is Nullable
+                      - generic [ref=f1e537]:
+                        - generic [ref=f1e538]: "System Data Type:"
+                        - textbox "System Data Type:" [ref=f1e543]: uniqueidentifier
+                      - generic [ref=f1e545]:
+                        - checkbox "Primary Key" [disabled] [ref=f1e546]
+                        - generic [ref=f1e548]: Primary Key
+                      - generic [ref=f1e549]:
+                        - generic [ref=f1e550]: "Length:"
+                        - textbox "Length:" [ref=f1e555]
+                      - generic [ref=f1e556]:
+                        - generic [ref=f1e557]: "Decimal Position:"
+                        - textbox "Decimal Position:" [ref=f1e562]
+                      - generic [ref=f1e563]:
+                        - generic [ref=f1e564]: "Default Value:"
+                        - textbox "Default Value:" [ref=f1e569]: newid()
+                      - generic [ref=f1e570]:
+                        - generic [ref=f1e571]: "Key Sequence:"
+                        - textbox "Key Sequence:" [ref=f1e576]
+                      - generic [ref=f1e578]:
+                        - checkbox "Is Computed" [disabled] [ref=f1e579]
+                        - generic [ref=f1e581]: Is Computed
+                      - generic [ref=f1e582]: "Data Type:"
+                      - generic [ref=f1e584]: "System Data Type:"
+                      - generic [ref=f1e586]: "Length:"
+                      - generic [ref=f1e588]: "Decimal Position:"
+                      - generic [ref=f1e590]: "Default Value:"
+                      - generic [ref=f1e592]: "Key Sequence:"
+          - text: ⁞
+        - region
+        - region [ref=f1e594]:
+          - textbox [ref=f1e599]: Column Name (SQL Columns 9 of 11)
+          - generic [ref=f1e601]: en-US
+          - separator [ref=f1e602]
+          - img "Powered by Infor" [ref=f1e603]
+    - complementary "Smart Panel" [ref=e60]:
+      - generic [ref=e61]:
+        - button "Insights" [ref=e64] [cursor=pointer]
+        - button "Inbox" [ref=e67] [cursor=pointer]
+        - button "Smart Help" [ref=e70] [cursor=pointer]
+        - button "Popout Smart Panel" [ref=e73] [cursor=pointer]
