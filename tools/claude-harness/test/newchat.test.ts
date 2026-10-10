@@ -36,6 +36,19 @@ describe("fresh coordinator chat per run", () => {
     expect(run.pause_reason).toBe("coordinator_requested_pause");
     h.store.close();
   });
+
+  it("accepts the resubmit approval when the first message of a new chat was interrupted while still submitting", async () => {
+    const h = harness({ coordinator: [{ submit: "uncertain_lost", envelope: { action: "PAUSE", reason: "p" } }], config: { chats: { newCoordinatorPerRun: true } } });
+    let run = await h.controller.run(h.controller.createRun(fixtureBrief()).id);
+    h.store.updateOp(run.pending_op_id!, { status: "submitting" }); // e.g. a controller error before the text was typed
+    run = await h.controller.run(run.id);
+    expect(run.pause_detail).toContain("approve resubmit");
+    expect(() => h.controller.applyResumeOptions(run.id, { approve: ["resubmit"] })).not.toThrow();
+    run = await h.controller.run(run.id);
+    expect(h.chat.submissions).toHaveLength(2);
+    expect(run.pause_reason).toBe("coordinator_requested_pause");
+    h.store.close();
+  });
 });
 
 describe("new specialist chat on request", () => {

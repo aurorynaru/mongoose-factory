@@ -117,7 +117,8 @@ export class Controller {
     }
     for (const code of o.approve ?? []) {
       let itemId: number | null = null;
-      if (code === "resubmit") itemId = op && op.status === "uncertain" ? op.id : null;
+      // An interrupted first message of a NEW chat stays "submitting"; the pause for it also asks for this approval.
+      if (code === "resubmit") itemId = op && (op.status === "uncertain" || (!!op.meta.newConversation && !op.meta.conversationUrl && op.status !== "planned")) ? op.id : null;
       else if(code==="denials")itemId=op?.meta.permissionDenials?op.id:null;
       else if (code === "attachment") itemId = (op?.meta.review as OpReview | undefined)?.code === "attachment" ? (op!.meta.review as OpReview).itemId : run.pending_inbound_id;
       else if (code === "scope" || code === "candidate") itemId = run.state === "DECISION_PENDING" ? run.pending_inbound_id : null;
