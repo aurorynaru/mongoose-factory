@@ -1,0 +1,189 @@
+{
+  "experiment_id": "EXP-049",
+  "title": "EXP-049 — Hello World Part 2: Create FX_Items SQL Table and IDO Using Property Classes",
+  "record_path": "experiments/EXP-049-hello-world-part-2-create-fx-items-sql-table-and-i.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Using only the supported Mongoose Web Designer New Form Definition > New Data > Maintenance wizard, create exactly one dbo.FX_Items SQL table and one FX_Items IDO in the existing FX_HelloWorldProject01 project, with table alias fxitms. Configure exactly four properties in order: FX_Item using FX_ItemBase with Primary Key and Required enabled; FX_Description as String length 150 with Label String ID FX_sDescription; FX_Cost using FX_Cost; and FX_UM using FX_UM. Require the wizard's native Property Class lookup to resolve all three referenced classes without metadata unloading. Before creation, prove both target objects absent and all dependencies available. Verify the complete wizard configuration before invoking Finish exactly once. Decline the optional Create Form prompt. If the new IDO is left checked out, perform exactly one authorized check-in of FX_Items only. Then close and reopen the supported IDOs and SQL Tables/SQL Columns runtime Forms to recover and compare the IDO definition, project, alias, four property definitions, inherited metadata, physical column types and primary key. Preserve every existing object and checkout state. Classify successful findings as observed same-session UI-level recovery only.",
+  "scope": {
+    "in_scope": [
+      "Read EXP-039, EXP-040, EXP-043, EXP-044, EXP-045, EXP-047-R2 and EXP-048 for established wizard navigation, project configuration, property-class definitions, SQL metadata verification and known limitations.",
+      "Read the relevant first half of section 7 of hello-world-pt2.md, approximately 7:52–9:06, if available in the repository. Treat the operator's specified values as authoritative for this experiment.",
+      "Confirm the existing authenticated Mongoose session, DEM configuration, Site Developer capability where observable, User Designer editing context where applicable, and clean application state before mutation.",
+      "Use supported native runtime Forms to establish that the IDO FX_Items and SQL table dbo.FX_Items are absent, separately, with visible exact-name criteria, settled zero-data-row results and working positive controls. Distinguish blank criteria or insertion placeholders from existing records.",
+      "Verify that IDO project FX_HelloWorldProject01 exists and is selectable. Do not edit its definition.",
+      "Read the existing FX_ItemBase, FX_Cost and FX_UM property classes without mutation. Confirm their visible metadata and availability. Read FX_UMBase only if required to establish the inherited FX_UM definition.",
+      "Verify the existing label-string resource FX_sDescription through supported read-only UI if available. Do not create or modify any string resource.",
+      "Open the supported Web Designer New Form Definition > New Data > Maintenance wizard using the route established in EXP-044.",
+      "Configure IDO Name FX_Items, IDO Project FX_HelloWorldProject01, SQL Table FX_Items in schema dbo and Table Alias fxitms.",
+      "Configure property 1 as FX_Item with Property Class FX_ItemBase, inheriting String, Length 20, Column Data Type nvarchar and Label String ID FX_sItem. Enable Primary Key and Required.",
+      "Configure property 2 as FX_Description with Data Type String, Length 150 and Label String ID FX_sDescription. Use the supported native type selection and preserve unrelated defaults.",
+      "Configure property 3 as FX_Cost with Property Class FX_Cost, inheriting Decimal, Length 18, Decimal Position 2, Default Value 0, Column Data Type decimal and Label String ID FX_sCost.",
+      "Configure property 4 as FX_UM with Property Class FX_UM, inheriting the FX_UMBase String, Length 10 and nvarchar metadata, plus the FX_UMs domain relationship, Domain Property FX_UM and Domain List Properties FX_Description.",
+      "Use the wizard's supported Property Class lookup for FX_ItemBase, FX_Cost and FX_UM. Capture each resolved selection. Stop before Finish if any class is absent or the resolved metadata conflicts with its established definition.",
+      "Verify all four configured wizard property rows, their order, field values, property-class assignments and key/required indicators before committing.",
+      "Invoke the wizard Finish action exactly once after all prerequisite and configuration checks pass. Capture the immediate completion message and any generated-object confirmation.",
+      "Decline the optional Create Form prompt using No, as in EXP-044. No FX_Items application Form is to be created.",
+      "Inspect the created FX_Items IDO using the native IDOs runtime Form. Verify project membership, table association, alias, property names, property classes and observable effective metadata.",
+      "If the newly created FX_Items IDO is visibly checked out, authorize exactly one native check-in of that IDO. Verify the resulting checkout indication. If it is already checked in, perform no lifecycle action.",
+      "Inspect dbo.FX_Items using native SQL Tables and SQL Columns Forms. Verify the intended business columns, SQL data types, lengths or precision and scale, nullability where exposed, and the primary-key designation.",
+      "After demonstrably clean post-creation states, close and reopen the IDOs runtime Form once and recover FX_Items through one fresh exact-name query.",
+      "After demonstrably clean post-creation states, close and reopen the SQL Tables runtime Form once, including its supported SQL Columns inspection surface, and recover dbo.FX_Items through one fresh exact-name query.",
+      "Compare recovered IDO and SQL metadata with the pre-Finish configuration and the immediate post-creation baselines. Document any inherited-versus-explicit display differences.",
+      "Capture decisive screenshots, accessibility snapshots where supported, wizard action counts, Form lifecycle counts and concise evidence summaries under evidence/EXP-049/.",
+      "Create or modify only the EXP-049 experiment record and evidence/EXP-049/ documentation. Preserve the existing repository working tree."
+    ],
+    "out_of_scope": [
+      "Creating an FX_Items Multi-View application Form. That belongs to the separate proposed EXP-050 workflow.",
+      "Creating or editing Form components, captions, event handlers, scripts, application variables or runtime behavior.",
+      "Creating, modifying or deleting FX_UMs, its SQL table, its IDO or its existing EA and DZ test records.",
+      "Changing FX_UMBase, FX_UM, FX_ItemBase or FX_Cost property-class definitions, relationships or checkout states.",
+      "Creating or changing FX_sItem, FX_sCost, FX_sDescription or any other string resource.",
+      "Changing the existing FX_HelloWorldProject01 project or unrelated IDOs.",
+      "Creating application records in FX_Items.",
+      "Assigning any additional properties, relationships, defaults, validation rules or indexes beyond the wizard-generated structures necessary for the four specified properties and primary key.",
+      "Creating additional SQL tables, IDOs, IDO projects, Forms or property classes.",
+      "Manually synchronizing schemas, regenerating existing Forms, unloading metadata, deploying objects or changing configuration settings.",
+      "Performing a property-class checkout or check-in.",
+      "Independent database durability verification, cross-session persistence, cache-eviction testing, runtime data entry or application-Form testing.",
+      "Modifying recipes, AGENTS.md, environment files or other experiment records."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not create, modify, rename, overwrite or delete any non-FX_ artifact.",
+    "Do not proceed with the wizard if FX_Items already exists as an IDO or dbo.FX_Items already exists as a SQL table, or if either collision gate is ambiguous.",
+    "Do not proceed if FX_HelloWorldProject01 is unavailable or cannot be selected unambiguously.",
+    "Do not proceed if FX_ItemBase, FX_Cost or FX_UM is missing from the native wizard Property Class lookup. Do not unload metadata to make a missing class appear.",
+    "Do not proceed if a property-class selection resolves to a different class or produces unexplained inherited values.",
+    "Do not create or modify any property class or referenced label-string resource.",
+    "Do not modify FX_UMs or its records, or any existing FX_ table or IDO.",
+    "Do not invoke Finish until all four wizard property definitions have been verified.",
+    "Do not invoke Finish more than once, retry an ambiguous Finish, or recreate an apparently partial object.",
+    "Do not accept the optional Create Form prompt. Select No once if the prompt appears as expected.",
+    "Do not invoke an additional Save operation outside the documented wizard workflow without separate operator authorization.",
+    "Do not perform any manual metadata lifecycle action except the single conditional check-in of newly created FX_Items.",
+    "Do not check in, check out or otherwise change FX_UMBase, FX_UM, FX_ItemBase or FX_Cost.",
+    "Do not repair, delete, overwrite or rename partial SQL or IDO artifacts if the experiment becomes blocked.",
+    "Do not perform schema synchronization, deployment, metadata unloading or direct SQL execution.",
+    "Do not use unsupported internal APIs, browser-executed JavaScript, direct database-writing mechanisms or scripts.",
+    "Do not authenticate again, restart services, replace the browser session or refresh the browser to overcome a failed prerequisite.",
+    "Do not continue after an unexpected validation error, authentication challenge, timeout, unanticipated Save or discard prompt, ambiguous completion result or unexplained state.",
+    "Do not exceed one fresh recovery snapshot and one corrected visible inspection after a browser-reference failure. If unresolved, stop and document the blocker.",
+    "Do not claim physical database durability, independent transaction verification, cross-session recovery or replay verification from native UI observations.",
+    "Do not change repository files outside the EXP-049 experiment record and evidence/EXP-049/.",
+    "Do not start another experiment or replay."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:DROP|TRUNCATE|DELETE)\\s+(?:TABLE|FROM)\\b",
+    "\\bUnload\\s+All\\s+Global\\s+Form\\s+Objects\\b",
+    "\\b(?:FormSync|Form\\s+Sync|Regenerate\\s+Form)\\b",
+    "\\b(?:DesignerSession|browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:execute|run|apply)\\s+(?:SQL|script|deployment|schema\\s+change)\\b",
+    "\\b(?:create|add)\\b[^.\\n]{0,40}\\b(?:event\\s+handler|script)s?\\b",
+    "\\b(?:deploy|deployment)\\s+(?:form|ido|schema|application|object)s?\\b"
+  ],
+  "related_experiments": [
+    "EXP-039",
+    "EXP-040",
+    "EXP-043",
+    "EXP-044",
+    "EXP-045",
+    "EXP-046",
+    "EXP-047",
+    "EXP-047-R2",
+    "EXP-048"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": null,
+    "artifacts": [
+      "FX_Items",
+      "FX_HelloWorldProject01",
+      "FX_ItemBase",
+      "FX_Cost",
+      "FX_UM",
+      "FX_UMBase",
+      "FX_sItem",
+      "FX_sCost",
+      "FX_sDescription"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Preflight: screenshots and native UI evidence identify the authenticated usable Mongoose environment, current DEM configuration, available editing context and clean state with no unexpected prompt or pending unrelated changes. Any runtime/Designer scope distinction is explicitly qualified. No mutation occurs during this check."
+    },
+    {
+      "id": "AC-2",
+      "description": "Collision gate: separate fresh native queries establish zero existing FX_Items IDO records and zero dbo.FX_Items SQL table records. Each uses visible exact-name criteria, settled results and a working positive control. Evidence distinguishes criteria placeholders from existing data records. Creation remains prohibited if either absence result is ambiguous."
+    },
+    {
+      "id": "AC-3",
+      "description": "Dependency gate: native read-only evidence confirms FX_HelloWorldProject01 is available, FX_ItemBase exposes String/20/nvarchar/FX_sItem, FX_Cost exposes Decimal/18/2/default 0/decimal/FX_sCost, and FX_UM exposes its expected inherited metadata and FX_UMs domain relationship. FX_sDescription is verified if its resource lookup is accessible. Existing definitions and checkout states remain untouched."
+    },
+    {
+      "id": "AC-4",
+      "description": "Wizard identity: screenshots establish the New Form Definition > New Data > Maintenance route and show the intended IDO Name FX_Items, IDO Project FX_HelloWorldProject01, SQL Table FX_Items and Table Alias fxitms before Finish. No unexpected alternative artifact is selected."
+    },
+    {
+      "id": "AC-5",
+      "description": "Wizard property configuration: evidence shows exactly four intended properties in order: FX_Item using FX_ItemBase with Primary Key and Required; FX_Description using String length 150 and FX_sDescription; FX_Cost using FX_Cost; and FX_UM using FX_UM. The Property Class lookup visibly resolves all three referenced classes. Each specified inherited or explicit value is verified before Finish. No unexpected fifth business property or relationship is configured."
+    },
+    {
+      "id": "AC-6",
+      "description": "Single wizard completion: controller actions establish exactly one Finish after all prerequisites passed. A native completion message or equivalent settled product result identifies successful creation of the intended FX_Items SQL table and IDO. If the expected optional Create Form prompt appears, exactly one No response declines it. No FX_Items application Form is created and no unexpected prompt remains."
+    },
+    {
+      "id": "AC-7",
+      "description": "IDO post-creation baseline: native IDOs UI retrieves exactly one FX_Items record associated with FX_HelloWorldProject01 and alias fxitms. Four properties match the wizard definition and reference their intended property classes. Effective type, length, precision, scale, default, labels and domain relationships match wherever exposed. Any inherited values not independently exposed are qualified. The IDO is in a settled state."
+    },
+    {
+      "id": "AC-8",
+      "description": "Conditional new-IDO lifecycle: if FX_Items is left checked out after creation, evidence shows exactly one native check-in of FX_Items and the resulting clean checked-in state. If already checked in, evidence shows no check-in was performed. No existing property class or other IDO undergoes a metadata lifecycle action."
+    },
+    {
+      "id": "AC-9",
+      "description": "SQL post-creation baseline: native SQL Tables and SQL Columns evidence identifies dbo.FX_Items and the intended columns. FX_Item is nvarchar(20), not nullable and the primary key; FX_Description is nvarchar(150); FX_Cost is decimal(18,2); and FX_UM is nvarchar(10), subject to verification of actual wizard-generated metadata. Required/nullability and default behavior are recorded where exposed, without inventing database constraints. Any system-generated columns or indexes are distinguished from the four specified business columns."
+    },
+    {
+      "id": "AC-10",
+      "description": "IDO recovery: after a demonstrably clean ordinary IDOs Form close and one reopen, exactly one fresh native exact-name query recovers FX_Items with the same project, alias and four property definitions as the post-creation baseline. Screenshots or accessibility evidence show Save disabled, no unexpected prompt and no unsaved-change indication. Any checkout-state comparison accounts for the permitted conditional check-in."
+    },
+    {
+      "id": "AC-11",
+      "description": "SQL recovery: after a demonstrably clean ordinary SQL Tables Form close and one reopen, exactly one fresh native exact-name query recovers dbo.FX_Items. Supported SQL Columns inspection confirms the same business columns, physical types, precision/scale and primary-key designation as the post-creation baseline. Save remains disabled and no unexpected prompt appears. The result is qualified as same-session UI recovery, not independent database durability."
+    },
+    {
+      "id": "AC-12",
+      "description": "Preservation and final audit: evidence reconciles collision gates, property-class lookups, exactly one Finish, the optional Form-decline response, the conditional FX_Items-only check-in, ordinary Form lifecycle counts and distinct recovery queries. Existing FX_UMs, FX_UMBase, FX_UM, FX_ItemBase, FX_Cost, FX_HelloWorldProject01 and referenced strings were not targets of worker mutation; any preservation not independently demonstrated is qualified. The repository inventory identifies only EXP-049-owned documentation changes and discloses unverified working-tree state. Findings are classified observed or unresolved, never replay_verified."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-049",
+  "replay_of": null,
+  "initial_instruction": "T1 — Preflight and collision/dependency gates only. Read EXP-039, EXP-040, EXP-043, EXP-044, EXP-045, EXP-047-R2 and EXP-048, concentrating on the accepted wizard route and its evidence limitations. Inspect the existing authenticated Mongoose browser through supported native UI without altering its state. Confirm the DEM configuration, usable Designer/Web Client, clean editing context and absence of unexpected prompts. Establish separately that the FX_Items IDO and dbo.FX_Items SQL table are absent through fresh native exact-name queries with settled zero-data-row results and positive controls. Verify FX_HelloWorldProject01, FX_ItemBase, FX_Cost and FX_UM are available with their required baseline metadata. Read FX_sDescription availability if a supported resource lookup is available. Capture the visible identities, query criteria, results, positive controls and dependency values under evidence/EXP-049/. Stop if any prerequisite is missing or ambiguous. Do not open the creation wizard, invoke Finish, create or modify any object, change checkout states or perform metadata unloading in T1. Update only the EXP-049 experiment record and evidence directory. Report exact evidence paths, passed or blocked gates, action counts, qualifications and final browser state. Await separate authorization before wizard configuration.",
+  "notes": "Proposed by the coordinator after run R-20261011-012552-sBdG. Rationale: EXP-048 established observed same-session UI-level recovery of FX_ItemBase and FX_Cost, including their inherited metadata. EXP-047-R2 established FX_UM as a derived property class, while EXP-044 provides the operator-accepted New Form Definition > New Data > Maintenance wizard route for creating a SQL table and IDO together. The next learning step is to use these existing FX_ property classes in one new FX_Items IDO and SQL table, verifying class lookup availability, wizard-generated metadata, physical SQL columns and ordinary close/reopen recovery. This is one bounded wizard-creation operation, not an IDO Form-building experiment. The proposed procedure has not yet been independently verified for FX_Items. | Operator review: exact-value guard (FX_Items, FX_Item, FX_Description, FX_Cost, FX_UM, FX_ItemBase, FX_HelloWorldProject01, fxitms, FX_sDescription, FX_sItem, FX_sCost) and no-JavaScript policy added. The tutorial's 'Create Form? Yes' is replaced by No (EXP-044 route); the FX_Items Form follows in EXP-050 through the EXP-045 Classic Multi-View route. The single conditional check-in of the new IDO FX_Items matches the accepted EXP-044 procedure. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Items",
+    "FX_Item",
+    "FX_Description",
+    "FX_Cost",
+    "FX_UM",
+    "FX_ItemBase",
+    "FX_HelloWorldProject01",
+    "fxitms",
+    "FX_sDescription",
+    "FX_sItem",
+    "FX_sCost"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  }
+}
