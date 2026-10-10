@@ -220,7 +220,9 @@ export class ChatGptAdapter implements ChatPort {
     const want = this.o.desiredModel?.(role) ?? { model: null, effort: null };
     if (!want.model && !want.effort) return { ok: true, model: null, effort: null };
     const norm = (x: string) => x.toLowerCase().replace(/[\s-]+/g, "");
-    const sameModel=(label:string)=>label.trim()===want.model?.trim();
+    // A custom GPT's new-chat menu labels GPT-6 as "6"; ordinary chats show "GPT-6". Otherwise exact.
+    const bare=(x:string)=>x.trim().replace(/^GPT-(?=\S)/i,"");
+    const sameModel=(label:string)=>!!want.model&&bare(label)===bare(want.model);
     // The model button renders after the composer (observed live on a custom GPT's new-chat page).
     let btn: Locator | null = null;
     const btnDeadline = Date.now() + Math.min(20_000, this.o.navigationTimeoutMs);

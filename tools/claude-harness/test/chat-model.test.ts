@@ -28,6 +28,10 @@ describe("ChatGPT exact visible 6 / High menu policy (fakes)",()=>{
   it("fails closed when only another model is offered",async()=>{
     const h=menuFake("6 Pro","High",["6 Pro","16","6-"]);expect(await h.adapter.ensureModel("coordinator",h.page)).toMatchObject({ok:false,detail:expect.stringContaining('model "6" is not offered')});
   });
+  it("treats the custom-GPT page's bare \"6\" label as GPT-6 but never as another model",async()=>{
+    const h=menuFake("GPT-6","High",["GPT-6","GPT-5.6 Sol"]);expect(await h.adapter.ensureModel("coordinator",h.page)).toMatchObject({ok:true});
+    const bareWant=menuFake("6 Pro","High",["GPT-6 Pro","GPT-16"]);expect(await bareWant.adapter.ensureModel("coordinator",bareWant.page)).toMatchObject({ok:false,detail:expect.stringContaining("not offered")});
+  });
   it("honours manual-selection mode while still checking exact model and effort",async()=>{
     const h=menuFake("6 Pro","High",["6","6 Pro"],false);expect(await h.adapter.ensureModel("coordinator",h.page)).toMatchObject({ok:false});expect(h.state.clicks).toEqual(["menu"]);
     const low=menuFake("6","Low",["6"],false);expect(await low.adapter.ensureModel("coordinator",low.page)).toMatchObject({ok:false,detail:expect.stringContaining("effort")});
