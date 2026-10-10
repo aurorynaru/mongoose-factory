@@ -1,0 +1,140 @@
+{
+  "experiment_id": "EXP-041",
+  "title": "EXP-041 — Hello World Part 1: Form Creation on Existing FX_ IDO",
+  "record_path": "experiments/EXP-041-hello-world-part-1-form-creation-on-existing-fx-id.md",
+  "new_record": true,
+  "reviewed": true,
+  "objective": "Create exactly one User-scope Mongoose Form named FX_HelloWorld01 using the existing IDO FX_HelloWorld01 as its data source, following the Hello World Part 1 form step. First establish a trustworthy, case-insensitive Form-name absence check across available scopes using a supported lookup with a positive control. Inspect available wizard routes and select exactly one builder that explicitly supports an existing IDO; accept its defaults, except that Save Template must be unchecked if offered. Complete at most one wizard Finish, perform at most one ordinary Designer Save when required, verify generated field components, close and reopen the Form, and verify recovered identity, scope, data source, and components. Finally open the Form once in the Web Client runtime without entering or saving data. Classify the result as observed only, not replay_verified.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, the existing Form creation recipe, the Hello World Part 1 tutorial covering the Form step, EXP-036 wizard lessons, and EXP-039/EXP-040 evidence before browser actions.",
+      "Use the existing authenticated DEM configuration G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT with Site Developer permission and User editing scope.",
+      "Inspect the supported Form inventory read-only. First demonstrate a working lookup using a known existing Form such as Sql Tables and record its actual displayed Name, scope and settled result. Then search for FX_HelloWorld01 using the same demonstrated mechanism, including case-insensitive matching and all accessible Form scopes.",
+      "If the inventory cannot establish reliable cross-scope absence because filtering is ineffective, results are virtualized or incomplete, or the session is not live, stop before any creation action. Do not treat an empty visible grid alone as proof of absence.",
+      "When Form absence is proven, record a narrowly scoped follow-up finding for EXP-040 in the EXP-041 record (date, verification method, scope coverage, evidence). Do not edit the EXP-040 record; the operator updates it after the run.",
+      "Inspect the Web Designer New Form Definition wizard route and its Category/Wizard choices. A Designer Runtime Builder route may be considered instead only if it explicitly offers a form builder for an existing IDO. Choose one supported route, one Category and one Wizard for the experiment.",
+      "Capture the exact available Category and Wizard labels and the selected builder. Stop if the selected wizard fails to load or presents an unsupported ComponentFlags error. Do not switch to another wizard in the same run.",
+      "Configure Form Name FX_HelloWorld01 and data source IDO FX_HelloWorld01, verifying the selected IDO's exact identity in the wizard. Record all other wizard defaults without changing them. If Save Template is present, uncheck it using a supported visible control and verify the unchecked state.",
+      "Inspect the final wizard page, generated-object implications and any confirmation before authorizing one Finish. Stop if it proposes another SQL table, IDO, project, script, unexpected non-FX_ artifact, or an unsupported mandatory choice.",
+      "Perform Finish at most once, capture the exact completion result, and verify exactly one new User-scope Form identity. Perform one ordinary Designer Save only if the resulting Form has pending changes and Save is available; otherwise record that it is already clean and no additional Save is required.",
+      "Inspect the generated Form's data-source binding and components for FX_Code and FX_Label. Record the exact component names, types, bindings, parent layout and any additional wizard-generated elements without modifying them.",
+      "Close the clean Form through its ordinary Designer Form-tab control and reopen it through a supported Designer Form menu or Select Form path. Compare Name, ScopeType, ScopeName, data source, generated field bindings, component structure and clean state against the pre-close evidence.",
+      "Open the completed Form exactly once in the Web Client runtime through a supported Form-opening control. Record whether it opens in add mode and what fields and messages are actually rendered. Do not assume runtime success based solely on Designer success.",
+      "Record screenshots, accessibility snapshots, operation counts, acceptance results, limitations and repository changes under evidence/EXP-041/ and the EXP-041 experiment record. Preserve all existing application objects."
+    ],
+    "out_of_scope": [
+      "Creating, recreating or modifying an SQL table, IDO, IDO Project, or database column.",
+      "Using SQL Tables, IDOs or IDO Projects maintenance forms during EXP-041.",
+      "Creating more than one Form or modifying an existing same-named Form.",
+      "Changing wizard-generated component types, captions, layout, property bindings or navigation after creation.",
+      "Inserting, editing, deleting or saving any application data rows.",
+      "Custom event handlers, scripts, variables, button actions, business logic or application integrations.",
+      "FormSync, metadata unloading, regeneration, deployment, source-control operations or configuration changes.",
+      "Testing database durability, cross-session recovery, caching behavior or independent replay.",
+      "Using a second wizard as a fallback after the first selected wizard fails.",
+      "Editing existing FX_ objects other than the newly authorized Form, or any non-FX_ objects."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not press Finish before a reliable Form-name absence check and complete wizard preflight.",
+    "Do not create an FX_HelloWorld01 Form when any exact or case-insensitive collision exists in another scope, or when the inventory's coverage cannot be established.",
+    "Do not guess a wizard name, data-source binding, scope, or mandatory field.",
+    "Do not retry Finish after a timeout, uncertain completion result or application error.",
+    "Do not try another wizard after a wizard-loading failure; record the blocker.",
+    "Do not leave Save Template checked if the option is present.",
+    "Do not accept any wizard option that creates or changes a SQL table, IDO or project.",
+    "Do not save an application data record, including an initially blank add-mode record.",
+    "Do not modify generated components, captions, bindings or layout after creation.",
+    "Do not use FormSync, metadata unload, regeneration, schema import, direct SQL, unsupported endpoints or browser JavaScript.",
+    "Do not perform check-in, check-out, authentication changes, permissions changes, logout, or session reset.",
+    "Do not type into maintenance Attributes controls as a substitute for query criteria.",
+    "Before responding to any dialog, obtain a fresh snapshot and verify the accessible label of the exact button reference. Never infer the intended choice from focus, button order or color.",
+    "Do not perform more than one fresh browser recovery snapshot and one corrected inspection for a failure; stop if the intended postcondition remains unproven.",
+    "Do not promote the resulting procedure to replay_verified after this single execution."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:FormSync|Regenerate\\s+Form|Unload\\s+All\\s+Global\\s+Form\\s+Objects)\\b",
+    "\\b(?:Get\\s+Database\\s+Schema|Add\\s+Subcollection|Update\\s+Current\\s+Table)\\b",
+    "\\b(?:Check\\s+In|Check\\s+Out|Undo\\s+Check\\s+Out)\\b",
+    "\\b(?:DataMaintenance|SQL\\s+Tables|IDO\\s+Projects)\\b",
+    "\\b(?:execute|run|apply)\\s+(?:SQL|script|deployment|schema\\s+change)\\b",
+    "\\b(?:create|modify|delete|insert|update)\\b[^.\\n]{0,50}\\b(?:SQL\\s+table|IDO\\s+project|application\\s+row|event\\s+handler|script)\\b"
+  ],
+  "related_experiments": [
+    "EXP-040",
+    "EXP-039",
+    "EXP-038",
+    "EXP-036",
+    "EXP-036-R2",
+    "EXP-019",
+    "EXP-019-R2",
+    "EXP-033-R4"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_HelloWorld01",
+    "artifacts": [
+      "FX_HelloWorld01 — one new User-scope Form, contingent on collision-free preflight",
+      "FX_HelloWorld01 — existing IDO, selected read-only as the Form data source",
+      "FX_Code — existing IDO property used by a generated component",
+      "FX_Label — existing IDO property used by a generated component",
+      "FX_HelloWorldProject01 — existing IDO project, reference only"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Preflight evidence identifies the active DEM configuration, usable session, Site Developer permissions and User editing scope; confirms the established EXP-040 IDO baseline; and records the clean working state. No creation action occurs before these checks pass."
+    },
+    {
+      "id": "AC-2",
+      "description": "A supported Form inventory lookup demonstrably returns a known existing positive-control Form, then establishes zero exact and case-insensitive FX_HelloWorld01 Form-name matches across all relevant scopes. Screenshots or captured responses show the query settings, coverage and settled results. If complete absence cannot be proven, AC-2 fails and the run stops before mutation."
+    },
+    {
+      "id": "AC-3",
+      "description": "One wizard route, Category and Wizard are identified by their rendered labels and captured before selection. The selected wizard visibly loads and supports a Form with an existing IDO data source. At most one wizard is attempted; any load error is recorded without switching builders."
+    },
+    {
+      "id": "AC-4",
+      "description": "Before Finish, evidence visibly identifies Form Name FX_HelloWorld01, exact data source IDO FX_HelloWorld01, selected User scope, relevant default settings and Save Template unchecked if offered. No additional created-object effect or unsupported requirement is left unexplained."
+    },
+    {
+      "id": "AC-5",
+      "description": "Exactly one wizard Finish is performed. Its observed completion result establishes one new FX_HelloWorld01 Form. The Designer visibly shows the correct User-scope identity and a clean state after at most one ordinary Save, with the Save result or already-clean condition recorded."
+    },
+    {
+      "id": "AC-6",
+      "description": "The new Form's Designer baseline visibly identifies its data source and generated components associated with FX_Code and FX_Label, including their actual names, types, bindings and parent structure. Any additional automatically generated components are inventoried separately, without modification."
+    },
+    {
+      "id": "AC-7",
+      "description": "Exactly one ordinary Designer Form-tab close and one supported reopen recover the same Name, ScopeType, ScopeName, data source, generated field components and bindings. Before/after screenshots and property evidence establish equality, with Save disabled and no pending changes after reopen."
+    },
+    {
+      "id": "AC-8",
+      "description": "The Form is opened once through a supported Web Client runtime path. Evidence captures its exact identity, rendered FX_Code/FX_Label fields, displayed runtime mode or messages, and whether add mode is actually observed. No application rows are entered or saved."
+    },
+    {
+      "id": "AC-9",
+      "description": "The EXP-040 carried-forward Form-name question (AC-7: no FX_HelloWorld01 Form created by the declined Create Form prompt) is explicitly reconciled in the EXP-041 record using the AC-2 evidence, with a dated cross-reference to EXP-040. The worker does not edit the EXP-040 record (repository changes stay within the EXP-041 record and evidence/EXP-041/); the operator updates EXP-040 afterwards. Historical EXP-040 waivers are preserved unchanged. The EXP-041 record includes an AC-1 to AC-9 evidence matrix, operation counts, artifact inventory, repository confinement audit, error and recovery accounting, and final clean browser state. The outcome is classified observed, not replay_verified."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-041",
+  "replay_of": null,
+  "initial_instruction": "T1 — Read-only prerequisites and Form-name collision gate for EXP-041. Review AGENTS.md, the Hello World Part 1 Form step, recipes/forms/create-basic-form.md, EXP-036 wizard lessons and EXP-040's carried-forward Form-absence limitation. Confirm the usable authenticated DEM environment, Site Developer role and User editing scope using supported rendered UI. Select the current browser tab before interacting and take a fresh snapshot. Open the supported Form inventory and first demonstrate a working positive-control Name lookup using a known existing Form, recording actual Name, scope, settings and result. Then use the same demonstrated method to inspect the proposed FX_HelloWorld01 Form name across scopes, including case-insensitive matches. Capture settled screenshots and accessibility evidence showing both the positive control and target result. If the filter is ineffective, the list virtualizes without a trustworthy complete result, a session is expired, or any target collision exists, stop without attempting any wizard. Otherwise report the proven absence gate and current clean browser state. Do not launch a wizard, press Finish, mutate any Mongoose object, or open application data for editing in T1. Write only the EXP-041 record and evidence/EXP-041/ for this initial task; the EXP-040 historical record may receive a dated collision-result cross-reference only after reliable evidence has been established and separately reconciled.",
+  "notes": "Proposed by the coordinator after run R-20261010-133302-x5e3. Rationale: EXP-039 verified the existing FX_HelloWorldProject01 project. EXP-040 established the SQL table dbo.FX_HelloWorld01 and IDO FX_HelloWorld01, including the FX_Code and FX_Label properties, their persistence after ordinary close/reopen, and successful Mongoose IDO check-in. The next smallest step in the Hello World tutorial is one Form built on that existing IDO. EXP-040 explicitly declined the optional form-generation prompt, but its Select Form inventory could not conclusively prove that no same-named Form exists. EXP-041 must settle that collision question before attempting creation. The experiment tests one new capability: generating and recovering a User-scope Form from an existing IDO, without changing the underlying data model. | Operator review: AC-9 reconciles EXP-040 inside the EXP-041 record only (no cross-record edit); exact-value and no-JavaScript guards added. Approved by the operator 2026-10-10 (IDOs, IDO Projects and Sql Tables tabs from EXP-040 left open).",
+  "exact_values": [
+    "FX_HelloWorld01"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  }
+}
