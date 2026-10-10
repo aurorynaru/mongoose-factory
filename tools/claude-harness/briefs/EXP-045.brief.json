@@ -1,0 +1,160 @@
+{
+  "experiment_id": "EXP-045",
+  "title": "EXP-045 — Hello World Part 2: FX_UMs Multi-View Form and Caption Strings",
+  "record_path": "experiments/EXP-045-hello-world-part-2-fx-ums-multi-view-form-and-capt.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Create exactly one User-scope Classic Multi-View Form named FX_UMs using the existing checked-in FX_UMs IDO as its data source. Accept the wizard's default property selection, position FX_UM above FX_Description using the supported positioning controls, and finish once with Save Template unchecked if offered. Then use the generated label components' Caption ellipsis dialogs to associate FX_sUM with the value Unit of Measure and FX_sDescription with the value Description, creating only those two permitted tenant-wide string resources where necessary. Perform one ordinary Designer Save, close and reopen the Form, and verify the same scoped definition, field order and both captions. Optionally open FX_UMs once in the Web Client to observe its runtime captions. Record actual UI outcomes and limitations; do not claim database durability or replay verification.",
+  "scope": {
+    "in_scope": [
+      "Read-only preflight of the authenticated DEM Web Client and Designer, User editing scope, existing checked-in FX_UMs IDO, existing FX_UMBase association, and repository baseline.",
+      "Read-only Form-name collision check for FX_UMs through Select Form, with a known-existing positive control and the EXP-041-R2 visible-inventory standard.",
+      "Read-only exact-ID searches for FX_sUM and FX_sDescription through a supported Strings view, if available, before string creation.",
+      "Inspect and use Web Designer New > Form Wizard Selection > New Form > Classic > Multi-View, following the relevant EXP-041-R3 procedure.",
+      "Create at most one User-scope Form FX_UMs using Data Source FX_UMs, accepting the default wizard property selection.",
+      "Position FX_UM above FX_Description with the wizard's visible arrow controls when necessary, verifying the final order before Finish.",
+      "Uncheck Save Template if offered and invoke the verified Finish control no more than once.",
+      "Inspect the generated FX_UM and FX_Description label components and their Caption ellipsis dialogs.",
+      "Create or associate only the explicitly authorized FX_sUM and FX_sDescription string IDs with the exact values Unit of Measure and Description, respectively.",
+      "Perform one ordinary Designer Save after the intended caption definitions are verified.",
+      "Close the clean FX_UMs Form tab ordinarily and reopen exactly the same User-scope Form through a supported Designer navigation path.",
+      "Verify recovered Form identity, label captions, property bindings and field order through fresh Designer UI evidence.",
+      "Optionally open FX_UMs once in Web Client runtime and capture whether both captions render, without entering or saving records.",
+      "Write experiment and evidence records only under experiments/EXP-045-*.md and evidence/EXP-045/, including cleanup inventory, screenshots, operation counts and limitations."
+    ],
+    "out_of_scope": [
+      "Creation, modification, or check-in/check-out of IDOs, IDO Projects, Property Classes, SQL tables or SQL columns.",
+      "Changes to FX_UMBase, FX_HelloWorldProject01, FX_HelloWorld01, or the vendor IdoPropertyClasses Form currently present in Designer.",
+      "Creation or modification of string IDs other than FX_sUM and FX_sDescription.",
+      "Overwriting a pre-existing string value that conflicts with either required caption; such a collision is a stop condition.",
+      "Entering EA, DZ or any other test data, including collection-row insertion, editing or deletion.",
+      "Creating additional Forms, templates, event handlers, scripts, workflows, custom methods or other unrelated metadata.",
+      "FormSync, cache/global-object unloading, metadata refresh, browser refresh, direct SQL, undocumented APIs, or database-catalogue access.",
+      "Independent authentication-session, cross-user, cross-session or database durability testing.",
+      "Changing the Form's controls beyond the generated field order and the two intended label-caption associations."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not create or change any artifact whose identity does not begin with FX_; preserve all vendor and unrelated objects.",
+    "Do not edit or save the underlying vendor IdoPropertyClasses Form.",
+    "Do not modify, check in, check out, or save the existing FX_UMs IDO, FX_UMBase Property Class, or FX_HelloWorldProject01 project.",
+    "Do not proceed with Form creation if the visible Form inventory contains a conflicting FX_UMs Form or if the positive-control search fails.",
+    "Do not invoke Finish unless the Form Name, User scope, FX_UMs data source, default properties, final field order, and Save Template setting are verified.",
+    "Do not invoke Finish more than once or retry it following an uncertain response.",
+    "Do not create a string resource without first verifying the intended ID and literal value in the supported Caption dialog.",
+    "Do not overwrite any conflicting pre-existing FX_sUM or FX_sDescription value; stop and request operator review.",
+    "Do not accept any Caption-dialog operation that would create or modify a non-FX_ resource or a string ID other than FX_sUM or FX_sDescription.",
+    "Do not perform another save or create operation to recover from an ambiguous response.",
+    "Do not perform any form data-row operation, including entering test records.",
+    "Do not alter unrelated generated components or properties.",
+    "Do not invoke global-object unload, FormSync, Regenerate Form, metadata-clearing commands, or browser refresh.",
+    "Do not execute JavaScript in the browser or use hidden Ext stores, internal endpoints, direct SQL, or unsupported DOM mutation.",
+    "Do not log in, log out, reauthenticate, restart the browser, or establish a replacement session after experiment start.",
+    "Do not answer an unexpected save, discard, overwrite, deletion, or authentication prompt without explicit coordinator review.",
+    "Do not exceed one fresh recovery snapshot and one corrected visible inspection after an interaction failure; stop on repeated failure.",
+    "Do not classify this first execution as replay_verified."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:FormSync|Form\\s+Sync|Regenerate\\s+Form)\\b",
+    "\\bUnload\\s+All\\s+Global\\s+Form\\s+Objects\\b",
+    "\\b(?:Check\\s+In|Check\\s+Out|Undo\\s+Check\\s+Out|Deploy(?:ment)?)\\b",
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:Get\\s+Database\\s+Schema|Update\\s+Current\\s+Table|Add\\s+Subcollection|New\\s+Data\\s+Maintenance)\\b",
+    "\\b(?:execute|run|apply)\\s+(?:SQL|script|deployment|schema\\s+change)\\b"
+  ],
+  "related_experiments": [
+    "EXP-039",
+    "EXP-040",
+    "EXP-041-R2",
+    "EXP-041-R3",
+    "EXP-043",
+    "EXP-044",
+    "EXP-005",
+    "EXP-008-R2",
+    "EXP-033-R4"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_UMs",
+    "artifacts": [
+      "FX_UMs",
+      "FX_sUM",
+      "FX_sDescription",
+      "FX_UMBase",
+      "FX_HelloWorldProject01"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Fresh preflight evidence establishes a usable authenticated Mongoose Web Client and Designer in the intended DEM configuration, User editing scope, the existing checked-in FX_UMs IDO with the expected project and two user-defined properties, an unchanged vendor IdoPropertyClasses design view with Save disabled, and a repository baseline. No mutation occurs during preflight."
+    },
+    {
+      "id": "AC-2",
+      "description": "The visible Select Form inventory returns a known-existing Form under the same Name-filter procedure and zero visible FX_UMs Form rows before creation. Captures identify the filter settings, committed criterion, settled matching or empty result, and actual positive-control row. Any unsupported cross-scope or case-insensitive conclusion is recorded as a limitation."
+    },
+    {
+      "id": "AC-3",
+      "description": "A supported read-only Strings lookup, if available, establishes the exact existing state of FX_sUM and FX_sDescription before creation. Otherwise the Caption ellipsis dialogs visibly establish each string ID and whether a conflicting existing resource would be affected before any string commit. Any conflicting value or ambiguous target blocks the corresponding mutation."
+    },
+    {
+      "id": "AC-4",
+      "description": "The Web Designer wizard visibly shows the exact FX_UMs Form Name, Classic Multi-View route, existing FX_UMs Data Source, and accepted default properties. On the positioning page, FX_UM is visibly above FX_Description, with arrow operations captured if needed. Save Template is visibly unchecked if offered, and pre-Finish screenshots identify the entire intended Form configuration."
+    },
+    {
+      "id": "AC-5",
+      "description": "Exactly one verified Finish produces an unambiguous successful FX_UMs Form creation. The resulting Designer Form is visibly FX_UMs in User scope, and a supported Form inventory query identifies exactly one matching visible target. No additional Form or template is created."
+    },
+    {
+      "id": "AC-6",
+      "description": "The generated label component for FX_UM is identified by its component identity or field binding. Its Caption ellipsis dialog visibly associates the exact ID FX_sUM with the value Unit of Measure. Evidence distinguishes creating a previously absent resource from associating an already correct one, and shows no unrelated resource modification."
+    },
+    {
+      "id": "AC-7",
+      "description": "The generated label component for FX_Description is identified by its component identity or field binding. Its Caption ellipsis dialog visibly associates the exact ID FX_sDescription with the value Description. Evidence distinguishes creating a previously absent resource from associating an already correct one, and shows no unrelated resource modification."
+    },
+    {
+      "id": "AC-8",
+      "description": "Before Save, the Designer shows the exact two intended label-caption associations, FX_UM above FX_Description, and no unintended component or binding changes. One ordinary Designer Save completes successfully, Save becomes disabled, and there is no unresolved dialog or validation error. Evidence records any separate string-resource commit behavior."
+    },
+    {
+      "id": "AC-9",
+      "description": "The clean FX_UMs Form closes through its ordinary Designer Form-tab control without an unsaved-changes prompt. Reopening through the supported Form-menu path loads the same Name, ScopeType User and ScopeName identity, with Save disabled and the same field bindings, FX_UM-before-FX_Description order, and FX_sUM and FX_sDescription caption associations."
+    },
+    {
+      "id": "AC-10",
+      "description": "Post-reopen visible Designer evidence shows Unit of Measure for the FX_UM label and Description for the FX_Description label, with the intended resource IDs established through their supported properties or Caption dialogs. Record separately any distinction between literal displayed captions and string-resource references; do not infer independent string-table durability from Form recovery alone."
+    },
+    {
+      "id": "AC-11",
+      "description": "Optional, non-gating: if supported runtime navigation succeeds without authentication recovery or metadata alteration, Web Client opens FX_UMs once and a screenshot records whether Unit of Measure and Description render in the intended order. No record is inserted or saved. If runtime navigation is unavailable, record the limitation without invalidating the verified Designer recovery."
+    },
+    {
+      "id": "AC-12",
+      "description": "The final cleanup inventory identifies exactly one newly created User-scope FX_UMs Form and the actual created or reused FX_sUM and FX_sDescription resources, including their values and tenant-wide implications. The existing IDO, project, Property Class, SQL table and vendor Form remain unmodified. A final evidence matrix reconciles all action counts, prompts, recoveries, save and close/reopen results, repository confinement and last browser state, classifying the finding observed rather than replay_verified."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-045",
+  "replay_of": null,
+  "initial_instruction": "T1 — READ-ONLY PREFLIGHT AND COLLISION GATES; NO CREATION. Read AGENTS.md (FX_ string resources are now in scope), docs/mongoose/transcripts/hello-world-pt2.md 05:09–06:06, the EXP-041-R3 record (Classic Multi-View route, wizard Name plain fill, Save Template uncheck, Select Form gate) and the EXP-044 outcome block. Create the EXP-045 record and evidence directory. Take a fresh snapshot of each open browser tab; confirm the DEM configuration, the Web Client, and the Designer tab in User scope. The Designer currently shows the vendor IdoPropertyClasses Form in design view: do not edit or save it. In the Web Client, run the visible Select Form inventory gate: one known-existing positive control, then FX_UMs (exact), using the Name filter with key-event typing; capture settled results; then Cancel Select Form. If a supported read-only way to look up string resources exists in the Web Client (for example a Strings form found through Select Form), use it to check FX_sUM and FX_sDescription read-only and record the result; if none is found, record that and do not search further. Do not open the Form wizard, create anything, Save, or change any string in T1. Report the gate results, evidence paths, and the final browser state.",
+  "notes": "Proposed by the coordinator after run R-20261010-200849-CRvE. Rationale: EXP-044 accepted the creation and same-session recovery of the checked-in FX_UMs IDO and dbo.FX_UMs table. The next tutorial step is to create one User-scope Form from that existing IDO, position FX_UM above FX_Description, and assign two FX_-prefixed caption string resources. EXP-041-R3 supplies the documented New Form / Classic / Multi-View wizard route, while earlier Form experiments establish ordinary Designer Save and close/reopen verification. This experiment tests the next distinct Form-building capability without repeating IDO or SQL-table creation. | Operator review: prohibited_patterns replaced with the narrow set used in EXP-043/EXP-044 (the drafted patterns would have matched legitimate instructions such as creating the Form on IDO FX_UMs, clicking Refresh, or creating the FX_sUM string value); exact-value guard, no-JavaScript policy and a read-only T1 instruction added. Approval pending from the operator.",
+  "exact_values": [
+    "FX_UMs",
+    "FX_UM",
+    "FX_Description",
+    "FX_sUM",
+    "FX_sDescription",
+    "Unit of Measure"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  }
+}
