@@ -8,6 +8,10 @@ Mode: LEARNING MODE. FX_-only scope extension for the Hello World tutorial (AGEN
 Editing scope: **User**. Observed in the Identify Your Editing Scope dialog (pre-filled `User` / `anton.ramos@3mworks.com.ph`) and in the Runtime Builder Selection scope line. Not changed by the worker.
 Target names: `FX_HelloWorld01` (requested IDO name; also the expected SQL table name, not yet confirmed), `FX_HelloWorldProject01` (existing IDO project, EXP-039), `FX_Code` (string, length 30), `FX_Label` (string, length 100).
 
+## Follow-up (2026-10-10, from EXP-041 T1)
+
+Carried-forward AC-7 check: the Select Form inventory visible to this user, with its search proven by positive controls, shows no Form named `FX_HelloWorld01` (exact query) and none containing `HelloWorld` (case-insensitive substring query). Evidence: `evidence/EXP-041/` (T1). Limitation: the dialog shows no scope column. This supports the record that the declined Create Form prompt created no Form.
+
 ## Outcome (operator, 2026-10-10)
 
 **Accepted (observed), with documented limitations.** Run R-20261010-133302-x5e3.
