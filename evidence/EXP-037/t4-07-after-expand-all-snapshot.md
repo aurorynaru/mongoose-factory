@@ -1,0 +1,879 @@
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - button "Form" [ref=e3] [cursor=pointer]
+    - button "Edit" [ref=e5] [cursor=pointer]
+    - button "View" [ref=e7] [cursor=pointer]
+    - button "Help" [ref=e9] [cursor=pointer]
+  - toolbar [ref=e11]:
+    - button [ref=e12] [cursor=pointer]:
+      - button "Design" [ref=e13]
+    - button "Save" [disabled] [ref=e15]:
+      - button "Save" [disabled]
+    - button "Regenerate Form" [disabled] [ref=e16]:
+      - button "Regenerate Form" [disabled]
+    - separator [ref=e17]
+    - button [ref=e18] [cursor=pointer]:
+      - button "New" [ref=e19]
+    - button [ref=e21] [cursor=pointer]:
+      - button "Copy" [ref=e22]
+    - button [ref=e24] [cursor=pointer]:
+      - button "Delete" [ref=e25]
+    - separator [ref=e27]
+    - button "Align Left" [disabled] [ref=e28]:
+      - button "Align Left" [disabled]
+    - button "Align Center" [disabled] [ref=e29]:
+      - button "Align Center" [disabled]
+    - button "Align Right" [disabled] [ref=e30]:
+      - button "Align Right" [disabled]
+    - button "Align Top" [disabled] [ref=e31]:
+      - button "Align Top" [disabled]
+    - button "Align Middle" [disabled] [ref=e32]:
+      - button "Align Middle" [disabled]
+    - button "Align Bottom" [disabled] [ref=e33]:
+      - button "Align Bottom" [disabled]
+    - separator [ref=e34]
+    - button "Make Same Width" [disabled] [ref=e35]:
+      - button "Make Same Width" [disabled]
+    - button "Make Same Height" [disabled] [ref=e36]:
+      - button "Make Same Height" [disabled]
+    - button "Make Same Size" [disabled] [ref=e37]:
+      - button "Make Same Size" [disabled]
+    - separator [ref=e38]
+    - button "Space Horizontally" [disabled] [ref=e39]:
+      - button "Space Horizontally" [disabled]
+    - button "Space Vertically" [disabled] [ref=e40]:
+      - button "Space Vertically" [disabled]
+    - separator [ref=e41]
+    - button [ref=e42] [cursor=pointer]:
+      - button "Tab Order" [ref=e43]
+    - button [ref=e45] [cursor=pointer]:
+      - button "Tab Order At" [ref=e46]
+    - separator [ref=e48]
+    - button "Undo" [disabled] [ref=e49]:
+      - button "Undo" [disabled]
+    - button "Redo" [disabled] [ref=e50]:
+      - button "Redo" [disabled]
+  - grid "Toolbox" [ref=e51]:
+    - text: 
+    - button "Collapse Panel" [ref=e53] [cursor=pointer]
+    - generic [ref=e54]:
+      - generic [ref=e55]: "Search Toolbox:"
+      - generic [ref=e58]:
+        - textbox "Search Toolbox:" [ref=e60]:
+          - /placeholder: Search Toolbox
+        - generic [ref=e61] [cursor=pointer]
+    - columnheader "Name"
+    - tree [ref=e66]:
+      - generic [ref=e67]:
+        - table [ref=e68]:
+          - rowgroup [ref=e69]:
+            - row [ref=e70]:
+              - treeitem "Framework Components" [ref=e71]
+        - table [ref=e73]:
+          - rowgroup [ref=e74]:
+            - row [ref=e75]:
+              - treeitem "Pointer" [ref=e76]
+        - table [ref=e78]:
+          - rowgroup [ref=e79]:
+            - row [ref=e80]:
+              - treeitem "Barcode" [ref=e81]
+        - table [ref=e83]:
+          - rowgroup [ref=e84]:
+            - row [ref=e85]:
+              - treeitem "Browser" [ref=e86]
+        - table [ref=e88]:
+          - rowgroup [ref=e89]:
+            - row [ref=e90]:
+              - treeitem "Button" [ref=e91]
+        - table [ref=e93]:
+          - rowgroup [ref=e94]:
+            - row [ref=e95]:
+              - treeitem "Calendar" [ref=e96]
+        - table [ref=e98]:
+          - rowgroup [ref=e99]:
+            - row [ref=e100]:
+              - treeitem "Chart" [ref=e101]
+        - table [ref=e103]:
+          - rowgroup [ref=e104]:
+            - row [ref=e105]:
+              - treeitem "CheckBox" [ref=e106]
+        - table [ref=e108]:
+          - rowgroup [ref=e109]:
+            - row [ref=e110]:
+              - treeitem "ComboBox" [ref=e111]
+        - table [ref=e113]:
+          - rowgroup [ref=e114]:
+            - row [ref=e115]:
+              - treeitem "DataView" [ref=e116]
+        - table [ref=e118]:
+          - rowgroup [ref=e119]:
+            - row [ref=e120]:
+              - treeitem "DateCombo" [ref=e121]
+        - table [ref=e123]:
+          - rowgroup [ref=e124]:
+            - row [ref=e125]:
+              - treeitem "Diagram" [ref=e126]
+        - table [ref=e128]:
+          - rowgroup [ref=e129]:
+            - row [ref=e130]:
+              - treeitem "DropList" [ref=e131]
+        - table [ref=e133]:
+          - rowgroup [ref=e134]:
+            - row [ref=e135]:
+              - treeitem "Edit" [ref=e136]
+        - table [ref=e138]:
+          - rowgroup [ref=e139]:
+            - row [ref=e140]:
+              - treeitem "FlexLayout" [ref=e141]
+        - table [ref=e143]:
+          - rowgroup [ref=e144]:
+            - row [ref=e145]:
+              - treeitem "FormPage" [ref=e146]
+        - table [ref=e148]:
+          - rowgroup [ref=e149]:
+            - row [ref=e150]:
+              - treeitem "Gauge" [ref=e151]
+        - table [ref=e153]:
+          - rowgroup [ref=e154]:
+            - row [ref=e155]:
+              - treeitem "Grid" [ref=e156]
+        - table [ref=e158]:
+          - rowgroup [ref=e159]:
+            - row [ref=e160]:
+              - treeitem "GroupBox" [ref=e161]
+        - table [ref=e163]:
+          - rowgroup [ref=e164]:
+            - row [ref=e165]:
+              - treeitem "HyperLinkButton" [ref=e166]
+        - table [ref=e168]:
+          - rowgroup [ref=e169]:
+            - row [ref=e170]:
+              - treeitem "Infocon" [ref=e171]
+        - table [ref=e173]:
+          - rowgroup [ref=e174]:
+            - row [ref=e175]:
+              - treeitem "Infor Chart" [ref=e176]
+        - table [ref=e178]:
+          - rowgroup [ref=e179]:
+            - row [ref=e180]:
+              - treeitem "List" [ref=e181]
+        - table [ref=e183]:
+          - rowgroup [ref=e184]:
+            - row [ref=e185]:
+              - treeitem "MenuItem" [ref=e186]
+        - table [ref=e188]:
+          - rowgroup [ref=e189]:
+            - row [ref=e190]:
+              - treeitem "MultiLineEdit" [ref=e191]
+        - table [ref=e193]:
+          - rowgroup [ref=e194]:
+            - row [ref=e195]:
+              - treeitem "NoteBook" [ref=e196]
+        - table [ref=e198]:
+          - rowgroup [ref=e199]:
+            - row [ref=e200]:
+              - treeitem "Process Intelligence" [ref=e201]
+        - table [ref=e203]:
+          - rowgroup [ref=e204]:
+            - row [ref=e205]:
+              - treeitem "RadioButton" [ref=e206]
+        - table [ref=e208]:
+          - rowgroup [ref=e209]:
+            - row [ref=e210]:
+              - treeitem "Static" [ref=e211]
+        - table [ref=e213]:
+          - rowgroup [ref=e214]:
+            - row [ref=e215]:
+              - treeitem "SubForm" [ref=e216]
+        - table [ref=e218]:
+          - rowgroup [ref=e219]:
+            - row [ref=e220]:
+              - treeitem "ToolbarButton" [ref=e221]
+        - table [ref=e223]:
+          - rowgroup [ref=e224]:
+            - row [ref=e225]:
+              - treeitem "Tree" [ref=e226]
+        - table [ref=e228]:
+          - rowgroup [ref=e229]:
+            - row [ref=e230]:
+              - treeitem "UserControl" [ref=e231]
+        - table [ref=e233]:
+          - rowgroup [ref=e234]:
+            - row [ref=e235]:
+              - treeitem "VerticalGrid" [ref=e236]
+        - table [ref=e238]:
+          - rowgroup [ref=e239]:
+            - row [ref=e240]:
+              - treeitem "User Components" [ref=e241]
+  - separator [ref=e243]
+  - text: 
+  - tablist [ref=e244]:
+    - tab [selected] [ref=e245] [cursor=pointer]:
+      - heading "FX_SingleButtonLab01" [level=2] [ref=e246]
+      - button "closable FX_SingleButtonLab01" [ref=e247]:
+        - img "closable FX_SingleButtonLab01"
+  - tabpanel [ref=e248]:
+    - button "Factory Test Button" [ref=e251] [cursor=pointer]
+    - separator [ref=e261]
+    - text: 
+    - generic [ref=e262]: Details
+    - button "Collapse Panel" [ref=e263] [cursor=pointer]
+    - tablist [ref=e264]:
+      - tab [ref=e265] [cursor=pointer]:
+        - heading "Collections" [level=2] [ref=e266]
+      - tab [selected] [ref=e267] [cursor=pointer]:
+        - heading "Components" [level=2] [ref=e268]
+      - tab [ref=e269] [cursor=pointer]:
+        - heading "Event Handlers" [level=2] [ref=e270]
+      - tab [ref=e271] [cursor=pointer]:
+        - heading "Variables" [level=2] [ref=e272]
+      - tab [ref=e273] [cursor=pointer]:
+        - heading "Design View Size" [level=2] [ref=e274]
+    - tabpanel "Components" [ref=e275]:
+      - grid [ref=e276]:
+        - generic [ref=e280]:
+          - textbox [ref=e282]
+          - generic [ref=e283] [cursor=pointer]
+        - button "Expand" [ref=e284] [cursor=pointer]: 
+        - button "Collapse" [ref=e285] [cursor=pointer]: 
+        - row [ref=e286]:
+          - columnheader "Name" [ref=e287]
+          - columnheader "Type" [ref=e292]
+          - columnheader "Data Source" [ref=e297]
+          - columnheader "Pane" [ref=e302]
+          - columnheader "Container" [ref=e307]
+          - columnheader "Tab" [ref=e312]
+          - columnheader "Event to generate" [ref=e317]
+          - columnheader "Component Class" [ref=e322]
+          - columnheader "Enabled When" [ref=e327]
+          - columnheader "Visible When" [ref=e332]
+          - columnheader "Required When" [ref=e337]
+        - tree [ref=e342]:
+          - generic [ref=e343]:
+            - table [ref=e344]:
+              - rowgroup [ref=e345]:
+                - row "Pane (00)" [ref=e346]:
+                  - treeitem "Pane (00)" [ref=e347]
+                  - gridcell [ref=e349]
+                  - gridcell [ref=e351]
+                  - gridcell [ref=e353]
+                  - gridcell [ref=e355]
+                  - gridcell [ref=e357]
+                  - gridcell [ref=e359]
+                  - gridcell [ref=e361]
+                  - gridcell [ref=e363]
+                  - gridcell [ref=e365]
+                  - gridcell [ref=e367]
+            - table [ref=e369]:
+              - rowgroup [ref=e370]:
+                - row "FX_SingleButton01 PushButton 0 0" [ref=e371]:
+                  - treeitem "FX_SingleButton01" [ref=e372]
+                  - gridcell "PushButton" [ref=e374]
+                  - gridcell [ref=e376]
+                  - gridcell "0" [ref=e378]
+                  - gridcell [ref=e380]
+                  - gridcell "0" [ref=e382]
+                  - gridcell [ref=e384]
+                  - gridcell [ref=e386]
+                  - gridcell [ref=e388]
+                  - gridcell [ref=e390]
+                  - gridcell [ref=e392]
+        - toolbar [ref=e394]:
+          - button "" [ref=e395] [cursor=pointer]
+  - separator [ref=e396]
+  - text: 
+  - generic [ref=e397]: Properties
+  - button "Collapse Panel" [ref=e398] [cursor=pointer]
+  - tabpanel [aria-hidden] [ref=e399]:
+    - generic [ref=e402]:
+      - textbox [ref=e404]: FX_SingleButton01 (Button)
+      - generic [ref=e405] [cursor=pointer]
+    - button [ref=e406] [cursor=pointer]:
+      - button [ref=e407]:
+        - generic [ref=e410]: d
+    - toolbar [ref=e411]:
+      - generic [ref=e412]:
+        - generic [ref=e413]: "Search Properties:"
+        - generic [ref=e416]:
+          - textbox [ref=e418]
+          - generic [ref=e419] [cursor=pointer]
+      - button [active] [ref=e420] [cursor=pointer]: 
+      - button [ref=e421] [cursor=pointer]: 
+    - generic: Name
+    - generic [ref=e422]: Value
+    - tree [ref=e430]:
+      - generic [ref=e431]:
+        - table [ref=e432]:
+          - rowgroup [ref=e433]:
+            - row [ref=e434]:
+              - treeitem [ref=e435]:
+                - generic [ref=e436]: Design
+              - gridcell [ref=e438]
+              - gridcell [ref=e440]
+        - table [ref=e441]:
+          - rowgroup [ref=e442]:
+            - row [ref=e443]:
+              - treeitem [ref=e444]:
+                - generic [ref=e445]: Name
+              - gridcell [ref=e447]:
+                - generic [ref=e448]: FX_SingleButton01
+              - gridcell [ref=e449]
+        - table [ref=e450]:
+          - rowgroup [ref=e451]:
+            - row [ref=e452]:
+              - treeitem [ref=e453]:
+                - generic [ref=e454]: Description
+              - gridcell [ref=e456]
+              - gridcell [ref=e458]
+        - table [ref=e459]:
+          - rowgroup [ref=e460]:
+            - row [ref=e461]:
+              - treeitem [ref=e462]:
+                - generic [ref=e463]: Caption
+              - gridcell [ref=e465]:
+                - generic [ref=e466]:
+                  - generic [ref=e467]: Factory Test Button
+                  - generic [ref=e468] [cursor=pointer]
+              - gridcell [ref=e469]:
+                - button [ref=e471] [cursor=pointer]: 
+        - table [ref=e472]:
+          - rowgroup [ref=e473]:
+            - row [ref=e474]:
+              - treeitem [ref=e475]:
+                - generic [ref=e476]: Type
+              - gridcell [ref=e478]:
+                - generic [ref=e479]:
+                  - generic [ref=e480]: PushButton
+                  - generic [ref=e481] [cursor=pointer]
+              - gridcell [ref=e482]
+        - table [ref=e483]:
+          - rowgroup [ref=e484]:
+            - row [ref=e485]:
+              - treeitem [ref=e486]:
+                - generic [ref=e487]: From Device Master
+              - gridcell [ref=e489]:
+                - generic [ref=e490]: "True"
+              - gridcell [ref=e491]
+        - table [ref=e492]:
+          - rowgroup [ref=e493]:
+            - row [ref=e494]:
+              - treeitem [ref=e495]:
+                - generic [ref=e582]: Appearance
+              - gridcell [ref=e498]
+              - gridcell [ref=e500]
+        - table [ref=e583]:
+          - rowgroup [ref=e584]:
+            - row [ref=e585]:
+              - treeitem [ref=e586]:
+                - generic [ref=e587]: Theme Class
+              - gridcell [ref=e589]:
+                - generic [ref=e592] [cursor=pointer]
+              - gridcell [ref=e593]
+        - table [ref=e594]:
+          - rowgroup [ref=e595]:
+            - row [ref=e596]:
+              - treeitem [ref=e597]:
+                - generic [ref=e598]: Background Color
+              - gridcell [ref=e600]
+              - gridcell [ref=e602]:
+                - button [ref=e604] [cursor=pointer]: 
+        - table [ref=e605]:
+          - rowgroup [ref=e606]:
+            - row [ref=e607]:
+              - treeitem [ref=e608]:
+                - generic [ref=e609]: Foreground Color
+              - gridcell [ref=e611]:
+                - generic [ref=e612]:
+                  - generic [ref=e613]: "#000000"
+                  - generic [ref=e614] [cursor=pointer]
+              - gridcell [ref=e615]:
+                - button [ref=e617] [cursor=pointer]: 
+        - table [ref=e618]:
+          - rowgroup [ref=e619]:
+            - row [ref=e620]:
+              - treeitem [ref=e621]:
+                - generic [ref=e622]: Bitmap File Name
+              - gridcell [ref=e624]:
+                - generic [ref=e627] [cursor=pointer]
+              - gridcell [ref=e628]
+        - table [ref=e629]:
+          - rowgroup [ref=e630]:
+            - row [ref=e631]:
+              - treeitem [ref=e632]:
+                - generic [ref=e633]: Font
+              - gridcell [ref=e635]
+              - gridcell [ref=e637]:
+                - button [ref=e639] [cursor=pointer]: 
+        - table [ref=e640]:
+          - rowgroup [ref=e641]:
+            - row [ref=e642]:
+              - treeitem [ref=e643]:
+                - generic [ref=e644]: Justification
+              - gridcell [ref=e646]:
+                - generic [ref=e649] [cursor=pointer]
+              - gridcell [ref=e650]
+        - table [ref=e501]:
+          - rowgroup [ref=e502]:
+            - row [ref=e503]:
+              - treeitem [ref=e504]:
+                - generic [ref=e651]: Behavior
+              - gridcell [ref=e507]
+              - gridcell [ref=e509]
+        - table [ref=e652]:
+          - rowgroup [ref=e653]:
+            - row [ref=e654]:
+              - treeitem [ref=e655]:
+                - generic [ref=e656]: Breadcrumb
+              - gridcell [ref=e658]
+              - gridcell [ref=e660]
+        - table [ref=e661]:
+          - rowgroup [ref=e662]:
+            - row [ref=e663]:
+              - treeitem [ref=e664]:
+                - generic [ref=e665]: Read-Only/Disable
+              - gridcell [ref=e667]:
+                - generic [ref=e668]:
+                  - generic [ref=e669]: "False"
+                  - generic [ref=e670] [cursor=pointer]
+              - gridcell [ref=e671]
+        - table [ref=e672]:
+          - rowgroup [ref=e673]:
+            - row [ref=e674]:
+              - treeitem [ref=e675]:
+                - generic [ref=e676]: Tab Read-Only Field
+              - gridcell [ref=e678]:
+                - generic [ref=e679]:
+                  - generic [ref=e680]: "False"
+                  - generic [ref=e681] [cursor=pointer]
+              - gridcell [ref=e682]
+        - table [ref=e683]:
+          - rowgroup [ref=e684]:
+            - row [ref=e685]:
+              - treeitem [ref=e686]:
+                - generic [ref=e687]: Hidden
+              - gridcell [ref=e689]:
+                - generic [ref=e690]:
+                  - generic [ref=e691]: "False"
+                  - generic [ref=e692] [cursor=pointer]
+              - gridcell [ref=e693]
+        - table [ref=e694]:
+          - rowgroup [ref=e695]:
+            - row [ref=e696]:
+              - treeitem [ref=e697]:
+                - generic [ref=e698]: No Tab Stop
+              - gridcell [ref=e700]:
+                - generic [ref=e701]:
+                  - generic [ref=e702]: "False"
+                  - generic [ref=e703] [cursor=pointer]
+              - gridcell [ref=e704]
+        - table [ref=e705]:
+          - rowgroup [ref=e706]:
+            - row [ref=e707]:
+              - treeitem [ref=e708]:
+                - generic [ref=e709]: Auto Complete
+              - gridcell [ref=e711]:
+                - generic [ref=e712]: "False"
+              - gridcell [ref=e713]
+        - table [ref=e714]:
+          - rowgroup [ref=e715]:
+            - row [ref=e716]:
+              - treeitem [ref=e717]:
+                - generic [ref=e718]: Add/Details and Find Form
+              - gridcell [ref=e720]
+              - gridcell [ref=e722]
+        - table [ref=e723]:
+          - rowgroup [ref=e724]:
+            - row [ref=e725]:
+              - treeitem [ref=e726]:
+                - generic [ref=e727]: New and Copy Operations
+              - gridcell [ref=e729]
+              - gridcell [ref=e731]
+        - table [ref=e732]:
+          - rowgroup [ref=e733]:
+            - row [ref=e734]:
+              - treeitem [ref=e735]:
+                - generic [ref=e736]: Dynamic Enabling and Disabling
+              - gridcell [ref=e738]
+              - gridcell [ref=e740]
+        - table [ref=e741]:
+          - rowgroup [ref=e742]:
+            - row [ref=e743]:
+              - treeitem [ref=e744]:
+                - generic [ref=e745]: Right-Click Menu
+              - gridcell [ref=e747]:
+                - generic [ref=e750] [cursor=pointer]
+              - gridcell [ref=e751]:
+                - button [ref=e753] [cursor=pointer]: 
+        - table [ref=e754]:
+          - rowgroup [ref=e755]:
+            - row [ref=e756]:
+              - treeitem [ref=e757]:
+                - generic [ref=e758]: Drag Image
+              - gridcell [ref=e760]:
+                - generic [ref=e763] [cursor=pointer]
+              - gridcell [ref=e764]
+        - table [ref=e765]:
+          - rowgroup [ref=e766]:
+            - row [ref=e767]:
+              - treeitem [ref=e768]:
+                - generic [ref=e769]: Enabled When
+              - gridcell [ref=e771]
+              - gridcell [ref=e773]:
+                - button [ref=e775] [cursor=pointer]: 
+        - table [ref=e776]:
+          - rowgroup [ref=e777]:
+            - row [ref=e778]:
+              - treeitem [ref=e779]:
+                - generic [ref=e780]: Required When
+              - gridcell [ref=e782]
+              - gridcell [ref=e784]:
+                - button [ref=e786] [cursor=pointer]: 
+        - table [ref=e787]:
+          - rowgroup [ref=e788]:
+            - row [ref=e789]:
+              - treeitem [ref=e790]:
+                - generic [ref=e791]: Theme Class When
+              - gridcell [ref=e793]
+              - gridcell [ref=e795]:
+                - button [ref=e797] [cursor=pointer]: 
+        - table [ref=e798]:
+          - rowgroup [ref=e799]:
+            - row [ref=e800]:
+              - treeitem [ref=e801]:
+                - generic [ref=e802]: Visible When
+              - gridcell [ref=e804]
+              - gridcell [ref=e806]:
+                - button [ref=e808] [cursor=pointer]: 
+        - table [ref=e510]:
+          - rowgroup [ref=e511]:
+            - row [ref=e512]:
+              - treeitem [ref=e513]:
+                - generic [ref=e809]: Data Source
+              - gridcell [ref=e516]
+              - gridcell [ref=e518]
+        - table [ref=e810]:
+          - rowgroup [ref=e811]:
+            - row [ref=e812]:
+              - treeitem [ref=e813]:
+                - generic [ref=e814]: Binding Type
+              - gridcell [ref=e816]:
+                - generic [ref=e817]:
+                  - generic [ref=e818]: None
+                  - generic [ref=e819] [cursor=pointer]
+              - gridcell [ref=e820]
+        - table [ref=e821]:
+          - rowgroup [ref=e822]:
+            - row [ref=e823]:
+              - treeitem [ref=e824]:
+                - generic [ref=e825]: Binding
+              - gridcell [ref=e827]:
+                - generic [ref=e830] [cursor=pointer]
+              - gridcell [ref=e831]:
+                - button [ref=e833] [cursor=pointer]: 
+        - table [ref=e834]:
+          - rowgroup [ref=e835]:
+            - row [ref=e836]:
+              - treeitem [ref=e837]:
+                - generic [ref=e838]: Required
+              - gridcell [ref=e840]:
+                - generic [ref=e841]:
+                  - generic [ref=e842]: "False"
+                  - generic [ref=e843] [cursor=pointer]
+              - gridcell [ref=e844]
+        - table [ref=e845]:
+          - rowgroup [ref=e846]:
+            - row [ref=e847]:
+              - treeitem [ref=e848]:
+                - generic [ref=e849]: To Be Determined
+              - gridcell [ref=e851]:
+                - generic [ref=e852]:
+                  - generic [ref=e853]: "False"
+                  - generic [ref=e854] [cursor=pointer]
+              - gridcell [ref=e855]
+        - table [ref=e856]:
+          - rowgroup [ref=e857]:
+            - row [ref=e858]:
+              - treeitem [ref=e859]:
+                - generic [ref=e860]: Upper or Lower Case
+              - gridcell [ref=e862]:
+                - generic [ref=e863]: Mixed
+              - gridcell [ref=e864]
+        - table [ref=e865]:
+          - rowgroup [ref=e866]:
+            - row [ref=e867]:
+              - treeitem [ref=e868]:
+                - generic [ref=e869]: Default Value
+              - gridcell [ref=e871]
+              - gridcell [ref=e873]
+        - table [ref=e874]:
+          - rowgroup [ref=e875]:
+            - row [ref=e876]:
+              - treeitem [ref=e877]:
+                - generic [ref=e878]: Data Type
+              - gridcell [ref=e880]
+              - gridcell [ref=e882]
+        - table [ref=e883]:
+          - rowgroup [ref=e884]:
+            - row [ref=e885]:
+              - treeitem [ref=e886]:
+                - generic [ref=e887]: List Source
+              - gridcell [ref=e889]
+              - gridcell [ref=e891]:
+                - button [ref=e893] [cursor=pointer]: 
+        - table [ref=e894]:
+          - rowgroup [ref=e895]:
+            - row [ref=e896]:
+              - treeitem [ref=e897]:
+                - generic [ref=e898]: Validation
+              - gridcell [ref=e900]
+              - gridcell [ref=e902]
+        - table [ref=e903]:
+          - rowgroup [ref=e904]:
+            - row [ref=e905]:
+              - treeitem [ref=e906]:
+                - generic [ref=e907]: Formatting
+              - gridcell [ref=e909]
+              - gridcell [ref=e911]
+        - table [ref=e519]:
+          - rowgroup [ref=e520]:
+            - row [ref=e521]:
+              - treeitem [ref=e522]:
+                - generic [ref=e912]: Events
+              - gridcell [selected] [ref=e525]
+              - gridcell [ref=e527]
+        - table [ref=e913]:
+          - rowgroup [ref=e914]:
+            - row [ref=e915]:
+              - treeitem [ref=e916]:
+                - generic [ref=e917]: Primary
+              - gridcell [ref=e919]:
+                - generic [ref=e922] [cursor=pointer]
+              - gridcell [ref=e923]:
+                - button [ref=e925] [cursor=pointer]: 
+        - table [ref=e926]:
+          - rowgroup [ref=e927]:
+            - row [ref=e928]:
+              - treeitem [ref=e929]:
+                - generic [ref=e930]: Data Change
+              - gridcell [ref=e932]:
+                - generic [ref=e935] [cursor=pointer]
+              - gridcell [ref=e936]:
+                - button [ref=e938] [cursor=pointer]: 
+        - table [ref=e939]:
+          - rowgroup [ref=e940]:
+            - row [ref=e941]:
+              - treeitem [ref=e942]:
+                - generic [ref=e943]: Lose Focus
+              - gridcell [ref=e945]:
+                - generic [ref=e948] [cursor=pointer]
+              - gridcell [ref=e949]:
+                - button [ref=e951] [cursor=pointer]: 
+        - table [ref=e952]:
+          - rowgroup [ref=e953]:
+            - row [ref=e954]:
+              - treeitem [ref=e955]:
+                - generic [ref=e956]: Gain Focus
+              - gridcell [ref=e958]:
+                - generic [ref=e961] [cursor=pointer]
+              - gridcell [ref=e962]:
+                - button [ref=e964] [cursor=pointer]: 
+        - table [ref=e965]:
+          - rowgroup [ref=e966]:
+            - row [ref=e967]:
+              - treeitem [ref=e968]:
+                - generic [ref=e969]: Drag From Events
+              - gridcell [ref=e971]:
+                - generic [ref=e972]: 0 event(s)
+              - gridcell [ref=e973]:
+                - button [ref=e975] [cursor=pointer]: 
+        - table [ref=e976]:
+          - rowgroup [ref=e977]:
+            - row [ref=e978]:
+              - treeitem [ref=e979]:
+                - generic [ref=e980]: Drop On Events
+              - gridcell [ref=e982]:
+                - generic [ref=e983]: 0 event(s)
+              - gridcell [ref=e984]:
+                - button [ref=e986] [cursor=pointer]: 
+        - table [ref=e528]:
+          - rowgroup [ref=e529]:
+            - row [ref=e530]:
+              - treeitem [ref=e531]:
+                - generic [ref=e987]: Help
+              - gridcell [ref=e534]
+              - gridcell [ref=e536]
+        - table [ref=e988]:
+          - rowgroup [ref=e989]:
+            - row [ref=e990]:
+              - treeitem [ref=e991]:
+                - generic [ref=e992]: ToolTip
+              - gridcell [ref=e994]:
+                - generic [ref=e997] [cursor=pointer]
+              - gridcell [ref=e998]:
+                - button [ref=e1000] [cursor=pointer]: 
+        - table [ref=e1001]:
+          - rowgroup [ref=e1002]:
+            - row [ref=e1003]:
+              - treeitem [ref=e1004]:
+                - generic [ref=e1005]: Help Context ID
+              - gridcell [ref=e1007]:
+                - generic [ref=e1008]: "0"
+              - gridcell [ref=e1009]
+        - table [ref=e1010]:
+          - rowgroup [ref=e1011]:
+            - row [ref=e1012]:
+              - treeitem [ref=e1013]:
+                - generic [ref=e1014]: Help File Name
+              - gridcell [ref=e1016]
+              - gridcell [ref=e1018]
+        - table [ref=e537]:
+          - rowgroup [ref=e538]:
+            - row [ref=e539]:
+              - treeitem [ref=e540]:
+                - generic [ref=e1019]: Inheritance
+              - gridcell [ref=e543]
+              - gridcell [ref=e545]
+        - table [ref=e1020]:
+          - rowgroup [ref=e1021]:
+            - row [ref=e1022]:
+              - treeitem [ref=e1023]:
+                - generic [ref=e1024]: Component Class
+              - gridcell [ref=e1026]:
+                - generic [ref=e1029] [cursor=pointer]
+              - gridcell [ref=e1030]:
+                - button [ref=e1032] [cursor=pointer]: 
+        - table [ref=e1033]:
+          - rowgroup [ref=e1034]:
+            - row [ref=e1035]:
+              - treeitem [ref=e1036]:
+                - generic [ref=e1037]: Component Class Parameters
+              - gridcell [ref=e1039]
+              - gridcell [ref=e1041]:
+                - button [ref=e1043] [cursor=pointer]: 
+        - table [ref=e1044]:
+          - rowgroup [ref=e1045]:
+            - row [ref=e1046]:
+              - treeitem [ref=e1047]:
+                - generic [ref=e1048]: Set Class From
+              - gridcell [ref=e1050]:
+                - generic [ref=e1051]: This Component's Attribute
+              - gridcell [ref=e1052]:
+                - button [ref=e1054] [cursor=pointer]: 
+        - table [ref=e1055]:
+          - rowgroup [ref=e1056]:
+            - row [ref=e1057]:
+              - treeitem [ref=e1058]:
+                - generic [ref=e1059]: View Attributes Inherited From Property
+              - gridcell [ref=e1061]
+              - gridcell [ref=e1063]
+        - table [ref=e1064]:
+          - rowgroup [ref=e1065]:
+            - row [ref=e1066]:
+              - treeitem [ref=e1067]:
+                - generic [ref=e1068]: Edit Property Class Extension For Property Class
+              - gridcell [ref=e1070]
+              - gridcell [ref=e1072]
+        - table [ref=e546]:
+          - rowgroup [ref=e547]:
+            - row [ref=e548]:
+              - treeitem [ref=e549]:
+                - generic [ref=e1073]: Layout
+              - gridcell [ref=e552]
+              - gridcell [ref=e554]
+        - table [ref=e1074]:
+          - rowgroup [ref=e1075]:
+            - row [ref=e1076]:
+              - treeitem [ref=e1077]:
+                - generic [ref=e1078]: Unit
+              - gridcell [ref=e1080]:
+                - generic [ref=e1081]: Char
+              - gridcell [ref=e1082]
+        - table [ref=e1083]:
+          - rowgroup [ref=e1084]:
+            - row [ref=e1085]:
+              - treeitem [ref=e1086]:
+                - generic [ref=e1087]: Size
+              - gridcell [ref=e1089]:
+                - generic [ref=e1090]: 14.25; 1.89
+              - gridcell [ref=e1091]
+        - table [ref=e1092]:
+          - rowgroup [ref=e1093]:
+            - row [ref=e1094]:
+              - treeitem [ref=e1095]:
+                - generic [ref=e1096]: Location
+              - gridcell [ref=e1098]:
+                - generic [ref=e1099]: 8.27777777777778; 24
+              - gridcell [ref=e1100]
+        - table [ref=e1101]:
+          - rowgroup [ref=e1102]:
+            - row [ref=e1103]:
+              - treeitem [ref=e1104]:
+                - generic [ref=e1105]: Glue
+              - gridcell [ref=e1107]
+              - gridcell [ref=e1109]
+        - table [ref=e1110]:
+          - rowgroup [ref=e1111]:
+            - row [ref=e1112]:
+              - treeitem [ref=e1113]:
+                - generic [ref=e1114]: Containment
+              - gridcell [ref=e1116]
+              - gridcell [ref=e1118]
+        - table [ref=e1119]:
+          - rowgroup [ref=e1120]:
+            - row [ref=e1121]:
+              - treeitem [ref=e1122]:
+                - generic [ref=e1123]: Tab Order
+              - gridcell [ref=e1125]:
+                - generic [ref=e1126]: "0"
+              - gridcell [ref=e1127]
+        - table [ref=e1128]:
+          - rowgroup [ref=e1129]:
+            - row [ref=e1130]:
+              - treeitem [ref=e1131]:
+                - generic [ref=e1132]: Order
+              - gridcell [ref=e1134]:
+                - generic [ref=e1137] [cursor=pointer]
+              - gridcell [ref=e1138]
+        - table [ref=e555]:
+          - rowgroup [ref=e556]:
+            - row [ref=e557]:
+              - treeitem [ref=e558]:
+                - generic [ref=e1139]: Miscellaneous
+              - gridcell [ref=e561]
+              - gridcell [ref=e563]
+        - table [ref=e1140]:
+          - rowgroup [ref=e1141]:
+            - row [ref=e1142]:
+              - treeitem [ref=e1143]:
+                - generic [ref=e1144]: Extension Properties
+              - gridcell [ref=e1146]
+              - gridcell [ref=e1148]:
+                - button [ref=e1150] [cursor=pointer]: 
+        - table [ref=e1151]:
+          - rowgroup [ref=e1152]:
+            - row [ref=e1153]:
+              - treeitem [ref=e1154]:
+                - generic [ref=e1155]: Specific Attributes
+              - gridcell [ref=e1157]
+              - gridcell [ref=e1159]
+        - table [ref=e1160]:
+          - rowgroup [ref=e1161]:
+            - row [ref=e1162]:
+              - treeitem [ref=e1163]:
+                - generic [ref=e1164]: Free-Form Data Type
+              - gridcell [ref=e1166]
+              - gridcell [ref=e1168]
+    - generic [ref=e564]:
+      - generic [ref=e565]: Events
+      - textbox [ref=e570]
+  - tablist [ref=e571]:
+    - tab [ref=e572] [cursor=pointer]:
+      - heading "Form" [level=2] [ref=e573]
+    - tab [selected] [ref=e574] [cursor=pointer]:
+      - heading "Component" [level=2] [ref=e575]
+  - toolbar [ref=e576]:
+    - generic [ref=e577]: "[ ScopeType: User / ScopeName: anton.ramos@3mworks.com.ph ]"
+    - generic [ref=e578]: en-US
+    - separator [ref=e579]
+    - img "Powered by Infor" [ref=e580]
+  - tooltip [ref=e1169]: Expand
