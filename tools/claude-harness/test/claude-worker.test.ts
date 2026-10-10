@@ -257,6 +257,20 @@ describe("Claude worker fake-process integration",()=>{
       expect((await h.worker.submit(other,h.worker.newMessageId(),"second")).status).toBe("rejected");
     }finally{await h.worker.waitForCompletion(sid,mid,{timeoutMs:5000,shouldStop:()=>true});}
   },15_000);
+  it("a synchronous spawn failure releases the lease and records a failed task without a process",async()=>{
+    const h=fixture();const argv=h.cfg.claude.argvPrefix;h.cfg.claude.argvPrefix=["bad\0arg"]; // spawn throws before any process starts
+    const sid=await h.worker.createSession("EXP-900 spawn"),mid=h.worker.newMessageId();
+    await h.worker.configureSession(sid,{denyBrowserJavaScript:true,preamble:"bounded"});
+    const r=await h.worker.submit(sid,mid,"first");
+    expect(r.status).toBe("rejected");
+    const j=read<TaskJournal>(h.worker.taskFile(sid,mid));
+    expect(j.process).toBeUndefined();expect(j.result?.status).toBe("failed");
+    expect(existsSync(join(h.paths.dataDir,"workers","active-task.json"))).toBe(false);
+    h.cfg.claude.argvPrefix=argv;
+    const other=await h.worker.createSession("EXP-900 after");await h.worker.configureSession(other,{denyBrowserJavaScript:true,preamble:"bounded"});
+    const omid=h.worker.newMessageId();expect((await h.worker.submit(other,omid,"second")).status).not.toBe("rejected");
+    await h.worker.waitForCompletion(other,omid,{timeoutMs:10_000,shouldStop:()=>false});
+  });
 });
 describe("metadata, billing and permission policy",()=>{
   it("strips both billing keys case-insensitively without modifying the parent",async()=>{

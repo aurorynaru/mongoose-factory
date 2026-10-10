@@ -119,7 +119,15 @@ export class ClaudeWorker implements WorkerPort {
     save(this.taskFile(sid,mid),journal);s.active=mid;save(this.sessionFile(sid),s);
     journal.state="launching";save(this.taskFile(sid,mid),journal);
     const guardConfig=journal.guardConfig;
-    const child=launch(cfg,this.cwd,args);const events=new TaskEvents(sid,(id,name)=>{
+    let child:ReturnType<typeof launch>;
+    try{child=launch(cfg,this.cwd,args);}
+    catch(err) {
+      // A synchronous spawn failure (e.g. ENAMETOOLONG) starts no process: release the lease and record it.
+      journal.state="terminal";journal.result={status:"failed",error:`Claude process could not be started (no process ran): ${(err as Error).message}`,text:"",transcript:"",assistantMessageIds:[]};
+      save(this.taskFile(sid,mid),journal);s.active=null;save(this.sessionFile(sid),s);unlinkSync(lease);
+      return {status:"rejected",detail:journal.result.error};
+    }
+    const events=new TaskEvents(sid,(id,name)=>{
       // Read results cannot release an action. The exact action ID is checked under lock.
       if(browserAction(name,{}))finishAction({session_id:sid,tool_name:name,tool_use_id:id},guardConfig);
     });
