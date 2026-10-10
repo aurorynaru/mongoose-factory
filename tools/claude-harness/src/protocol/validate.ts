@@ -154,7 +154,7 @@ export function completionProblems(env: Envelope, ctx: ValidationContext): strin
     for (const bc of briefChecks) {
       const c = byId.get(bc.id);
       if (!c) out.push(`acceptance_check_missing:${bc.id}`);
-      else if (c.status !== "passed") out.push(`acceptance_check_not_passed:${bc.id}:${c.status}`);
+      else if (c.status !== "passed" && !(bc.optional && c.status === "not_applicable")) out.push(`acceptance_check_not_passed:${bc.id}:${c.status}`);
       else if (c.evidence_refs.length === 0) out.push(`acceptance_check_without_evidence:${bc.id}`);
     }
   } else if (env.outcome === "blocked") {

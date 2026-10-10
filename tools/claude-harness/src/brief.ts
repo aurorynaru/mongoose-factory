@@ -41,7 +41,7 @@ export const BriefSchema = z.object({
     form: z.string().nullable().default(null),
     artifacts: z.array(z.string()).default([]),
   }),
-  acceptance_checks: z.array(z.object({ id: z.string().min(1), description: z.string().min(1) })).default([]),
+  acceptance_checks: z.array(z.object({ id: z.string().min(1), description: z.string().min(1), /** An optional check may complete as not_applicable (with evidence of why) in an accepted run. */ optional: z.boolean().optional() })).default([]),
   evidence_dir: z.string().min(1),
   /** Set when this experiment is a replay; required before any finding may be classified replay_verified. */
   replay_of: z.string().nullable().default(null),

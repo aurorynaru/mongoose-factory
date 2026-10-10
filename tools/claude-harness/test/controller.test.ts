@@ -553,6 +553,22 @@ describe("limit enforcement", () => {
   });
 });
 
+describe("optional acceptance checks", () => {
+  const withNA = () => ({ ...shared.complete, acceptance_checks: shared.complete.acceptance_checks.map((c: { id: string }) => (c.id === "AC-2" ? { ...c, status: "not_applicable" } : c)) });
+  it("accepts not_applicable only for a check the brief marks optional", async () => {
+    const strict = track(harness({ coordinator: [SEND("t1"), { envelope: withNA() }], worker: [WORKER_OK] }));
+    const r1 = await strict.controller.run(strict.controller.createRun(fixtureBrief()).id);
+    expect(r1.pause_detail).toContain("acceptance_check_not_passed:AC-2:not_applicable");
+
+    const b = fixtureBrief();
+    b.brief.acceptance_checks = b.brief.acceptance_checks.map((c) => (c.id === "AC-2" ? { ...c, optional: true } : c));
+    const lenient = track(harness({ coordinator: [SEND("t1"), { envelope: withNA() }], worker: [WORKER_OK] }));
+    const r2 = await lenient.controller.run(lenient.controller.createRun(b).id);
+    expect(r2.status).toBe("completed");
+    expect(r2.outcome).toBe("accepted");
+  });
+});
+
 describe("completion requires acceptance evidence", () => {
   it("rejects completion with a check not passed, a missing check, or no worker report", async () => {
     const partial = { ...shared.complete, acceptance_checks: [shared.complete.acceptance_checks[0]] };
