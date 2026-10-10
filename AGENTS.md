@@ -28,6 +28,21 @@ For now, learn only:
 Do not explore Responsive Form Builder, IDS Forms, App Builder, or other
 Mongoose UI stacks unless explicitly instructed.
 
+## Scope extension: Infor Hello World tutorial (operator decision, 2026-10-10)
+
+In this demo tenant only, the factory may create and modify **FX_-prefixed** SQL
+tables, columns, IDOs, IDO projects, IDO properties and methods, property classes,
+validators, component classes and themes needed to follow the Infor Hello World
+tutorial (Parts 1–8, `docs/mongoose/transcripts/`), adapted to FX_ names.
+
+- These objects are tenant-wide, not User-scoped. Forms stay in User editing scope.
+- Never create, alter or delete existing non-FX_ tables, IDOs, data or global objects.
+  Where the tutorial changes an existing object (e.g. adds a column to Items), use
+  the FX_ equivalent (FX_Items) instead.
+- Tenant-wide operations such as metadata-cache unloading, FormSync or deployment
+  still need explicit authorization in the experiment brief.
+- Every created object is recorded in its experiment record so it can be cleaned up.
+
 ## Safety
 
 Only create or modify factory-owned test artifacts.
