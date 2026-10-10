@@ -101,6 +101,12 @@ Browser task boundaries:
   capturing a page, make its tab the selected tab with the tab-selection tool,
   then take a fresh snapshot. Selecting a tab is navigation within the browser,
   not a Mongoose lifecycle action.
+- Infor OS portal notification banners (a `portal-notification` strip above the
+  Mongoose frame, e.g. "The DistributionIFSContactUs group does not have any
+  active users…") are not Mongoose artifacts. Standing operator authorization
+  (2026-10-10): when such a banner is visible, or intercepts a click, dismiss it
+  once with its own close (×) button, then take a fresh snapshot and record the
+  dismissal. Never click its links ("here") or act on its message.
 - End in a stable page state with no browser-native dialogs (alert, confirm,
   prompt, or beforeunload "leave page") and no unsaved-change prompts. CDP
   disconnect dismisses beforeunload dialogs. In-page Mongoose dialogs (such as
