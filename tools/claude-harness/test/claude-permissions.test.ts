@@ -45,4 +45,11 @@ describe("intentional permission-denial classification",()=>{
     e.add({type:"user",message:{content:[{type:"tool_result",tool_use_id:"unmatched",is_error:true,content:"Permission denied"}]}});
     expect(e.permissionDenials.at(-1)?.tool_name).toBe("unknown");
   });
+  it("does not count an ordinary tool error whose echoed file text mentions denials",()=>{
+    const e=new TaskEvents("test-session");
+    e.add({type:"assistant",message:{id:"a",content:[{type:"tool_use",id:"t",name:"Edit",input:{file_path:join(cwd,"experiments/EXP-1.md")}}]}});
+    e.add({type:"user",message:{content:[{type:"tool_result",tool_use_id:"t",is_error:true,content:"<tool_use_error>String to replace not found in file.\nString: two permission denials were reported</tool_use_error>"}]}});
+    expect(e.permissionDenied).toBe(false);
+    expect(e.permissionDenials).toHaveLength(0);
+  });
 });

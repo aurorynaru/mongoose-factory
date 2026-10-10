@@ -47,7 +47,8 @@ export class TaskEvents {
     if(e.type==="user"&&Array.isArray(e.message?.content))for(const b of e.message.content){
       if(b.type!=="tool_result")continue;const p=this.pending.get(b.tool_use_id);
       const body=typeof b.content==="string"?b.content:JSON.stringify(b.content);
-      if(b.is_error&&/permission|denied|not allowed|rejected by.*hook/i.test(body))this.denial({tool_use_id:b.tool_use_id,tool_name:p?.name,tool_input:p?.input});
+      // Only the first line: errors such as Edit's "String to replace not found" echo file text, which may mention denials.
+      if(b.is_error&&/permission|denied|not allowed|rejected by.*hook/i.test(body.split("\n")[0]))this.denial({tool_use_id:b.tool_use_id,tool_name:p?.name,tool_input:p?.input});
       if(!p)continue;
       // Native results also cover pre-execution permission denials and cancellations
       // for which Claude may not emit PostToolUse/PostToolUseFailure.
