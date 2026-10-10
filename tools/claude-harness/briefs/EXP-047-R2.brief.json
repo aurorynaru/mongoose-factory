@@ -3,7 +3,7 @@
   "title": "EXP-047-R2 — Hello World Part 2: Derived FX_UM Property Class Creation and Recovery (replay after session expiry)",
   "record_path": "experiments/EXP-047-R2-hello-world-part-2-derived-fx-um-property-class-cr.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Using only the supported Mongoose Web Client Property Classes runtime Form (IdoPropertyClasses), establish that the derived property class FX_UM does not already exist, then create exactly one FX_UM property class with Base Class FX_UMBase, Domain IDO FX_UMs, Domain Property FX_UM, and Additional List Properties FX_Description. Preserve the inherited data type, length, and Label String ID FX_sUM without manually overriding them. Record which property fields visibly display override asterisks. Perform exactly one ordinary toolbar Save, verify the clean post-Save state, close and reopen the Property Classes runtime Form through native navigation, execute one fresh exact-name collection query, and verify recovery of the four configured relationships and the observable inherited properties. Preserve FX_UMBase and all other existing artifacts unchanged. The experiment establishes same-session runtime UI-level metadata recovery only.",
   "scope": {
     "in_scope": [
@@ -146,7 +146,7 @@
   "evidence_dir": "evidence/EXP-047-R2",
   "replay_of": "EXP-047",
   "initial_instruction": "T1 — READ-ONLY PREFLIGHT AND CREATION GATE; NO CREATION. Replay of EXP-047 (blocked by session expiry; read its operator outcome block). Create the EXP-047-R2 record and evidence directory. Take a fresh snapshot of each open tab; confirm the authenticated Web Client and DEM configuration. Open the Property Classes runtime Form through Select Form (key-event filter) if it is not open. Capture the FX_UMBase read-only baseline (Data Type, Length, Column Data Type, Label String ID, checkout indication). Then run the creation gate with one fresh Filter-in-Place query for FX_UM (exact text) and one for the positive control FX_UMBase, capturing the criteria before F4 and the settled result after each. Record the matching rule observed. Do not invoke New, type into a placeholder row, Save, check in or check out anything, or open the Designer. Report whether the gate is established, the evidence paths and the final browser state.",
-  "notes": "EXP-047-R2: replay of EXP-047 (blocked by Web Client session expiry before the positive control; nothing created). Changes: precondition that the operator re-authenticated; handling of a possible leftover placeholder-only Property Classes tab; T1 rewritten for the replay. Everything else is the reviewed EXP-047 brief. Approval pending from the operator.",
+  "notes": "EXP-047-R2: replay of EXP-047 (blocked by Web Client session expiry before the positive control; nothing created). Changes: precondition that the operator re-authenticated; handling of a possible leftover placeholder-only Property Classes tab; T1 rewritten for the replay. Everything else is the reviewed EXP-047 brief. Approved by the operator 2026-10-11 with precondition attestation: logged in again, configuration OK, Web Client loaded, no unsaved changes.",
   "exact_values": [
     "FX_UM",
     "FX_UMBase",
