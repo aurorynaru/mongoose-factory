@@ -1,0 +1,154 @@
+{
+  "experiment_id": "EXP-042-R3",
+  "title": "EXP-042-R3 — Hello World Part 1: Two Test Records Through the Web Client Runtime (replay after operator browser refresh)",
+  "record_path": "experiments/EXP-042-R3-hello-world-part-1-two-test-records-replay.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "In the authenticated DEM configuration, use only the existing User-scope Form FX_HelloWorld01, bound to IDO FX_HelloWorld01 and table dbo.FX_HelloWorld01, to enter exactly two factory-owned test records: FX_Code=FX001 with FX_Label=Factory test one, and FX_Code=FX002 with FX_Label=Factory test two. First confirm that the Web Client status bar is displayed (enabled in EXP-042-R2 and applied by the operator's browser refresh; no preference change here) and verify through its count that the collection holds zero persisted rows, then identify both uncaptioned runtime inputs through Edit > Find Value in Collection, corroborated by the EXP-041-R3 Designer component table and the FX_Code Required marker. Enter the first record, use the native New action to stage the second record, and perform exactly one explicit toolbar Save. Verify the committed values, ordinarily close the runtime Form, reopen it once, and query all records to verify both values are recovered. Record the inserted rows in the cleanup inventory. Classification is observed only, not replay_verified.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, the Hello World Part 1 tutorial test-data section at 7:40–8:01, EXP-040, EXP-041-R3, and their decisive evidence before browser actions.",
+      "Standard input methods (record each use): the Select Form filter needs key-event typing (browser_type with slowly: true, EXP-041); Mongoose combobox and wizard fields take one plain fill (browser_type without slowly, EXP-041-R3). For each runtime edit field use one plain fill into the verified input, then press Tab once to commit; take a fresh snapshot and confirm the field shows the exact value before moving on. If a value does not stay in its field after one corrected attempt, stop before Save. Before every prompt or alert click, take a fresh snapshot and confirm the button label of the exact ref.",
+      "Use the existing authenticated DEM configuration G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT and existing Site Developer/User-scope context. Do not perform authentication or session replacement.",
+      "The operator refreshed the browser once before this run to apply the Display Status Bar preference set in EXP-042-R2, and attested that the Web Client reloaded and is logged in. Confirm that no FX_HelloWorld01 runtime tab and no Designer tab is open. If a FX_HelloWorld01 runtime tab is open, stop without discarding it or opening a duplicate runtime Form. Do not refresh or reload the browser yourself.",
+      "Form identity: cite the accepted EXP-041-R3 evidence for the User-scope FX_HelloWorld01 Form, its Primary Collection FX_HelloWorld01 and the Designer component table (FX_Code/FX_Label bindings, FX_Code Required). Do not open the Designer in this experiment; no open Designer tab counts as a clean Designer state.",
+      "Read-only reference to the established FX_HelloWorld01 IDO and dbo.FX_HelloWorld01 table definitions from EXP-040. FX_Code is String 30, required and the primary key; FX_Label is String 100 and nullable.",
+      "Status bar: Display Status Bar was checked in EXP-042-R2 (evidence/EXP-042-R2/t1-03-…png) and the operator has refreshed the browser. Do not open User Preferences and change no preference. After opening the Form, verify from rendered UI and the accessibility snapshot that a status bar is displayed; capture it. If no status bar is displayed, record that and stop.",
+      "Open FX_HelloWorld01 exactly once in the Web Client using Select Form. If filtering is needed, use Filter By Name, Case Sensitive unchecked, Starts With unchecked, and the verified Control+a plus key-event typing method. Verify the intended Form before confirming the selection.",
+      "Before data entry and before any gate decision, you must run exactly one supported complete read-only query (Filter-in-Place F4 with empty criteria, or Refresh) and read the status bar: capture its exact text and a settled screenshot of the grid. Emptiness is established only when the status bar's own text shows zero persisted records (for example a count of 0) and the grid shows only the starred new-row placeholder. If the status bar is absent, or its text could count the placeholder or is otherwise ambiguous, record the exact text and stop. Skipping this query is not allowed (EXP-042-R2 T1 skipped it).",
+      "Field mapping via Edit > Find Value in Collection (read-only; source: external second opinion, unverified until observed here): for each of the two runtime inputs in turn, click once into the input (no typing), open Edit > Find Value in Collection, read the dialog's In Property selection, capture a screenshot that shows both the dialog and the focused input, then close the dialog with Cancel (fresh snapshot and button-label check first) without searching. The mapping is established only if the two inputs show two different properties, FX_Code and FX_Label, consistent with the EXP-041-R3 Designer component table and with the Required marker on the FX_Code input. If the dialog does not show a property, both inputs show the same property, or the Required marker contradicts the result, record it and stop before typing.",
+      "Verify the runtime is ready for new-record entry. If the empty-collection query changes the mode, use only a supported visible New control to enter add mode, recording the action and state. Stop if that transition cannot be verified.",
+      "Enter record 1 with FX_Code FX001 and FX_Label Factory test one. Capture both values and the associated input identities before advancing.",
+      "Use the native toolbar New once to begin record 2, provided record 1 remains safely staged and New has not unexpectedly committed or discarded it. Enter FX_Code FX002 and FX_Label Factory test two. Capture the two staged records before Save.",
+      "Perform exactly one explicit runtime toolbar Save after both records are staged, using a freshly verified Save control. Record the exact response, alerts, validation messages and post-Save state. Do not retry after timeout or uncertain completion.",
+      "Verify the saved collection displays exactly two records with the expected FX_Code and FX_Label pairings, with no duplicate or unexpected rows.",
+      "Close the clean runtime Form through its ordinary Form-tab close control exactly once, reopen FX_HelloWorld01 once through the supported Select Form route, and query all rows with an empty Filter-in-Place criterion or supported refresh. Compare the returned rows with the post-Save baseline.",
+      "Capture screenshots and accessibility snapshots showing target identity, field mapping, initial zero-row condition, both staged records, the Save result, post-Save rows and post-reopen rows.",
+      "Record the two FX_ test records in evidence/EXP-042-R3/cleanup-inventory.md. Confine repository changes to the EXP-042-R3 experiment record and evidence/EXP-042-R3/.",
+      "Before every prompt or alert response, obtain a fresh snapshot and verify the exact accessible button label and reference. Allow at most one fresh recovery snapshot and one corrected visible inspection; stop if the postcondition remains unproven."
+    ],
+    "out_of_scope": [
+      "Creating or modifying any Form, IDO, IDO Project, SQL table, column, index, event handler, variable, script or component definition.",
+      "Editing Form captions, Label String IDs, layout, field bindings, Component Class or Required properties.",
+      "Writing to any application table other than dbo.FX_HelloWorld01.",
+      "Adding more than the two authorized test records.",
+      "Editing or deleting records after Save.",
+      "Using SQL Tables, IDOs, IDO Projects or other application maintenance Forms.",
+      "Direct SQL, external APIs, unsupported endpoints or custom browser JavaScript.",
+      "FormSync, metadata unloading, regeneration, deployment and source-control operations.",
+      "Session replacement, login, logout, permission changes or configuration changes.",
+      "Independent database durability, cross-session persistence, cache invalidation, concurrent-user behavior and replay verification.",
+      "Cleaning up the inserted test records during this experiment."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Do not enter any data unless the existing collection is proven empty and both runtime input identities are established.",
+    "Do not interpret a blank starred row alone as proof that no persisted rows exist.",
+    "Do not type into an unnamed input based only on visual position or a Required marker.",
+    "Do not proceed if either FX001 or FX002 already exists, or if any other persisted row is present.",
+    "Do not change existing application data or insert rows outside dbo.FX_HelloWorld01.",
+    "Do not proceed to record 2 if the New action discards record 1 or unexpectedly commits it.",
+    "Do not perform more than one explicit Save, and do not retry Save when its outcome is uncertain.",
+    "Do not automatically acknowledge a validation, duplicate-key, discard, overwrite, or save-changes prompt. Capture it and stop unless the exact response is unambiguously authorized.",
+    "Do not dismiss or discard an inherited blank runtime record from EXP-041-R3 or EXP-042 without operator action.",
+    "Do not use hidden DOM controls, browser evaluation, scripts, SQL or unsupported APIs to bypass the field-identification or empty-collection gates.",
+    "Do not modify any non-FX_ artifact or any existing FX_ definition.",
+    "Do not perform authentication, check-in, check-out, metadata unload or schema operations.",
+    "Do not perform a second runtime opening, additional Save, extra record insertion or corrective edit after a failure.",
+    "Do not claim database-level durability or replay_verified classification from a single execution.",
+    "Do not open User Preferences or change any preference.",
+    "Do not run a search from the Find Value in Collection dialog; close it only with Cancel.",
+    "Do not open the Web Designer in this experiment.",
+    "Do not refresh, reload or navigate the browser page."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:FormSync|Regenerate\\s+Form|Unload\\s+All\\s+Global\\s+Form\\s+Objects)\\b",
+    "\\b(?:Get\\s+Database\\s+Schema|Add\\s+Subcollection|Update\\s+Current\\s+Table)\\b",
+    "\\b(?:Check\\s+In|Check\\s+Out|Undo\\s+Check\\s+Out)\\b",
+    "\\b(?:execute|run|apply)\\s+(?:SQL|script|deployment|schema\\s+change)\\b",
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:create|modify|delete)\\b[^.\\n]{0,50}\\b(?:SQL\\s+table|IDO\\s+project|event\\s+handler|script)\\b"
+  ],
+  "related_experiments": [
+    "EXP-033-R4",
+    "EXP-039",
+    "EXP-040",
+    "EXP-041",
+    "EXP-041-R2",
+    "EXP-041-R3",
+    "EXP-042",
+    "EXP-042-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_HelloWorld01",
+    "artifacts": [
+      "FX_HelloWorld01 — existing User-scope Form, runtime use only",
+      "FX_HelloWorld01 — existing IDO, referenced without definition changes",
+      "FX_HelloWorld01 — existing factory-owned SQL table in schema dbo, exactly two authorized test rows",
+      "FX_Code — existing IDO property, values FX001 and FX002",
+      "FX_Label — existing IDO property, values Factory test one and Factory test two",
+      "FX_HelloWorldProject01 — existing IDO project, reference only"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Preflight evidence establishes a usable authenticated DEM configuration after the operator's browser refresh, no open FX_HelloWorld01 runtime tab and no open Designer tab, and the accepted EXP-041-R3 evidence for the User-scope FX_HelloWorld01 Form and its Primary Collection/IDO. A displayed status bar is captured after the Form opens, with no preference change in this experiment. The authorized target table and two record values are documented before any application data mutation."
+    },
+    {
+      "id": "AC-2",
+      "description": "After one supported complete read-only query, the status bar's own text visibly shows zero persisted records for the FX_HelloWorld01 collection, and the grid shows only the starred new-row placeholder. Evidence identifies the Form, the exact status-bar text and the settled grid, and records zero matches for FX001 and FX002. A missing status bar, any existing record or an ambiguous count closes the mutation gate."
+    },
+    {
+      "id": "AC-3",
+      "description": "For each runtime input, an Edit > Find Value in Collection screenshot shows the focused input and the dialog's In Property selection, and the two inputs map to FX_Code and FX_Label respectively. The mapping agrees with the EXP-041-R3 Designer component table and the FX_Code Required marker. Each dialog is closed with Cancel without a search. If either input cannot be identified this way, this check fails and no typing occurs."
+    },
+    {
+      "id": "AC-4",
+      "description": "The first staged new record visibly contains FX_Code FX001 and FX_Label Factory test one in the verified corresponding inputs. No other record or field is modified, and no explicit Save has occurred."
+    },
+    {
+      "id": "AC-5",
+      "description": "The supported New action advances to the second staged record without unexpectedly discarding or committing record 1. Evidence captures record 2 with FX_Code FX002 and FX_Label Factory test two, while confirming both expected records remain represented before Save. Any unexpected persistence or loss is recorded as a blocker."
+    },
+    {
+      "id": "AC-6",
+      "description": "Exactly one explicit runtime Save is performed after both records are staged. The captured response and settled runtime state show successful completion without validation or duplicate-key error. No retry, second Save or application-data edit occurs."
+    },
+    {
+      "id": "AC-7",
+      "description": "Immediately after Save, a supported complete collection read displays exactly two persisted records, pairing FX001 with Factory test one and FX002 with Factory test two. Both values, count and target Form identity are directly captured; absence of additional rows is established for the queried collection."
+    },
+    {
+      "id": "AC-8",
+      "description": "Exactly one ordinary runtime Form-tab close and one supported reopen recover FX_HelloWorld01. An unfiltered complete collection query after reopen returns exactly the same two records and values as the post-Save baseline, with no extra rows or errors. Evidence establishes same-session runtime recovery only."
+    },
+    {
+      "id": "AC-9",
+      "description": "The evidence/EXP-042 cleanup inventory contains exactly the two inserted rows, their table and IDO identities, exact values and cleanup ownership, with no deletion performed. The final experiment record contains an AC-1 to AC-9 matrix, screenshots and snapshot references, operation counts, Save outcome, repository-confinement audit, error/recovery accounting and final browser state. Findings are classified observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-042-R3",
+  "replay_of": "EXP-042-R2",
+  "initial_instruction": "T1 — PREFLIGHT AND GATES; NO DATA ENTRY OR SAVE. Replay of EXP-042-R2, which was blocked because the Display Status Bar preference only takes effect after a browser refresh. The operator has refreshed the browser. Read AGENTS.md, the tutorial test-data section, the EXP-042 and EXP-042-R2 records (their operator outcome blocks) and their decisive evidence, and the EXP-041-R3 Designer component table. Create the EXP-042-R3 record and evidence directory. Select the current tab, take a fresh snapshot and confirm the DEM configuration, that no FX_HelloWorld01 runtime tab and no Designer tab is open. Do not open User Preferences. Open FX_HelloWorld01 once through Select Form with the verified key-event filter method and confirm a status bar is displayed. Then run exactly one empty-criteria FiP F4 (or Refresh) and capture the exact status-bar text and the settled grid; this query is mandatory before the gate decision. If and only if the status bar shows zero persisted records, identify each input with Edit > Find Value in Collection (click into the input without typing, read In Property, screenshot, Cancel). Do not type a value, use New, Save, refresh the browser or otherwise mutate application data in T1. If a gate cannot be proven, stop and document the blocker. Record decisive screenshots, the status-bar text, the mapping, operation counts, limitations and the current browser state under EXP-042-R3 only. Insertion, the single Save and close/reopen verification follow in separate bounded worker instructions.",
+  "notes": "EXP-042-R3: replay of EXP-042-R2 (blocked at AC-2 before any data mutation; Display Status Bar was checked but needs a browser refresh). Changes: precondition that the operator refreshed the browser and no FX_HelloWorld01 tab is open; no preference change (verify the status bar only); the empty-criteria query is mandatory before the gate decision; no browser refresh by the worker. Everything else is the reviewed EXP-042-R2 brief. Approval pending from the operator.",
+  "exact_values": [
+    "FX_HelloWorld01",
+    "FX001",
+    "FX002",
+    "Factory test one",
+    "Factory test two"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  }
+}
