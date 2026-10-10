@@ -59,9 +59,14 @@ export class ClaudeChat implements ChatPort {
       if(opts.shouldStop())return {status:"interrupted"};
       if(Date.now()>=deadline)return {status:"timeout",detail:"Claude role reply timeout; preserve journal and reconcile"};
       const worker=this.workers[role],result=await worker.waitForCompletion(op.sid,op.continuation??op.mid,remaining);
-      if(result.status!=="completed"||result.permissionDenials?.length)return this.outcome(result,op);
+      if(result.status!=="completed")return this.outcome(result,op);
+      // "completed" means every denial was classified as expected (deny rule, read sandbox or harness guard).
+      // Roles are read-only, so a refused call changed nothing: forward the reply with an audit note.
+      const refused=result.permissionDenials?.length?`
+
+[HARNESS NOTE: ${result.permissionDenials.length} tool call(s) were refused by this role's read-only policy and had no effect: ${result.permissionDenials.map(d=>d.tool_name).join(", ")}.]`:"";
       const request=role==="specialist"?externalQuestion(result.text):null;
-      if(!request) {const reply:ReplyOutcome={status:"complete",messageId:`${op.sid}:${op.continuation??op.mid}`,markdown:result.text};save(file,{...op,reply});return reply;}
+      if(!request) {const reply:ReplyOutcome={status:"complete",messageId:`${op.sid}:${op.continuation??op.mid}`,markdown:result.text+refused};save(file,{...op,reply});return reply;}
       if(!this.o.external)return {status:"blocked",problem:"not_configured",detail:"External second opinion unavailable"};
       const opinion=await this.o.external.ask(op.runId,`${nonce}-${op.continuation??op.mid}`,request,remaining);
       if(opinion.status!=="complete")return opinion;

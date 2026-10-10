@@ -1,6 +1,6 @@
 import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import { intentionallyDenied } from "../src/adapters/claude/permissions.js";
+import { intentionallyDenied, outsideReadRoots } from "../src/adapters/claude/permissions.js";
 import { absolutePattern } from "../src/adapters/claude/tool-policy.js";
 import { TaskEvents } from "../src/adapters/claude/events.js";
 
@@ -51,5 +51,18 @@ describe("intentional permission-denial classification",()=>{
     e.add({type:"user",message:{content:[{type:"tool_result",tool_use_id:"t",is_error:true,content:"<tool_use_error>String to replace not found in file.\nString: two permission denials were reported</tool_use_error>"}]}});
     expect(e.permissionDenied).toBe(false);
     expect(e.permissionDenials).toHaveLength(0);
+  });
+});
+describe("role read-sandbox denials",()=>{
+  const roots=[join(cwd,"workspace"),join(cwd,"experiments"),join(cwd,"docs","mongoose")];
+  it.each([
+    ["Grep",{path:cwd},true], ["Read",{file_path:join(cwd,"AGENTS.md")},true], ["Glob",{path:join(cwd,"docs")},true],
+    ["Grep",{path:join(cwd,"experiments")},false], ["Read",{file_path:join(cwd,"docs","mongoose","sources.md")},false],
+    ["Edit",{file_path:join(cwd,"AGENTS.md")},false], ["Read",{},false],
+  ])("%s %j outside the read roots: %s",(tool_name,tool_input,expected)=>{
+    expect(outsideReadRoots({tool_name:tool_name as string,tool_input:tool_input as Record<string,unknown>},roots,cwd)).toBe(expected);
+  });
+  it("never applies without read roots (worker tasks)",()=>{
+    expect(outsideReadRoots({tool_name:"Read",tool_input:{file_path:join(cwd,"AGENTS.md")}},undefined,cwd)).toBe(false);
   });
 });

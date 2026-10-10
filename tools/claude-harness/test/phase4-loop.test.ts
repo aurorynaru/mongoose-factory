@@ -130,6 +130,15 @@ describe("Phase 4 controller loop with fake Claude processes",()=>{
     expect(existsSync(join(h.paths.runsDir,run.id,"external-second-opinion/ledger.json"))).toBe(true);
     expect(h.store.getRole("specialist")?.conversation_id).toBe("external");expect(h.store.getSetting("claude:conversation:specialist")).toMatch(/^claude-session:/);
   });
+  it("forwards a completed specialist reply whose only denial is a read outside its read roots, with an audit note",async()=>{
+    const specialist={prose:"Source rank: observed records.",envelope:{protocol:"mongoose-harness/specialist-v1",consultation_id:"{{consultation_id}}",verdict:"informational",required_verifications:[]}};
+    const h=fixture("chatgpt",{script:{specialist:[{reply:specialist,permissionDenials:[{tool_name:"Grep",tool_use_id:"g1",tool_input:{path:h0root()}}]}],worker:[{write:shared.workerOk.files}]}});
+    function h0root(){return "C:\\outside-every-read-root";}
+    const browser=new FakeChat({coordinator:[{envelope:{action:"ASK_SPECIALIST",reason:"question",message:"Explain Select Form."}},SEND,COMPLETE],specialist:[]});
+    const controller=h.create(true,new RoutedChat(h.config,browser,h.claude)),run=await controller.run(controller.createRun(fixtureBrief()).id);
+    expect(run.status).toBe("completed");
+    const inbound=h.store.inboundForRun(run.id,"specialist");expect(inbound).toHaveLength(1);expect(inbound[0].content).toContain("HARNESS NOTE: 1 tool call(s) were refused");
+  });
 });
 
 describe("specialist permissions and external broker",()=>{

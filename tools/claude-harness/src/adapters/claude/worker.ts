@@ -14,7 +14,7 @@ import { gitState, touched, type GitState } from "./git-state.js";
 import { childEnvironment, diagnostic, launch, taskProcess } from "./process.js";
 import { findMarker, marker, transcriptPath } from "./transcripts.js";
 import { generatedPolicy } from "./tool-policy.js";
-import { intentionallyDenied } from "./permissions.js";
+import { intentionallyDenied, outsideReadRoots } from "./permissions.js";
 import { browserAction, finishAction, type GuardConfig } from "../../hooks/pre-tool-use.js";
 import { rolePolicy } from "./role-policy.js";
 import type { ChatRole } from "../types.js";
@@ -26,6 +26,8 @@ export interface TaskJournal {
   argv:string[]; createdAt:string; result?:WorkerResult; process?:Record<string,unknown>;
   permissionSettings:string; eventFile:string; stderrFile:string; nativeTranscript:string;
   permissionDenyRules?:string[];
+  /** Role tasks only: the folders the role may read (blockReadsOutsideWorkingDirectories). */
+  readRoots?:string[];
   guardConfig?:GuardConfig;
   recoveryEvidence?:Record<string,unknown>;
   finishedAt?:string; guardDenialsFile?:string;
@@ -111,6 +113,7 @@ export class ClaudeWorker implements WorkerPort {
     const journal:TaskJournal={sessionId:sid,messageId:mid,payload,preamble,agentsHash:hash(agents),before:gitState(paths.factoryRoot),state:"planned",argv:args,createdAt:new Date().toISOString(),permissionSettings:policy.settingsFile,eventFile:join(dir,`${mid}.events.jsonl`),stderrFile:join(dir,`${mid}.stderr.txt`),nativeTranscript:transcriptPath(cfg.claude.configDir??join(homedir(),".claude"),this.cwd,sid)};
     journal.guardDenialsFile=policy.denialFile;
     journal.permissionDenyRules=[...policy.deny];
+    if(this.o.role)journal.readRoots=[this.cwd,...(policy as ReturnType<typeof rolePolicy>).directories];
     journal.guardConfig=read<GuardConfig>(policy.guardConfig);
     writeFileSync(policy.denialFile,"");
     const lease=join(paths.dataDir,"workers","active-task.json");
@@ -199,7 +202,7 @@ export class ClaudeWorker implements WorkerPort {
     else if(e.invalid||!e.terminal||!e.model||!modelMatches(this.o.config.claude.models.worker.model,e.model)||e.pending.size)
       result={status:"failed",error:e.invalid||"Missing terminal/init event or unfinished tools; completion unproven",...base};
     else if(e.permissionDenied&&((a.exit!==0&&!a.recovered)||e.terminal.is_error||e.terminal.subtype!=="success"||!e.permissionDenials.length||
-      !e.permissionDenials.every(d=>intentionallyDenied(d,j.permissionDenyRules??[],this.o.paths.factoryRoot)||guardDenied(d))))
+      !e.permissionDenials.every(d=>intentionallyDenied(d,j.permissionDenyRules??[],this.o.paths.factoryRoot)||outsideReadRoots(d,j.readRoots,this.cwd)||guardDenied(d))))
       result={status:"blocked",kind:"permission",detail:"Claude reported unexpected/unclassified denied tool permissions or no successful terminal result; task completion is not established",permissionDenials:e.permissionDenials};
     else if((a.exit!==0&&!a.recovered)||e.terminal.is_error||e.terminal.subtype!=="success")result={status:"failed",error:String(e.terminal.result??e.terminal.errors??"Claude failed"),...base};
     else {j.after=gitState(this.o.paths.factoryRoot);result={status:"completed",...base,text:typeof e.terminal.result==="string"?e.terminal.result:e.text,touchedFiles:touched(j.before,j.after),cost:Number(e.terminal.total_cost_usd??0),tokens:Number(e.terminal.usage?.input_tokens??0)+Number(e.terminal.usage?.output_tokens??0),
