@@ -1,0 +1,161 @@
+{
+  "experiment_id": "EXP-050",
+  "title": "EXP-050 — Hello World Part 2: Create FX_Items Multi-View Form, Caption Strings, and Verify Runtime",
+  "record_path": "experiments/EXP-050-hello-world-part-2-create-fx-items-multi-view-form.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Create exactly one User-scoped Classic Multi-View Form named FX_Items using the existing FX_Items IDO, preserving the wizard's default properties while ordering the four business fields FX_Item, FX_Description, FX_Cost, and FX_UM. Create caption strings FX_sItem = 'Item' and FX_sCost = 'Cost' through the EXP-045 Caption ellipsis workflow. Preserve the existing FX_sDescription = 'Description' and FX_sUM = 'Unit of Measure' strings unchanged. Perform one ordinary Designer Save, close and reopen the Form, verify its identity and persisted configuration, and open it once in the Web Client runtime without entering data. Record the actual FX_UM component type and compare it with the tutorial's ComboBox expectation. Classify the result as observed unless independently replayed later.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, the accepted EXP-049 record, EXP-045's successful Multi-View and caption-string procedures, and the relevant Hello World Part 2 section before interacting with Mongoose.",
+      "Inspect the current Web Client and Designer state. Require a usable authenticated session, clean Designer state, and confirmed User editing scope before mutation.",
+      "Verify the existing FX_Items IDO and its four business properties read-only, using EXP-049 evidence as the baseline. Do not change the IDO or its checkout state.",
+      "Establish a native Select Form collision gate for Form Name FX_Items before creation. Use a known-existing Form as a positive filter control, then establish zero visible matches for the proposed Form name with the available case-insensitive Name-search behavior. If absence is ambiguous, stop before starting the wizard.",
+      "Verify the intended existing caption resources and the absence of FX_sItem and FX_sCost through supported read-only native surfaces where available. If a target resource already exists unexpectedly, do not overwrite it; inspect and report the discrepancy.",
+      "Use Web Designer New > Classic > Multi-View, following the successful EXP-045 route. Enter Form Name FX_Items using one plain fill and select Data Source FX_Items.",
+      "Accept the wizard's default property generation, and configure the business-property order as FX_Item, FX_Description, FX_Cost, FX_UM. Verify the selected source and ordered list before completion.",
+      "Uncheck Save Template. Verify the final wizard state, invoke Finish exactly once, inspect the completion result, and confirm that the created Form is FX_Items in User scope.",
+      "Inspect the generated Form using the supported Details > Components grid Expand control and native row selection. Identify the label components for all four business properties and their displayed Caption values.",
+      "For FX_sItem, use its label Caption ellipsis route. Answer Yes once only to the exact missing-string creation prompt for FX_sItem. Replace the generated default String Value with Item; commit the cell editor using Tab or Enter before pressing OK.",
+      "For FX_sCost, repeat the same native string-creation workflow only for FX_sCost. Set its String Value to Cost, commit the cell editor before OK, and avoid changing any other string.",
+      "Independently inspect FX_sItem and FX_sCost through the supported Edit > String read-only view. Verify their exact IDs and stored displayed values.",
+      "Inspect the existing FX_sDescription and FX_sUM caption references without editing them. Preserve their expected text values Description and Unit of Measure.",
+      "Perform exactly one ordinary Designer Save after the intended Form and caption changes. Verify the native Save result and clean Designer state.",
+      "Close the clean FX_Items Designer Form tab once, confirm its absence from the open Form tabs, then reopen the same User-scoped Form once through the supported Form-menu recent-forms or Select Form route.",
+      "Verify the reopened Form identity using Name, ScopeType, and ScopeName. Reinspect all four business-field positions, label captions, data bindings, and the FX_UM component's displayed design-time type where the native UI exposes them.",
+      "Open FX_Items once through the Web Client runtime using the supported native Form-opening workflow. Record the rendered field order, captions, and actual FX_UM input control type. Compare the observed result with the tutorial's ComboBox expectation without assuming it in advance.",
+      "Capture decisive screenshots or accessibility snapshots under evidence/EXP-050/ at the collision gate, pre-Finish wizard state, Form creation result, caption-string editor commits, clean Designer Save, closed state, reopened Form, and runtime display.",
+      "Write experiments/EXP-050-hello-world-part-2-fx-items-multiview-form.md and concise task evidence reports under evidence/EXP-050/. Include operation counts, acceptance results, unresolved observations, and repository-change confinement."
+    ],
+    "out_of_scope": [
+      "Creating, modifying, deleting, or regenerating the FX_Items IDO or dbo.FX_Items SQL table.",
+      "Editing the FX_ItemBase, FX_Cost, FX_UM, FX_UMBase, or other existing property classes.",
+      "Changing the FX_UMs IDO, table, domain configuration, or existing test data.",
+      "Editing the existing FX_sDescription or FX_sUM string resources.",
+      "Creating additional caption strings beyond FX_sItem and FX_sCost.",
+      "Creating more than one FX_Items Form or changing unrelated Forms.",
+      "Modifying or saving the vendor IdoPropertyClasses Form in Web Designer.",
+      "Entering, inserting, updating, or deleting FX_Items test records.",
+      "Check-in, checkout, Undo Check Out, source-control operations, and deployment.",
+      "FormSync, direct SQL, internal API mutation, metadata unloading, and cache reset.",
+      "Event handlers, scripts, Form variables, custom validation logic, and additional controls not generated or required by the specified wizard.",
+      "Changing user preferences, authentication settings, Site scope, Group scope, or Vendor Default Form definitions.",
+      "Proving cross-session persistence, database-level durability, metadata-cache eviction, or replay verification."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never modify or save a vendor-defined Form, especially IdoPropertyClasses.",
+    "Never edit the existing FX_Items IDO, SQL table, property classes, FX_UMs objects, or existing caption strings.",
+    "Never enter or save test item records during runtime inspection.",
+    "Never invoke a check-in, checkout, metadata unload, FormSync application, deployment, or SQL mutation.",
+    "Never invoke wizard Finish more than once or retry an ambiguous creation result.",
+    "Never overwrite an unexpectedly existing FX_sItem or FX_sCost resource.",
+    "Never press OK in a String dialog until the String Value editor has been visibly committed and the exact intended value verified.",
+    "Never make a second ordinary Designer Save to compensate for an unverified first Save. Stop and inspect the result before any further action.",
+    "Never create an additional Form if FX_Items already exists in a relevant scope or its absence cannot be established.",
+    "Never use unsupported DOM mutations, hidden-control activation, guessed deep links, or unapproved recovery workflows.",
+    "Never perform deliberate login, reauthentication, session replacement, or browser restart after the controlled operation begins. Stop on an unexpected session challenge.",
+    "After a browser-reference failure, allow at most one fresh untargeted snapshot and one corrected inspection. If the state remains ambiguous, record a blocker rather than widening scope.",
+    "Do not claim that FX_UM is rendered as a ComboBox unless the generated component or native runtime display provides direct evidence.",
+    "Do not promote this first successful execution to replay_verified."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:DELETE\\s+FROM|DROP\\s+TABLE|TRUNCATE\\s+TABLE|ALTER\\s+TABLE)\\b",
+    "\\b(?:INSERT\\s+INTO|UPDATE\\s+dbo\\.)\\b",
+    "\\b(?:click|press|execute|run)\\s+(?:Check\\s+In|Check\\s+Out|Undo\\s+Check\\s+Out|Unload\\s+All\\s+Global\\s+Form\\s+Objects|FormSync)\\b",
+    "\\b(?:create|add)\\b[^.\\n]{0,40}\\b(?:event handler|script)s?\\b",
+    "\\b(?:save|modify|delete)\\s+(?:the\\s+)?(?:vendor\\s+)?IdoPropertyClasses\\b",
+    "\\b(?:create|insert|update|delete)\\b[^.\\n]{0,40}\\b(?:test\\s+items|test\\s+records|FX_Items\\s+rows)\\b"
+  ],
+  "related_experiments": [
+    "EXP-049",
+    "EXP-045",
+    "EXP-048",
+    "EXP-041",
+    "EXP-039"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Items",
+    "artifacts": [
+      "FX_Items",
+      "FX_sItem",
+      "FX_sCost",
+      "FX_sDescription",
+      "FX_sUM"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Preflight evidence identifies the usable Mongoose environment, User editing scope, clean Designer state, existing FX_Items IDO and its four properties. No unexpected authentication or unsaved-change dialog is present. Capture native identity and scope evidence before mutation."
+    },
+    {
+      "id": "AC-2",
+      "description": "Before Form creation, a supported Select Form search shows a known-existing positive-control Form and no visible FX_Items Form name match in the relevant inventory. Record the exact filters, settled results, and any cross-scope limitations. No Finish is permitted if the collision gate is ambiguous."
+    },
+    {
+      "id": "AC-3",
+      "description": "Pre-Finish wizard evidence visibly identifies Form Name FX_Items, Data Source FX_Items, Classic Multi-View route, the ordered business fields FX_Item, FX_Description, FX_Cost, FX_UM, and Save Template unchecked. Capture the identity and field order before invoking Finish."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly one wizard Finish creates one User-scoped FX_Items Form. Capture its native completion result, reopened or initially loaded Form identity, and a clean post-creation state. No second Form creation or template creation occurs."
+    },
+    {
+      "id": "AC-5",
+      "description": "Exactly two intended caption resources are created or established through the supported Caption ellipsis workflow: FX_sItem = Item and FX_sCost = Cost. Each new-resource prompt is tied to its exact ID, and each String Value editor is committed before OK. The subsequent Edit > String read-only views show the exact IDs and values. No overwrite is performed if a resource unexpectedly already exists."
+    },
+    {
+      "id": "AC-6",
+      "description": "The existing FX_sDescription = Description and FX_sUM = Unit of Measure resources remain unchanged. Native read-only evidence identifies their references and values where exposed; the action audit confirms no edit to either existing resource."
+    },
+    {
+      "id": "AC-7",
+      "description": "The generated Form's native Details > Components view shows the four business fields in the intended order: FX_Item, FX_Description, FX_Cost, FX_UM. The corresponding label components reference the intended FX_ caption strings. Evidence identifies the selected component, binding, Caption, and relevant order or layout position rather than relying on component filenames alone."
+    },
+    {
+      "id": "AC-8",
+      "description": "Exactly one ordinary Designer Save is invoked after the intended changes. A captured native result and post-Save state demonstrate that the Designer is clean, with no unsaved-change indication or unexpected prompt."
+    },
+    {
+      "id": "AC-9",
+      "description": "The FX_Items Form is closed through its own native Form-tab close control and demonstrably disappears from the open Form tabs. It is reopened once using a supported Form-opening route. The recovered Form has the same Name, User ScopeType and ScopeName, four business-field positions, bindings, and caption references. Evidence explicitly distinguishes ordinary same-session UI recovery from stronger persistence claims."
+    },
+    {
+      "id": "AC-10",
+      "description": "One read-only Web Client runtime opening of FX_Items visibly shows the intended business-field order and the captions Item, Description, Cost, and Unit of Measure. The actual FX_UM input control type is captured and compared with the tutorial's expected ComboBox. Any discrepancy is recorded explicitly. No test record is entered or saved."
+    },
+    {
+      "id": "AC-11",
+      "description": "The final audit reconciles one Form creation, at most two newly created caption resources with exact expected values, one ordinary Designer Save, one Form close, one Form reopen, and one read-only runtime opening. Evidence and repository inventory support confinement to the FX_Items User-scoped Form, FX_sItem, FX_sCost, the EXP-050 record and evidence directory. No IDO, SQL table, vendor Form, existing string, source-control state, or test data was intentionally changed. Any limitation of independent preservation proof is documented."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-050",
+  "replay_of": null,
+  "initial_instruction": "T1 — READ-ONLY PREFLIGHT AND GATES; NO CREATION. Read AGENTS.md, the EXP-049 operator outcome block, and the EXP-045 record (Classic Multi-View route, Components grid Expand selection, Caption ellipsis string creation, the T12 commit-before-OK lesson, the Edit > String lookup). Create the EXP-050 record and evidence directory. Take a fresh snapshot of each open tab; confirm the authenticated Web Client, the DEM configuration and the Designer in User scope with Save disabled (the Designer may show the vendor IdoPropertyClasses Form: do not edit or save it). Run the Select Form gate in the Web Client: one known-existing positive control (FX_UMs), then FX_Items (exact), with key-event typing and settled captures; Cancel Select Form. In the Designer, open Edit > String once and use the Strings filter: FX_sItem and FX_sCost (expected absent), FX_sDescription and FX_sUM (expected present with Description and Unit of Measure), plus one positive control; then Cancel. Read the FX_Items IDO and its four properties read-only in the IDOs Form if it can be done with one exact-name query; otherwise cite EXP-049. Do not open the Form wizard, create anything, answer any create prompt, or Save in T1. Report gate results, evidence paths and the final browser state.",
+  "notes": "Proposed by the coordinator after run R-20261011-020822-9Eej. Rationale: EXP-049 was accepted with documented limits and established the FX_Items IDO, dbo.FX_Items SQL table, four business properties, native check-in, and same-session recovery. EXP-045 established the Classic Multi-View wizard route, caption-string creation workflow, and the requirement to commit the String Value editor before OK. The next tutorial step is to create the User-scoped FX_Items Form on the existing IDO, add only the two missing caption strings, and observe whether the FX_UM domain produces a ComboBox at runtime. This is one bounded Form-construction experiment involving one new Form and two new caption strings, with no test-record insertion or underlying IDO modification. | Operator review: initial_instruction rewritten as a bounded read-only T1 (the draft described the whole experiment); exact-value guard (FX_Items, FX_Item, FX_Description, FX_Cost, FX_UM, FX_UMs, FX_sItem, FX_sCost, Item, Cost) and no-JavaScript policy added. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Items",
+    "FX_Item",
+    "FX_Description",
+    "FX_Cost",
+    "FX_UM",
+    "FX_UMs",
+    "FX_sItem",
+    "FX_sCost",
+    "Item",
+    "Cost"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  }
+}
