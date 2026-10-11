@@ -108,6 +108,12 @@ Browser task boundaries:
   after a list, list once more and retry the select once; this retry does not
   consume the fresh-snapshot recovery allowance. Never click or screenshot a
   tab whose selection has not succeeded.
+- Designer delete controls (standing operator safety rule, 2026-10-12): the
+  Designer TOP toolbar trash icon is "Delete Form Definition" — it deletes the
+  whole Form. Never click it. Delete a component only with the trash button at
+  the bottom of the Details > Components grid, after its confirmation names the
+  exact component. If a "delete the definition for form" dialog ever appears,
+  click No (Yes has default focus: never press Enter), then report it (EXP-062-R2).
 - Infor OS portal notification banners (a `portal-notification` strip above the
   Mongoose frame, e.g. "The DistributionIFSContactUs group does not have any
   active users…") are not Mongoose artifacts. Standing operator authorization
