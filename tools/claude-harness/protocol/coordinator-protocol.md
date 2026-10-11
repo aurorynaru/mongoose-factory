@@ -122,6 +122,12 @@ Evidence review:
   without attachment does not prove the content or make a pending check pass.
 - When worker tasks are exhausted, review already saved evidence or pause for the
   operator. Do not request more browser work without an operator limit change.
+- Repository confinement (standing operator rule, 2026-10-11): workers have no shell
+  or git by design, so they can never show git status or a working-tree diff. Do
+  not pause, block, or request an attachment for that reason. Judge confinement from
+  the worker's list of written files and the harness-audit-T*.md tool tables, and
+  mark it supported with the limitation "operator git review at outcome is
+  authoritative". The operator checks git status before recording the outcome.
 <!-- END PROTOCOL -->
 
 ## Short reminder (sent with every non-kickoff message)
