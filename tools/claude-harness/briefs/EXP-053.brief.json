@@ -1,0 +1,153 @@
+{
+  "experiment_id": "EXP-053",
+  "title": "EXP-053 — Hello World Part 3 Section 4: FX_Items Form Event Diagnostics",
+  "record_path": "experiments/EXP-053-hello-world-part-3-section-4-fx-items-form-event-d.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Using the existing User-scoped FX_Items Form with Initial Command=Refresh, reproduce the diagnostic workflow from Hello World Part 3 section 4. First record the original values of every option on the operator's Diagnostics User Preferences page without changing anything. Then configure only Diagnostics Enable, Form tab Events, and Event Handler Include through the native Web Client preferences UI. Open the native Diagnostic Log, close any clean inherited FX_Items runtime tab, clear the diagnostic messages exactly once, and open FX_Items exactly once using Open > Select Form. Capture the precise event names, message order, available timestamps, and other diagnostic information generated during that opening and its automatic initial Refresh. Preserve the relevant log text in evidence/EXP-053/, excluding credentials. Finally restore every temporarily changed Diagnostics preference to its recorded original value and verify restoration. No Designer, Form definition, IDO, business-data, or unrelated preference changes are permitted.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, the accepted EXP-052 experiment record and decisive evidence, EXP-050 runtime Form identity procedures, and docs/mongoose/transcripts/hello-world-pt3.md section 4 (03:20–04:23) before browser interaction.",
+      "T1 is strictly read-only: inspect the inherited Web Client state, confirm the DEM configuration and authenticated identity without exposing credentials, record whether FX_Items is currently open, and inspect the Diagnostics User Preferences page.",
+      "Before any Diagnostics preference mutation, capture a screenshot and accessibility evidence of every option and its original value on the Diagnostics preferences page, including options outside the three authorized settings. Create a complete original-value inventory under evidence/EXP-053/.",
+      "Use only the supported native Web Client User Preferences interface to configure Diagnostics Enable, Form tab Events, and Event Handler Include to the operator-requested states. Preserve all other preference values. Confirm the changes using the native OK control and verify the resulting settings.",
+      "If a requested control, its state, or its supported native editor cannot be identified unambiguously, stop the diagnostic test without changing unrelated settings. Any authorized settings already changed must still be restored when safe.",
+      "Open View > Diagnostic Log through the native Web Client menu. Record the initial visible log state without claiming that inherited messages belong to EXP-053.",
+      "Before the controlled log capture, verify that any inherited FX_Items runtime Form is clean, with Save disabled, no unsaved changes and no pending prompt. Close that runtime Form once through its native tab control. Confirm the tab is absent before proceeding.",
+      "Clear the native Diagnostic Log exactly once after the clean runtime closure and before the controlled FX_Items opening. Capture evidence that the previous messages have been cleared. Do not perform another clear during the capture.",
+      "Open the existing FX_Items runtime Form exactly once through the previously verified Web Client Open > Select Form workflow. Confirm exact Form name, the selected configuration, and the absence of an unexpected authentication challenge.",
+      "Do not manually invoke Refresh, F4, Filter-in-Place, Get More Rows, or any other collection-loading operation after the controlled opening.",
+      "Capture the immediate and settled FX_Items runtime states. Verify whether the three existing records automatically appear, with the native record count, Save-disabled state and original business-field values, without changing any record.",
+      "Inspect the native Diagnostic Log after the controlled opening. Capture every relevant Form event and event-handler entry with its exact visible name, original message text, chronological display order, available timestamp and any native context identifying the FX_Items Form.",
+      "Preserve the complete relevant diagnostic sequence in an evidence text file under evidence/EXP-053/. Distinguish direct native log contents from worker interpretation. Preserve the ordering and timestamps as displayed; never invent timestamps, event names, IDs or missing messages.",
+      "Distinguish events correlated with Form opening and automatic Refresh from unrelated or unattributable diagnostic entries. Record ambiguity rather than inferring unsupported event causation.",
+      "If the Diagnostic Log becomes truncated, the log window obstructs the opening workflow, or events cannot be attributed reliably, document the actual limitation. Do not repeat the controlled opening or clear the log again.",
+      "At the end of the experiment, restore all changed Diagnostics settings to the original values captured during T1, using the supported native preferences interface and its ordinary OK confirmation. Reopen the Diagnostics page read-only to verify every option matches the original baseline.",
+      "If restoration is blocked, report exactly which settings remain changed, their known original and current states, and the native obstruction. Do not claim successful cleanup.",
+      "Capture screenshots and accessibility evidence for the pre-change preference baseline, configured Diagnostics state, clean FX_Items closure, cleared-log baseline, runtime opening, diagnostic event sequence, restoration and final preference comparison.",
+      "Maintain one EXP-053 experiment record under experiments/ and evidence reports exclusively under evidence/EXP-053/. Separate automatically generated browser evidence from worker-authored files.",
+      "Perform a final action-count, preservation and repository-confinement audit. Classify successful new findings as observed only.",
+      "Preference timing clarification (operator, 2026-10-11): the Display Status Bar preference needed a browser refresh before it applied (EXP-042-R2). If, after the Diagnostics options are confirmed with OK, the log is cleared and FX_Items is opened once, the Diagnostic Log shows no Form event entries, record this as a possible refresh-before-apply requirement and stop for coordinator review. Do not refresh the browser, re-clear the log or reopen the Form to compensate. Before stopping, restore the Diagnostics preferences as AC-8 requires."
+    ],
+    "out_of_scope": [
+      "Creating or modifying any Form, component, Form event, event handler, script, variable, validator, collection, caption, binding or Designer property.",
+      "Changing FX_Items Initial Command from its established Refresh value.",
+      "Changing FX_Items business records, the underlying IDO, SQL table, property classes, or FX_UMs reference data.",
+      "Editing the Web Designer or changing the User editing scope.",
+      "Changing any User Preferences option outside the three expressly authorized Diagnostics controls.",
+      "Leaving authorized Diagnostics changes in place after the experiment when native restoration is possible.",
+      "Testing alternate Initial Command values, adding diagnostic Form handlers, or altering the Form to generate additional events.",
+      "Repeating the controlled runtime opening, manually refreshing the final Form, performing additional queries, or deliberately generating extra events.",
+      "Clearing the Diagnostic Log more than once.",
+      "Reading hidden browser state, calling internal application APIs, using injected browser JavaScript, or modifying diagnostic messages.",
+      "Testing cross-session persistence, independently confirming database-level durability, or claiming a complete server-side event trace.",
+      "Replaying EXP-052, creating reusable recipes, performing deployment, or starting another experiment.",
+      "Changing authentication, security, tenant, configuration, general session settings, or non-Diagnostics preferences."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Create, modify or delete any non-FX_ artifact. The operator's explicitly authorized temporary personal Diagnostics preference changes are the sole exception, and must be restored.",
+    "Create, modify or delete any FX_Items business-data record or FX_UMs reference record.",
+    "Invoke runtime Save, New, Delete, or any business-data mutation.",
+    "Change FX_Items Initial Command or perform a Designer Save.",
+    "Create or modify any Form event, event handler, script, variable, collection, validator, or binding.",
+    "Change any User Preference outside Diagnostics Enable, Form tab Events, and Event Handler Include.",
+    "Begin modifying Diagnostics preferences before documenting the original value of every option on the Diagnostics page.",
+    "Assume an option's original value if it was not visibly established.",
+    "Leave changed Diagnostics preferences unrestored without explicitly documenting a genuine restoration blocker.",
+    "Clear the Diagnostic Log more than once during the controlled test.",
+    "Open FX_Items for the controlled capture more than once, or reopen it to force missing events.",
+    "Manually Refresh, F4, Filter-in-Place, or query FX_Items after the controlled runtime opening.",
+    "Close a dirty runtime Form or confirm an unexpected unsaved-change prompt.",
+    "Change Designer scope, accept an unload warning, check in or check out objects, regenerate a Form, or perform FormSync application.",
+    "Restart the browser, reload the Web Client, clear application caches, deliberately reauthenticate, or replace the session to recover an interrupted test.",
+    "Use browser evaluate, run-code, injected JavaScript, hidden controls, guessed deep links, direct SQL, or unsupported application APIs.",
+    "Read, display, print, log, screenshot, or include any credential or secret value in diagnostic evidence.",
+    "Copy raw diagnostic text containing credentials into experiment records or evidence files.",
+    "Infer event timestamps, sequence, event origin, or causal relationships that are not established by the captured native diagnostics.",
+    "After a browser-reference failure, exceed one fresh untargeted snapshot and one corrected visible inspection before stopping for review.",
+    "Modify AGENTS.md, recipes, unrelated experiments, unrelated project files, or browser-tool infrastructure.",
+    "Start EXP-053 before the operator approves this proposal."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:DELETE\\s+FROM|DROP\\s+TABLE|TRUNCATE\\s+TABLE|ALTER\\s+TABLE|INSERT\\s+INTO|UPDATE\\s+dbo\\.)",
+    "\\b(?:Check\\s+In|Check\\s+Out|Undo\\s+Check\\s+Out|FormSync|Form\\s+Sync|Regenerate\\s+Form|Deploy(?:ment)?|Unload\\s+All\\s+Global\\s+Form\\s+Objects)\\b",
+    "\\b(?:create|add)\\b[^.\\n]{0,40}\\b(?:event handler|script)s?\\b",
+    "\\b(?:modify|regenerate|delete)\\b[^.\\n]{0,50}\\b(?:IDO definition|property class|caption string|Form definition)\\b",
+    "\\b(?:execute|run)\\s+(?:direct\\s+)?(?:SQL mutation|database update|deployment)\\b",
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|javascript:)\\b"
+  ],
+  "related_experiments": [
+    "EXP-052",
+    "EXP-051",
+    "EXP-050"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Items",
+    "artifacts": [
+      "FX_Items"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Read-only preflight establishes a usable DEM Web Client, the current runtime-tab state, and the previously configured User-scoped FX_Items Form with Initial Command=Refresh. The Hello World Part 3 section 4 transcript has been reviewed. No authentication challenge or pending unsafe mutation is present. Evidence includes a preflight report and native screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "Before preference mutation, every option and its original value on the Diagnostics User Preferences page is recorded in a complete baseline inventory with screenshot and accessibility support. The three authorized options are individually identified without assuming defaults. No preference has yet been changed."
+    },
+    {
+      "id": "AC-3",
+      "description": "Only Diagnostics Enable, Form tab Events, and Event Handler Include are configured to the required states through supported native controls. An ordinary OK confirms the changes. A subsequent read-only verification shows the intended values and all other Diagnostics options unchanged from AC-2. Evidence captures the configured page and exact native control states."
+    },
+    {
+      "id": "AC-4",
+      "description": "Any inherited FX_Items runtime Form is confirmed clean and closed through its native tab control. The native Diagnostic Log is opened, cleared exactly once, and visibly contains no retained pre-test messages before the controlled opening. Screenshots and the operation audit establish the clean closure and cleared-log baseline."
+    },
+    {
+      "id": "AC-5",
+      "description": "FX_Items is opened exactly once through the supported native Select Form workflow after the log is cleared. Immediate and settled screenshots/accessibility evidence establish its actual runtime state, native loaded-record count, Save state, and whether the three existing records appeared automatically. No manually initiated collection-loading action occurs after opening. Unexpected loading behavior is recorded as a failed postcondition, not corrected by another query."
+    },
+    {
+      "id": "AC-6",
+      "description": "The post-opening native Diagnostic Log contains a captured event sequence attributable to the controlled FX_Items opening, with exact displayed event names, display order, available timestamps, and event-handler entries where present. Screenshots and relevant accessibility evidence establish the native source of the messages. Missing entries, absent timestamps, unrelated messages, and ambiguous attribution are explicitly documented rather than invented."
+    },
+    {
+      "id": "AC-7",
+      "description": "The relevant diagnostic sequence is preserved in a readable text report under evidence/EXP-053/, retaining the original message order and available timestamps. The report distinguishes verbatim native diagnostic content from interpretations and explains the relationship to the controlled runtime-opening interval. No credentials or secret values are reproduced. Evidence is not dependent on clipped screenshots or a truncated final summary."
+    },
+    {
+      "id": "AC-8",
+      "description": "Every temporarily changed Diagnostics preference is restored to its exact AC-2 original value through the supported native interface and ordinary OK confirmation. A separate read-only reopening of the Diagnostics preferences page proves that all recorded option values match the original baseline. If restoration fails, the check fails and the exact residual changed values and obstruction are documented."
+    },
+    {
+      "id": "AC-9",
+      "description": "The final action audit reconciles Diagnostics preference inspections and confirmations, one cleared-log baseline, any clean inherited runtime closure, one controlled FX_Items opening, zero manual post-opening collection loads, zero runtime data mutations, and the preference-restoration sequence. Errors, prompts, timeouts, reference recoveries and deviations are disclosed. Repository evidence confirms confinement to the EXP-053 record and evidence files, with automatically generated browser files separately identified."
+    },
+    {
+      "id": "AC-10",
+      "description": "The final experiment record contains an evidence-backed matrix for AC-1 through AC-9, exact verified evidence paths, original and restored Diagnostics settings, recorded event names, timestamps and ordering, runtime-opening observations, action counts, preservation findings and unresolved limitations. Findings are classified observed only. No replay verification, isolated event causation, cross-session durability or database-level persistence is claimed."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-053",
+  "replay_of": null,
+  "initial_instruction": "T1 — Read-only preflight only. Read AGENTS.md, the accepted EXP-052 record and decisive evidence, the relevant EXP-050/051 runtime background, and docs/mongoose/transcripts/hello-world-pt3.md section 4 (03:20–04:23). Inspect the existing Web Client and Designer tabs read-only, confirming the DEM identity, FX_Items runtime-tab state, and the saved Initial Command=Refresh where visibly available. EXP-052 left the runtime FX_Items tab open; record whether that remains true, and do not close it in T1. Through the native Web Client View > User Preferences workflow, inspect the Diagnostics page read-only. Record every Diagnostics option, its exact visible original value, and the control state for Diagnostics Enable, Form tab Events, and Event Handler Include. Capture screenshots and accessibility evidence under evidence/EXP-053/. If a value is hidden or ambiguous, document that rather than guessing. Do not change any preference, confirm changes with OK, clear the Diagnostic Log, open or close FX_Items, modify product data, or interact with Designer properties. Create only the EXP-053 experiment record and T1 evidence report. Stop for coordinator review before any preference mutation.",
+  "notes": "Proposed by the coordinator after run R-20261011-122156-AVGD. Rationale: EXP-052 was accepted at the same-session UI-observation level. It established that the existing User-scoped FX_Items Form retained Initial Command=Refresh after Designer Save and close/reopen, and that its next runtime opening displayed all three existing records without a manual Refresh. The next transcript section, Hello World Part 3 section 4 (03:20–04:23), introduces native event diagnostics. EXP-053 will capture the Form and event-handler diagnostic messages associated with one controlled FX_Items opening. This adds diagnostic observability without changing the Form definition or business data. The operator explicitly authorizes temporary changes to three personal Diagnostics preferences and diagnostic-log clearing, with mandatory restoration afterward. EXP-052 left FX_Items open in the Web Client, so the initial read-only preflight must record that inherited state rather than incorrectly claiming the Form is already closed. Its clean closure belongs to the subsequent controlled capture phase. | Operator review 2026-10-11: added exact_values FX_Items (case-sensitive typing guard), deny_browser_javascript, User editing scope, Deploy/Regenerate Form/Form Sync in the lifecycle pattern, and the clarification that a refresh-before-apply symptom stops the run without a browser refresh. Operator authorizations: temporary changes to the operator's own Diagnostics preferences (Enable, Form Events, Event Handler Include) for EXP-053 only, with restoration; clearing the diagnostic log is a standing operator permission from 2026-10-11. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Items"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User (Web Client runtime and the operator's own Diagnostics preferences only; no Designer edits)"
+}
