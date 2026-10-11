@@ -253,4 +253,4 @@ Limits:
 - The log panel shows about 6 rows; the full list comes from the accessibility snapshot.
 - After the T5 restoration, the OK and the reopen logged no rows. Operator reading: this is consistent with Enabled now being off. Plausible, but not proven.
 
-Next: Part 3 section 5, a button on FX_Items whose Primary Event is StdFormRefresh. Its clicks can be checked against this diagnostic baseline. That needs Enabled on again for that run, which the standing diagnostics permission covers only for clearing the log. Enabling diagnostics again is treated as covered by the operator's authorization of section 4–8 diagnostics use, and is recorded in the brief.
+Next: Part 3 section 5, a button on FX_Items whose Primary Event is StdFormRefresh. Its clicks can be checked against this diagnostic baseline. Checking against the log needs General > Enabled on again for that run. The operator authorized diagnostics preference changes for EXP-053 only (log clearing is standing), so turning Enabled on again in a later experiment needs a new operator decision.
