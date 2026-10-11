@@ -1,0 +1,178 @@
+{
+  "experiment_id": "EXP-054-R2",
+  "title": "EXP-054-R2 - Hello World Part 3 Section 5: FX_Items Native Refresh Button and Event Diagnostics (replay after tab-selection blocker)",
+  "record_path": "experiments/EXP-054-R2-hello-world-part-3-section-5-fx-items-native-refre.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "On the existing User-scoped FX_Items Form, add exactly one native PushButton through the supported Designer component workflow, give it the component Name FX_RefreshButton, literal Caption FX_Refresh, and Primary Event StdFormRefresh (Standard Form Refresh). Preserve all existing components, bindings, Form properties, and Initial Command=Refresh. Perform exactly one ordinary Designer Save, close and reopen the Designer Form, and verify recovery of the Button and all three configured properties. Then close the clean inherited FX_Items runtime tab, reopen the saved Form exactly once through the native Web Client workflow, verify its original three records, temporarily enable Diagnostics using the EXP-053 baseline, clear the native Diagnostic Log exactly once, activate FX_RefreshButton exactly once, and capture the actual resulting Form event sequence, message order, timestamps, and record state. Finally restore Diagnostics Enabled to its original OFF value and verify all 32 options against the pre-change baseline. Classify new findings observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt3.md section 5 (04:23–05:00), the accepted EXP-053 record and decisive evidence, recipes/components/add-component-from-toolbox.md, recipes/components/configure-basic-component.md, and relevant EXP-027 and EXP-036 button lessons before browser interaction.",
+      "T1 is strictly read-only. Establish the live DEM Web Client and Designer identities, the exact FX_Items User-scoped Form version, Initial Command=Refresh, current Designer and runtime tab states, and the absence of an authentication challenge, dirty Form, or unsafe pending prompt.",
+      "Before mutation, capture the complete FX_Items Designer component inventory through Details > Components, including component Names, Types, relevant Caption and Events values, and a visible layout baseline. Verify that FX_RefreshButton does not already exist and identify the permitted placement location without altering existing components.",
+      "Record all 32 original Diagnostics User Preferences values across General, Form, IDO Collections, and Others, with screenshots and accessibility evidence before any preference mutation. Expected EXP-053 baseline is Enabled OFF; Form Events ON; Event Handler Include ON; Variable Value Changed ON; verify rather than assume.",
+      "Use the verified native Toolbox and Designer component workflow to place exactly one PushButton in an appropriate free area without overlapping or moving existing components. Select and configure the new component through Details > Components rather than relying on canvas adorners.",
+      "Set the new component Name to exactly FX_RefreshButton, its literal Caption to exactly FX_Refresh without using a string resource, and its Events > Primary value to the supported built-in StdFormRefresh event through the native property editor or picker.",
+      "Before saving, verify that exactly one new PushButton exists, that its Name, literal Caption, and Primary Event are correct and committed, and that all previously inventoried FX_Items components, Form properties, bindings, and Initial Command remain unchanged.",
+      "Perform exactly one ordinary Designer Save after all new Button properties are verified. Confirm that the Form returns to a clean state with Save disabled and that the configured Button and preservation checks remain intact.",
+      "Close the clean FX_Items Designer Form once through its native Form tab control. Reopen it once through the supported Designer recent-forms workflow. Verify exact Form Name, ScopeType=User, ScopeName, one FX_RefreshButton, Type PushButton, literal Caption FX_Refresh, and Primary Event StdFormRefresh, with all original components and properties unchanged.",
+      "Inspect any inherited FX_Items runtime tab. Close it only after verifying that it is clean, Save is disabled, and there is no pending unsaved-change prompt. Confirm that the runtime tab is absent.",
+      "Open the saved FX_Items runtime Form exactly once through native Web Client Open > Select Form. Capture immediate and settled states, verify the three original records, displayed values, native record count, and disabled Save state. Confirm that the FX_RefreshButton is rendered and identifiable.",
+      "After the saved runtime Form is open, navigate through native View > User Preferences > Diagnostics. Change only General > Enabled from its verified original OFF state to ON. Preserve Form Events, Event Handler Include, Variable Value Changed, and all other options. Confirm through native OK and independently read back all 32 option values.",
+      "Open or retain the native Diagnostic Log, document any inherited messages without attributing them to this test, then clear the log exactly once. Capture a visibly empty Log Messages baseline immediately before activating the Button.",
+      "Activate the native FX_RefreshButton exactly once. Capture the immediate and settled runtime state and the native Diagnostic Log without performing any separate manual Refresh or collection-loading operation.",
+      "Capture every relevant FormEvent and EventHandler entry actually displayed during the Button activation interval, including exact event names, original message text, chronological display order, available timestamps, handler counts, and visible FX_Items context. In particular, inspect whether StdFormRefresh and StdFormRefreshCompleted appear without requiring or inventing those results.",
+      "Preserve the complete relevant diagnostic sequence as readable text under evidence/EXP-054-R2/, with verbatim native contents separated from worker interpretation. Document any missing entries, ambiguous attribution, inaccessible rows, or truncated messages.",
+      "Verify that the original dumbbell, eggs, and guitar records retain their original visible business-field values, that the native loaded-record count remains three where supported, and that Save remains disabled. No business records may be edited.",
+      "At the end of testing, restore Diagnostics General > Enabled to its verified original OFF state through native User Preferences and ordinary OK. Reopen Diagnostics read-only and verify that every one of the 32 options exactly matches the T1 inventory. If restoration is obstructed, report the precise original and residual values and the native blocker.",
+      "Capture screenshots and accessibility evidence at preflight, component baseline, new Button configuration, post-Save, Designer close/reopen, runtime opening, Diagnostics configuration, cleared-log baseline, Button activation, diagnostic sequence, preference restoration, and final preservation comparison.",
+      "Maintain one EXP-054-R2 experiment record under experiments/ and worker-authored evidence exclusively under evidence/EXP-054-R2/. Identify automatically generated browser evidence separately and perform a final action-count and repository-confinement audit.",
+      "Use one fresh untargeted snapshot and at most one corrected visible inspection after a browser-reference failure. If the required control or postcondition remains unverified, stop and document the blocker rather than broadening the operation.",
+      "If no Form event entries appear after the single Button activation, record the possible preference-application timing limitation established by the EXP-053 discussion. Do not refresh the browser, repeat the click, or re-clear the log. Restore authorized Diagnostics changes before stopping when safely possible.",
+      "Replay context (operator, 2026-10-11): EXP-054 was blocked before any mutation because a browser_tabs select issued before any browser_tabs list in a fresh worker task fails with 'Tab N not found'. The worker preamble now requires list before the first select. The EXP-054 T1 baselines (evidence/EXP-054/t1-02 component grid, t1-03..t1-06 Diagnostics) may be read as references, but this replay must re-establish its own preflight."
+    ],
+    "out_of_scope": [
+      "Any Form other than FX_Items, except read-only reference inspection of existing FX_ evidence.",
+      "Creation of a new Form, IDO, SQL table, property class, validator, or business-data record.",
+      "Modification of any existing FX_Items component, including moving, resizing, renaming, rebinding, or changing its caption or events.",
+      "Changing Form-level Initial Command from Refresh.",
+      "Adding custom Form events, event-handler definitions, Prompt actions, scripts, variables, or validators. Those belong to later Hello World sections.",
+      "Creating a caption string resource or assigning a resource-backed Caption to FX_RefreshButton.",
+      "Any Designer operation beyond the single Button addition, its three requested properties, one ordinary Save, one ordinary close, and one supported reopen.",
+      "Changing the IDO, underlying SQL data, FX_UMs reference data, or existing item records.",
+      "Changing any User Preferences option other than the expressly authorized temporary Diagnostics General Enabled setting.",
+      "Changing the existing Form Events, Event Handler Include, or Variable Value Changed Diagnostics settings.",
+      "Testing alternate Primary Event values, multiple Button clicks, or different refresh mechanisms.",
+      "Manual runtime Refresh, F4, Filter-in-Place, Get More Rows, or additional collection queries after the controlled runtime opening.",
+      "Repeating the controlled runtime opening, log clear, or Button activation to obtain missing events.",
+      "Browser reload, restart, cache invalidation, Designer global-object unload, Form regeneration, FormSync, check-in, check-out, or deployment.",
+      "Cross-session persistence, database-level durability, internal event causation, or complete server-side diagnostic tracing.",
+      "Creating reusable recipes, altering unrelated experiments or AGENTS.md, or starting another experiment."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Create, change, or remove any non-FX_ Mongoose artifact.",
+    "Create, change, or remove any FX_Items business record or FX_UMs reference record.",
+    "Perform runtime Save, New, or Delete, or change any business-field value.",
+    "Change any existing FX_Items component, component order, binding, caption, event assignment, or layout property.",
+    "Change FX_Items Initial Command or any unrelated Form property.",
+    "Add more than one Button or use a component Name other than FX_RefreshButton.",
+    "Use a caption resource instead of the exact literal FX_Refresh.",
+    "Assign any Button Primary Event other than the built-in StdFormRefresh.",
+    "Save a partial or ambiguous Button configuration. If a required native editor or event picker cannot be identified, stop and preserve or safely discard the unsaved partial state only through a clearly supported native dialog.",
+    "Perform more than one ordinary Designer Save or save before all Button properties and original-component preservation checks pass.",
+    "Close a dirty Designer or runtime Form without a verified and safe native discard decision.",
+    "Clear the Diagnostic Log more than once.",
+    "Activate FX_RefreshButton more than once during the controlled test.",
+    "Reopen FX_Items a second time for diagnostic capture or refresh it manually to force missing events.",
+    "Change Diagnostics options before capturing the complete original 32-option baseline.",
+    "Change Diagnostics Form Events, Event Handler Include, Variable Value Changed, or any other unrelated preference.",
+    "Leave Diagnostics Enabled ON after testing when supported native restoration is possible.",
+    "Ignore an unsuccessful Diagnostics restoration or claim restored status without an independent 32-option comparison.",
+    "Restart or reload the browser, deliberately reauthenticate, replace the session, or change configuration to recover an interruption.",
+    "Use injected browser JavaScript, hidden controls, internal application APIs, direct SQL, or unsupported deep links.",
+    "Read, display, screenshot, log, or copy credential or secret values into evidence.",
+    "Infer missing event entries, timestamps, event-handler execution, or isolated event causation from expectation or transcript narration.",
+    "Repeat a failed browser-reference operation beyond one fresh untargeted snapshot and one corrected visible inspection.",
+    "Modify AGENTS.md, recipes, unrelated experiment records, unrelated project files, or browser-tool infrastructure.",
+    "Start EXP-054 before the operator approves this proposal."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:DELETE\\s+FROM|DROP\\s+TABLE|TRUNCATE\\s+TABLE|ALTER\\s+TABLE|INSERT\\s+INTO|UPDATE\\s+dbo\\.)",
+    "\\b(?:Check\\s+In|Check\\s+Out|Undo\\s+Check\\s+Out|FormSync|Form\\s+Sync|Regenerate\\s+Form|Deploy(?:ment)?|Unload\\s+All\\s+Global\\s+Form\\s+Objects)\\b",
+    "\\b(?:create|add)\\b[^.\\n]{0,40}\\b(?:event handler|script)s?\\b",
+    "\\b(?:modify|regenerate|delete)\\b[^.\\n]{0,50}\\b(?:IDO definition|property class|caption string|Form definition)\\b",
+    "\\b(?:execute|run)\\s+(?:direct\\s+)?(?:SQL mutation|database update|deployment)\\b",
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|javascript:)\\b"
+  ],
+  "related_experiments": [
+    "EXP-003-R2",
+    "EXP-027",
+    "EXP-036",
+    "EXP-037",
+    "EXP-050",
+    "EXP-052",
+    "EXP-053",
+    "EXP-054"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Items",
+    "artifacts": [
+      "FX_Items",
+      "FX_RefreshButton"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Read-only preflight proves a usable authenticated DEM environment, exact User-scoped FX_Items Form identity, Initial Command=Refresh, and clean Designer/runtime states. The Hello World section and relevant verified recipes have been reviewed. Native screenshots and a preflight report prove the state before mutation."
+    },
+    {
+      "id": "AC-2",
+      "description": "A complete pre-change FX_Items component inventory and baseline layout are recorded. FX_RefreshButton is absent, all original components are identified, and the supported Details > Components configuration surface is available. Evidence identifies the Form and User scope."
+    },
+    {
+      "id": "AC-3",
+      "description": "Before Save, exactly one new PushButton exists with Name FX_RefreshButton, literal Caption FX_Refresh, and Events > Primary=StdFormRefresh. Screenshots and accessibility evidence show the committed property values and demonstrate that the previously inventoried components and Form Initial Command remain unchanged."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly one ordinary Designer Save completes, the Designer becomes clean with Save disabled, and the Button and preservation checks still match their pre-Save verified values. The native Save outcome and post-Save property views are captured."
+    },
+    {
+      "id": "AC-5",
+      "description": "One ordinary clean Designer Form-tab close removes FX_Items without a prompt. One supported recent-forms reopen recovers the same User-scoped FX_Items version with exactly one FX_RefreshButton, Type PushButton, Caption FX_Refresh, Primary Event StdFormRefresh, and all original components and Form properties unchanged. Save remains disabled. Evidence supports same-session UI recovery only."
+    },
+    {
+      "id": "AC-6",
+      "description": "After one verified clean inherited runtime closure, the saved FX_Items Form is opened exactly once through native Web Client Open > Select Form. Immediate and settled evidence shows FX_RefreshButton rendered, all three original item records automatically available, the native count displaying three where supported, unchanged visible values, and Save disabled. No manual collection-loading action occurs."
+    },
+    {
+      "id": "AC-7",
+      "description": "Before any Diagnostics mutation, all 32 original option values are evidenced. Only General Enabled is temporarily changed from OFF to ON, confirmed using native OK, and independently read back as ON with the other 31 options unchanged. Native screenshots show the requested Form Events and Event Handler Include settings already ON."
+    },
+    {
+      "id": "AC-8",
+      "description": "The native Diagnostic Log is opened and any inherited entries are distinguished from the experiment. Exactly one native Clear operation yields a visibly empty Log Messages grid immediately before the controlled Button click. Exactly one activation of FX_RefreshButton is evidenced, with zero additional clears, clicks, runtime openings, or manual refreshes."
+    },
+    {
+      "id": "AC-9",
+      "description": "After the one Button activation, the native Diagnostic Log and accessibility evidence capture the actual relevant FX_Items Form event sequence, exact displayed event names, original text, row order, available timestamps, and handler counts. The readable verbatim sequence is saved under evidence/EXP-054-R2/, separate from interpretation. Any observed StdFormRefresh and StdFormRefreshCompleted entries are identified precisely; missing or ambiguous messages are explicitly reported rather than invented."
+    },
+    {
+      "id": "AC-10",
+      "description": "Immediate and settled post-click screenshots and accessibility evidence establish the original three item records and their displayed business values, native loaded-record count, disabled Save state, and absence of unintended data modifications or prompts. Any unexpected runtime behavior is recorded without another Button click or manual query."
+    },
+    {
+      "id": "AC-11",
+      "description": "At experiment end, Diagnostics General Enabled is restored to OFF through native User Preferences and ordinary OK. A separate read-only reopening establishes that every one of the 32 options matches the initial baseline, including Form Events ON, Event Handler Include ON, and Variable Value Changed ON. If restoration fails, this check fails and the exact remaining changes and obstruction are documented."
+    },
+    {
+      "id": "AC-12",
+      "description": "The final action and preservation audit reconciles one new Button, one Designer Save, one Designer close/reopen, one clean runtime closure, one controlled runtime opening, one Diagnostic Log clear, one Button activation, zero runtime mutations, zero extra collection loads, and the complete Diagnostics restoration. The final EXP-054-R2 record contains an evidence-backed AC-1 through AC-11 matrix, actual event names/timestamps/order, exact file paths, disclosed errors and recovery attempts, preservation findings, and repository confinement. Findings are observed only; no replay verification, isolated causation, cross-session persistence, or server-side trace completeness is claimed."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-054-R2",
+  "replay_of": "EXP-054",
+  "initial_instruction": "Replay of EXP-054 (blocked by tab selection before list; no mutation was made). Read the EXP-054 record and its operator outcome block. In every task, call browser_tabs list before the first tab selection. T1 — READ-ONLY PREFLIGHT ONLY. Read AGENTS.md; docs/mongoose/transcripts/hello-world-pt3.md section 5 (04:23–05:00); accepted EXP-053 and decisive evidence; recipes/components/add-component-from-toolbox.md and configure-basic-component.md; and relevant EXP-027/EXP-036 native Button configuration lessons. Inspect the inherited controlled Web Client and Designer using native browser tools. Establish exact FX_Items User-scoped Form identity, Initial Command=Refresh, authenticated DEM configuration, current runtime tab state, and both clients' cleanliness. Through Designer Details > Components, inventory every existing FX_Items component and its Name/Type and relevant properties; capture layout and component-grid screenshots. Confirm FX_RefreshButton is absent and identify the supported native Button configuration surface without placing anything. Through Web Client View > User Preferences > Diagnostics, record every one of the 32 option values across all four tabs, including General Enabled, Form Events, Event Handler Include, and Variable Value Changed, with screenshots and accessibility evidence. Close read-only preference inspection without applying anything. Save a concise preflight, component-baseline, and Diagnostics-baseline report under evidence/EXP-054-R2/ and initialize the EXP-054-R2 experiment record. Record exact native evidence paths, visible identities, original values, and any ambiguities. Do not add a Button, change properties or preferences, Save, close or reopen FX_Items, clear the log, activate the runtime Form, or change business data in T1. If a prerequisite cannot be established, stop and report the blocker. The proposal is not execution authorization until the operator approves it.",
+  "notes": "EXP-054-R2: replay of EXP-054 (blocked in T2/T2-R at Designer tab selection; 'Tab 0 not found' when select precedes list; no mutation). Changes: new record/evidence paths, replay context, and list-before-select at task start (also now a standing worker-preamble rule). Everything else is the reviewed EXP-054 brief, including its operator authorizations: General > Enabled on and restored to off (operator: 'continue with diagnostics', covering this replay of EXP-054), standing log-clear permission. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Items",
+    "FX_RefreshButton",
+    "FX_Refresh",
+    "StdFormRefresh"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User (Designer Form FX_Items in User scope; Web Client runtime; the operator's own Diagnostics General > Enabled only)"
+}
