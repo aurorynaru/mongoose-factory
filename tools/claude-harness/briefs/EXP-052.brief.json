@@ -1,0 +1,164 @@
+{
+  "experiment_id": "EXP-052",
+  "title": "EXP-052 — Hello World Part 3: FX_Items Runtime Filtering and Initial Refresh",
+  "record_path": "experiments/EXP-052-hello-world-part-3-fx-items-runtime-filtering-and-.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "On the existing User-scoped FX_Items Form, reproduce the Hello World Part 3 sections 1–3 workflow in two gated phases. First, reopen the clean runtime Form, capture its initial Add-mode state, invoke one native toolbar Refresh, and verify the three records. Perform one Filter-in-Place query using Item=d* and one using Cost >5 together with Unit of Measure DZ/Dozen, attempting the literal Cost criterion >5 only once and recording any unsupported or ambiguous interpretation without trying alternative syntax. Second, inspect the exact FX_Items User-scoped Form in Web Designer, record the current Initial Command and all available options, change only Initial Command to Refresh, execute one ordinary Designer Save, close and reopen the Designer Form, and verify the property persisted. Finally, reopen FX_Items in the Web Client and verify that the three records load automatically without a manually initiated Refresh or query. Record all observations and limitations under evidence/EXP-052/. The worker must stop at any failed prerequisite or unsafe transition rather than widening the experiment.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, the accepted EXP-051 experiment and decisive evidence, EXP-050 Form identity and runtime procedures, EXP-042-R3 and EXP-046 native collection-count guidance where relevant, and docs/mongoose/transcripts/hello-world-pt3.md sections 1–3 ([0:14]–[3:20]) before browser interaction.",
+      "Inspect the inherited Web Client and Web Designer states read-only. Confirm the DEM configuration, the exact FX_Items runtime Form, and the existing Designer editing identity Name=FX_Items, ScopeType=User, ScopeName=current authenticated user. Do not change editing scope.",
+      "Before the runtime baseline test, close the inherited FX_Items runtime Form only if it is demonstrably clean, then reopen it once through the previously supported native Web Client Form-opening workflow. Capture the initial Add-mode state before any query.",
+      "Record the initial Add-mode placeholder, blue new-row star, blank Item, Description, and Unit of Measure inputs, permitted Cost default 0.00, Save disabled, and native status-bar count token (Object 1 of 1). Stop if the state cannot be distinguished from a persisted record.",
+      "Click the native runtime toolbar Refresh exactly once and capture the settled result. Verify the native count and the three factory-owned rows: dumbbell / 45 pound iron / 45.00 / EA, guitar / natural acoustic / 129.99 / EA, and eggs / cage free / 6.99 / DZ. Do not assume any particular row order.",
+      "Perform one native Filter-in-Place query with Item criterion d*. Capture the criteria before execution and the settled result afterwards. The expected result is exactly the unstarred dumbbell record with its four original values.",
+      "Perform a second controlled Filter-in-Place test after explicitly clearing the previous Item criterion. Attempt the literal Cost criterion >5 once, paired with the supported Unit of Measure code DZ representing Dozen. Confirm the displayed criterion and unit mapping before execution. If accepted, expect eggs as the only matching record.",
+      "If the Cost criterion >5 is rejected before execution, capture the exact rejection and skip the Cost subtest without testing alternate operator syntax. If it can be safely cleared through the native criteria editor, the second query may proceed with the verified DZ criterion alone, with that narrower test explicitly documented. If rejection occurs after executing the second query, or the result is ambiguous, do not retry or issue an additional query.",
+      "Capture the actual runtime query behavior, including status text, displayed criteria, loaded-row count, selected-record position, row identities, field values, Save state, and any error messages. Treat deviations as observations, not reasons to add data or alter definitions.",
+      "Before entering the Designer property-change phase, ensure the runtime is clean. Close its FX_Items Form tab through the native control once. Preserve all saved data and avoid any data operation during the transition.",
+      "Use the existing Web Designer only. Resolve the inherited Identify Your Editing Scope dialog solely by confirming the already-selected User scope, without changing scope or accepting any unload warning. Verify the loaded Form identity by Name, ScopeType, and ScopeName before proceeding.",
+      "Select the FX_Items Form itself in Designer, expand Behavior, locate Initial Command, and capture its unchanged baseline value. Open its supported native option list read-only and record every option actually offered.",
+      "Proceed with the Designer mutation only if Initial Command is visibly available, the exact Refresh option is offered, the target is the established User-scoped FX_Items version, and the Designer is clean. Change only Initial Command to Refresh through the native property editor.",
+      "Capture the new Initial Command value after committing the editor. Verify other visible Form properties and identity values remain unchanged from the baseline. Perform exactly one ordinary Designer Save, capture its native outcome, and require a demonstrably clean Designer state.",
+      "Close the clean FX_Items Designer Form tab exactly once and reopen the same User-scoped version once through the supported Designer recent-forms or equivalent verified native workflow. Confirm Initial Command=Refresh and the unchanged comparison properties, with Save disabled.",
+      "After the Designer property recovery succeeds, open the existing FX_Items runtime Form once through the supported Web Client workflow. Do not manually invoke Refresh, F4, Filter-in-Place, or another collection-loading operation. Capture the immediate and settled states to determine whether the three saved records load automatically.",
+      "Verify the automatically loaded records using the native status-bar count, unstarred grid rows, Save disabled, and all twelve business-field values, including Cost displayed with two decimal places. Record the actual behavior if automatic loading fails.",
+      "Capture screenshots and relevant accessibility evidence under evidence/EXP-052/ for each decisive baseline, criteria/result pair, Designer property baseline/options, property mutation, Save, Designer close/reopen, and final runtime opening.",
+      "Maintain one experiment record under experiments/ and concise evidence reports under evidence/EXP-052/. Reconcile operation counts, lifecycle boundaries, and preservation evidence. Distinguish worker-authored files from automatically generated browser evidence elsewhere in the repository.",
+      "Classify all successful new product findings as observed. Do not promote any finding to replay_verified."
+    ],
+    "out_of_scope": [
+      "Creating new Forms, SQL tables, IDOs, property classes, domains, caption strings, or runtime records.",
+      "Changing any FX_Items business-field value or deleting existing records.",
+      "Changing FX_UMs reference data or the EA/Each and DZ/Dozen choices.",
+      "Changing any FX_Items Form property other than Initial Command.",
+      "Modifying Form components, collections, validators, variables, events, event handlers, scripts, or bindings.",
+      "Changing Site Default, Group, Vendor Default, or any editing scope other than the existing User scope.",
+      "Editing the vendor-defined IdoPropertyClasses Form or any other vendor Form.",
+      "Hello World Part 3 section 4, User Preferences, diagnostics, or session settings.",
+      "Testing additional filter expressions, greater-than syntaxes, alternative wildcard patterns, or unrelated query operators.",
+      "Changing authentication, security, configuration groups, or tenant settings.",
+      "SQL or IDO metadata changes, check-in/check-out, FormSync application, metadata unloading, cache reset, or deployment.",
+      "Creating a reusable recipe or claiming general behavior across other Forms.",
+      "Cross-session persistence, independent database-level durability, or replay verification."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Create, modify, or delete any non-FX_ artifact.",
+    "Modify any existing FX_Items data record or FX_UMs reference record.",
+    "Create a fourth FX_Items record or create any new business-data record.",
+    "Enter runtime edit/add mode to mutate a record, or invoke a runtime Save or Delete.",
+    "Change the Designer editing scope or accept a warning that requires changing scope or unloading metadata.",
+    "Modify or save FX_Items in Designer unless the exact User-scoped Form identity, clean baseline, and Initial Command=Refresh option have been verified.",
+    "Change more than the single FX_Items Form-level Initial Command property.",
+    "Attempt a second Designer Save, retry a Save whose result is ambiguous, or close a dirty Form.",
+    "Use any wildcard other than d* for the authorized Item filter.",
+    "Try any alternate greater-than Cost syntax after the single >5 attempt.",
+    "Repeat an ambiguous or rejected query to force the expected result.",
+    "Treat the displayed label Dozen as equivalent to the stored code DZ unless the native UI establishes that mapping.",
+    "Manually Refresh or query the final runtime Form before capturing whether the saved Initial Command automatically loads the rows.",
+    "Alter captions, property classes, IDO definitions, source collections, scripts, events, or User Preferences.",
+    "Use direct SQL mutation, browser JavaScript, hidden controls, guessed deep links, internal APIs, or unsupported interaction methods.",
+    "Perform check-in, checkout, Undo Check Out, metadata unload, cache reset, FormSync application, or deployment.",
+    "Start another experiment or replay.",
+    "Perform deliberate reauthentication, browser restart, or session replacement after the controlled Designer mutation begins. Stop if an unexpected session challenge appears.",
+    "Read, display, print, log, or screenshot credential values.",
+    "After a browser-reference failure, perform more than one fresh untargeted snapshot and one corrected inspection for that failure. Stop if the result remains ambiguous.",
+    "Claim cross-session recovery, independent database persistence, or replay verification from same-session UI evidence.",
+    "Modify recipes, AGENTS.md, unrelated experiment records, or unrelated project files."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:DELETE\\s+FROM|DROP\\s+TABLE|TRUNCATE\\s+TABLE|ALTER\\s+TABLE|INSERT\\s+INTO|UPDATE\\s+dbo\\.)",
+    "\\b(?:click|press|invoke|execute|run)\\s+(?:Check\\s+In|Check\\s+Out|Undo\\s+Check\\s+Out|Unload\\s+All\\s+Global\\s+Form\\s+Objects|FormSync)\\b",
+    "\\b(?:create|add)\\b[^.\\n]{0,40}\\b(?:event handler|script)s?\\b",
+    "\\b(?:save|modify|delete)\\s+(?:the\\s+)?(?:vendor\\s+)?IdoPropertyClasses\\b",
+    "\\b(?:modify|regenerate|delete)\\b[^.\\n]{0,50}\\b(?:IDO definition|property class|caption string|Form definition)\\b",
+    "\\b(?:execute|run)\\s+(?:direct\\s+)?(?:SQL mutation|database update|deployment)\\b"
+  ],
+  "related_experiments": [
+    "EXP-051",
+    "EXP-050",
+    "EXP-046",
+    "EXP-042-R3",
+    "EXP-008"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Items",
+    "artifacts": [
+      "FX_Items"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Preflight evidence establishes a usable DEM Web Client, exact FX_Items runtime Form, existing User-scoped Designer identity (Name + ScopeType + ScopeName), and no unexpected authentication challenge or pending mutation. The initial Form property baseline and the inherited Designer scope-dialog state are recorded without changing scope."
+    },
+    {
+      "id": "AC-2",
+      "description": "After one clean native runtime close/reopen for the baseline, a screenshot identifies FX_Items in Add mode with one starred placeholder, blank business inputs except Cost default 0.00, Save disabled, and native count token (Object 1 of 1). No query has yet been executed during this reopened instance."
+    },
+    {
+      "id": "AC-3",
+      "description": "Exactly one manual native toolbar Refresh returns three unstarred FX_Items records. Screenshot and accessibility evidence show the native loaded-record count and all three authorized keys with their original four business-field values. No runtime data mutation occurs."
+    },
+    {
+      "id": "AC-4",
+      "description": "One Filter-in-Place query visibly uses Item criterion d* with unrelated criteria blank. Its settled result contains exactly one persisted record, dumbbell / 45 pound iron / 45.00 / EA, with a native total-record count of one and Save disabled. Criteria and result are captured separately."
+    },
+    {
+      "id": "AC-5",
+      "description": "The second Filter-in-Place test captures Item cleared, the literal Cost criterion >5 attempted at most once, and the native DZ/Dozen mapping. If the combined criteria are accepted, exactly eggs / cage free / 6.99 / DZ is returned. If >5 is rejected or ambiguous, the exact native outcome is documented, no alternate syntax is attempted, and only a safely established DZ-only result may be reported as such. The worker does not claim greater-than filtering was verified when it was not."
+    },
+    {
+      "id": "AC-6",
+      "description": "Before mutation, Web Designer visibly identifies the exact FX_Items User-scoped Form. The Form-level Behavior > Initial Command baseline is captured, its offered native options are recorded, and Refresh is confirmed as an available exact option. No other property or scope has been changed."
+    },
+    {
+      "id": "AC-7",
+      "description": "Only Initial Command is changed to Refresh through the native Designer property editor. Exactly one ordinary Designer Save completes without error, leaves the Designer visibly clean, and preserves the Form identity and comparison-property baseline. Pre-Save and post-Save screenshots/accessibility evidence establish the actual value and result."
+    },
+    {
+      "id": "AC-8",
+      "description": "Exactly one ordinary clean Designer Form-tab close removes FX_Items, followed by exactly one supported Designer reopening of the same User-scoped Form. The reopened Form still shows Initial Command=Refresh with comparison properties unchanged and Save disabled. Both the closed and recovered states are captured."
+    },
+    {
+      "id": "AC-9",
+      "description": "After the Designer property recovery, one supported runtime opening of FX_Items loads exactly the three authorized, unstarred saved records without a manual Refresh, F4, or Filter-in-Place operation after opening. The initial and settled runtime states, count token, Save-disabled state, and all twelve business-field values are captured. If automatic loading fails or is ambiguous, the exact observed result is recorded and AC-9 fails rather than issuing a compensating query."
+    },
+    {
+      "id": "AC-10",
+      "description": "The final action audit reconciles the baseline runtime close/reopen, one manual Refresh, two controlled Filter-in-Place tests subject to the documented Cost-syntax stop rule, one Initial Command mutation, one Designer Save, one Designer close/reopen, and one final runtime reopen. It records any query rejection, implicit action, unexpected prompt, timeout, reference recovery, or deviation from intended counts."
+    },
+    {
+      "id": "AC-11",
+      "description": "Preservation and repository evidence support confinement to the existing FX_Items User-scoped Form property and EXP-052 documentation/evidence. The audit confirms no intentional runtime data mutation, FX_UMs modification, IDO/SQL/property-class/caption change, vendor Form edit, User Preferences change, check-in/out, or metadata unload. Tool-generated browser files outside evidence/EXP-052/ and any inaccessible repository baseline are disclosed rather than hidden."
+    },
+    {
+      "id": "AC-12",
+      "description": "The final experiment record contains a concise evidence-backed matrix for AC-1 through AC-11, exact evidence paths, original versus recovered Initial Command values, observed query behavior, action counts, and unresolved limitations. Any successful finding is classified observed only, with no cross-session, database-durability, or replay_verified claim."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-052",
+  "replay_of": null,
+  "initial_instruction": "T1 — Read AGENTS.md, EXP-051's accepted record and decisive evidence, EXP-050's FX_Items Form identity/runtime procedures, EXP-042-R3 and EXP-046 relevant status-count procedures, and Hello World Part 3 transcript sections 1–3. Then perform read-only browser preflight only. Enumerate the existing browser tabs, inspect the inherited FX_Items Web Client runtime state and the existing Designer scope dialog without dismissing or changing it, and confirm the DEM configuration, target Form identity, clean/dirty state, and User scope. Capture screenshots and accessibility evidence under evidence/EXP-052/. Do not close or reopen the runtime Form, execute Refresh or a query, interact with Designer property editors, Save, or change anything in T1. Record the precise inherited state, any prerequisites not established, and a concise T1 report. Stop for coordinator review before beginning the controlled runtime baseline.",
+  "notes": "Proposed by the coordinator after run R-20261011-114105-Dh5t. Rationale: EXP-051 established exactly three factory-owned FX_Items records, native validation of FX_UM, and successful same-session recovery after Save and ordinary Form close/reopen. The next tutorial step investigates native runtime Refresh and Filter-in-Place behavior, followed by one narrowly controlled User-scope Form property change: Initial Command = Refresh. Using the existing Form and records avoids additional data creation and directly tests whether the saved setting changes the Form's initial loading behavior. The read-only query phase establishes a before-change baseline; the Designer phase tests one property and its persistence. No database-level durability or replay verification is claimed. | Operator review: exact-value guard (FX_Items, d*, >5, DZ) and no-JavaScript policy added. Operator decision: the tutorial filters (b*; Cost greater than 10 and Dozen) are adapted to the EXP-051 dataset (d*; Cost >5 and DZ), because the tutorial values would match nothing here. The DZ = Dozen mapping was observed in the EXP-051 combo-box list (t1-03). Approval pending from the operator.",
+  "exact_values": [
+    "FX_Items",
+    "d*",
+    ">5",
+    "DZ"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  }
+}
