@@ -101,6 +101,13 @@ Browser task boundaries:
   capturing a page, make its tab the selected tab with the tab-selection tool,
   then take a fresh snapshot. Selecting a tab is navigation within the browser,
   not a Mongoose lifecycle action.
+- Tab selection order (standing operator rule, 2026-10-11): in each task, list
+  the tabs (read-only) BEFORE the first tab selection. A select issued before
+  any list in a fresh task fails with "Tab N not found" (EXP-051, EXP-053,
+  EXP-054); after a list the same select succeeds. If a select still fails
+  after a list, list once more and retry the select once; this retry does not
+  consume the fresh-snapshot recovery allowance. Never click or screenshot a
+  tab whose selection has not succeeded.
 - Infor OS portal notification banners (a `portal-notification` strip above the
   Mongoose frame, e.g. "The DistributionIFSContactUs group does not have any
   active users…") are not Mongoose artifacts. Standing operator authorization
