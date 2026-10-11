@@ -1,0 +1,888 @@
+- generic [ref=e5]:
+  - banner "Portal Top Navigation Bar" [ref=e6]:
+    - generic [ref=e8]:
+      - generic:
+        - generic [ref=e10]:
+          - generic:
+            - link "Home" [ref=e12] [cursor=pointer]
+            - button "Open navigation menu" [ref=e15] [cursor=pointer]
+        - generic [ref=e17]:
+          - tablist "Tabs" [ref=e18]:
+            - tab "System Administrator" [ref=e19] [cursor=pointer]:
+              - link "System Administrator" [ref=e20]
+              - button "Close tab System Administrator" [ref=e23]
+            - tab "Mongoose" [selected] [ref=e24] [cursor=pointer]:
+              - link "Mongoose" [ref=e25]
+              - button "Open tab menu" [ref=e28]
+              - button "Close tab Mongoose" [ref=e32]
+          - button "Tabs menu more" [ref=e36] [cursor=pointer]
+        - generic [ref=e38]:
+          - generic:
+            - generic [ref=e39]: DEM
+            - button "Health Notifications" [ref=e43] [cursor=pointer]
+            - button "User menu" [ref=e45] [cursor=pointer]
+            - button "Hide Smart Panel" [ref=e47] [cursor=pointer]
+    - generic:
+      - generic:
+        - generic: Infor OS Portal
+        - generic: 2026.10.01 (20260909-164316, 20260909-154143, 1063, 1583, 727)
+        - generic:
+          - generic:
+            - text: Copyright © 2026 Infor. All rights reserved. The word and design marks set forth herein are trademarks and/or registered trademarks of Infor and/or its affiliates and subsidiaries. All other trademarks listed herein are the property of their respective owners
+            - generic: www.infor.com
+            - text: .
+  - main [ref=e48]:
+    - iframe [active] [ref=e59]:
+      - generic [ref=f1e1]:
+        - banner [ref=f1e2]:
+          - heading "Infor Mongoose Application Development Framework" [level=1] [ref=f1e3]
+          - link "Skip to Main Content" [ref=f1e4] [cursor=pointer]:
+            - /url: "#formContainer"
+          - navigation [ref=f1e5]:
+            - button "Explorer" [ref=f1e6] [cursor=pointer]
+            - separator
+            - button "Form" [ref=f1e10] [cursor=pointer]
+            - separator
+            - button "Actions" [ref=f1e12] [cursor=pointer]
+            - separator
+            - button "Edit" [ref=f1e14] [cursor=pointer]
+            - separator
+            - button "View" [ref=f1e16] [cursor=pointer]
+            - separator
+            - button "Window" [ref=f1e18] [cursor=pointer]
+            - separator
+            - button "Help" [ref=f1e20] [cursor=pointer]
+            - button "anton.ramos@3mworks.com.ph | G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT" [ref=f1e22] [cursor=pointer]
+          - toolbar [ref=f1e24]:
+            - button "Open" [ref=f1e25] [cursor=pointer]:
+              - button "Open" [ref=f1e26]
+            - button "Save" [disabled] [ref=f1e28]:
+              - button "Save" [disabled]
+            - button "New" [disabled] [ref=f1e29]:
+              - button "New" [disabled]
+            - button "Delete" [disabled] [ref=f1e30]:
+              - button "Delete" [disabled]
+            - button "Refresh" [disabled] [ref=f1e33]:
+              - button "Refresh" [disabled]
+            - button "Filter in Place" [disabled] [ref=f1e36]:
+              - button "FiP" [disabled]
+            - button "Get More Rows" [disabled] [ref=f1e39]:
+              - button "Get More Rows" [disabled]
+            - button "System Notes" [disabled] [ref=f1e40]:
+              - button "System Notes" [disabled]
+            - button "Documents" [disabled] [ref=f1e43]:
+              - button "Documents" [disabled]
+            - button "Send email for the current object" [disabled] [ref=f1e46]:
+              - button "Send email for the current object" [disabled]
+            - button "Export To Excel" [disabled] [ref=f1e49]:
+              - button "Export To Excel" [disabled]
+            - button [ref=f1e52] [cursor=pointer]:
+              - button "Designer" [ref=f1e53]
+            - button "Designer" [ref=f1e55] [cursor=pointer]:
+              - button "Designer" [ref=f1e56]
+            - button "Help Current Form" [ref=f1e58] [cursor=pointer]:
+              - button "Help Current Form" [ref=f1e59]
+        - region [ref=f1e61]:
+          - heading "Explorer" [ref=f1e62]
+          - button "Collapse Panel"
+          - grid [ref=f1e63]:
+            - columnheader "Name"
+            - tree [ref=f1e68]:
+              - generic [ref=f1e69]:
+                - table [ref=f1e70]:
+                  - rowgroup [ref=f1e71]:
+                    - row [ref=f1e72]:
+                      - treeitem [ref=f1e73]:
+                        - treeitem "My Folders" [ref=f1e75]
+                - table [ref=f1e76]:
+                  - rowgroup [ref=f1e77]:
+                    - row [ref=f1e78]:
+                      - treeitem [ref=f1e79]:
+                        - treeitem "Master Explorer" [ref=f1e81]
+                - table [ref=f1e82]:
+                  - rowgroup [ref=f1e83]:
+                    - row [ref=f1e84]:
+                      - treeitem [ref=f1e85]:
+                        - treeitem "Public Folders" [ref=f1e87]
+                - table [ref=f1e88]:
+                  - rowgroup [ref=f1e89]:
+                    - row [ref=f1e90]:
+                      - treeitem [ref=f1e91]:
+                        - treeitem "User Folders" [ref=f1e93]
+        - region [ref=f1e94]:
+          - main [ref=f1e95]:
+            - tablist [ref=f1e96]:
+              - tab [ref=f1e97] [cursor=pointer]:
+                - heading "Sql Tables" [level=2] [ref=f1e98]
+                - button "Close Panel Sql Tables" [ref=f1e99]:
+                  - img "Close Panel Sql Tables"
+              - tab [ref=f1e100] [cursor=pointer]:
+                - heading "Sql Columns" [level=2] [ref=f1e101]
+                - button "Close Panel Sql Columns" [ref=f1e102]:
+                  - img "Close Panel Sql Columns"
+              - tab [ref=f1e103] [cursor=pointer]:
+                - heading "FX_Items" [level=2] [ref=f1e104]
+                - button "Close Panel FX_Items" [ref=f1e105]:
+                  - img "Close Panel FX_Items"
+              - tab [ref=f1e106] [cursor=pointer]:
+                - heading "Property Classes" [level=2] [ref=f1e107]
+                - button "Close Panel Property Classes" [ref=f1e108]:
+                  - img "Close Panel Property Classes"
+              - tab "IDOs Close Panel IDOs" [disabled]:
+                - heading "IDOs" [level=2]
+                - button "Close Panel IDOs" [disabled]:
+                  - img "Close Panel IDOs"
+              - tab [selected] [ref=f1e1390] [cursor=pointer]:
+                - heading "IDO Property Wizard" [level=2] [ref=f1e1391]
+                - button "Close Panel IDO Property Wizard" [ref=f1e1392]:
+                  - img "Close Panel IDO Property Wizard"
+            - tabpanel "IDO Property Wizard" [ref=f1e1393]:
+              - form [ref=f1e1394]:
+                - generic [ref=f1e1395]:
+                  - group [ref=f1e1443]:
+                    - generic [ref=f1e1446]:
+                      - group [ref=f1e1447]
+                      - group [ref=f1e1451]
+                      - generic [ref=f1e1455]:
+                        - text: "*"
+                        - generic [ref=f1e1456]: "Bind To:"
+                        - generic [ref=f1e1459]:
+                          - combobox "Bind To:" [ref=f1e1461]: fxitms.FX_Picture
+                          - button "Open" [ref=f1e1462] [cursor=pointer]
+                      - generic [ref=f1e1463]: "Bind To:"
+                      - generic [ref=f1e1465]: "Property Name:"
+                      - generic [ref=f1e1467]:
+                        - text: "*"
+                        - generic [ref=f1e1468]: "Property Name:"
+                        - textbox "Property Name:" [ref=f1e1473]: FX_Picture
+                      - generic [ref=f1e1474]: "Property Class:"
+                      - generic [ref=f1e1478]:
+                        - combobox [expanded] [active] [ref=f1e1480]
+                        - button "Open" [ref=f1e1481] [cursor=pointer]
+                        - listbox [ref=f1e1556]:
+                          - list [ref=f1e1557]:
+                            - table [ref=f1e1558]:
+                              - rowgroup [ref=f1e1559]:
+                                - option [ref=f1e1560]:
+                                  - cell "AccessAs" [ref=f1e1561]
+                                - option [ref=f1e1562]:
+                                  - cell "AlphaKey" [ref=f1e1563]
+                                - option [ref=f1e1564]:
+                                  - cell "AlphaPrefix" [ref=f1e1565]
+                                - option [ref=f1e1566]:
+                                  - cell "Amount" [ref=f1e1567]
+                                - option [ref=f1e1568]:
+                                  - cell "AppModuleName" [ref=f1e1569]
+                                - option [ref=f1e1570]:
+                                  - cell "AppModuleNameBase" [ref=f1e1571]
+                                - option [ref=f1e1572]:
+                                  - cell "AppViewName" [ref=f1e1573]
+                                - option [ref=f1e1574]:
+                                  - cell "ApsInt" [ref=f1e1575]
+                                - option [ref=f1e1576]:
+                                  - cell "ApsSmallInt" [ref=f1e1577]
+                                - option [ref=f1e1578]:
+                                  - cell "AssemblyName" [ref=f1e1579]
+                                - option [ref=f1e1580]:
+                                  - cell "AssemblyNameBase" [ref=f1e1581]
+                                - option [ref=f1e1582]:
+                                  - cell "AssemblyReferences" [ref=f1e1583]
+                                - option [ref=f1e1584]:
+                                  - cell "AuthorizationObjectName" [ref=f1e1585]
+                                - option [ref=f1e1586]:
+                                  - cell "AuthorizationObjectType" [ref=f1e1587]
+                                - option [ref=f1e1588]:
+                                  - cell "BGTaskErrorMsg" [ref=f1e1589]
+                                - option [ref=f1e1590]:
+                                  - cell "BGTaskExecutable" [ref=f1e1591]
+                                - option [ref=f1e1592]:
+                                  - cell "BGTaskName" [ref=f1e1593]
+                                - option [ref=f1e1594]:
+                                  - cell "BGTaskParms" [ref=f1e1595]
+                                - option [ref=f1e1596]:
+                                  - cell "BooleanQuery" [ref=f1e1597]
+                                - option [ref=f1e1598]:
+                                  - cell "BPProduct" [ref=f1e1599]
+                                - option [ref=f1e1600]:
+                                  - cell "BPVersion" [ref=f1e1601]
+                                - option [ref=f1e1602]:
+                                  - cell "CachedSettingIDOName" [ref=f1e1603]
+                                - option [ref=f1e1604]:
+                                  - cell "CachedSettingName" [ref=f1e1605]
+                                - option [ref=f1e1606]:
+                                  - cell "ClassName" [ref=f1e1607]
+                                - option [ref=f1e1608]:
+                                  - cell "ClassNameBase" [ref=f1e1609]
+                                - option [ref=f1e1610]:
+                                  - cell "CollectionAction" [ref=f1e1611]
+                                - option [ref=f1e1612]:
+                                  - cell "CollectionActionBase" [ref=f1e1613]
+                                - option [ref=f1e1614]:
+                                  - cell "CollectionDeleteAction" [ref=f1e1615]
+                                - option [ref=f1e1616]:
+                                  - cell "CollectionFilter" [ref=f1e1617]
+                                - option [ref=f1e1618]:
+                                  - cell "CollectionName" [ref=f1e1619]
+                                - option [ref=f1e1620]:
+                                  - cell "CollectionPropertyName" [ref=f1e1621]
+                                - option [ref=f1e1622]:
+                                  - cell "CollectionPropertyNameBase" [ref=f1e1623]
+                                - option [ref=f1e1624]:
+                                  - cell "CollectionPropertyPath" [ref=f1e1625]
+                                - option [ref=f1e1626]:
+                                  - cell "CollectionPropertyPathBase" [ref=f1e1627]
+                                - option [ref=f1e1628]:
+                                  - cell "ColumnName" [ref=f1e1629]
+                                - option [ref=f1e1630]:
+                                  - cell "ColumnNameBase" [ref=f1e1631]
+                                - option [ref=f1e1632]:
+                                  - cell "ColumnType" [ref=f1e1633]
+                                - option [ref=f1e1634]:
+                                  - cell "ConfigurationName" [ref=f1e1635]
+                                - option [ref=f1e1636]:
+                                  - cell "ConsecutiveIdenticalCharMax" [ref=f1e1637]
+                                - option [ref=f1e1638]:
+                                  - cell "ConstraintType" [ref=f1e1639]
+                                - option [ref=f1e1640]:
+                                  - cell "ContextDefinedInfo" [ref=f1e1641]
+                                - option [ref=f1e1642]:
+                                  - cell "ContextDefinedInfoBase" [ref=f1e1643]
+                                - option [ref=f1e1644]:
+                                  - cell "CoreCurrCode" [ref=f1e1645]
+                                - option [ref=f1e1646]:
+                                  - cell "CoreShortDesc" [ref=f1e1647]
+                                - option [ref=f1e1648]:
+                                  - cell "CountryPack" [ref=f1e1649]
+                                - option [ref=f1e1650]:
+                                  - cell "CurrentDate" [ref=f1e1651]
+                                - option [ref=f1e1652]:
+                                  - cell "CustomAssemblyType" [ref=f1e1653]
+                                - option [ref=f1e1654]:
+                                  - cell "DataSource" [ref=f1e1655]
+                                - option [ref=f1e1656]:
+                                  - cell "Date" [ref=f1e1657]
+                                - option [ref=f1e1658]:
+                                  - cell "DateFormat" [ref=f1e1659]
+                                - option [ref=f1e1660]:
+                                  - cell "DateNoDefault" [ref=f1e1661]
+                                - option [ref=f1e1662]:
+                                  - cell "DateTime" [ref=f1e1663]
+                                - option [ref=f1e1664]:
+                                  - cell "Description" [ref=f1e1665]
+                                - option [ref=f1e1666]:
+                                  - cell "DevelopmentFlagBase" [ref=f1e1667]
+                                - option [ref=f1e1668]:
+                                  - cell "DocumentExtension" [ref=f1e1669]
+                                - option [ref=f1e1670]:
+                                  - cell "DocumentExtensionBase" [ref=f1e1671]
+                                - option [ref=f1e1672]:
+                                  - cell "DocumentType" [ref=f1e1673]
+                                - option [ref=f1e1674]:
+                                  - cell "DocumentTypeBase" [ref=f1e1675]
+                                - option [ref=f1e1676]:
+                                  - cell "DotNetLanguage" [ref=f1e1677]
+                                - option [ref=f1e1678]:
+                                  - cell "Email" [ref=f1e1679]
+                                - option [ref=f1e1680]:
+                                  - cell "EMailAddrs" [ref=f1e1681]
+                                - option [ref=f1e1682]:
+                                  - cell "EmailTypeDescription" [ref=f1e1683]
+                                - option [ref=f1e1684]:
+                                  - cell "EmailTypeType" [ref=f1e1685]
+                                - option [ref=f1e1686]:
+                                  - cell "EncryptedClientPassword" [ref=f1e1687]
+                                - option [ref=f1e1688]:
+                                  - cell "ErrorWarningNone" [ref=f1e1689]
+                                - option [ref=f1e1690]:
+                                  - cell "ESBFlag" [ref=f1e1691]
+                                - option [ref=f1e1692]:
+                                  - cell "ESBLogicalID" [ref=f1e1693]
+                                - option [ref=f1e1694]:
+                                  - cell "ESBMessageId" [ref=f1e1695]
+                                - option [ref=f1e1696]:
+                                  - cell "ESBMessageXML" [ref=f1e1697]
+                                - option [ref=f1e1698]:
+                                  - cell "ESBPriority" [ref=f1e1699]
+                                - option [ref=f1e1700]:
+                                  - cell "ESBPropertyName" [ref=f1e1701]
+                                - option [ref=f1e1702]:
+                                  - cell "ESBPropertyValue" [ref=f1e1703]
+                                - option [ref=f1e1704]:
+                                  - cell "ESBTenantID" [ref=f1e1705]
+                                - option [ref=f1e1706]:
+                                  - cell "EventActionParmList" [ref=f1e1707]
+                                - option [ref=f1e1708]:
+                                  - cell "EventActionType" [ref=f1e1709]
+                                - option [ref=f1e1710]:
+                                  - cell "EventChrono" [ref=f1e1711]
+                                - option [ref=f1e1712]:
+                                  - cell "EventCondition" [ref=f1e1713]
+                                - option [ref=f1e1714]:
+                                  - cell "EventInitialStateName" [ref=f1e1715]
+                                - option [ref=f1e1716]:
+                                  - cell "EventInitialStateNameBase" [ref=f1e1717]
+                                - option [ref=f1e1718]:
+                                  - cell "EventInterval" [ref=f1e1719]
+                                - option [ref=f1e1720]:
+                                  - cell "EventName" [ref=f1e1721]
+                                - option [ref=f1e1722]:
+                                  - cell "EventObjectList" [ref=f1e1723]
+                                - option [ref=f1e1724]:
+                                  - cell "EventOccurrences" [ref=f1e1725]
+                                - option [ref=f1e1726]:
+                                  - cell "EventParmId" [ref=f1e1727]
+                                - option [ref=f1e1728]:
+                                  - cell "EventQueuedObjectType" [ref=f1e1729]
+                                - option [ref=f1e1730]:
+                                  - cell "EventQueueId" [ref=f1e1731]
+                                - option [ref=f1e1732]:
+                                  - cell "EventResult" [ref=f1e1733]
+                                - option [ref=f1e1734]:
+                                  - cell "EventRevision" [ref=f1e1735]
+                                - option [ref=f1e1736]:
+                                  - cell "EventSequence" [ref=f1e1737]
+                                - option [ref=f1e1738]:
+                                  - cell "EventState" [ref=f1e1739]
+                                - option [ref=f1e1740]:
+                                  - cell "EventStatus" [ref=f1e1741]
+                                - option [ref=f1e1742]:
+                                  - cell "EventTitle" [ref=f1e1743]
+                                - option [ref=f1e1744]:
+                                  - cell "EventVariableAccess" [ref=f1e1745]
+                                - option [ref=f1e1746]:
+                                  - cell "EventVariableName" [ref=f1e1747]
+                                - option [ref=f1e1748]:
+                                  - cell "EventVariableValue" [ref=f1e1749]
+                                - option [ref=f1e1750]:
+                                  - cell "ExternalEntityName" [ref=f1e1751]
+                                - option [ref=f1e1752]:
+                                  - cell "ExternalRoleName" [ref=f1e1753]
+                                - option [ref=f1e1754]:
+                                  - cell "ExternalRoleNameType" [ref=f1e1755]
+                                - option [ref=f1e1756]:
+                                  - cell "FaxHeader" [ref=f1e1757]
+                                - option [ref=f1e1758]:
+                                  - cell "Filter" [ref=f1e1759]
+                                - option [ref=f1e1760]:
+                                  - cell "FilterBase" [ref=f1e1761]
+                                - option [ref=f1e1762]:
+                                  - cell "FilterSequence" [ref=f1e1763]
+                                - option [ref=f1e1764]:
+                                  - cell "FlagNy" [ref=f1e1765]
+                                - option [ref=f1e1766]:
+                                  - cell "FldName" [ref=f1e1767]
+                                - option [ref=f1e1768]:
+                                  - cell "FldNameBase" [ref=f1e1769]
+                                - option [ref=f1e1770]:
+                                  - cell "FlowAction" [ref=f1e1771]
+                                - option [ref=f1e1772]:
+                                  - cell "FlowType" [ref=f1e1773]
+                                - option [ref=f1e1774]:
+                                  - cell "FolderName" [ref=f1e1775]
+                                - option [ref=f1e1776]:
+                                  - cell "FontDescriptor" [ref=f1e1777]
+                                - option [ref=f1e1778]:
+                                  - cell "FormName" [ref=f1e1779]
+                                - option [ref=f1e1780]:
+                                  - cell "FullObjectPath" [ref=f1e1781]
+                                - option [ref=f1e1782]:
+                                  - cell "FX_Cost" [ref=f1e1783]
+                                - option [ref=f1e1784]:
+                                  - cell "FX_ItemBase" [ref=f1e1785]
+                                - option [ref=f1e1786]:
+                                  - cell "FX_Picture" [ref=f1e1787]
+                                - option [ref=f1e1788]:
+                                  - cell "FX_UM" [ref=f1e1789]
+                                - option [ref=f1e1790]:
+                                  - cell "FX_UMBase" [ref=f1e1791]
+                                - option [ref=f1e1792]:
+                                  - cell "G6RCost" [ref=f1e1793]
+                                - option [ref=f1e1794]:
+                                  - cell "G6RItemBase" [ref=f1e1795]
+                                - option [ref=f1e1796]:
+                                  - cell "G6RPiture" [ref=f1e1797]
+                                - option [ref=f1e1798]:
+                                  - cell "G6RUM" [ref=f1e1799]
+                                - option [ref=f1e1800]:
+                                  - cell "G6RUnitBase" [ref=f1e1801]
+                                - option [ref=f1e1802]:
+                                  - cell "GenericBigIntType" [ref=f1e1803]
+                                - option [ref=f1e1804]:
+                                  - cell "GenericCode" [ref=f1e1805]
+                                - option [ref=f1e1806]:
+                                  - cell "GenericIntType" [ref=f1e1807]
+                                - option [ref=f1e1808]:
+                                  - cell "GenericNo" [ref=f1e1809]
+                                - option [ref=f1e1810]:
+                                  - cell "GenericType" [ref=f1e1811]
+                                - option [ref=f1e1812]:
+                                  - cell "GroupName" [ref=f1e1813]
+                                - option [ref=f1e1814]:
+                                  - cell "HTTPMethod" [ref=f1e1815]
+                                - option [ref=f1e1816]:
+                                  - cell "IDOCollections" [ref=f1e1817]
+                                - option [ref=f1e1818]:
+                                  - cell "IdoLinkDatabaseBase" [ref=f1e1819]
+                                - option [ref=f1e1820]:
+                                  - cell "IDOName" [ref=f1e1821]
+                                - option [ref=f1e1822]:
+                                  - cell "IDONameBase" [ref=f1e1823]
+                                - option [ref=f1e1824]:
+                                  - cell "IncludeFlag" [ref=f1e1825]
+                                - option [ref=f1e1826]:
+                                  - cell "IndexName" [ref=f1e1827]
+                                - option [ref=f1e1828]:
+                                  - cell "IndexNameBase" [ref=f1e1829]
+                                - option [ref=f1e1830]:
+                                  - cell "Infobar" [ref=f1e1831]
+                                - option [ref=f1e1832]:
+                                  - cell "InlineList" [ref=f1e1833]
+                                - option [ref=f1e1834]:
+                                  - cell "InstallMethod" [ref=f1e1835]
+                                - option [ref=f1e1836]:
+                                  - cell "InstallStatus" [ref=f1e1837]
+                                - option [ref=f1e1838]:
+                                  - cell "int" [ref=f1e1839]
+                                - option [ref=f1e1840]:
+                                  - cell "InternetInfoName" [ref=f1e1841]
+                                - option [ref=f1e1842]:
+                                  - cell "InternetInfoNameBase" [ref=f1e1843]
+                                - option [ref=f1e1844]:
+                                  - cell "InternetPrinterID" [ref=f1e1845]
+                                - option [ref=f1e1846]:
+                                  - cell "InternetPrinterIDBase" [ref=f1e1847]
+                                - option [ref=f1e1848]:
+                                  - cell "IntranetName" [ref=f1e1849]
+                                - option [ref=f1e1850]:
+                                  - cell "IntranetNameBase" [ref=f1e1851]
+                                - option [ref=f1e1852]:
+                                  - cell "InWorkflowBase" [ref=f1e1853]
+                                - option [ref=f1e1854]:
+                                  - cell "IONTransferType" [ref=f1e1855]
+                                - option [ref=f1e1856]:
+                                  - cell "KeyList" [ref=f1e1857]
+                                - option [ref=f1e1858]:
+                                  - cell "KeyValueBase" [ref=f1e1859]
+                                - option [ref=f1e1860]:
+                                  - cell "Label" [ref=f1e1861]
+                                - option [ref=f1e1862]:
+                                  - cell "LangCode" [ref=f1e1863]
+                                - option [ref=f1e1864]:
+                                  - cell "LangCodeBase" [ref=f1e1865]
+                                - option [ref=f1e1866]:
+                                  - cell "Level" [ref=f1e1867]
+                                - option [ref=f1e1868]:
+                                  - cell "LicenseBeginDate" [ref=f1e1869]
+                                - option [ref=f1e1870]:
+                                  - cell "LicenseCheckSum" [ref=f1e1871]
+                                - option [ref=f1e1872]:
+                                  - cell "LicenseCustomer" [ref=f1e1873]
+                                - option [ref=f1e1874]:
+                                  - cell "LicenseDatabase" [ref=f1e1875]
+                                - option [ref=f1e1876]:
+                                  - cell "LicensedConcurrentSessions" [ref=f1e1877]
+                                - option [ref=f1e1878]:
+                                  - cell "LicenseDocument" [ref=f1e1879]
+                                - option [ref=f1e1880]:
+                                  - cell "LicensedUsers" [ref=f1e1881]
+                                - option [ref=f1e1882]:
+                                  - cell "LicenseExpDate" [ref=f1e1883]
+                                - option [ref=f1e1884]:
+                                  - cell "LicenseID" [ref=f1e1885]
+                                - option [ref=f1e1886]:
+                                  - cell "LicenseObjectName" [ref=f1e1887]
+                                - option [ref=f1e1888]:
+                                  - cell "LicenseObjectNameBase" [ref=f1e1889]
+                                - option [ref=f1e1890]:
+                                  - cell "LicenseObjectType" [ref=f1e1891]
+                                - option [ref=f1e1892]:
+                                  - cell "LicenseServer" [ref=f1e1893]
+                                - option [ref=f1e1894]:
+                                  - cell "LicenseStatus" [ref=f1e1895]
+                                - option [ref=f1e1896]:
+                                  - cell "LinkBy" [ref=f1e1897]
+                                - option [ref=f1e1898]:
+                                  - cell "LinkByBase" [ref=f1e1899]
+                                - option [ref=f1e1900]:
+                                  - cell "ListSiteEntity" [ref=f1e1901]
+                                - option [ref=f1e1902]:
+                                  - cell "ListYesNo" [ref=f1e1903]
+                                - option [ref=f1e1904]:
+                                  - cell "LockoutDuration" [ref=f1e1905]
+                                - option [ref=f1e1906]:
+                                  - cell "LongDesc" [ref=f1e1907]
+                                - option [ref=f1e1908]:
+                                  - cell "LongerDesc" [ref=f1e1909]
+                                - option [ref=f1e1910]:
+                                  - cell "LongList" [ref=f1e1911]
+                                - option [ref=f1e1912]:
+                                  - cell "LongRowPointer" [ref=f1e1913]
+                                - option [ref=f1e1914]:
+                                  - cell "LongString" [ref=f1e1915]
+                                - option [ref=f1e1916]:
+                                  - cell "MarkupAttributeName" [ref=f1e1917]
+                                - option [ref=f1e1918]:
+                                  - cell "MarkupAttributeNameBase" [ref=f1e1919]
+                                - option [ref=f1e1920]:
+                                  - cell "MarkupDocumentDocumentation" [ref=f1e1921]
+                                - option [ref=f1e1922]:
+                                  - cell "MarkupDocumentDocumentationClass" [ref=f1e1923]
+                                - option [ref=f1e1924]:
+                                  - cell "MarkupDocumentName" [ref=f1e1925]
+                                - option [ref=f1e1926]:
+                                  - cell "MarkupDocumentNameBase" [ref=f1e1927]
+                                - option [ref=f1e1928]:
+                                  - cell "MarkUpElementRowPointer" [ref=f1e1929]
+                                - option [ref=f1e1930]:
+                                  - cell "MarkUpElementRowPointerBase" [ref=f1e1931]
+                                - option [ref=f1e1932]:
+                                  - cell "MarkupElementSequence" [ref=f1e1933]
+                                - option [ref=f1e1934]:
+                                  - cell "MarkupElementSequenceBase" [ref=f1e1935]
+                                - option [ref=f1e1936]:
+                                  - cell "MarkupElementTagName" [ref=f1e1937]
+                                - option [ref=f1e1938]:
+                                  - cell "MarkupElementTagNameBase" [ref=f1e1939]
+                                - option [ref=f1e1940]:
+                                  - cell "MarkupElementValue" [ref=f1e1941]
+                                - option [ref=f1e1942]:
+                                  - cell "MarkupElementValueBase" [ref=f1e1943]
+                                - option [ref=f1e1944]:
+                                  - cell "MarkupElementValueType" [ref=f1e1945]
+                                - option [ref=f1e1946]:
+                                  - cell "MarkupElementValueTypeBase" [ref=f1e1947]
+                                - option [ref=f1e1948]:
+                                  - cell "MediaType" [ref=f1e1949]
+                                - option [ref=f1e1950]:
+                                  - cell "MessageBusId" [ref=f1e1951]
+                                - option [ref=f1e1952]:
+                                  - cell "MessageCategory" [ref=f1e1953]
+                                - option [ref=f1e1954]:
+                                  - cell "MessageCategoryBase" [ref=f1e1955]
+                                - option [ref=f1e1956]:
+                                  - cell "MessageLanguage" [ref=f1e1957]
+                                - option [ref=f1e1958]:
+                                  - cell "MessageLanguageType" [ref=f1e1959]
+                      - generic [ref=f1e1483]:
+                        - checkbox "Inherit from Property Class" [disabled] [ref=f1e1484]
+                        - generic [ref=f1e1486]: Inherit from Property Class
+                      - generic [ref=f1e1489]:
+                        - combobox [ref=f1e1491]: Binary
+                        - button "Open" [ref=f1e1492] [cursor=pointer]
+                      - generic [ref=f1e1493]: "Length:"
+                      - textbox [ref=f1e1499]
+                      - generic [ref=f1e1500]: "Decimal:"
+                      - textbox [ref=f1e1506]
+                      - generic [ref=f1e1508]:
+                        - checkbox "Inherit from Property Class" [disabled] [ref=f1e1509]
+                        - generic [ref=f1e1511]: Inherit from Property Class
+                      - generic [ref=f1e1514]:
+                        - combobox [ref=f1e1516]: varbinary
+                        - button "Open" [ref=f1e1517] [cursor=pointer]
+                      - generic [ref=f1e1519]:
+                        - checkbox "Inherit from Property Class" [ref=f1e1520]
+                        - generic [ref=f1e1522]: Inherit from Property Class
+                      - textbox [ref=f1e1527]
+                  - button "Help" [ref=f1e1434] [cursor=pointer]
+                  - button "< Back" [ref=f1e1436] [cursor=pointer]
+                  - button "Next >" [disabled] [ref=f1e1438]
+                  - button "Finish" [ref=f1e1440] [cursor=pointer]
+                  - button "Cancel" [ref=f1e1442] [cursor=pointer]
+          - separator [ref=f1e934]: ⁞
+          - generic [ref=f1e935]:
+            - generic [ref=f1e936]: DevTools
+            - button "Collapse Panel" [ref=f1e937] [cursor=pointer]
+            - toolbar [ref=f1e938]:
+              - button [disabled]
+              - button [ref=f1e939] [cursor=pointer]
+              - button [ref=f1e940] [cursor=pointer]
+              - button [ref=f1e941] [cursor=pointer]
+              - textbox [ref=f1e946]:
+                - /placeholder: Search
+              - button [ref=f1e947] [cursor=pointer]
+              - button [ref=f1e948] [cursor=pointer]
+              - button [disabled]
+              - button [disabled]
+              - button [ref=f1e949] [cursor=pointer]
+              - button [ref=f1e950] [cursor=pointer]
+            - tablist [ref=f1e951]:
+              - tab [ref=f1e952] [cursor=pointer]:
+                - heading "Logs" [level=2] [ref=f1e953]
+              - tab [ref=f1e954] [cursor=pointer]:
+                - heading "Variables" [level=2] [ref=f1e955]
+              - tab [selected] [ref=f1e956] [cursor=pointer]:
+                - heading "Log Messages" [level=2] [ref=f1e957]
+              - tab [ref=f1e958] [cursor=pointer]:
+                - heading "Console" [level=2] [ref=f1e959]
+            - tabpanel "Log Messages" [ref=f1e960]:
+              - row [ref=f1e961]:
+                - columnheader "Time" [ref=f1e962]
+                - columnheader "Source" [ref=f1e967]
+                - columnheader "Type" [ref=f1e972]
+                - columnheader "Message" [ref=f1e977]
+              - grid [ref=f1e982]:
+                - generic [ref=f1e983]:
+                  - table [ref=f1e984]:
+                    - rowgroup [ref=f1e985]:
+                      - row [ref=f1e986]:
+                        - gridcell "07:08:00.855" [ref=f1e987]
+                        - gridcell "WinStudio" [ref=f1e989]
+                        - gridcell "Diagnostics" [ref=f1e991]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormRefresh, starting processing, IDO collection object" [ref=f1e993]'
+                  - table [ref=f1e995]:
+                    - rowgroup [ref=f1e996]:
+                      - row [ref=f1e997]:
+                        - gridcell "07:08:00.855" [ref=f1e998]
+                        - gridcell "WinStudio" [ref=f1e1000]
+                        - gridcell "Diagnostics" [ref=f1e1002]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormGetBoundValues, starting processing, IDO collection object" [ref=f1e1004]'
+                  - table [ref=f1e1006]:
+                    - rowgroup [ref=f1e1007]:
+                      - row [ref=f1e1008]:
+                        - gridcell "07:08:00.855" [ref=f1e1009]
+                        - gridcell "WinStudio" [ref=f1e1011]
+                        - gridcell "Diagnostics" [ref=f1e1013]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormGetBoundValues, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1015]'
+                  - table [ref=f1e1017]:
+                    - rowgroup [ref=f1e1018]:
+                      - row [ref=f1e1019]:
+                        - gridcell "07:08:00.855" [ref=f1e1020]
+                        - gridcell "WinStudio" [ref=f1e1022]
+                        - gridcell "Diagnostics" [ref=f1e1024]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectRefresh, starting processing, IDO collection object" [ref=f1e1026]'
+                  - table [ref=f1e1028]:
+                    - rowgroup [ref=f1e1029]:
+                      - row [ref=f1e1030]:
+                        - gridcell "07:08:00.855" [ref=f1e1031]
+                        - gridcell "WinStudio" [ref=f1e1033]
+                        - gridcell "Diagnostics" [ref=f1e1035]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectRefresh, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1037]'
+                  - table [ref=f1e1039]:
+                    - rowgroup [ref=f1e1040]:
+                      - row [ref=f1e1041]:
+                        - gridcell "07:08:00.949" [ref=f1e1042]
+                        - gridcell "WinStudio" [ref=f1e1044]
+                        - gridcell "Diagnostics" [ref=f1e1046]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectSelectCurrentCompleted, starting processing, IDO collection object" [ref=f1e1048]'
+                  - table [ref=f1e1050]:
+                    - rowgroup [ref=f1e1051]:
+                      - row [ref=f1e1052]:
+                        - gridcell "07:08:00.949" [ref=f1e1053]
+                        - gridcell "WinStudio" [ref=f1e1055]
+                        - gridcell "Diagnostics" [ref=f1e1057]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectSelectCurrentCompleted, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1059]'
+                  - table [ref=f1e1061]:
+                    - rowgroup [ref=f1e1062]:
+                      - row [ref=f1e1063]:
+                        - gridcell "07:08:00.949" [ref=f1e1064]
+                        - gridcell "WinStudio" [ref=f1e1066]
+                        - gridcell "Diagnostics" [ref=f1e1068]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectRefreshCompleted, starting processing, IDO collection object" [ref=f1e1070]'
+                  - table [ref=f1e1072]:
+                    - rowgroup [ref=f1e1073]:
+                      - row [ref=f1e1074]:
+                        - gridcell "07:08:00.949" [ref=f1e1075]
+                        - gridcell "WinStudio" [ref=f1e1077]
+                        - gridcell "Diagnostics" [ref=f1e1079]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectRefreshCompleted, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1081]'
+                  - table [ref=f1e1083]:
+                    - rowgroup [ref=f1e1084]:
+                      - row [ref=f1e1085]:
+                        - gridcell "07:08:00.949" [ref=f1e1086]
+                        - gridcell "WinStudio" [ref=f1e1088]
+                        - gridcell "Diagnostics" [ref=f1e1090]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormLoadBoundValues, starting processing, IDO collection object" [ref=f1e1092]'
+                  - table [ref=f1e1094]:
+                    - rowgroup [ref=f1e1095]:
+                      - row [ref=f1e1096]:
+                        - gridcell "07:08:00.949" [ref=f1e1097]
+                        - gridcell "WinStudio" [ref=f1e1099]
+                        - gridcell "Diagnostics" [ref=f1e1101]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormLoadDerivedValues, starting processing, IDO collection object" [ref=f1e1103]'
+                  - table [ref=f1e1105]:
+                    - rowgroup [ref=f1e1106]:
+                      - row [ref=f1e1107]:
+                        - gridcell "07:08:00.949" [ref=f1e1108]
+                        - gridcell "WinStudio" [ref=f1e1110]
+                        - gridcell "Diagnostics" [ref=f1e1112]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormLoadDerivedValues, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1114]'
+                  - table [ref=f1e1116]:
+                    - rowgroup [ref=f1e1117]:
+                      - row [ref=f1e1118]:
+                        - gridcell "07:08:00.949" [ref=f1e1119]
+                        - gridcell "WinStudio" [ref=f1e1121]
+                        - gridcell "Diagnostics" [ref=f1e1123]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormLoadBoundValues, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1125]'
+                  - table [ref=f1e1127]:
+                    - rowgroup [ref=f1e1128]:
+                      - row [ref=f1e1129]:
+                        - gridcell "07:08:00.949" [ref=f1e1130]
+                        - gridcell "WinStudio" [ref=f1e1132]
+                        - gridcell "Diagnostics" [ref=f1e1134]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormRefreshCompleted, starting processing, IDO collection object" [ref=f1e1136]'
+                  - table [ref=f1e1138]:
+                    - rowgroup [ref=f1e1139]:
+                      - row [ref=f1e1140]:
+                        - gridcell "07:08:00.949" [ref=f1e1141]
+                        - gridcell "WinStudio" [ref=f1e1143]
+                        - gridcell "Diagnostics" [ref=f1e1145]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormRefreshCompleted, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1147]'
+                  - table [ref=f1e1149]:
+                    - rowgroup [ref=f1e1150]:
+                      - row [ref=f1e1151]:
+                        - gridcell "07:08:00.949" [ref=f1e1152]
+                        - gridcell "WinStudio" [ref=f1e1154]
+                        - gridcell "Diagnostics" [ref=f1e1156]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormRefresh, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1158]'
+                  - table [ref=f1e1160]:
+                    - rowgroup [ref=f1e1161]:
+                      - row [ref=f1e1162]:
+                        - gridcell "07:08:44.703" [ref=f1e1163]
+                        - gridcell "WinStudio" [ref=f1e1165]
+                        - gridcell "Diagnostics" [ref=f1e1167]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from to -1, VariableType=Form Persistent=False" [ref=f1e1169]'
+                  - table [ref=f1e1171]:
+                    - rowgroup [ref=f1e1172]:
+                      - row [ref=f1e1173]:
+                        - gridcell "07:08:44.703" [ref=f1e1174]
+                        - gridcell "WinStudio" [ref=f1e1176]
+                        - gridcell "Diagnostics" [ref=f1e1178]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from to 0, VariableType=Form Persistent=False" [ref=f1e1180]'
+                  - table [ref=f1e1182]:
+                    - rowgroup [ref=f1e1183]:
+                      - row [ref=f1e1184]:
+                        - gridcell "07:08:44.703" [ref=f1e1185]
+                        - gridcell "WinStudio" [ref=f1e1187]
+                        - gridcell "Diagnostics" [ref=f1e1189]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1191]'
+                  - table [ref=f1e1193]:
+                    - rowgroup [ref=f1e1194]:
+                      - row [ref=f1e1195]:
+                        - gridcell "07:08:44.703" [ref=f1e1196]
+                        - gridcell "WinStudio" [ref=f1e1198]
+                        - gridcell "Diagnostics" [ref=f1e1200]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 0 to 1, VariableType=Form Persistent=False" [ref=f1e1202]'
+                  - table [ref=f1e1204]:
+                    - rowgroup [ref=f1e1205]:
+                      - row [ref=f1e1206]:
+                        - gridcell "07:08:44.703" [ref=f1e1207]
+                        - gridcell "WinStudio" [ref=f1e1209]
+                        - gridcell "Diagnostics" [ref=f1e1211]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1213]'
+                  - table [ref=f1e1215]:
+                    - rowgroup [ref=f1e1216]:
+                      - row [ref=f1e1217]:
+                        - gridcell "07:08:44.703" [ref=f1e1218]
+                        - gridcell "WinStudio" [ref=f1e1220]
+                        - gridcell "Diagnostics" [ref=f1e1222]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 1 to 1, VariableType=Form Persistent=False" [ref=f1e1224]'
+                  - table [ref=f1e1226]:
+                    - rowgroup [ref=f1e1227]:
+                      - row [ref=f1e1228]:
+                        - gridcell "07:08:44.703" [ref=f1e1229]
+                        - gridcell "WinStudio" [ref=f1e1231]
+                        - gridcell "Diagnostics" [ref=f1e1233]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1235]'
+                  - table [ref=f1e1237]:
+                    - rowgroup [ref=f1e1238]:
+                      - row [ref=f1e1239]:
+                        - gridcell "07:08:44.703" [ref=f1e1240]
+                        - gridcell "WinStudio" [ref=f1e1242]
+                        - gridcell "Diagnostics" [ref=f1e1244]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 1 to 2, VariableType=Form Persistent=False" [ref=f1e1246]'
+                  - table [ref=f1e1248]:
+                    - rowgroup [ref=f1e1249]:
+                      - row [ref=f1e1250]:
+                        - gridcell "07:08:44.703" [ref=f1e1251]
+                        - gridcell "WinStudio" [ref=f1e1253]
+                        - gridcell "Diagnostics" [ref=f1e1255]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1257]'
+                  - table [ref=f1e1259]:
+                    - rowgroup [ref=f1e1260]:
+                      - row [ref=f1e1261]:
+                        - gridcell "07:08:44.703" [ref=f1e1262]
+                        - gridcell "WinStudio" [ref=f1e1264]
+                        - gridcell "Diagnostics" [ref=f1e1266]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 2 to 2, VariableType=Form Persistent=False" [ref=f1e1268]'
+                  - table [ref=f1e1270]:
+                    - rowgroup [ref=f1e1271]:
+                      - row [ref=f1e1272]:
+                        - gridcell "07:08:44.703" [ref=f1e1273]
+                        - gridcell "WinStudio" [ref=f1e1275]
+                        - gridcell "Diagnostics" [ref=f1e1277]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1279]'
+                  - table [ref=f1e1281]:
+                    - rowgroup [ref=f1e1282]:
+                      - row [ref=f1e1283]:
+                        - gridcell "07:08:44.703" [ref=f1e1284]
+                        - gridcell "WinStudio" [ref=f1e1286]
+                        - gridcell "Diagnostics" [ref=f1e1288]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 2 to 3, VariableType=Form Persistent=False" [ref=f1e1290]'
+                  - table [ref=f1e1292]:
+                    - rowgroup [ref=f1e1293]:
+                      - row [ref=f1e1294]:
+                        - gridcell "07:08:44.703" [ref=f1e1295]
+                        - gridcell "WinStudio" [ref=f1e1297]
+                        - gridcell "Diagnostics" [ref=f1e1299]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1301]'
+                  - table [ref=f1e1303]:
+                    - rowgroup [ref=f1e1304]:
+                      - row [ref=f1e1305]:
+                        - gridcell "07:08:44.703" [ref=f1e1306]
+                        - gridcell "WinStudio" [ref=f1e1308]
+                        - gridcell "Diagnostics" [ref=f1e1310]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 3 to 3, VariableType=Form Persistent=False" [ref=f1e1312]'
+                  - table [ref=f1e1314]:
+                    - rowgroup [ref=f1e1315]:
+                      - row [ref=f1e1316]:
+                        - gridcell "07:08:44.703" [ref=f1e1317]
+                        - gridcell "WinStudio" [ref=f1e1319]
+                        - gridcell "Diagnostics" [ref=f1e1321]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1323]'
+                  - table [ref=f1e1325]:
+                    - rowgroup [ref=f1e1326]:
+                      - row [ref=f1e1327]:
+                        - gridcell "07:08:44.703" [ref=f1e1328]
+                        - gridcell "WinStudio" [ref=f1e1330]
+                        - gridcell "Diagnostics" [ref=f1e1332]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 3 to 4, VariableType=Form Persistent=False" [ref=f1e1334]'
+                  - table [ref=f1e1336]:
+                    - rowgroup [ref=f1e1337]:
+                      - row [ref=f1e1338]:
+                        - gridcell "07:08:44.703" [ref=f1e1339]
+                        - gridcell "WinStudio" [ref=f1e1341]
+                        - gridcell "Diagnostics" [ref=f1e1343]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1345]'
+                  - table [ref=f1e1347]:
+                    - rowgroup [ref=f1e1348]:
+                      - row [ref=f1e1349]:
+                        - gridcell "07:08:44.703" [ref=f1e1350]
+                        - gridcell "WinStudio" [ref=f1e1352]
+                        - gridcell "Diagnostics" [ref=f1e1354]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 4 to 4, VariableType=Form Persistent=False" [ref=f1e1356]'
+                  - table [ref=f1e1358]:
+                    - rowgroup [ref=f1e1359]:
+                      - row [ref=f1e1360]:
+                        - gridcell "07:08:44.703" [ref=f1e1361]
+                        - gridcell "WinStudio" [ref=f1e1363]
+                        - gridcell "Diagnostics" [ref=f1e1365]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1367]'
+                  - table [ref=f1e1369]:
+                    - rowgroup [ref=f1e1370]:
+                      - row [ref=f1e1371]:
+                        - gridcell "07:08:44.703" [ref=f1e1372]
+                        - gridcell "WinStudio" [ref=f1e1374]
+                        - gridcell "Diagnostics" [ref=f1e1376]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 4 to 5, VariableType=Form Persistent=False" [ref=f1e1378]'
+        - region
+        - region [ref=f1e1380]:
+          - textbox [ref=f1e1385]
+          - generic [ref=f1e1387]: en-US
+          - separator [ref=f1e1388]
+          - img "Powered by Infor" [ref=f1e1389]
+    - complementary "Smart Panel" [ref=e60]:
+      - generic [ref=e61]:
+        - button "Insights" [ref=e64] [cursor=pointer]
+        - button "Inbox" [ref=e67] [cursor=pointer]
+        - button "Smart Help" [ref=e70] [cursor=pointer]
+        - button "Popout Smart Panel" [ref=e73] [cursor=pointer]

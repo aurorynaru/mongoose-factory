@@ -1,0 +1,484 @@
+- generic [ref=e5]:
+  - banner "Portal Top Navigation Bar" [ref=e6]:
+    - generic [ref=e8]:
+      - generic:
+        - generic [ref=e10]:
+          - generic:
+            - link "Home" [ref=e12] [cursor=pointer]
+            - button "Open navigation menu" [ref=e15] [cursor=pointer]
+        - generic [ref=e17]:
+          - tablist "Tabs" [ref=e18]:
+            - tab "System Administrator" [ref=e19] [cursor=pointer]:
+              - link "System Administrator" [ref=e20]
+              - button "Close tab System Administrator" [ref=e23]
+            - tab "Mongoose" [selected] [ref=e24] [cursor=pointer]:
+              - link "Mongoose" [ref=e25]
+              - button "Open tab menu" [ref=e28]
+              - button "Close tab Mongoose" [ref=e32]
+          - button "Tabs menu more" [ref=e36] [cursor=pointer]
+        - generic [ref=e38]:
+          - generic:
+            - generic [ref=e39]: DEM
+            - button "Health Notifications" [ref=e43] [cursor=pointer]
+            - button "User menu" [ref=e45] [cursor=pointer]
+            - button "Hide Smart Panel" [ref=e47] [cursor=pointer]
+    - generic:
+      - generic:
+        - generic: Infor OS Portal
+        - generic: 2026.10.01 (20260909-164316, 20260909-154143, 1063, 1583, 727)
+        - generic:
+          - generic:
+            - text: Copyright © 2026 Infor. All rights reserved. The word and design marks set forth herein are trademarks and/or registered trademarks of Infor and/or its affiliates and subsidiaries. All other trademarks listed herein are the property of their respective owners
+            - generic: www.infor.com
+            - text: .
+  - main [ref=e48]:
+    - iframe [active] [ref=e59]:
+      - generic [ref=f1e1]:
+        - banner [ref=f1e2]:
+          - heading "Infor Mongoose Application Development Framework" [level=1] [ref=f1e3]
+          - link "Skip to Main Content" [ref=f1e4] [cursor=pointer]:
+            - /url: "#formContainer"
+          - navigation [ref=f1e5]:
+            - button "Explorer" [ref=f1e6] [cursor=pointer]
+            - separator
+            - button "Form" [ref=f1e10] [cursor=pointer]
+            - separator
+            - button "Actions" [ref=f1e12] [cursor=pointer]
+            - separator
+            - button "Edit" [ref=f1e14] [cursor=pointer]
+            - separator
+            - button "View" [ref=f1e16] [cursor=pointer]
+            - separator
+            - button "Window" [ref=f1e18] [cursor=pointer]
+            - separator
+            - button "Help" [ref=f1e20] [cursor=pointer]
+            - button "anton.ramos@3mworks.com.ph | G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT" [ref=f1e22] [cursor=pointer]
+          - toolbar [ref=f1e24]:
+            - button "Open" [ref=f1e25] [cursor=pointer]:
+              - button "Open" [ref=f1e26]
+            - button "Save" [disabled] [ref=f1e28]:
+              - button "Save" [disabled]
+            - button "New" [disabled] [ref=f1e29]:
+              - button "New" [disabled]
+            - button "Delete" [disabled] [ref=f1e30]:
+              - button "Delete" [disabled]
+            - button "Refresh" [disabled] [ref=f1e33]:
+              - button "Refresh" [disabled]
+            - button "Filter in Place" [disabled] [ref=f1e36]:
+              - button "FiP" [disabled]
+            - button "Get More Rows" [disabled] [ref=f1e39]:
+              - button "Get More Rows" [disabled]
+            - button "System Notes" [disabled] [ref=f1e40]:
+              - button "System Notes" [disabled]
+            - button "Documents" [disabled] [ref=f1e43]:
+              - button "Documents" [disabled]
+            - button "Send email for the current object" [disabled] [ref=f1e46]:
+              - button "Send email for the current object" [disabled]
+            - button "Export To Excel" [disabled] [ref=f1e49]:
+              - button "Export To Excel" [disabled]
+            - button [ref=f1e52] [cursor=pointer]:
+              - button "Designer" [ref=f1e53]
+            - button "Designer" [ref=f1e55] [cursor=pointer]:
+              - button "Designer" [ref=f1e56]
+            - button "Help Current Form" [ref=f1e58] [cursor=pointer]:
+              - button "Help Current Form" [ref=f1e59]
+        - region [ref=f1e61]:
+          - heading "Explorer" [ref=f1e62]
+          - button "Collapse Panel"
+          - grid [ref=f1e63]:
+            - columnheader "Name"
+            - tree [ref=f1e68]:
+              - generic [ref=f1e69]:
+                - table [ref=f1e70]:
+                  - rowgroup [ref=f1e71]:
+                    - row [ref=f1e72]:
+                      - treeitem [ref=f1e73]:
+                        - treeitem "My Folders" [ref=f1e75]
+                - table [ref=f1e76]:
+                  - rowgroup [ref=f1e77]:
+                    - row [ref=f1e78]:
+                      - treeitem [ref=f1e79]:
+                        - treeitem "Master Explorer" [ref=f1e81]
+                - table [ref=f1e82]:
+                  - rowgroup [ref=f1e83]:
+                    - row [ref=f1e84]:
+                      - treeitem [ref=f1e85]:
+                        - treeitem "Public Folders" [ref=f1e87]
+                - table [ref=f1e88]:
+                  - rowgroup [ref=f1e89]:
+                    - row [ref=f1e90]:
+                      - treeitem [ref=f1e91]:
+                        - treeitem "User Folders" [ref=f1e93]
+        - region [ref=f1e94]:
+          - main [ref=f1e95]:
+            - tablist [ref=f1e96]:
+              - tab [ref=f1e97] [cursor=pointer]:
+                - heading "Sql Tables" [level=2] [ref=f1e98]
+                - button "Close Panel Sql Tables" [ref=f1e99]:
+                  - img "Close Panel Sql Tables"
+              - tab [ref=f1e100] [cursor=pointer]:
+                - heading "Sql Columns" [level=2] [ref=f1e101]
+                - button "Close Panel Sql Columns" [ref=f1e102]:
+                  - img "Close Panel Sql Columns"
+              - tab [ref=f1e103] [cursor=pointer]:
+                - heading "FX_Items" [level=2] [ref=f1e104]
+                - button "Close Panel FX_Items" [ref=f1e105]:
+                  - img "Close Panel FX_Items"
+              - tab [ref=f1e106] [cursor=pointer]:
+                - heading "Property Classes" [level=2] [ref=f1e107]
+                - button "Close Panel Property Classes" [ref=f1e108]:
+                  - img "Close Panel Property Classes"
+              - tab "IDOs Close Panel IDOs" [disabled]:
+                - heading "IDOs" [level=2]
+                - button "Close Panel IDOs" [disabled]:
+                  - img "Close Panel IDOs"
+              - tab [selected] [ref=f1e1390] [cursor=pointer]:
+                - heading "IDO Property Wizard" [level=2] [ref=f1e1391]
+                - button "Close Panel IDO Property Wizard" [ref=f1e1392]:
+                  - img "Close Panel IDO Property Wizard"
+            - tabpanel "IDO Property Wizard" [ref=f1e1393]:
+              - form [ref=f1e1394]:
+                - generic [ref=f1e1395]:
+                  - group [ref=f1e1443]:
+                    - generic [ref=f1e1446]:
+                      - group [ref=f1e1447]
+                      - group [ref=f1e1451]
+                      - generic [ref=f1e1455]:
+                        - text: "*"
+                        - generic [ref=f1e1456]: "Bind To:"
+                        - generic [ref=f1e1459]:
+                          - combobox "Bind To:" [ref=f1e1461]
+                          - button "Open" [ref=f1e1462] [cursor=pointer]
+                      - generic [ref=f1e1463]: "Bind To:"
+                      - generic [ref=f1e1465]: "Property Name:"
+                      - generic [ref=f1e1467]:
+                        - text: "*"
+                        - generic [ref=f1e1468]: "Property Name:"
+                        - textbox "Property Name:" [ref=f1e1473]
+                      - generic [ref=f1e1474]: "Property Class:"
+                      - generic [ref=f1e1478]:
+                        - combobox [ref=f1e1480]
+                        - button "Open" [ref=f1e1481] [cursor=pointer]
+                      - generic [ref=f1e1483]:
+                        - checkbox "Inherit from Property Class" [ref=f1e1484]
+                        - generic [ref=f1e1486]: Inherit from Property Class
+                      - generic [ref=f1e1489]:
+                        - combobox [ref=f1e1491]
+                        - button "Open" [ref=f1e1492] [cursor=pointer]
+                      - generic [ref=f1e1493]: "Length:"
+                      - textbox [ref=f1e1499]
+                      - generic [ref=f1e1500]: "Decimal:"
+                      - textbox [ref=f1e1506]
+                      - generic [ref=f1e1508]:
+                        - checkbox "Inherit from Property Class" [ref=f1e1509]
+                        - generic [ref=f1e1511]: Inherit from Property Class
+                      - generic [ref=f1e1514]:
+                        - combobox [ref=f1e1516]
+                        - button "Open" [ref=f1e1517] [cursor=pointer]
+                      - generic [ref=f1e1519]:
+                        - checkbox "Inherit from Property Class" [ref=f1e1520]
+                        - generic [ref=f1e1522]: Inherit from Property Class
+                      - textbox [ref=f1e1527]
+                  - button "Help" [ref=f1e1434] [cursor=pointer]
+                  - button "< Back" [ref=f1e1436] [cursor=pointer]
+                  - button "Next >" [disabled] [active] [ref=f1e1438]
+                  - button "Finish" [ref=f1e1440] [cursor=pointer]
+                  - button "Cancel" [ref=f1e1442] [cursor=pointer]
+          - separator [ref=f1e934]: ⁞
+          - generic [ref=f1e935]:
+            - generic [ref=f1e936]: DevTools
+            - button "Collapse Panel" [ref=f1e937] [cursor=pointer]
+            - toolbar [ref=f1e938]:
+              - button [disabled]
+              - button [ref=f1e939] [cursor=pointer]
+              - button [ref=f1e940] [cursor=pointer]
+              - button [ref=f1e941] [cursor=pointer]
+              - textbox [ref=f1e946]:
+                - /placeholder: Search
+              - button [ref=f1e947] [cursor=pointer]
+              - button [ref=f1e948] [cursor=pointer]
+              - button [disabled]
+              - button [disabled]
+              - button [ref=f1e949] [cursor=pointer]
+              - button [ref=f1e950] [cursor=pointer]
+            - tablist [ref=f1e951]:
+              - tab [ref=f1e952] [cursor=pointer]:
+                - heading "Logs" [level=2] [ref=f1e953]
+              - tab [ref=f1e954] [cursor=pointer]:
+                - heading "Variables" [level=2] [ref=f1e955]
+              - tab [selected] [ref=f1e956] [cursor=pointer]:
+                - heading "Log Messages" [level=2] [ref=f1e957]
+              - tab [ref=f1e958] [cursor=pointer]:
+                - heading "Console" [level=2] [ref=f1e959]
+            - tabpanel "Log Messages" [ref=f1e960]:
+              - row [ref=f1e961]:
+                - columnheader "Time" [ref=f1e962]
+                - columnheader "Source" [ref=f1e967]
+                - columnheader "Type" [ref=f1e972]
+                - columnheader "Message" [ref=f1e977]
+              - grid [ref=f1e982]:
+                - generic [ref=f1e983]:
+                  - table [ref=f1e984]:
+                    - rowgroup [ref=f1e985]:
+                      - row [ref=f1e986]:
+                        - gridcell "07:08:00.855" [ref=f1e987]
+                        - gridcell "WinStudio" [ref=f1e989]
+                        - gridcell "Diagnostics" [ref=f1e991]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormRefresh, starting processing, IDO collection object" [ref=f1e993]'
+                  - table [ref=f1e995]:
+                    - rowgroup [ref=f1e996]:
+                      - row [ref=f1e997]:
+                        - gridcell "07:08:00.855" [ref=f1e998]
+                        - gridcell "WinStudio" [ref=f1e1000]
+                        - gridcell "Diagnostics" [ref=f1e1002]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormGetBoundValues, starting processing, IDO collection object" [ref=f1e1004]'
+                  - table [ref=f1e1006]:
+                    - rowgroup [ref=f1e1007]:
+                      - row [ref=f1e1008]:
+                        - gridcell "07:08:00.855" [ref=f1e1009]
+                        - gridcell "WinStudio" [ref=f1e1011]
+                        - gridcell "Diagnostics" [ref=f1e1013]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormGetBoundValues, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1015]'
+                  - table [ref=f1e1017]:
+                    - rowgroup [ref=f1e1018]:
+                      - row [ref=f1e1019]:
+                        - gridcell "07:08:00.855" [ref=f1e1020]
+                        - gridcell "WinStudio" [ref=f1e1022]
+                        - gridcell "Diagnostics" [ref=f1e1024]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectRefresh, starting processing, IDO collection object" [ref=f1e1026]'
+                  - table [ref=f1e1028]:
+                    - rowgroup [ref=f1e1029]:
+                      - row [ref=f1e1030]:
+                        - gridcell "07:08:00.855" [ref=f1e1031]
+                        - gridcell "WinStudio" [ref=f1e1033]
+                        - gridcell "Diagnostics" [ref=f1e1035]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectRefresh, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1037]'
+                  - table [ref=f1e1039]:
+                    - rowgroup [ref=f1e1040]:
+                      - row [ref=f1e1041]:
+                        - gridcell "07:08:00.949" [ref=f1e1042]
+                        - gridcell "WinStudio" [ref=f1e1044]
+                        - gridcell "Diagnostics" [ref=f1e1046]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectSelectCurrentCompleted, starting processing, IDO collection object" [ref=f1e1048]'
+                  - table [ref=f1e1050]:
+                    - rowgroup [ref=f1e1051]:
+                      - row [ref=f1e1052]:
+                        - gridcell "07:08:00.949" [ref=f1e1053]
+                        - gridcell "WinStudio" [ref=f1e1055]
+                        - gridcell "Diagnostics" [ref=f1e1057]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectSelectCurrentCompleted, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1059]'
+                  - table [ref=f1e1061]:
+                    - rowgroup [ref=f1e1062]:
+                      - row [ref=f1e1063]:
+                        - gridcell "07:08:00.949" [ref=f1e1064]
+                        - gridcell "WinStudio" [ref=f1e1066]
+                        - gridcell "Diagnostics" [ref=f1e1068]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectRefreshCompleted, starting processing, IDO collection object" [ref=f1e1070]'
+                  - table [ref=f1e1072]:
+                    - rowgroup [ref=f1e1073]:
+                      - row [ref=f1e1074]:
+                        - gridcell "07:08:00.949" [ref=f1e1075]
+                        - gridcell "WinStudio" [ref=f1e1077]
+                        - gridcell "Diagnostics" [ref=f1e1079]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectRefreshCompleted, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1081]'
+                  - table [ref=f1e1083]:
+                    - rowgroup [ref=f1e1084]:
+                      - row [ref=f1e1085]:
+                        - gridcell "07:08:00.949" [ref=f1e1086]
+                        - gridcell "WinStudio" [ref=f1e1088]
+                        - gridcell "Diagnostics" [ref=f1e1090]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormLoadBoundValues, starting processing, IDO collection object" [ref=f1e1092]'
+                  - table [ref=f1e1094]:
+                    - rowgroup [ref=f1e1095]:
+                      - row [ref=f1e1096]:
+                        - gridcell "07:08:00.949" [ref=f1e1097]
+                        - gridcell "WinStudio" [ref=f1e1099]
+                        - gridcell "Diagnostics" [ref=f1e1101]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormLoadDerivedValues, starting processing, IDO collection object" [ref=f1e1103]'
+                  - table [ref=f1e1105]:
+                    - rowgroup [ref=f1e1106]:
+                      - row [ref=f1e1107]:
+                        - gridcell "07:08:00.949" [ref=f1e1108]
+                        - gridcell "WinStudio" [ref=f1e1110]
+                        - gridcell "Diagnostics" [ref=f1e1112]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormLoadDerivedValues, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1114]'
+                  - table [ref=f1e1116]:
+                    - rowgroup [ref=f1e1117]:
+                      - row [ref=f1e1118]:
+                        - gridcell "07:08:00.949" [ref=f1e1119]
+                        - gridcell "WinStudio" [ref=f1e1121]
+                        - gridcell "Diagnostics" [ref=f1e1123]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormLoadBoundValues, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1125]'
+                  - table [ref=f1e1127]:
+                    - rowgroup [ref=f1e1128]:
+                      - row [ref=f1e1129]:
+                        - gridcell "07:08:00.949" [ref=f1e1130]
+                        - gridcell "WinStudio" [ref=f1e1132]
+                        - gridcell "Diagnostics" [ref=f1e1134]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormRefreshCompleted, starting processing, IDO collection object" [ref=f1e1136]'
+                  - table [ref=f1e1138]:
+                    - rowgroup [ref=f1e1139]:
+                      - row [ref=f1e1140]:
+                        - gridcell "07:08:00.949" [ref=f1e1141]
+                        - gridcell "WinStudio" [ref=f1e1143]
+                        - gridcell "Diagnostics" [ref=f1e1145]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormRefreshCompleted, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1147]'
+                  - table [ref=f1e1149]:
+                    - rowgroup [ref=f1e1150]:
+                      - row [ref=f1e1151]:
+                        - gridcell "07:08:00.949" [ref=f1e1152]
+                        - gridcell "WinStudio" [ref=f1e1154]
+                        - gridcell "Diagnostics" [ref=f1e1156]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormRefresh, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e1158]'
+                  - table [ref=f1e1160]:
+                    - rowgroup [ref=f1e1161]:
+                      - row [ref=f1e1162]:
+                        - gridcell "07:08:44.703" [ref=f1e1163]
+                        - gridcell "WinStudio" [ref=f1e1165]
+                        - gridcell "Diagnostics" [ref=f1e1167]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from to -1, VariableType=Form Persistent=False" [ref=f1e1169]'
+                  - table [ref=f1e1171]:
+                    - rowgroup [ref=f1e1172]:
+                      - row [ref=f1e1173]:
+                        - gridcell "07:08:44.703" [ref=f1e1174]
+                        - gridcell "WinStudio" [ref=f1e1176]
+                        - gridcell "Diagnostics" [ref=f1e1178]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from to 0, VariableType=Form Persistent=False" [ref=f1e1180]'
+                  - table [ref=f1e1182]:
+                    - rowgroup [ref=f1e1183]:
+                      - row [ref=f1e1184]:
+                        - gridcell "07:08:44.703" [ref=f1e1185]
+                        - gridcell "WinStudio" [ref=f1e1187]
+                        - gridcell "Diagnostics" [ref=f1e1189]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1191]'
+                  - table [ref=f1e1193]:
+                    - rowgroup [ref=f1e1194]:
+                      - row [ref=f1e1195]:
+                        - gridcell "07:08:44.703" [ref=f1e1196]
+                        - gridcell "WinStudio" [ref=f1e1198]
+                        - gridcell "Diagnostics" [ref=f1e1200]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 0 to 1, VariableType=Form Persistent=False" [ref=f1e1202]'
+                  - table [ref=f1e1204]:
+                    - rowgroup [ref=f1e1205]:
+                      - row [ref=f1e1206]:
+                        - gridcell "07:08:44.703" [ref=f1e1207]
+                        - gridcell "WinStudio" [ref=f1e1209]
+                        - gridcell "Diagnostics" [ref=f1e1211]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1213]'
+                  - table [ref=f1e1215]:
+                    - rowgroup [ref=f1e1216]:
+                      - row [ref=f1e1217]:
+                        - gridcell "07:08:44.703" [ref=f1e1218]
+                        - gridcell "WinStudio" [ref=f1e1220]
+                        - gridcell "Diagnostics" [ref=f1e1222]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 1 to 1, VariableType=Form Persistent=False" [ref=f1e1224]'
+                  - table [ref=f1e1226]:
+                    - rowgroup [ref=f1e1227]:
+                      - row [ref=f1e1228]:
+                        - gridcell "07:08:44.703" [ref=f1e1229]
+                        - gridcell "WinStudio" [ref=f1e1231]
+                        - gridcell "Diagnostics" [ref=f1e1233]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1235]'
+                  - table [ref=f1e1237]:
+                    - rowgroup [ref=f1e1238]:
+                      - row [ref=f1e1239]:
+                        - gridcell "07:08:44.703" [ref=f1e1240]
+                        - gridcell "WinStudio" [ref=f1e1242]
+                        - gridcell "Diagnostics" [ref=f1e1244]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 1 to 2, VariableType=Form Persistent=False" [ref=f1e1246]'
+                  - table [ref=f1e1248]:
+                    - rowgroup [ref=f1e1249]:
+                      - row [ref=f1e1250]:
+                        - gridcell "07:08:44.703" [ref=f1e1251]
+                        - gridcell "WinStudio" [ref=f1e1253]
+                        - gridcell "Diagnostics" [ref=f1e1255]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1257]'
+                  - table [ref=f1e1259]:
+                    - rowgroup [ref=f1e1260]:
+                      - row [ref=f1e1261]:
+                        - gridcell "07:08:44.703" [ref=f1e1262]
+                        - gridcell "WinStudio" [ref=f1e1264]
+                        - gridcell "Diagnostics" [ref=f1e1266]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 2 to 2, VariableType=Form Persistent=False" [ref=f1e1268]'
+                  - table [ref=f1e1270]:
+                    - rowgroup [ref=f1e1271]:
+                      - row [ref=f1e1272]:
+                        - gridcell "07:08:44.703" [ref=f1e1273]
+                        - gridcell "WinStudio" [ref=f1e1275]
+                        - gridcell "Diagnostics" [ref=f1e1277]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1279]'
+                  - table [ref=f1e1281]:
+                    - rowgroup [ref=f1e1282]:
+                      - row [ref=f1e1283]:
+                        - gridcell "07:08:44.703" [ref=f1e1284]
+                        - gridcell "WinStudio" [ref=f1e1286]
+                        - gridcell "Diagnostics" [ref=f1e1288]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 2 to 3, VariableType=Form Persistent=False" [ref=f1e1290]'
+                  - table [ref=f1e1292]:
+                    - rowgroup [ref=f1e1293]:
+                      - row [ref=f1e1294]:
+                        - gridcell "07:08:44.703" [ref=f1e1295]
+                        - gridcell "WinStudio" [ref=f1e1297]
+                        - gridcell "Diagnostics" [ref=f1e1299]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1301]'
+                  - table [ref=f1e1303]:
+                    - rowgroup [ref=f1e1304]:
+                      - row [ref=f1e1305]:
+                        - gridcell "07:08:44.703" [ref=f1e1306]
+                        - gridcell "WinStudio" [ref=f1e1308]
+                        - gridcell "Diagnostics" [ref=f1e1310]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 3 to 3, VariableType=Form Persistent=False" [ref=f1e1312]'
+                  - table [ref=f1e1314]:
+                    - rowgroup [ref=f1e1315]:
+                      - row [ref=f1e1316]:
+                        - gridcell "07:08:44.703" [ref=f1e1317]
+                        - gridcell "WinStudio" [ref=f1e1319]
+                        - gridcell "Diagnostics" [ref=f1e1321]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1323]'
+                  - table [ref=f1e1325]:
+                    - rowgroup [ref=f1e1326]:
+                      - row [ref=f1e1327]:
+                        - gridcell "07:08:44.703" [ref=f1e1328]
+                        - gridcell "WinStudio" [ref=f1e1330]
+                        - gridcell "Diagnostics" [ref=f1e1332]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 3 to 4, VariableType=Form Persistent=False" [ref=f1e1334]'
+                  - table [ref=f1e1336]:
+                    - rowgroup [ref=f1e1337]:
+                      - row [ref=f1e1338]:
+                        - gridcell "07:08:44.703" [ref=f1e1339]
+                        - gridcell "WinStudio" [ref=f1e1341]
+                        - gridcell "Diagnostics" [ref=f1e1343]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1345]'
+                  - table [ref=f1e1347]:
+                    - rowgroup [ref=f1e1348]:
+                      - row [ref=f1e1349]:
+                        - gridcell "07:08:44.703" [ref=f1e1350]
+                        - gridcell "WinStudio" [ref=f1e1352]
+                        - gridcell "Diagnostics" [ref=f1e1354]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 4 to 4, VariableType=Form Persistent=False" [ref=f1e1356]'
+                  - table [ref=f1e1358]:
+                    - rowgroup [ref=f1e1359]:
+                      - row [ref=f1e1360]:
+                        - gridcell "07:08:44.703" [ref=f1e1361]
+                        - gridcell "WinStudio" [ref=f1e1363]
+                        - gridcell "Diagnostics" [ref=f1e1365]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e1367]'
+                  - table [ref=f1e1369]:
+                    - rowgroup [ref=f1e1370]:
+                      - row [ref=f1e1371]:
+                        - gridcell "07:08:44.703" [ref=f1e1372]
+                        - gridcell "WinStudio" [ref=f1e1374]
+                        - gridcell "Diagnostics" [ref=f1e1376]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 4 to 5, VariableType=Form Persistent=False" [ref=f1e1378]'
+        - region
+        - region [ref=f1e1380]:
+          - textbox [ref=f1e1385]: "&Next >"
+          - generic [ref=f1e1387]: en-US
+          - separator [ref=f1e1388]
+          - img "Powered by Infor" [ref=f1e1389]
+    - complementary "Smart Panel" [ref=e60]:
+      - generic [ref=e61]:
+        - button "Insights" [ref=e64] [cursor=pointer]
+        - button "Inbox" [ref=e67] [cursor=pointer]
+        - button "Smart Help" [ref=e70] [cursor=pointer]
+        - button "Popout Smart Panel" [ref=e73] [cursor=pointer]
