@@ -1,0 +1,751 @@
+- generic [ref=e5]:
+  - banner "Portal Top Navigation Bar" [ref=e6]:
+    - generic [ref=e8]:
+      - generic:
+        - generic [ref=e10]:
+          - generic:
+            - link "Home" [ref=e12] [cursor=pointer]
+            - button "Open navigation menu" [ref=e15] [cursor=pointer]
+        - generic [ref=e17]:
+          - tablist "Tabs" [ref=e18]:
+            - tab "System Administrator" [ref=e19] [cursor=pointer]:
+              - link "System Administrator" [ref=e20]
+              - button "Close tab System Administrator" [ref=e23]
+            - tab "Mongoose" [selected] [ref=e24] [cursor=pointer]:
+              - link "Mongoose" [ref=e25]
+              - button "Open tab menu" [ref=e28]
+              - button "Close tab Mongoose" [ref=e32]
+          - button "Tabs menu more" [ref=e36] [cursor=pointer]
+        - generic [ref=e38]:
+          - generic:
+            - generic [ref=e39]: DEM
+            - button "Health Notifications" [ref=e43] [cursor=pointer]
+            - button "User menu" [ref=e45] [cursor=pointer]
+            - button "Hide Smart Panel" [ref=e47] [cursor=pointer]
+    - generic:
+      - generic:
+        - generic: Infor OS Portal
+        - generic: 2026.10.01 (20260909-164316, 20260909-154143, 1063, 1583, 727)
+        - generic:
+          - generic:
+            - text: Copyright © 2026 Infor. All rights reserved. The word and design marks set forth herein are trademarks and/or registered trademarks of Infor and/or its affiliates and subsidiaries. All other trademarks listed herein are the property of their respective owners
+            - generic: www.infor.com
+            - text: .
+  - main [ref=e48]:
+    - iframe [active] [ref=e59]:
+      - generic [ref=f1e1]:
+        - banner [ref=f1e2]:
+          - heading "Infor Mongoose Application Development Framework" [level=1] [ref=f1e3]
+          - link "Skip to Main Content" [ref=f1e4] [cursor=pointer]:
+            - /url: "#formContainer"
+          - navigation [ref=f1e5]:
+            - button "Explorer" [ref=f1e6] [cursor=pointer]
+            - separator
+            - button "Form" [ref=f1e10] [cursor=pointer]
+            - separator
+            - button "Actions" [ref=f1e12] [cursor=pointer]
+            - separator
+            - button "Edit" [ref=f1e14] [cursor=pointer]
+            - separator
+            - button "View" [ref=f1e16] [cursor=pointer]
+            - separator
+            - button "Window" [ref=f1e18] [cursor=pointer]
+            - separator
+            - button "Help" [ref=f1e20] [cursor=pointer]
+            - button "anton.ramos@3mworks.com.ph | G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT" [ref=f1e22] [cursor=pointer]
+          - toolbar [ref=f1e24]:
+            - button "Open" [ref=f1e25] [cursor=pointer]:
+              - button "Open" [ref=f1e26]
+            - button "Save" [disabled] [ref=f1e28]:
+              - button "Save" [disabled]
+            - button "New" [ref=f1e29] [cursor=pointer]:
+              - button "New" [ref=f1e30]
+            - button "Delete" [ref=f1e32] [cursor=pointer]:
+              - button "Delete" [ref=f1e33]
+            - button "Refresh" [ref=f1e35] [cursor=pointer]:
+              - button "Refresh" [ref=f1e36]
+            - button "Filter in Place" [ref=f1e38] [cursor=pointer]:
+              - button "FiP" [ref=f1e39]
+            - button "Get More Rows" [disabled] [ref=f1e41]:
+              - button "Get More Rows" [disabled]
+            - button "System Notes" [disabled] [ref=f1e42]:
+              - button "System Notes" [disabled]
+            - button "Documents" [disabled] [ref=f1e45]:
+              - button "Documents" [disabled]
+            - button "Send email for the current object" [disabled] [ref=f1e48]:
+              - button "Send email for the current object" [disabled]
+            - button "Export To Excel" [ref=f1e51] [cursor=pointer]:
+              - button "Export To Excel" [ref=f1e52]
+            - button [ref=f1e54] [cursor=pointer]:
+              - button "Designer" [ref=f1e55]
+            - button "Designer" [ref=f1e57] [cursor=pointer]:
+              - button "Designer" [ref=f1e58]
+            - button "Help Current Form" [ref=f1e60] [cursor=pointer]:
+              - button "Help Current Form" [ref=f1e61]
+        - region [ref=f1e63]:
+          - heading "Explorer" [ref=f1e64]
+          - button "Collapse Panel"
+          - grid [ref=f1e65]:
+            - columnheader "Name"
+            - tree [ref=f1e70]:
+              - generic [ref=f1e71]:
+                - table [ref=f1e72]:
+                  - rowgroup [ref=f1e73]:
+                    - row [ref=f1e74]:
+                      - treeitem [ref=f1e75]:
+                        - treeitem "My Folders" [ref=f1e77]
+                - table [ref=f1e78]:
+                  - rowgroup [ref=f1e79]:
+                    - row [ref=f1e80]:
+                      - treeitem [ref=f1e81]:
+                        - treeitem "Master Explorer" [ref=f1e83]
+                - table [ref=f1e84]:
+                  - rowgroup [ref=f1e85]:
+                    - row [ref=f1e86]:
+                      - treeitem [ref=f1e87]:
+                        - treeitem "Public Folders" [ref=f1e89]
+                - table [ref=f1e90]:
+                  - rowgroup [ref=f1e91]:
+                    - row [ref=f1e92]:
+                      - treeitem [ref=f1e93]:
+                        - treeitem "User Folders" [ref=f1e95]
+        - region [ref=f1e96]:
+          - main [ref=f1e97]:
+            - tablist [ref=f1e98]:
+              - tab [ref=f1e99] [cursor=pointer]:
+                - heading "FX_Items" [level=2] [ref=f1e100]
+                - button "Close Panel FX_Items" [ref=f1e101]:
+                  - img "Close Panel FX_Items"
+              - tab [ref=f1e758] [cursor=pointer]:
+                - heading "Sql Tables" [level=2] [ref=f1e759]
+                - button "Close Panel Sql Tables" [ref=f1e760]:
+                  - img "Close Panel Sql Tables"
+              - tab [selected] [ref=f1e972] [cursor=pointer]:
+                - heading "Sql Columns" [level=2] [ref=f1e973]
+                - button "Close Panel Sql Columns" [ref=f1e974]:
+                  - img "Close Panel Sql Columns"
+            - tabpanel "Sql Columns" [ref=f1e975]:
+              - form [ref=f1e976]:
+                - generic [ref=f1e977]:
+                  - grid [ref=f1e978]:
+                    - grid [ref=f1e979]:
+                      - row [ref=f1e980]:
+                        - columnheader [ref=f1e981]
+                      - grid [ref=f1e986]:
+                        - generic [ref=f1e987]:
+                          - table [ref=f1e988]:
+                            - rowgroup [ref=f1e989]:
+                              - row [ref=f1e990]:
+                                - gridcell "1" [ref=f1e991]
+                          - table [ref=f1e994]:
+                            - rowgroup [ref=f1e995]:
+                              - row [ref=f1e996]:
+                                - gridcell "2" [ref=f1e997]
+                          - table [ref=f1e999]:
+                            - rowgroup [ref=f1e1000]:
+                              - row [ref=f1e1001]:
+                                - gridcell "3" [active] [selected] [ref=f1e1002]
+                          - table [ref=f1e1004]:
+                            - rowgroup [ref=f1e1005]:
+                              - row [ref=f1e1006]:
+                                - gridcell "4" [ref=f1e1007]
+                          - table [ref=f1e1009]:
+                            - rowgroup [ref=f1e1010]:
+                              - row [ref=f1e1011]:
+                                - gridcell "5" [ref=f1e1012]
+                          - table [ref=f1e1014]:
+                            - rowgroup [ref=f1e1015]:
+                              - row [ref=f1e1016]:
+                                - gridcell "6" [ref=f1e1017]
+                          - table [ref=f1e1019]:
+                            - rowgroup [ref=f1e1020]:
+                              - row [ref=f1e1021]:
+                                - gridcell "7" [ref=f1e1022]
+                          - table [ref=f1e1024]:
+                            - rowgroup [ref=f1e1025]:
+                              - row [ref=f1e1026]:
+                                - gridcell "8" [ref=f1e1027]
+                          - table [ref=f1e1029]:
+                            - rowgroup [ref=f1e1030]:
+                              - row [ref=f1e1031]:
+                                - gridcell "9" [ref=f1e1032]
+                          - table [ref=f1e1034]:
+                            - rowgroup [ref=f1e1035]:
+                              - row [ref=f1e1036]:
+                                - gridcell "10" [ref=f1e1037]
+                          - table [ref=f1e1039]:
+                            - rowgroup [ref=f1e1040]:
+                              - row [ref=f1e1041]:
+                                - gridcell "11" [ref=f1e1042]
+                    - grid [ref=f1e1044]:
+                      - row [ref=f1e1045]:
+                        - columnheader "* Column Name" [ref=f1e1046]
+                        - columnheader "Schema" [ref=f1e1052]
+                        - columnheader "Table Name" [ref=f1e1058]
+                        - columnheader "* Data Type" [ref=f1e1064]
+                        - columnheader "System Data Type" [ref=f1e1070]
+                        - columnheader "Length" [ref=f1e1076]
+                        - columnheader "Decimal Position" [ref=f1e1082]
+                        - columnheader "Default Value" [ref=f1e1088]
+                        - columnheader "Is Nullable" [ref=f1e1094]
+                        - columnheader "Primary Key" [ref=f1e1100]
+                        - columnheader "Key Sequence" [ref=f1e1106]
+                        - columnheader "Definition" [ref=f1e1112]
+                        - columnheader "Is Computed" [ref=f1e1118]
+                        - columnheader "Column Id" [ref=f1e1124]
+                      - grid [ref=f1e1130]:
+                        - generic [ref=f1e1131]:
+                          - table [ref=f1e1132]:
+                            - rowgroup [ref=f1e1133]:
+                              - row "FX_Item dbo FX_Items nvarchar nvarchar 20 checkbox not checked checkbox checked 1 checkbox not checked 2" [ref=f1e1134]:
+                                - gridcell "FX_Item" [ref=f1e1135]
+                                - gridcell "dbo" [ref=f1e1137]
+                                - gridcell "FX_Items" [ref=f1e1139]
+                                - gridcell "nvarchar" [ref=f1e1141]
+                                - gridcell "nvarchar" [ref=f1e1143]
+                                - gridcell "20" [ref=f1e1145]
+                                - gridcell [ref=f1e1147]
+                                - gridcell [ref=f1e1149]
+                                - checkbox [ref=f1e1151]:
+                                  - img "checkbox not checked" [ref=f1e1153]
+                                - checkbox [checked] [ref=f1e1154]:
+                                  - img "checkbox checked" [ref=f1e1156]
+                                - gridcell "1" [ref=f1e1157]
+                                - gridcell [ref=f1e1159]
+                                - checkbox [ref=f1e1161]:
+                                  - img "checkbox not checked" [ref=f1e1163]
+                                - gridcell "2" [ref=f1e1164]
+                          - table [ref=f1e1166]:
+                            - rowgroup [ref=f1e1167]:
+                              - row "FX_Description dbo FX_Items nvarchar nvarchar 150 checkbox checked checkbox not checked checkbox not checked 3" [ref=f1e1168]:
+                                - gridcell "FX_Description" [ref=f1e1169]
+                                - gridcell "dbo" [ref=f1e1171]
+                                - gridcell "FX_Items" [ref=f1e1173]
+                                - gridcell "nvarchar" [ref=f1e1175]
+                                - gridcell "nvarchar" [ref=f1e1177]
+                                - gridcell "150" [ref=f1e1179]
+                                - gridcell [ref=f1e1181]
+                                - gridcell [ref=f1e1183]
+                                - checkbox [checked] [ref=f1e1185]:
+                                  - img "checkbox checked" [ref=f1e1187]
+                                - checkbox [ref=f1e1188]:
+                                  - img "checkbox not checked" [ref=f1e1190]
+                                - gridcell [ref=f1e1191]
+                                - gridcell [ref=f1e1193]
+                                - checkbox [ref=f1e1195]:
+                                  - img "checkbox not checked" [ref=f1e1197]
+                                - gridcell "3" [ref=f1e1198]
+                          - table [ref=f1e1587]:
+                            - rowgroup [ref=f1e1588]:
+                              - row "FX_Cost dbo FX_Items decimal decimal 18 2 checkbox checked checkbox not checked checkbox not checked 4" [ref=f1e1589]:
+                                - gridcell "FX_Cost" [ref=f1e1590]
+                                - gridcell "dbo" [ref=f1e1592]
+                                - gridcell "FX_Items" [ref=f1e1594]
+                                - gridcell "decimal" [ref=f1e1596]
+                                - gridcell "decimal" [ref=f1e1598]
+                                - gridcell "18" [ref=f1e1600]
+                                - gridcell "2" [ref=f1e1602]
+                                - gridcell [ref=f1e1604]
+                                - checkbox [checked] [ref=f1e1606]:
+                                  - img "checkbox checked" [ref=f1e1608]
+                                - checkbox [ref=f1e1609]:
+                                  - img "checkbox not checked" [ref=f1e1611]
+                                - gridcell [ref=f1e1612]
+                                - gridcell [ref=f1e1614]
+                                - checkbox [ref=f1e1616]:
+                                  - img "checkbox not checked" [ref=f1e1618]
+                                - gridcell "4" [ref=f1e1619]
+                          - table [ref=f1e1207]:
+                            - rowgroup [ref=f1e1208]:
+                              - row "FX_UM dbo FX_Items nvarchar nvarchar 10 checkbox checked checkbox not checked" [ref=f1e1466]:
+                                - gridcell "FX_UM" [ref=f1e1210]
+                                - gridcell "dbo" [ref=f1e1212]
+                                - gridcell "FX_Items" [ref=f1e1383]
+                                - gridcell "nvarchar" [ref=f1e1412]
+                                - gridcell "nvarchar" [ref=f1e1414]
+                                - gridcell "10" [ref=f1e1467]
+                                - gridcell [ref=f1e1469]
+                                - gridcell [ref=f1e1471]
+                                - checkbox [checked] [ref=f1e1473]:
+                                  - img "checkbox checked" [ref=f1e1475]
+                                - checkbox [ref=f1e1476]:
+                                  - img "checkbox not checked" [ref=f1e1478]
+                                - gridcell [ref=f1e1479]
+                                - cell
+                          - table [ref=f1e1214]:
+                            - rowgroup [ref=f1e1215]:
+                              - row "CreatedBy dbo FX_Items UsernameType nvarchar 128 suser_sname() checkbox not checked checkbox not checked" [ref=f1e1481]:
+                                - gridcell "CreatedBy" [ref=f1e1217]
+                                - gridcell "dbo" [ref=f1e1219]
+                                - gridcell "FX_Items" [ref=f1e1386]
+                                - gridcell "UsernameType" [ref=f1e1417]
+                                - gridcell "nvarchar" [ref=f1e1419]
+                                - gridcell "128" [ref=f1e1482]
+                                - gridcell [ref=f1e1484]
+                                - gridcell "suser_sname()" [ref=f1e1486]
+                                - checkbox [ref=f1e1488]:
+                                  - img "checkbox not checked" [ref=f1e1490]
+                                - checkbox [ref=f1e1491]:
+                                  - img "checkbox not checked" [ref=f1e1493]
+                                - gridcell [ref=f1e1494]
+                                - cell
+                          - table [ref=f1e1221]:
+                            - rowgroup [ref=f1e1222]:
+                              - row "UpdatedBy dbo FX_Items UsernameType nvarchar 128 suser_sname() checkbox not checked checkbox not checked" [ref=f1e1496]:
+                                - gridcell "UpdatedBy" [ref=f1e1224]
+                                - gridcell "dbo" [ref=f1e1226]
+                                - gridcell "FX_Items" [ref=f1e1389]
+                                - gridcell "UsernameType" [ref=f1e1422]
+                                - gridcell "nvarchar" [ref=f1e1424]
+                                - gridcell "128" [ref=f1e1497]
+                                - gridcell [ref=f1e1499]
+                                - gridcell "suser_sname()" [ref=f1e1501]
+                                - checkbox [ref=f1e1503]:
+                                  - img "checkbox not checked" [ref=f1e1505]
+                                - checkbox [ref=f1e1506]:
+                                  - img "checkbox not checked" [ref=f1e1508]
+                                - gridcell [ref=f1e1509]
+                                - cell
+                          - table [ref=f1e1228]:
+                            - rowgroup [ref=f1e1229]:
+                              - row "CreateDate dbo FX_Items CurrentDateType datetime getdate() checkbox not checked checkbox not checked" [ref=f1e1511]:
+                                - gridcell "CreateDate" [ref=f1e1231]
+                                - gridcell "dbo" [ref=f1e1233]
+                                - gridcell "FX_Items" [ref=f1e1392]
+                                - gridcell "CurrentDateType" [ref=f1e1427]
+                                - gridcell "datetime" [ref=f1e1429]
+                                - gridcell [ref=f1e1512]
+                                - gridcell [ref=f1e1514]
+                                - gridcell "getdate()" [ref=f1e1516]
+                                - checkbox [ref=f1e1518]:
+                                  - img "checkbox not checked" [ref=f1e1520]
+                                - checkbox [ref=f1e1521]:
+                                  - img "checkbox not checked" [ref=f1e1523]
+                                - gridcell [ref=f1e1524]
+                                - cell
+                          - table [ref=f1e1235]:
+                            - rowgroup [ref=f1e1236]:
+                              - row "RecordDate dbo FX_Items CurrentDateType datetime getdate() checkbox not checked checkbox not checked" [ref=f1e1526]:
+                                - gridcell "RecordDate" [ref=f1e1238]
+                                - gridcell "dbo" [ref=f1e1240]
+                                - gridcell "FX_Items" [ref=f1e1395]
+                                - gridcell "CurrentDateType" [ref=f1e1432]
+                                - gridcell "datetime" [ref=f1e1434]
+                                - gridcell [ref=f1e1527]
+                                - gridcell [ref=f1e1529]
+                                - gridcell "getdate()" [ref=f1e1531]
+                                - checkbox [ref=f1e1533]:
+                                  - img "checkbox not checked" [ref=f1e1535]
+                                - checkbox [ref=f1e1536]:
+                                  - img "checkbox not checked" [ref=f1e1538]
+                                - gridcell [ref=f1e1539]
+                                - cell
+                          - table [ref=f1e1242]:
+                            - rowgroup [ref=f1e1243]:
+                              - row "RowPointer dbo FX_Items RowPointerType uniqueidentifier newid() checkbox not checked checkbox not checked" [ref=f1e1541]:
+                                - gridcell "RowPointer" [ref=f1e1245]
+                                - gridcell "dbo" [ref=f1e1247]
+                                - gridcell "FX_Items" [ref=f1e1398]
+                                - gridcell "RowPointerType" [ref=f1e1437]
+                                - gridcell "uniqueidentifier" [ref=f1e1439]
+                                - gridcell [ref=f1e1542]
+                                - gridcell [ref=f1e1544]
+                                - gridcell "newid()" [ref=f1e1546]
+                                - checkbox [ref=f1e1548]:
+                                  - img "checkbox not checked" [ref=f1e1550]
+                                - checkbox [ref=f1e1551]:
+                                  - img "checkbox not checked" [ref=f1e1553]
+                                - gridcell [ref=f1e1554]
+                                - cell
+                          - table [ref=f1e1249]:
+                            - rowgroup [ref=f1e1250]:
+                              - row "NoteExistsFlag dbo FX_Items FlagNyType tinyint (0) checkbox not checked checkbox not checked" [ref=f1e1556]:
+                                - gridcell "NoteExistsFlag" [ref=f1e1252]
+                                - gridcell "dbo" [ref=f1e1254]
+                                - gridcell "FX_Items" [ref=f1e1401]
+                                - gridcell "FlagNyType" [ref=f1e1442]
+                                - gridcell "tinyint" [ref=f1e1444]
+                                - gridcell [ref=f1e1557]
+                                - gridcell [ref=f1e1559]
+                                - gridcell "(0)" [ref=f1e1561]
+                                - checkbox [ref=f1e1563]:
+                                  - img "checkbox not checked" [ref=f1e1565]
+                                - checkbox [ref=f1e1566]:
+                                  - img "checkbox not checked" [ref=f1e1568]
+                                - gridcell [ref=f1e1569]
+                                - cell
+                          - table [ref=f1e1256]:
+                            - rowgroup [ref=f1e1257]:
+                              - row "InWorkflow dbo FX_Items FlagNyType tinyint (0) checkbox not checked checkbox not checked" [ref=f1e1571]:
+                                - gridcell "InWorkflow" [ref=f1e1259]
+                                - gridcell "dbo" [ref=f1e1261]
+                                - gridcell "FX_Items" [ref=f1e1404]
+                                - gridcell "FlagNyType" [ref=f1e1447]
+                                - gridcell "tinyint" [ref=f1e1449]
+                                - gridcell [ref=f1e1572]
+                                - gridcell [ref=f1e1574]
+                                - gridcell "(0)" [ref=f1e1576]
+                                - checkbox [ref=f1e1578]:
+                                  - img "checkbox not checked" [ref=f1e1580]
+                                - checkbox [ref=f1e1581]:
+                                  - img "checkbox not checked" [ref=f1e1583]
+                                - gridcell [ref=f1e1584]
+                                - cell
+                  - separator [ref=f1e1263]: ⁞
+                  - group [ref=f1e1264]:
+                    - generic [ref=f1e1267]:
+                      - generic [ref=f1e1268]:
+                        - text: "*"
+                        - generic [ref=f1e1269]: "Column Name:"
+                        - generic [ref=f1e1272]:
+                          - combobox "Column Name:" [ref=f1e1274]: FX_Cost
+                          - button "Open" [ref=f1e1275] [cursor=pointer]
+                      - generic [ref=f1e1276]:
+                        - generic [ref=f1e1277]: "Schema:"
+                        - combobox "Schema:" [ref=f1e1282]: dbo
+                      - generic [ref=f1e1283]:
+                        - generic [ref=f1e1284]: "Table Name:"
+                        - combobox "Table Name:" [ref=f1e1289]: FX_Items
+                      - generic [ref=f1e1290]: "Column Name:"
+                      - generic [ref=f1e1292]: "Schema:"
+                      - generic [ref=f1e1294]: "Table Name:"
+                  - group [ref=f1e1296]:
+                    - generic [ref=f1e1299]:
+                      - generic [ref=f1e1300]:
+                        - generic [ref=f1e1301]: "Column Id:"
+                        - textbox "Column Id:" [ref=f1e1306]: "4"
+                      - generic [ref=f1e1307]: "Column Id:"
+                      - generic [ref=f1e1309]:
+                        - text: "*"
+                        - generic [ref=f1e1310]: "Data Type:"
+                        - generic [ref=f1e1313]:
+                          - combobox "Data Type:" [ref=f1e1315]: decimal
+                          - button "Open" [ref=f1e1316] [cursor=pointer]
+                      - generic [ref=f1e1318]:
+                        - checkbox "Is Nullable" [checked] [ref=f1e1319]
+                        - generic [ref=f1e1321]: Is Nullable
+                      - generic [ref=f1e1322]:
+                        - generic [ref=f1e1323]: "System Data Type:"
+                        - textbox "System Data Type:" [ref=f1e1328]: decimal
+                      - generic [ref=f1e1330]:
+                        - checkbox "Primary Key" [disabled] [ref=f1e1331]
+                        - generic [ref=f1e1333]: Primary Key
+                      - generic [ref=f1e1334]:
+                        - generic [ref=f1e1335]: "Length:"
+                        - textbox "Length:" [ref=f1e1340]: "18"
+                      - generic [ref=f1e1341]:
+                        - generic [ref=f1e1342]: "Decimal Position:"
+                        - textbox "Decimal Position:" [ref=f1e1347]: "2"
+                      - generic [ref=f1e1348]:
+                        - generic [ref=f1e1349]: "Default Value:"
+                        - textbox "Default Value:" [ref=f1e1354]
+                      - generic [ref=f1e1355]:
+                        - generic [ref=f1e1356]: "Key Sequence:"
+                        - textbox "Key Sequence:" [ref=f1e1361]
+                      - generic [ref=f1e1363]:
+                        - checkbox "Is Computed" [disabled] [ref=f1e1364]
+                        - generic [ref=f1e1366]: Is Computed
+                      - generic [ref=f1e1367]: "Data Type:"
+                      - generic [ref=f1e1369]: "System Data Type:"
+                      - generic [ref=f1e1371]: "Length:"
+                      - generic [ref=f1e1373]: "Decimal Position:"
+                      - generic [ref=f1e1375]: "Default Value:"
+                      - generic [ref=f1e1377]: "Key Sequence:"
+          - separator [ref=f1e233]: ⁞
+          - generic [ref=f1e234]:
+            - generic [ref=f1e235]: DevTools
+            - button "Collapse Panel" [ref=f1e236] [cursor=pointer]
+            - toolbar [ref=f1e237]:
+              - button [disabled]
+              - button [ref=f1e238] [cursor=pointer]
+              - button [ref=f1e239] [cursor=pointer]
+              - button [ref=f1e240] [cursor=pointer]
+              - textbox [ref=f1e245]:
+                - /placeholder: Search
+              - button [ref=f1e246] [cursor=pointer]
+              - button [ref=f1e247] [cursor=pointer]
+              - button [disabled]
+              - button [disabled]
+              - button [ref=f1e248] [cursor=pointer]
+              - button [ref=f1e249] [cursor=pointer]
+            - tablist [ref=f1e250]:
+              - tab [ref=f1e251] [cursor=pointer]:
+                - heading "Logs" [level=2] [ref=f1e252]
+              - tab [ref=f1e253] [cursor=pointer]:
+                - heading "Variables" [level=2] [ref=f1e254]
+              - tab [selected] [ref=f1e255] [cursor=pointer]:
+                - heading "Log Messages" [level=2] [ref=f1e256]
+              - tab [ref=f1e257] [cursor=pointer]:
+                - heading "Console" [level=2] [ref=f1e258]
+            - tabpanel "Log Messages" [ref=f1e259]:
+              - row [ref=f1e260]:
+                - columnheader "Time" [ref=f1e261]
+                - columnheader "Source" [ref=f1e266]
+                - columnheader "Type" [ref=f1e271]
+                - columnheader "Message" [ref=f1e276]
+              - grid [ref=f1e281]:
+                - generic [ref=f1e282]:
+                  - table [ref=f1e283]:
+                    - rowgroup [ref=f1e284]:
+                      - row [ref=f1e285]:
+                        - gridcell "07:08:00.855" [ref=f1e286]
+                        - gridcell "WinStudio" [ref=f1e288]
+                        - gridcell "Diagnostics" [ref=f1e290]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormRefresh, starting processing, IDO collection object" [ref=f1e292]'
+                  - table [ref=f1e294]:
+                    - rowgroup [ref=f1e295]:
+                      - row [ref=f1e296]:
+                        - gridcell "07:08:00.855" [ref=f1e297]
+                        - gridcell "WinStudio" [ref=f1e299]
+                        - gridcell "Diagnostics" [ref=f1e301]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormGetBoundValues, starting processing, IDO collection object" [ref=f1e303]'
+                  - table [ref=f1e305]:
+                    - rowgroup [ref=f1e306]:
+                      - row [ref=f1e307]:
+                        - gridcell "07:08:00.855" [ref=f1e308]
+                        - gridcell "WinStudio" [ref=f1e310]
+                        - gridcell "Diagnostics" [ref=f1e312]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormGetBoundValues, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e314]'
+                  - table [ref=f1e316]:
+                    - rowgroup [ref=f1e317]:
+                      - row [ref=f1e318]:
+                        - gridcell "07:08:00.855" [ref=f1e319]
+                        - gridcell "WinStudio" [ref=f1e321]
+                        - gridcell "Diagnostics" [ref=f1e323]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectRefresh, starting processing, IDO collection object" [ref=f1e325]'
+                  - table [ref=f1e327]:
+                    - rowgroup [ref=f1e328]:
+                      - row [ref=f1e329]:
+                        - gridcell "07:08:00.855" [ref=f1e330]
+                        - gridcell "WinStudio" [ref=f1e332]
+                        - gridcell "Diagnostics" [ref=f1e334]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectRefresh, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e336]'
+                  - table [ref=f1e338]:
+                    - rowgroup [ref=f1e339]:
+                      - row [ref=f1e340]:
+                        - gridcell "07:08:00.949" [ref=f1e341]
+                        - gridcell "WinStudio" [ref=f1e343]
+                        - gridcell "Diagnostics" [ref=f1e345]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectSelectCurrentCompleted, starting processing, IDO collection object" [ref=f1e347]'
+                  - table [ref=f1e349]:
+                    - rowgroup [ref=f1e350]:
+                      - row [ref=f1e351]:
+                        - gridcell "07:08:00.949" [ref=f1e352]
+                        - gridcell "WinStudio" [ref=f1e354]
+                        - gridcell "Diagnostics" [ref=f1e356]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectSelectCurrentCompleted, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e358]'
+                  - table [ref=f1e360]:
+                    - rowgroup [ref=f1e361]:
+                      - row [ref=f1e362]:
+                        - gridcell "07:08:00.949" [ref=f1e363]
+                        - gridcell "WinStudio" [ref=f1e365]
+                        - gridcell "Diagnostics" [ref=f1e367]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectRefreshCompleted, starting processing, IDO collection object" [ref=f1e369]'
+                  - table [ref=f1e371]:
+                    - rowgroup [ref=f1e372]:
+                      - row [ref=f1e373]:
+                        - gridcell "07:08:00.949" [ref=f1e374]
+                        - gridcell "WinStudio" [ref=f1e376]
+                        - gridcell "Diagnostics" [ref=f1e378]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdObjectRefreshCompleted, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e380]'
+                  - table [ref=f1e382]:
+                    - rowgroup [ref=f1e383]:
+                      - row [ref=f1e384]:
+                        - gridcell "07:08:00.949" [ref=f1e385]
+                        - gridcell "WinStudio" [ref=f1e387]
+                        - gridcell "Diagnostics" [ref=f1e389]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormLoadBoundValues, starting processing, IDO collection object" [ref=f1e391]'
+                  - table [ref=f1e393]:
+                    - rowgroup [ref=f1e394]:
+                      - row [ref=f1e395]:
+                        - gridcell "07:08:00.949" [ref=f1e396]
+                        - gridcell "WinStudio" [ref=f1e398]
+                        - gridcell "Diagnostics" [ref=f1e400]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormLoadDerivedValues, starting processing, IDO collection object" [ref=f1e402]'
+                  - table [ref=f1e404]:
+                    - rowgroup [ref=f1e405]:
+                      - row [ref=f1e406]:
+                        - gridcell "07:08:00.949" [ref=f1e407]
+                        - gridcell "WinStudio" [ref=f1e409]
+                        - gridcell "Diagnostics" [ref=f1e411]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormLoadDerivedValues, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e413]'
+                  - table [ref=f1e415]:
+                    - rowgroup [ref=f1e416]:
+                      - row [ref=f1e417]:
+                        - gridcell "07:08:00.949" [ref=f1e418]
+                        - gridcell "WinStudio" [ref=f1e420]
+                        - gridcell "Diagnostics" [ref=f1e422]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormLoadBoundValues, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e424]'
+                  - table [ref=f1e426]:
+                    - rowgroup [ref=f1e427]:
+                      - row [ref=f1e428]:
+                        - gridcell "07:08:00.949" [ref=f1e429]
+                        - gridcell "WinStudio" [ref=f1e431]
+                        - gridcell "Diagnostics" [ref=f1e433]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormRefreshCompleted, starting processing, IDO collection object" [ref=f1e435]'
+                  - table [ref=f1e437]:
+                    - rowgroup [ref=f1e438]:
+                      - row [ref=f1e439]:
+                        - gridcell "07:08:00.949" [ref=f1e440]
+                        - gridcell "WinStudio" [ref=f1e442]
+                        - gridcell "Diagnostics" [ref=f1e444]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormRefreshCompleted, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e446]'
+                  - table [ref=f1e448]:
+                    - rowgroup [ref=f1e449]:
+                      - row [ref=f1e450]:
+                        - gridcell "07:08:00.949" [ref=f1e451]
+                        - gridcell "WinStudio" [ref=f1e453]
+                        - gridcell "Diagnostics" [ref=f1e455]
+                        - 'gridcell "FormEvent (FX_Items): Event name StdFormRefresh, result 0, num handlers for event 0, num executed 0, default handler ignored False, IDO collection object" [ref=f1e457]'
+                  - table [ref=f1e459]:
+                    - rowgroup [ref=f1e460]:
+                      - row [ref=f1e461]:
+                        - gridcell "07:08:44.703" [ref=f1e462]
+                        - gridcell "WinStudio" [ref=f1e464]
+                        - gridcell "Diagnostics" [ref=f1e466]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from to -1, VariableType=Form Persistent=False" [ref=f1e468]'
+                  - table [ref=f1e470]:
+                    - rowgroup [ref=f1e471]:
+                      - row [ref=f1e472]:
+                        - gridcell "07:08:44.703" [ref=f1e473]
+                        - gridcell "WinStudio" [ref=f1e475]
+                        - gridcell "Diagnostics" [ref=f1e477]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from to 0, VariableType=Form Persistent=False" [ref=f1e479]'
+                  - table [ref=f1e481]:
+                    - rowgroup [ref=f1e482]:
+                      - row [ref=f1e483]:
+                        - gridcell "07:08:44.703" [ref=f1e484]
+                        - gridcell "WinStudio" [ref=f1e486]
+                        - gridcell "Diagnostics" [ref=f1e488]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e490]'
+                  - table [ref=f1e492]:
+                    - rowgroup [ref=f1e493]:
+                      - row [ref=f1e494]:
+                        - gridcell "07:08:44.703" [ref=f1e495]
+                        - gridcell "WinStudio" [ref=f1e497]
+                        - gridcell "Diagnostics" [ref=f1e499]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 0 to 1, VariableType=Form Persistent=False" [ref=f1e501]'
+                  - table [ref=f1e503]:
+                    - rowgroup [ref=f1e504]:
+                      - row [ref=f1e505]:
+                        - gridcell "07:08:44.703" [ref=f1e506]
+                        - gridcell "WinStudio" [ref=f1e508]
+                        - gridcell "Diagnostics" [ref=f1e510]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e512]'
+                  - table [ref=f1e514]:
+                    - rowgroup [ref=f1e515]:
+                      - row [ref=f1e516]:
+                        - gridcell "07:08:44.703" [ref=f1e517]
+                        - gridcell "WinStudio" [ref=f1e519]
+                        - gridcell "Diagnostics" [ref=f1e521]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 1 to 1, VariableType=Form Persistent=False" [ref=f1e523]'
+                  - table [ref=f1e525]:
+                    - rowgroup [ref=f1e526]:
+                      - row [ref=f1e527]:
+                        - gridcell "07:08:44.703" [ref=f1e528]
+                        - gridcell "WinStudio" [ref=f1e530]
+                        - gridcell "Diagnostics" [ref=f1e532]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e534]'
+                  - table [ref=f1e536]:
+                    - rowgroup [ref=f1e537]:
+                      - row [ref=f1e538]:
+                        - gridcell "07:08:44.703" [ref=f1e539]
+                        - gridcell "WinStudio" [ref=f1e541]
+                        - gridcell "Diagnostics" [ref=f1e543]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 1 to 2, VariableType=Form Persistent=False" [ref=f1e545]'
+                  - table [ref=f1e547]:
+                    - rowgroup [ref=f1e548]:
+                      - row [ref=f1e549]:
+                        - gridcell "07:08:44.703" [ref=f1e550]
+                        - gridcell "WinStudio" [ref=f1e552]
+                        - gridcell "Diagnostics" [ref=f1e554]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e556]'
+                  - table [ref=f1e558]:
+                    - rowgroup [ref=f1e559]:
+                      - row [ref=f1e560]:
+                        - gridcell "07:08:44.703" [ref=f1e561]
+                        - gridcell "WinStudio" [ref=f1e563]
+                        - gridcell "Diagnostics" [ref=f1e565]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 2 to 2, VariableType=Form Persistent=False" [ref=f1e567]'
+                  - table [ref=f1e569]:
+                    - rowgroup [ref=f1e570]:
+                      - row [ref=f1e571]:
+                        - gridcell "07:08:44.703" [ref=f1e572]
+                        - gridcell "WinStudio" [ref=f1e574]
+                        - gridcell "Diagnostics" [ref=f1e576]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e578]'
+                  - table [ref=f1e580]:
+                    - rowgroup [ref=f1e581]:
+                      - row [ref=f1e582]:
+                        - gridcell "07:08:44.703" [ref=f1e583]
+                        - gridcell "WinStudio" [ref=f1e585]
+                        - gridcell "Diagnostics" [ref=f1e587]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 2 to 3, VariableType=Form Persistent=False" [ref=f1e589]'
+                  - table [ref=f1e591]:
+                    - rowgroup [ref=f1e592]:
+                      - row [ref=f1e593]:
+                        - gridcell "07:08:44.703" [ref=f1e594]
+                        - gridcell "WinStudio" [ref=f1e596]
+                        - gridcell "Diagnostics" [ref=f1e598]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e600]'
+                  - table [ref=f1e602]:
+                    - rowgroup [ref=f1e603]:
+                      - row [ref=f1e604]:
+                        - gridcell "07:08:44.703" [ref=f1e605]
+                        - gridcell "WinStudio" [ref=f1e607]
+                        - gridcell "Diagnostics" [ref=f1e609]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 3 to 3, VariableType=Form Persistent=False" [ref=f1e611]'
+                  - table [ref=f1e613]:
+                    - rowgroup [ref=f1e614]:
+                      - row [ref=f1e615]:
+                        - gridcell "07:08:44.703" [ref=f1e616]
+                        - gridcell "WinStudio" [ref=f1e618]
+                        - gridcell "Diagnostics" [ref=f1e620]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e622]'
+                  - table [ref=f1e624]:
+                    - rowgroup [ref=f1e625]:
+                      - row [ref=f1e626]:
+                        - gridcell "07:08:44.703" [ref=f1e627]
+                        - gridcell "WinStudio" [ref=f1e629]
+                        - gridcell "Diagnostics" [ref=f1e631]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 3 to 4, VariableType=Form Persistent=False" [ref=f1e633]'
+                  - table [ref=f1e635]:
+                    - rowgroup [ref=f1e636]:
+                      - row [ref=f1e637]:
+                        - gridcell "07:08:44.703" [ref=f1e638]
+                        - gridcell "WinStudio" [ref=f1e640]
+                        - gridcell "Diagnostics" [ref=f1e642]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e644]'
+                  - table [ref=f1e646]:
+                    - rowgroup [ref=f1e647]:
+                      - row [ref=f1e648]:
+                        - gridcell "07:08:44.703" [ref=f1e649]
+                        - gridcell "WinStudio" [ref=f1e651]
+                        - gridcell "Diagnostics" [ref=f1e653]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 4 to 4, VariableType=Form Persistent=False" [ref=f1e655]'
+                  - table [ref=f1e657]:
+                    - rowgroup [ref=f1e658]:
+                      - row [ref=f1e659]:
+                        - gridcell "07:08:44.703" [ref=f1e660]
+                        - gridcell "WinStudio" [ref=f1e662]
+                        - gridcell "Diagnostics" [ref=f1e664]
+                        - 'gridcell "VarValue (StdCurFormPage): Changing from -1 to -1, VariableType=Form Persistent=False" [ref=f1e666]'
+                  - table [ref=f1e668]:
+                    - rowgroup [ref=f1e669]:
+                      - row [ref=f1e670]:
+                        - gridcell "07:08:44.703" [ref=f1e671]
+                        - gridcell "WinStudio" [ref=f1e673]
+                        - gridcell "Diagnostics" [ref=f1e675]
+                        - 'gridcell "VarValue (StdLastFormPage): Changing from 4 to 5, VariableType=Form Persistent=False" [ref=f1e677]'
+        - region
+        - region [ref=f1e679]:
+          - textbox [ref=f1e684]: (SQL Columns 3 of 11)
+          - generic [ref=f1e686]: en-US
+          - separator [ref=f1e687]
+          - img "Powered by Infor" [ref=f1e688]
+    - complementary "Smart Panel" [ref=e60]:
+      - generic [ref=e61]:
+        - button "Insights" [ref=e64] [cursor=pointer]
+        - button "Inbox" [ref=e67] [cursor=pointer]
+        - button "Smart Help" [ref=e70] [cursor=pointer]
+        - button "Popout Smart Panel" [ref=e73] [cursor=pointer]

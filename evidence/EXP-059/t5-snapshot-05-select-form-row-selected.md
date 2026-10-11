@@ -1,0 +1,34 @@
+- dialog "Select Form" [ref=f1e1495]:
+  - button "Close Window" [ref=f1e1497] [cursor=pointer]
+  - grid [ref=f1e1498]:
+    - row [ref=f1e1499]:
+      - columnheader "Caption" [ref=f1e1500]
+      - columnheader "Name" [ref=f1e1505]
+    - grid [ref=f1e1510]:
+      - generic [ref=f1e1511]:
+        - table [ref=f1e1512]:
+          - rowgroup [ref=f1e1513]:
+            - row [ref=f1e1514]:
+              - gridcell "Sql Tables" [active] [ref=f1e1515]
+              - gridcell "SqlTables" [ref=f1e1517]
+        - table [ref=f1e1519]:
+          - rowgroup [ref=f1e1520]:
+            - row [ref=f1e1521]:
+              - gridcell "Sql Tables Constraint" [ref=f1e1522]
+              - gridcell "SqlTablesPrimaryKey" [ref=f1e1524]
+  - generic [ref=f1e1526]: "Filter:"
+  - textbox [ref=f1e1531]: SqlTables
+  - generic [ref=f1e1532]: "Filter By:"
+  - generic [ref=f1e1535]:
+    - combobox [ref=f1e1537]: Name
+    - generic [ref=f1e1538] [cursor=pointer]
+  - generic [ref=f1e1540]:
+    - checkbox "Case Sensitive" [ref=f1e1541]
+    - generic [ref=f1e1543]: Case Sensitive
+  - generic [ref=f1e1545]:
+    - checkbox "Starts With" [ref=f1e1546]
+    - generic [ref=f1e1548]: Starts With
+  - toolbar [ref=f1e1549]:
+    - button "OK" [ref=f1e1550] [cursor=pointer]
+    - button "Cancel" [ref=f1e1552] [cursor=pointer]
+    - button "Help" [ref=f1e1554] [cursor=pointer]
