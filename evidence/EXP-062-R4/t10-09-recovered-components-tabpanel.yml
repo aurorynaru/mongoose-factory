@@ -1,0 +1,51 @@
+- tabpanel "Components" [ref=e1808]:
+  - grid [ref=e1809]:
+    - generic [ref=e1813]:
+      - textbox [ref=e1815]
+      - generic [ref=e1816] [cursor=pointer]
+    - button "Expand" [ref=e1817] [cursor=pointer]: 
+    - button "Collapse" [ref=e1818] [cursor=pointer]: 
+    - row [ref=e1819]:
+      - columnheader "Name" [ref=e1820]
+      - columnheader "Type" [ref=e1825]
+      - columnheader "Data Source" [ref=e1830]
+      - columnheader "Pane" [ref=e1835]
+      - columnheader "Container" [ref=e1840]
+      - columnheader "Tab" [ref=e1845]
+      - columnheader "Event to generate" [ref=e1850]
+      - columnheader "Component Class" [ref=e1855]
+      - columnheader "Enabled When" [ref=e1860]
+      - columnheader "Visible When" [ref=e1865]
+      - columnheader "Required When" [ref=e1870]
+    - tree [ref=e1875]:
+      - generic [ref=e1876]:
+        - table [ref=e1877]:
+          - rowgroup [ref=e1878]:
+            - row "Pane (00)" [ref=e1879]:
+              - treeitem "Pane (00)" [ref=e1880]
+              - gridcell [ref=e1882]
+              - gridcell [ref=e1884]
+              - gridcell [ref=e1886]
+              - gridcell [ref=e1888]
+              - gridcell [ref=e1890]
+              - gridcell [ref=e1892]
+              - gridcell [ref=e1894]
+              - gridcell [ref=e1896]
+              - gridcell [ref=e1898]
+              - gridcell [ref=e1900]
+        - table [ref=e1902]:
+          - rowgroup [ref=e1903]:
+            - row "Pane (01)" [ref=e1904]:
+              - treeitem "Pane (01)" [ref=e1905]
+              - gridcell [ref=e1907]
+              - gridcell [ref=e1909]
+              - gridcell [ref=e1911]
+              - gridcell [ref=e1913]
+              - gridcell [ref=e1915]
+              - gridcell [ref=e1917]
+              - gridcell [ref=e1919]
+              - gridcell [ref=e1921]
+              - gridcell [ref=e1923]
+              - gridcell [ref=e1925]
+    - toolbar [ref=e1927]:
+      - button "" [ref=e1928] [cursor=pointer]
