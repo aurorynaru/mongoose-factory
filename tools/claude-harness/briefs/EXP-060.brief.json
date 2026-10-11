@@ -1,0 +1,158 @@
+{
+  "experiment_id": "EXP-060",
+  "title": "EXP-060 — Hello World Part 4 Section 2: Create and Recover FX_Picture Binary IDO Property Class",
+  "record_path": "experiments/EXP-060-hello-world-part-4-section-2-create-and-recover-fx.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Using the existing authenticated Mongoose Web Client, open the native IDO Property Classes runtime maintenance Form through Open > Select Form. First verify through one native exact-name query that no property class named FX_Picture exists. If absent, create exactly one property class named FX_Picture with Data Type Binary, Length -1, Column Data Type varbinary selected through the native F2 lookup, and Binary Format PNG. Leave Base Class, Domain, and Label String ID blank. Record all visible properties and verify the complete configuration before performing exactly one ordinary toolbar Save. Capture the native Save response, the resulting clean state, and the target's checkout ownership. Do not perform any checkout-management action. Close the clean IDO Property Classes Form once, reopen it once using Open > Select Form, and perform exactly one native recovery query for FX_Picture. Verify that exactly one recovered property class retains all specified attributes, the blank optional fields, and its checkout state. Document decisive screenshots, native readbacks, action counts, repository confinement, and limitations. Classify the outcome as observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, hello-world-pt4.md Section 2 at 01:32–02:13, and relevant EXP-047-R2, EXP-048, EXP-049, and EXP-059 records before interacting with the browser.",
+      "Capture the starting repository state using available operator-provided information and distinguish pre-existing changes from EXP-060 documentation changes.",
+      "Use the operator-prepared authenticated Web Client session and native Open > Select Form route to open the IDO Property Classes runtime Form. Do not open its definition in Web Designer.",
+      "Verify the correct maintenance Form is open, usable, and free of session or authentication challenges before proceeding.",
+      "Perform exactly one native exact-name pre-creation query for FX_Picture. Verify zero matching property classes before any mutation. If FX_Picture already exists, stop and document the existing state without creating another.",
+      "Capture the original maintenance Form state, including selected record, Save state, and any relevant ownership indicators.",
+      "Invoke the native New operation exactly once to introduce one property class named FX_Picture.",
+      "Set Data Type to Binary and Length to -1 using supported native controls.",
+      "Select Column Data Type varbinary through the native F2 lookup described in EXP-048. Require an exact, unambiguous varbinary selection and verify its committed value.",
+      "Set Binary Format to PNG.",
+      "Leave Base Class, Domain, and Label String ID blank. Verify all three fields are blank without creating referenced objects or resources.",
+      "Before Save, capture the complete new-record configuration with screenshots and accessibility readbacks. Verify the name, Binary data type, Length -1, varbinary column type, PNG format, and three blank optional fields.",
+      "Perform exactly one ordinary toolbar Save after every configuration gate passes.",
+      "Capture any displayed native Save response, warning, confirmation, or error verbatim. Verify the resulting clean state with Save disabled and the saved attributes still visible.",
+      "Read and record the target property class's checked-out status and owner using the native maintenance Form. The expected state is checked out to the current operator, but this must be observed rather than assumed.",
+      "Close the clean IDO Property Classes internal Form tab exactly once. Verify no unsaved-changes prompt appears and the tab is absent.",
+      "Reopen IDO Property Classes exactly once through the supported native Web Client Open > Select Form route.",
+      "Perform exactly one native post-reopen Filter in Place query using the literal FX_Picture. Verify exactly one matching record and capture its identity.",
+      "Compare all recovered attributes and blank optional fields with the pre-Save configuration. Record the recovered checkout state and owner without changing them.",
+      "Capture decisive evidence under evidence/EXP-060/, including rendered target identity, pre-Save values, post-Save state, Form close/reopen, post-reopen query result, full property readback, and checkout ownership.",
+      "Create or update only the EXP-060 experiment record and evidence/EXP-060/ documentation. Maintain a cumulative action audit and final acceptance matrix."
+    ],
+    "out_of_scope": [
+      "Any change to dbo.FX_Items, its FX_Picture SQL column, existing columns, constraints, indexes, keys, or records.",
+      "Any property class other than FX_Picture.",
+      "Any IDO creation, editing, property addition, extension, rebuild, or synchronization.",
+      "Any Form definition, Web Designer metadata, component, variable, binding, event handler, or runtime behavior change.",
+      "Any binary-image upload, PNG file import, image display, record update, or runtime image test.",
+      "Creating or modifying domains, Base Classes, Label String IDs, or string resources.",
+      "Any checkout-management operation, including explicit check-in, checkout, or undo checkout.",
+      "The tutorial's Unload All Global Form Objects operation or any other metadata/cache unload.",
+      "FormSync, deployment, regeneration, application configuration changes, or direct SQL operations.",
+      "Editing or saving the vendor IDO Property Classes Form definition.",
+      "Browser-level diagnostics, network inspection, console inspection, JavaScript evaluation, or internal application APIs.",
+      "Authentication changes, browser refresh or restart, deliberate reauthentication, or speculative session recovery.",
+      "Further work on the blocked EXP-059 experiment.",
+      "Promotion of findings to replay_verified or modification of verified recipes."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never create, modify, or delete any non-FX_-prefixed artifact.",
+    "Never create a second property class or invoke the native New operation more than once.",
+    "Never create FX_Picture if an existing property class with that name is found. Treat ambiguous identity or duplicate results as a blocker.",
+    "Never change any existing property class, including similarly named classes.",
+    "Never invoke Save before all required FX_Picture attributes and blank optional fields have been visibly verified.",
+    "Never invoke Save more than once or repeat an uncertain Save.",
+    "Never substitute another data type for Binary or another Column Data Type for varbinary.",
+    "Never guess a Column Data Type when the F2 lookup result is missing, ambiguous, or uncommitted.",
+    "Never save a missing, incomplete, or ambiguous Binary Format value.",
+    "Never populate Base Class, Domain, or Label String ID.",
+    "Never manually check in, check out, or undo checkout for FX_Picture or any other class. Observe the automatic checkout state only.",
+    "Never change the SQL table, SQL column, an IDO, or a Form definition.",
+    "Never invoke a metadata or global-object unload, cache operation, or FormSync operation.",
+    "Never execute direct SQL, generated scripts, or database maintenance commands.",
+    "Never invoke browser-console, network-request, or other browser diagnostic tools, including read-only diagnostic calls.",
+    "Never use browser JavaScript evaluation, synthetic internal APIs, direct navigation URLs, browser refresh, or browser restart.",
+    "Never authenticate, deliberately reauthenticate, enter credentials, or change the configuration during the experiment.",
+    "Never repeat an uncertain New, Save, close, reopen, or F2 selection without independently establishing the previous action's outcome.",
+    "After a locator or visibility failure, allow at most one fresh untargeted snapshot and one corrected visible inspection. If still unresolved, record a blocker.",
+    "Never approve unexpected destructive, conversion, overwrite, or other consequential confirmations.",
+    "Never mutate production business records or disable security.",
+    "Never edit AGENTS.md, tutorial sources, existing recipes, prior experiment records, or any files outside the EXP-060 experiment record and evidence directory.",
+    "Never start another experiment or replay."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:execute|run|apply)\\b[^.\\n]{0,50}\\b(?:SQL script|generated SQL|DDL|FormSync)\\b",
+    "\\b(?:Unload All Global Form Objects|ClearCache|Unload IDO Metadata With Forms)\\b",
+    "\\b(?:FormSync|Deployment|Deploy)\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,25}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out|Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|direct URL navigation|javascript evaluation)\\b",
+    "\\b(?:create|modify|delete|regenerate)\\b[^.\\n]{0,50}\\b(?:IDO(?!\\s+propert)|event handler|Form definition)\\b"
+  ],
+  "related_experiments": [
+    "EXP-043",
+    "EXP-047",
+    "EXP-047-R2",
+    "EXP-048",
+    "EXP-049",
+    "EXP-059"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": null,
+    "artifacts": [
+      "FX_Picture"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Required sources and relevant experiment evidence have been reviewed. Starting repository state is documented. The authenticated Web Client is usable, and the core IDO Property Classes runtime Form opens through the native route without an authentication or session challenge. Evidence: source-review notes, Web Client identity, maintenance Form heading, initial screenshot, and action audit."
+    },
+    {
+      "id": "AC-2",
+      "description": "Exactly one native pre-creation query for the literal FX_Picture is performed. It returns zero matching property classes, with the query text, active maintenance Form, and zero-result state visibly established before New. If the name already exists or the query result is ambiguous, creation does not proceed. Evidence: query screenshot, accessibility snapshot, and exact absence finding."
+    },
+    {
+      "id": "AC-3",
+      "description": "Exactly one unsaved new property class is configured with Name FX_Picture, Data Type Binary, Length -1, Column Data Type varbinary, and Binary Format PNG. Base Class, Domain, and Label String ID remain blank. Every field is committed and read back before Save. Evidence: complete pre-Save screenshots, native field readbacks, target identity, and New-action count."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly one ordinary toolbar Save is performed after AC-3 passes. The resulting Form is clean with Save disabled, the configured attributes remain visible, and no unexpected error or consequential confirmation remains. Any native Save response is captured verbatim. Evidence: Save audit, immediate and settled screenshots, and response text or an explicit statement that no confirmation text appeared."
+    },
+    {
+      "id": "AC-5",
+      "description": "After Save, FX_Picture's checkout status and ownership are visibly recorded through the native maintenance Form. If the class is automatically checked out, the owner matches the current operator. No explicit checkout-management operation occurs. Evidence: target identity and checkout-state screenshot or accessibility readback."
+    },
+    {
+      "id": "AC-6",
+      "description": "The clean IDO Property Classes Form is closed exactly once without an unsaved-changes prompt and reopened exactly once through Open > Select Form. The reopened Form is usable and clean. Evidence: before/after internal-tab screenshots, native reopening path, heading, and counted close/reopen actions."
+    },
+    {
+      "id": "AC-7",
+      "description": "Exactly one native post-reopen Filter in Place query for FX_Picture retrieves one and only one matching property class. Its complete recovered configuration equals the AC-3 baseline: Binary, Length -1, Column Data Type varbinary, Binary Format PNG, and blank Base Class, Domain, and Label String ID. Checkout status and owner are recovered and compared with AC-5. Save remains disabled. Evidence: filtered one-record result, full recovered readbacks, checkout state, and field-by-field comparison matrix."
+    },
+    {
+      "id": "AC-8",
+      "description": "A cumulative action audit proves exactly one property-class New, one Save, one ordinary maintenance Form close, one reopen, one pre-creation query, and one post-reopen recovery query. No other property class, IDO, SQL table, Form definition, or business record was modified. No checkout-management, unload, diagnostic, script, or unauthorized action occurred. Repository confinement is supported by worker-written file inventories and harness tool audits, with authoritative final git review reserved for the operator. Evidence: cumulative action matrix, tool audit, written-file inventory, and stated limitations."
+    },
+    {
+      "id": "AC-9",
+      "description": "The final EXP-060 report provides decisive evidence references for AC-1 through AC-8, all required pre-Save and recovered field values, exact action counts, native Save behavior, checkout ownership, blockers, limitations, repository audit, and final Form state. Findings are classified observed only, without claiming replay verification, independent database durability, automatic IDO integration, or PNG runtime functionality. Evidence: final report under evidence/EXP-060/ and the completed EXP-060 experiment record."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-060",
+  "replay_of": null,
+  "initial_instruction": "T1 — Read-only preparation only. Review AGENTS.md, hello-world-pt4.md Section 2 at 01:32–02:13, and relevant EXP-047-R2, EXP-048, EXP-049, and EXP-059 evidence. Record the starting repository state using available permitted information; do not invoke shell or git tools if unavailable. Select the existing authenticated Web Client and open the native IDO Property Classes runtime Form through Open > Select Form, without touching its Designer definition. Capture the exact Form heading, clean state, identity, and any opening prompt. Perform exactly ONE native exact-name query for FX_Picture and capture the result with its query text and record count visible. If any matching property class exists, the query is ambiguous, or an authentication/session challenge appears, stop and document the blocker. Do not invoke New, Save, checkout management, Form close/reopen, or any mutation in T1. Do not invoke browser diagnostics or JavaScript tools. Store screenshots, snapshots, and a concise action audit under evidence/EXP-060/ and create or update only the EXP-060 experiment record. Report the exact next permitted step, but do not start it.",
+  "notes": "Proposed by the coordinator after run R-20261011-203230-bdYw. Rationale: EXP-059 established, at the native UI-observation level, that dbo.FX_Items contains the nullable FX_Picture varbinary column with Length -1, and that the original eleven columns and three runtime records remained unchanged. EXP-059 was blocked for harness acceptance because of an unauthorized browser-console diagnostic, not because the observed column operation failed. Hello World Part 4 Section 2 (01:32–02:13) introduces the next distinct capability: defining a reusable binary IDO property class. EXP-047-R2 and EXP-048 provide relevant native IDO Property Classes workflows, including Column Data Type selection and checkout behavior. EXP-060 will create only one FX_-prefixed property class using that documented workflow, without repeating or working around EXP-059, touching its SQL column, or performing the tutorial's tenant-wide unload. This is a new experiment, not a replay. | Operator review 2026-10-11: the IDO pattern now excludes \"IDO property\" (creating an IDO property class is the core step) and the check-in pattern matches only actions (click/press/use Check In ...), not descriptions of the checkout state; exact_values FX_Picture (case-sensitive typing guard); deny_browser_javascript; editing scope. Operator decision: no Unload All Global Form Objects. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Picture"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "Tenant-wide FX_ property class (AGENTS.md FX_ scope extension) through the Web Client IDO Property Classes runtime form; no Forms; no preference changes"
+}
