@@ -1,0 +1,248 @@
+{
+  "experiment_id": "EXP-062-R2",
+  "title": "EXP-062-R2 - Hello World Part 4 Section 4: Configure Picture Import UI on User-Scope FX_Items Form (replay after authorized metadata unload)",
+  "record_path": "experiments/EXP-062-R2-hello-world-part-4-section-4-picture-import-ui.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Replay of EXP-062, which stopped before any change because the FX_Picture IDO property (created in EXP-061) was not offered by the Designer binding pickers. First, as the tutorial directs after adding an IDO property (hello-world-pt4.md Section 3 step 7 and Section 8 step 1), refresh the cached metadata with the operator-authorized unload: read (never change) the Unload IDO Metadata With Forms User Preference and require it checked; with no runtime Form dirty and any clean FX_Items runtime Form closed, invoke exactly one Web Client runtime Form > Definition global-form-object unload once; close the clean FX_Items Designer Form tab, invoke the Designer Form > Definition > Unload All Global Form Objects command exactly once, and reopen the same User-scoped FX_Items Form. Gate: FX_Picture must now be offered by a supported native Designer binding surface; if it is still absent, stop blocked before any Form change, without a second unload. Then perform the EXP-062 Section 4 transformation exactly as specified: Delete exactly the FX_VarTestEdit component while preserving its associated FX_VarTest variable and the existing FX_Test handler group. Retain the FX_RefreshButton Name, create the FX_sImport caption string with literal text Import through the documented Caption ellipsis workflow, and assign that string to the button. Add exactly one Static component named FX_PictureStatic to the right of the existing input fields, bind it to the FX_Picture IDO property, and set No Colon to True. Create one custom event FX_ImportPicture with a Binary Value Action configured for Action Type Import and component FX_PictureStatic. Assign FX_ImportPicture to FX_RefreshButton Events > Primary, replacing the previous FX_Test assignment without deleting FX_Test or its two actions. Verify every intended change and all preserved baseline properties before performing exactly one ordinary Designer Save. Close and reopen the same User-scoped Form, verify complete definition recovery, and inspect the runtime Form read-only for the three original records, Import button, and empty picture Static. Do not activate the Import action. Capture decisive native UI evidence and classify successful findings as observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt4.md Sections 3 and 4 (including the unload directions), the EXP-062 record and evidence (the blocker this replay addresses), the unload mechanics in EXP-005-R2, EXP-006-R2 and EXP-029, and relevant EXP-045, EXP-050, EXP-051, EXP-054-R2, EXP-056, EXP-057, EXP-058 and EXP-061 evidence before browser interaction.",
+      "Create or update only experiments/EXP-062-R2-hello-world-part-4-section-4-picture-import-ui.md and evidence/EXP-062-R2/ documentation and evidence files.",
+      "Record the operator-provided repository baseline, pre-existing changes, worker-written-file inventory, and cumulative browser action audit.",
+      "Use the existing authenticated Designer session without deliberate reauthentication, browser refresh, restart, or configuration change.",
+      "Confirm editing permission and editing scope User. Verify the loaded FX_Items Form definition identity by Form Name, ScopeType User, and ScopeName matching the authenticated operator. Never edit Site Default or another version.",
+      "Establish that the Designer is clean and responsive, with no authentication challenge, unexpected dialog, or unsaved changes before mutation.",
+      "Capture a complete baseline inventory of FX_Items Form components, including component Name, Type, parent/container, Caption, binding, Data Source Binding Type, geometry, relevant Miscellaneous attributes, event assignments, and other readable properties.",
+      "Record the complete properties of FX_VarTestEdit before deletion. Establish that exactly one such component exists and distinguish it from the separate FX_VarTest variable.",
+      "Capture the complete FX_RefreshButton baseline, including its Name, Caption, geometry, and current Events > Primary assignment.",
+      "Record the pre-change handler inventory, including the existing FX_Test group and both actions, and verify that FX_ImportPicture does not already exist.",
+      "Read-only User Preference gate: open the supported Web Client User Preferences dialog, record whether Unload IDO Metadata With Forms is checked, and close the dialog without changing or saving anything. If it is not checked, stop blocked before any unload.",
+      "Before the runtime unload, record every open Web Client runtime Form tab and its dirty state. Close only a clean FX_Items runtime Form if one is open; leave other Forms untouched. If any open runtime Form has unsaved changes, stop blocked.",
+      "Invoke exactly one Web Client runtime Form > Definition global-form-object unload (re-observe and record the exact visible menu label before the click; it must be the single unambiguous global-form-object unload item). Completion is expected to be silent; record any visible response verbatim.",
+      "After the baseline, close the clean FX_Items Designer Form tab once (no unsaved-changes prompt), re-observe the exact Designer Form > Definition label, and invoke Unload All Global Form Objects in the Designer exactly once with the target closed.",
+      "Reopen the exact FX_Items User-scoped Form once after the Designer unload through the supported recent-forms route (at most one documented retry, then the native Open > Select Form fallback), and re-verify Name, ScopeType User, ScopeName, clean state, and that the baseline is unchanged.",
+      "After the two authorized unloads and the reopen, confirm that the FX_Picture property created in EXP-061 is offered through the supported Designer binding selection surface, without committing any binding during the check. If it is missing, ambiguous, or unavailable, stop before any Form change and report the blocker; do not unload again.",
+      "Delete exactly one existing Form component, FX_VarTestEdit, using the supported Designer component-selection and deletion workflow. Verify that no other component was deleted.",
+      "Preserve the FX_VarTest variable definition and all existing FX_Test event-handler definitions and actions.",
+      "Retain the existing FX_RefreshButton component and its exact Name. Change its Caption using the existing caption-string lookup and creation workflow.",
+      "Create exactly one FX_sImport string if absent, through Caption ellipsis. When the native UI offers to create the missing string, approve only that exact FX_sImport creation. Replace any prefilled split value with literal Import, commit the text cell using Tab or Enter, and verify the committed value before confirming the dialog.",
+      "If FX_sImport already exists, inspect its current value and identity before making any change; stop for review if its status conflicts with the requested new-string creation.",
+      "Assign Caption string ID FX_sImport to FX_RefreshButton and verify the displayed Caption resolves to Import.",
+      "Preserve FX_RefreshButton geometry unless moving it is demonstrably necessary to make space for the picture Static. Any necessary movement must be measured, documented, and limited to that component.",
+      "Add exactly one Toolbox Static component named FX_PictureStatic to the right of the existing input fields, using the supported Designer placement controls.",
+      "Set FX_PictureStatic Data Source Binding Type to Property and Binding to FX_Picture through a supported native property-selection control. Require an unambiguous committed selection.",
+      "Set FX_PictureStatic Miscellaneous > Specific Attributes > No Colon to True, using its supported visible property control. If the attribute cannot be identified or verified, stop before Save rather than guessing.",
+      "Capture FX_PictureStatic component identity, type, parent, geometry, property binding, and No Colon value.",
+      "Within Details > Event Handlers, create exactly one new custom event named FX_ImportPicture. Enter the new name into the event combobox according to the previously observed EXP-058 procedure.",
+      "Configure FX_ImportPicture with Response Type Binary Value Action and its intended action parameters: Action Type Import and component FX_PictureStatic. Capture the exact native field names and selected values.",
+      "Set FX_RefreshButton Events > Primary to FX_ImportPicture. Verify the authoritative Primary property after committing the selection rather than relying on the potentially stale Components-grid Event to generate column.",
+      "Before Save, compare the complete edited Form against the recorded baseline. Require the five intended changes and no unauthorized changes to other components, variables, handlers, bindings, or layout.",
+      "Perform exactly one ordinary Designer Save after every mutation and configuration gate passes. Record the native Save response verbatim and confirm the Designer returns to a demonstrably clean state.",
+      "Re-read FX_VarTest, the FX_Test handler group with its two actions, FX_RefreshButton, FX_PictureStatic, FX_ImportPicture, and all other baseline components after Save.",
+      "Close the clean FX_Items Designer Form tab exactly once through its supported Form-tab close control, without an unsaved-changes prompt.",
+      "Reopen the exact FX_Items User-scoped Form once through the supported Designer recent-forms route. Permit at most one documented recent-forms retry, then the native Open > Select Form fallback if needed, recording the actual path. Never use an unsupported direct URL.",
+      "After reopening, verify the same Form Name, ScopeType User, and ScopeName, and compare all intended changes and all preserved components, variables, handlers, event assignments, geometry, and bindings against the pre-Save and original baselines.",
+      "Verify that the recovered Form is clean, with Designer Save disabled, and that the FX_Test group retains both original actions.",
+      "Open the existing FX_Items runtime Form once through a supported native route without altering inherited tabs. Verify three original business records, a visible Import button, an empty picture Static, no unexpected prompt, and a clean Save-disabled state.",
+      "Preserve all FX_Items business records. The Import button must not be activated during this experiment.",
+      "Leave the FX_Items IDO checkout owned by the existing operator, without performing checkout-management operations.",
+      "Capture screenshots and accessibility readbacks that identify the exact Form, editing scope, selected component or handler, relevant property values, Save result, recovered definition, and runtime outcome.",
+      "Record any blocker after no more than one fresh untargeted snapshot and one corrected visible inspection for a failed locator or visibility inspection. Do not expand the procedure or retry uncertain mutations.",
+      "Classify successful findings as observed only and explicitly distinguish Form-definition recovery from independent database durability, cache behavior, binary storage, and runtime image-import functionality."
+    ],
+    "out_of_scope": [
+      "Editing any Site Default, Group, Vendor Default, or other non-User FX_Items Form version.",
+      "Creating a new FX_Items Form or another Form.",
+      "Modifying the existing FX_Items IDO, FX_Picture IDO property, FX_Picture property class, SQL table, SQL column, or application database.",
+      "Deleting any component other than FX_VarTestEdit.",
+      "Deleting or changing the FX_VarTest variable definition.",
+      "Deleting, renaming, or modifying the existing FX_Test event-handler group or either of its two actions.",
+      "Renaming FX_RefreshButton or replacing it with another Button component.",
+      "Changing unrelated Button properties, components, layout, bindings, event assignments, or Form-level metadata.",
+      "Creating strings other than FX_sImport.",
+      "Creating handlers other than FX_ImportPicture.",
+      "Creating components other than FX_PictureStatic.",
+      "Adding a Picture component or substituting another component type for Static.",
+      "Binding FX_PictureStatic to another IDO property or a Form variable.",
+      "Configuring additional event actions, scripts, generated events, or unrelated handler parameters.",
+      "Executing or testing the new FX_ImportPicture event at runtime.",
+      "Activating the Import button, opening a picture-file chooser, selecting a picture, or importing binary content.",
+      "Uploading, storing, rendering, or retrieving PNG or other image files.",
+      "Creating or modifying FX_Items business records.",
+      "Reconfiguring the existing IDO checkout or making changes to its project or property inventory.",
+      "Executing SQL, generated scripts, database DDL, or internal application APIs.",
+      "Changing Designer preferences, configuration selection, security settings, or authentication state.",
+      "Browser JavaScript evaluation, console inspection, network inspection, tracing, unsupported navigation, or browser restart.",
+      "Modifying previous experiment records, AGENTS.md, tutorial sources, verified recipes, or files outside the EXP-062-R2 documentation and evidence paths (the EXP-062 record and evidence stay unmodified).",
+      "Starting another experiment or a further replay.",
+      "Promoting EXP-062-R2 findings to replay_verified.",
+      "Any unload, cache, or metadata operation other than the two authorized global-form-object unloads (one Web Client runtime, one Designer), including repeating either unload; FormSync, deployment, regeneration, or production maintenance.",
+      "Changing the Unload IDO Metadata With Forms User Preference or any other User Preference.",
+      "Closing any runtime Form other than a clean FX_Items runtime Form."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never create, modify, or delete any non-FX_-prefixed Mongoose artifact.",
+    "Never proceed with mutation unless the loaded FX_Items definition is proven to be the authenticated operator's User-scoped version.",
+    "Never alter Site Default or any other FX_Items version.",
+    "Never proceed if FX_Items is dirty at the initial baseline or if the current Designer session is unusable or challenged.",
+    "Never delete FX_VarTestEdit before recording its complete existing properties and verifying its exact identity.",
+    "Never delete or modify any other Form component, including the underlying FX_VarTest variable.",
+    "Never delete or modify the FX_Test handler group or either existing action.",
+    "Never modify an existing FX_sImport string with conflicting content without operator review.",
+    "Never accept creation of an unexpected string ID or overwrite of another string.",
+    "Never guess a property binding, event selection, component target, or hidden property value.",
+    "Never substitute a binding other than FX_Picture for FX_PictureStatic.",
+    "Never use a component type other than Static for FX_PictureStatic.",
+    "Never leave No Colon in an unverified state before Save.",
+    "Never rename or recreate FX_RefreshButton.",
+    "Never reposition FX_RefreshButton unless visibly necessary for space, and never change other component geometry.",
+    "Never substitute an event name other than FX_ImportPicture or a Response Type other than Binary Value Action.",
+    "Never add more than one action to FX_ImportPicture.",
+    "Never substitute Action Type or target component values.",
+    "Never change FX_RefreshButton Primary to an ambiguous or uncommitted event value.",
+    "Never rely solely on the potentially stale Components-grid Event to generate field to prove the Primary event assignment.",
+    "Never invoke Designer Save before the complete intended Form definition is verified.",
+    "Never invoke Designer Save more than once or retry an uncertain Save.",
+    "Never close or reopen a dirty Form or dismiss unsaved changes without explicit operator approval.",
+    "Never edit, save, regenerate, or delete another Form definition.",
+    "Never trigger FX_ImportPicture or activate the Import button in runtime.",
+    "Never interact with any runtime data-editing control or save a business record.",
+    "Never perform check-in, undo checkout, or other checkout-management actions on FX_Items.",
+    "Never invoke any unload other than exactly one Web Client runtime and exactly one Designer global-form-object unload, and never repeat either one.",
+    "Never perform any other application-cache operation, deployment, or FormSync action.",
+    "Never change the Unload IDO Metadata With Forms preference; if it is not checked, stop blocked.",
+    "Never invoke the Designer unload while FX_Items is open or dirty in the Designer.",
+    "Never use direct SQL, scripts, application internals, or browser JavaScript.",
+    "Never deliberately reauthenticate, refresh, restart, or replace the inherited browser session.",
+    "Never repeat an uncertain component deletion, string creation, event creation, Save, Form close, or Form reopen.",
+    "Never exceed one fresh untargeted snapshot and one corrected visible inspection for a locator or visibility failure.",
+    "Never expand this experiment to unrelated troubleshooting or previously blocked experiments.",
+    "Never modify tutorial documents, AGENTS.md, prior experiment records, or verified recipes.",
+    "Never claim independent database durability, cache invalidation, successful image import, or replay verification from same-session UI recovery."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:execute|run|apply)\\b[^.\\n]{0,50}\\b(?:SQL script|generated SQL|DDL)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|direct URL navigation|JavaScript evaluation)\\b",
+    "\\b(?:upload|attach)\\b[^.\\n]{0,35}\\b(?:PNG|image|picture file)\\b",
+    "\\b(?:click|press|activate)\\s+(?:the\\s+)?(?:runtime\\s+)?Import\\s+button\\b",
+    "\\b(?:create|modify|delete)\\b[^.\\n]{0,45}\\b(?:SQL table|IDO project|property class)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b"
+  ],
+  "related_experiments": [
+    "EXP-062",
+    "EXP-005-R2",
+    "EXP-006-R2",
+    "EXP-029",
+    "EXP-045",
+    "EXP-050",
+    "EXP-051",
+    "EXP-054-R2",
+    "EXP-056",
+    "EXP-057",
+    "EXP-058",
+    "EXP-060",
+    "EXP-061"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Items",
+    "artifacts": [
+      "FX_Items",
+      "FX_Picture",
+      "FX_VarTestEdit",
+      "FX_VarTest",
+      "FX_RefreshButton",
+      "FX_sImport",
+      "FX_PictureStatic",
+      "FX_ImportPicture",
+      "FX_Test"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "The required AGENTS.md, tutorial Section 4, and relevant prior experiment evidence were reviewed. The authenticated Designer is usable, no session challenge is present, and exactly the intended FX_Items User-scoped Form version is identified by Name, ScopeType, and ScopeName. Designer Save is initially disabled. Evidence: source-review notes, identity and scope screenshot, initial Designer screenshot, and action audit."
+    },
+    {
+      "id": "AC-2",
+      "description": "Metadata-unload gate. The Unload IDO Metadata With Forms preference is read as checked and left unchanged. With no dirty runtime Form, exactly one Web Client runtime global-form-object unload is invoked (exact label recorded); the clean FX_Items Designer Form is closed once and exactly one Designer Unload All Global Form Objects is invoked with the target closed; FX_Items is reopened with the identical User-scope identity, clean, with the baseline unchanged. FX_Picture is then offered by a supported native Designer binding surface without any binding committed during the check. If FX_Picture is still absent, the replay stops blocked before any Form change. Evidence: preference readback screenshot, both menu-label screenshots, close/reopen identity screenshots, binding-picker screenshot listing FX_Picture, and unload/action audit with exact counts."
+    },
+    {
+      "id": "AC-3",
+      "description": "Before mutation, the complete FX_Items component baseline is captured with readable Name, Type, parent/container, Caption, binding, geometry, events, and relevant properties. Exactly one FX_VarTestEdit and one FX_RefreshButton are identified. The FX_VarTest variable and existing FX_Test handler group with two actions are recorded. FX_ImportPicture is absent, and the intended FX_Picture binding prerequisite is verified through supported native UI. Evidence: full component inventory, FX_VarTestEdit property screenshots, variable readback, handler/action inventory, binding evidence, and baseline matrix."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly one component, FX_VarTestEdit, is deleted. Its previously recorded identity is no longer present in the component tree or inventory, component cardinality decreases by exactly one, and no other baseline component is removed. The FX_VarTest variable and FX_Test handler group remain. Evidence: before/after component inventories, deletion action audit, and variable/handler readbacks."
+    },
+    {
+      "id": "AC-5",
+      "description": "Exactly one FX_sImport caption string is created through the supported Caption ellipsis workflow, if the prerequisite absence gate passes. Its committed literal value is Import, and FX_RefreshButton retains its original Name while its Caption references FX_sImport and visibly resolves to Import. Its other properties and geometry remain unchanged unless a documented space requirement justifies a narrowly scoped movement. Evidence: native string-creation prompt and committed value, Caption-property readback, displayed button caption, baseline comparison, and action counts."
+    },
+    {
+      "id": "AC-6",
+      "description": "Exactly one new Static component named FX_PictureStatic is added to the right of the input fields. Its committed Data Source Binding Type is Property, its Binding is FX_Picture, and Miscellaneous > Specific Attributes > No Colon is visibly True. The selected component identity, parent, type, and geometry are recorded. Evidence: Designer layout screenshot, component-tree readback, binding selector, complete property-grid values, and component cardinality."
+    },
+    {
+      "id": "AC-7",
+      "description": "Exactly one new custom event FX_ImportPicture is present in Details > Event Handlers. It has one action with Response Type Binary Value Action and the exact action parameters Action Type Import and component FX_PictureStatic. The event name and every field are visibly committed. No other handler or action is modified. Evidence: handler-list screenshot, selected event identity, action editor/readback, and before/after handler comparison."
+    },
+    {
+      "id": "AC-8",
+      "description": "FX_RefreshButton Events > Primary is committed to FX_ImportPicture, replacing its previous FX_Test Primary assignment. The authoritative component Events property shows the exact new value. FX_Test remains present with both original actions unchanged. Evidence: button identity and Primary readback, handler inventory, two-action FX_Test readback, and pre-Save comparison."
+    },
+    {
+      "id": "AC-9",
+      "description": "Before Save, a complete comparison establishes only the five intended transformations: FX_VarTestEdit deletion, FX_RefreshButton caption/string change, FX_PictureStatic addition and binding, FX_ImportPicture handler creation, and FX_RefreshButton Primary reassignment. All other recorded Form components, variable definitions, handler groups, bindings, geometry, and readable attributes match the baseline, except any explicitly justified permitted button movement. Evidence: pre-Save component and handler matrices, screenshots, and mutation audit."
+    },
+    {
+      "id": "AC-10",
+      "description": "Exactly one ordinary Designer Save is invoked after all configuration gates pass. The native response is captured verbatim and indicates no unresolved error or unexpected confirmation. Designer Save becomes disabled, and all five intended changes remain visible in the clean post-Save definition. No regeneration or additional Save occurs. Evidence: pre-Save state, Save response, settled Designer screenshot, post-Save property readbacks, and exact Save count."
+    },
+    {
+      "id": "AC-11",
+      "description": "The clean FX_Items Designer Form is closed once without an unsaved-changes prompt and reopened through an approved native route. The recovered version has the identical User-scope Name, ScopeType, and ScopeName. Every intended deletion, caption/string, Static binding and No Colon value, Binary Value Action handler, and Primary event assignment is recovered. FX_VarTest, FX_Test with two actions, and all other baseline components remain unchanged. Designer Save is disabled. Evidence: close/reopen screenshots, reopened scope identity, complete recovered component and handler inventories, field-by-field comparisons, and action audit."
+    },
+    {
+      "id": "AC-12",
+      "description": "The FX_Items runtime Form opens read-only once and displays the three pre-existing dumbbell, eggs, and guitar records with their documented readable fields. A visible Import button and empty picture Static are present. No import or unexpected prompt is activated; no business record is modified; runtime Save remains disabled. Evidence: runtime Form identity, three-record grid/count, button and Static screenshot, clean-state readback, and runtime action audit."
+    },
+    {
+      "id": "AC-13",
+      "description": "The final EXP-062-R2 report provides decisive evidence references for AC-1 through AC-12, exact component and handler baseline/recovery comparisons, FX_sImport creation evidence, the complete controlled action audit, worker-written-file inventory, any browser-tool-generated file limitations, and the final Designer/runtime state. It confirms the preference left unchanged, exactly two unloads (one runtime, one Designer), the pre-mutation close/reopen, one Designer Save, the permitted component/string/handler operations, one ordinary close/reopen, and zero runtime imports, business-record changes, checkout-management actions, or unauthorized operations. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are classified observed only, without independent durability, cache, or picture-import claims."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-062-R2",
+  "replay_of": "EXP-062",
+  "initial_instruction": "T1 — Read-only preflight for EXP-062-R2 (replay of EXP-062 after an authorized metadata unload). Review AGENTS.md, hello-world-pt4.md Sections 3 and 4, the EXP-062 record and evidence, and the unload mechanics in EXP-005-R2, EXP-006-R2 and EXP-029. Without shell/git access, record the starting state. Confirm the operator-prepared authenticated session is usable, list the browser tabs, and identify the Web Client and Designer tabs. In the Designer, confirm the loaded Form is exactly FX_Items in User scope for the authenticated operator, clean, with Designer Save disabled, and capture the complete pre-mutation baseline (components, FX_VarTestEdit, FX_RefreshButton with Primary, input-field geometry, FX_VarTest variable, FX_Test group with its two actions, FX_ImportPicture absence, FX_sImport existence) through native read-only controls; reuse EXP-062 observations only after re-verifying them live. In the Web Client, record the open runtime Form tabs and their dirty state, and read (do not change) the Unload IDO Metadata With Forms preference through the supported User Preferences dialog, closing it without saving. Create the EXP-062-R2 record with the baseline, preference reading, action audit and worker-written-file inventory, with screenshots under evidence/EXP-062-R2/. Stop before closing any Form, invoking any unload, or making any change. If identity, scope or the preference cannot be established, report a blocker.",
+  "notes": "Replay of EXP-062 (blocked at AC-2 before any change: FX_Picture absent from the Designer binding pickers, run R-20261011-231213-E1AR). Operator decision 2026-10-11: perform the tutorial metadata unload (\"Metadata unload\" chosen over changing the FX_Items IDO checkout); FX_Items stays checked out. Operator authorization 2026-10-11 (tenant-wide operation, per AGENTS.md): exactly one Web Client runtime global-form-object unload and exactly one Designer Unload All Global Form Objects, each once, never repeated; the Unload IDO Metadata With Forms preference is read only (observed checked in EXP-005-R2/EXP-006-R2/EXP-029). Unload mechanics are replay_verified in EXP-006-R2 (Designer Form > Definition > Unload All Global Form Objects, target closed, silent completion); the runtime menu label must be re-observed. If FX_Picture is still absent after both unloads, the replay stops blocked; the next option would be an operator decision on the IDO checkout state, not a further unload. Otherwise the EXP-062 Section 4 transformation, ACs (renumbered: new AC-2 is the unload gate, EXP-062 AC-2..AC-12 are AC-3..AC-13), exact_values, deny_browser_javascript and User scope are unchanged; the unload prohibited pattern was replaced by guards against other unload commands and preference changes. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Items",
+    "FX_sImport",
+    "Import",
+    "FX_PictureStatic",
+    "FX_ImportPicture",
+    "FX_Picture"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User (Designer Form FX_Items in User scope; FX_sImport string is tenant-wide per the FX_ scope extension; runtime read-only)"
+}
