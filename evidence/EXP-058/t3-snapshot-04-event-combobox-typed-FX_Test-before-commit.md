@@ -1,0 +1,980 @@
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - button "Form" [ref=e3] [cursor=pointer]
+    - button "Edit" [ref=e5] [cursor=pointer]
+    - button "View" [ref=e7] [cursor=pointer]
+    - button "Help" [ref=e9] [cursor=pointer]
+  - toolbar [ref=e11]:
+    - button [ref=e12] [cursor=pointer]:
+      - button "Design" [ref=e13]
+    - button "Save" [disabled] [ref=e15]:
+      - button "Save" [disabled]
+    - button "Regenerate Form" [disabled] [ref=e16]:
+      - button "Regenerate Form" [disabled]
+    - separator [ref=e17]
+    - button [ref=e18] [cursor=pointer]:
+      - button "New" [ref=e19]
+    - button [ref=e21] [cursor=pointer]:
+      - button "Copy" [ref=e22]
+    - button [ref=e24] [cursor=pointer]:
+      - button "Delete" [ref=e25]
+    - separator [ref=e27]
+    - button "Align Left" [disabled] [ref=e28]:
+      - button "Align Left" [disabled]
+    - button "Align Center" [disabled] [ref=e29]:
+      - button "Align Center" [disabled]
+    - button "Align Right" [disabled] [ref=e30]:
+      - button "Align Right" [disabled]
+    - button "Align Top" [disabled] [ref=e31]:
+      - button "Align Top" [disabled]
+    - button "Align Middle" [disabled] [ref=e32]:
+      - button "Align Middle" [disabled]
+    - button "Align Bottom" [disabled] [ref=e33]:
+      - button "Align Bottom" [disabled]
+    - separator [ref=e34]
+    - button "Make Same Width" [disabled] [ref=e35]:
+      - button "Make Same Width" [disabled]
+    - button "Make Same Height" [disabled] [ref=e36]:
+      - button "Make Same Height" [disabled]
+    - button "Make Same Size" [disabled] [ref=e37]:
+      - button "Make Same Size" [disabled]
+    - separator [ref=e38]
+    - button "Space Horizontally" [disabled] [ref=e39]:
+      - button "Space Horizontally" [disabled]
+    - button "Space Vertically" [disabled] [ref=e40]:
+      - button "Space Vertically" [disabled]
+    - separator [ref=e41]
+    - button [ref=e42] [cursor=pointer]:
+      - button "Tab Order" [ref=e43]
+    - button [ref=e45] [cursor=pointer]:
+      - button "Tab Order At" [ref=e46]
+    - separator [ref=e48]
+    - button "Undo" [disabled] [ref=e49]:
+      - button "Undo" [disabled]
+    - button "Redo" [disabled] [ref=e50]:
+      - button "Redo" [disabled]
+  - grid "Toolbox" [ref=e51]:
+    - text: 
+    - button "Collapse Panel" [ref=e53] [cursor=pointer]
+    - generic [ref=e54]:
+      - generic [ref=e55]: "Search Toolbox:"
+      - generic [ref=e58]:
+        - textbox "Search Toolbox:" [ref=e60]:
+          - /placeholder: Search Toolbox
+        - generic [ref=e61] [cursor=pointer]
+    - columnheader "Name"
+    - tree [ref=e66]:
+      - generic [ref=e67]:
+        - table [ref=e68]:
+          - rowgroup [ref=e69]:
+            - row [ref=e70]:
+              - treeitem "Framework Components" [ref=e71]
+        - table [ref=e73]:
+          - rowgroup [ref=e74]:
+            - row [ref=e75]:
+              - treeitem "Pointer" [ref=e76]
+        - table [ref=e78]:
+          - rowgroup [ref=e79]:
+            - row [ref=e80]:
+              - treeitem "Barcode" [ref=e81]
+        - table [ref=e83]:
+          - rowgroup [ref=e84]:
+            - row [ref=e85]:
+              - treeitem "Browser" [ref=e86]
+        - table [ref=e88]:
+          - rowgroup [ref=e89]:
+            - row [ref=e90]:
+              - treeitem "Button" [ref=e91]
+        - table [ref=e93]:
+          - rowgroup [ref=e94]:
+            - row [ref=e95]:
+              - treeitem "Calendar" [ref=e96]
+        - table [ref=e98]:
+          - rowgroup [ref=e99]:
+            - row [ref=e100]:
+              - treeitem "Chart" [ref=e101]
+        - table [ref=e103]:
+          - rowgroup [ref=e104]:
+            - row [ref=e105]:
+              - treeitem "CheckBox" [ref=e106]
+        - table [ref=e108]:
+          - rowgroup [ref=e109]:
+            - row [ref=e110]:
+              - treeitem "ComboBox" [ref=e111]
+        - table [ref=e113]:
+          - rowgroup [ref=e114]:
+            - row [ref=e115]:
+              - treeitem "DataView" [ref=e116]
+        - table [ref=e118]:
+          - rowgroup [ref=e119]:
+            - row [ref=e120]:
+              - treeitem "DateCombo" [ref=e121]
+        - table [ref=e123]:
+          - rowgroup [ref=e124]:
+            - row [ref=e125]:
+              - treeitem "Diagram" [ref=e126]
+        - table [ref=e128]:
+          - rowgroup [ref=e129]:
+            - row [ref=e130]:
+              - treeitem "DropList" [ref=e131]
+        - table [ref=e133]:
+          - rowgroup [ref=e134]:
+            - row [ref=e135]:
+              - treeitem "Edit" [ref=e136]
+        - table [ref=e138]:
+          - rowgroup [ref=e139]:
+            - row [ref=e140]:
+              - treeitem "FlexLayout" [ref=e141]
+        - table [ref=e143]:
+          - rowgroup [ref=e144]:
+            - row [ref=e145]:
+              - treeitem "FormPage" [ref=e146]
+        - table [ref=e148]:
+          - rowgroup [ref=e149]:
+            - row [ref=e150]:
+              - treeitem "Gauge" [ref=e151]
+        - table [ref=e153]:
+          - rowgroup [ref=e154]:
+            - row [ref=e155]:
+              - treeitem "Grid" [ref=e156]
+        - table [ref=e158]:
+          - rowgroup [ref=e159]:
+            - row [ref=e160]:
+              - treeitem "GroupBox" [ref=e161]
+        - table [ref=e163]:
+          - rowgroup [ref=e164]:
+            - row [ref=e165]:
+              - treeitem "HyperLinkButton" [ref=e166]
+        - table [ref=e168]:
+          - rowgroup [ref=e169]:
+            - row [ref=e170]:
+              - treeitem "Infocon" [ref=e171]
+        - table [ref=e173]:
+          - rowgroup [ref=e174]:
+            - row [ref=e175]:
+              - treeitem "Infor Chart" [ref=e176]
+        - table [ref=e178]:
+          - rowgroup [ref=e179]:
+            - row [ref=e180]:
+              - treeitem "List" [ref=e181]
+        - table [ref=e183]:
+          - rowgroup [ref=e184]:
+            - row [ref=e185]:
+              - treeitem "MenuItem" [ref=e186]
+        - table [ref=e188]:
+          - rowgroup [ref=e189]:
+            - row [ref=e190]:
+              - treeitem "MultiLineEdit" [ref=e191]
+        - table [ref=e193]:
+          - rowgroup [ref=e194]:
+            - row [ref=e195]:
+              - treeitem "NoteBook" [ref=e196]
+        - table [ref=e198]:
+          - rowgroup [ref=e199]:
+            - row [ref=e200]:
+              - treeitem "Process Intelligence" [ref=e201]
+        - table [ref=e203]:
+          - rowgroup [ref=e204]:
+            - row [ref=e205]:
+              - treeitem "RadioButton" [ref=e206]
+        - table [ref=e208]:
+          - rowgroup [ref=e209]:
+            - row [ref=e210]:
+              - treeitem "Static" [ref=e211]
+        - table [ref=e213]:
+          - rowgroup [ref=e214]:
+            - row [ref=e215]:
+              - treeitem "SubForm" [ref=e216]
+        - table [ref=e218]:
+          - rowgroup [ref=e219]:
+            - row [ref=e220]:
+              - treeitem "ToolbarButton" [ref=e221]
+        - table [ref=e223]:
+          - rowgroup [ref=e224]:
+            - row [ref=e225]:
+              - treeitem "Tree" [ref=e226]
+        - table [ref=e228]:
+          - rowgroup [ref=e229]:
+            - row [ref=e230]:
+              - treeitem "UserControl" [ref=e231]
+        - table [ref=e233]:
+          - rowgroup [ref=e234]:
+            - row [ref=e235]:
+              - treeitem "VerticalGrid" [ref=e236]
+        - table [ref=e238]:
+          - rowgroup [ref=e239]:
+            - row [ref=e240]:
+              - treeitem "User Components" [ref=e241]
+  - separator [ref=e243]
+  - text: 
+  - tablist [ref=e244]:
+    - tab [selected] [ref=e245] [cursor=pointer]:
+      - heading "FX_Items" [level=2] [ref=e246]
+      - button "closable FX_Items" [ref=e247]:
+        - img "closable FX_Items"
+  - tabpanel [ref=e248]:
+    - generic [ref=e249]:
+      - grid [ref=e250]:
+        - grid [ref=e251]:
+          - row [ref=e252]:
+            - columnheader [ref=e253]
+          - grid [ref=e258]
+        - grid [ref=e260]:
+          - row [ref=e261]:
+            - columnheader "Item" [ref=e262]
+            - columnheader "Description" [ref=e267]
+            - columnheader "Cost" [ref=e272]
+            - columnheader "Unit of Measure" [ref=e277]
+          - grid [ref=e282]
+        - generic [ref=e284] [cursor=pointer]: 
+      - separator [ref=e285]: ⁞
+      - button "FX_Refresh" [ref=e287] [cursor=pointer]
+      - textbox [ref=e293]
+      - generic [ref=e303]:
+        - generic [ref=e304]: "Item:"
+        - generic [ref=e305] [cursor=pointer]
+      - generic [ref=e306]:
+        - generic [ref=e307]: "Item:"
+        - textbox "Item:" [ref=e312]
+        - generic [ref=e313] [cursor=pointer]
+      - generic [ref=e314]:
+        - generic [ref=e315]: "Description:"
+        - generic [ref=e316] [cursor=pointer]
+      - generic [ref=e317]:
+        - generic [ref=e318]: "Description:"
+        - textbox "Description:" [ref=e323]
+        - generic [ref=e324] [cursor=pointer]
+      - generic [ref=e325]:
+        - generic [ref=e326]: "Cost:"
+        - generic [ref=e327] [cursor=pointer]
+      - generic [ref=e328]:
+        - generic [ref=e329]: "Cost:"
+        - textbox "Cost:" [ref=e334]
+        - generic [ref=e335] [cursor=pointer]
+      - generic [ref=e336]:
+        - generic [ref=e337]: "Unit of Measure:"
+        - generic [ref=e338] [cursor=pointer]
+      - generic [ref=e339]:
+        - generic [ref=e340]: "Unit of Measure:"
+        - combobox "Unit of Measure:" [ref=e345]
+        - generic [ref=e346] [cursor=pointer]
+    - separator [ref=e347]
+    - text: 
+    - generic [ref=e348]: Details
+    - button "Collapse Panel" [ref=e349] [cursor=pointer]
+    - tablist [ref=e350]:
+      - tab [ref=e351] [cursor=pointer]:
+        - heading "Collections" [level=2] [ref=e352]
+      - tab [ref=e353] [cursor=pointer]:
+        - heading "Components" [level=2] [ref=e354]
+      - tab [selected] [ref=e355] [cursor=pointer]:
+        - heading "Event Handlers" [level=2] [ref=e356]
+      - tab [ref=e357] [cursor=pointer]:
+        - heading "Variables" [level=2] [ref=e358]
+      - tab [ref=e359] [cursor=pointer]:
+        - heading "Design View Size" [level=2] [ref=e360]
+    - tabpanel "Event Handlers" [ref=e1232]:
+      - grid [ref=e1233]:
+        - toolbar [ref=e1234]:
+          - generic [ref=e1235]:
+            - generic [ref=e1236]: "Search Properties:"
+            - generic [ref=e1239]:
+              - textbox "Search Properties:" [ref=e1241]
+              - generic [ref=e1242] [cursor=pointer]
+          - button "Expand" [ref=e1243] [cursor=pointer]: 
+          - button "Collapse" [ref=e1244] [cursor=pointer]: 
+        - row [ref=e1245]:
+          - columnheader "Sequence" [ref=e1246]
+          - columnheader "Response Type" [ref=e1251]
+          - columnheader "Disabled" [ref=e1256]
+          - columnheader "Response Parameters" [ref=e1261]
+        - grid [ref=e1266]:
+          - generic [ref=e1267]:
+            - table [ref=e1268]:
+              - rowgroup [ref=e1269]:
+                - row [ref=e1270]:
+                  - cell "StdFormRefreshCompleted" [ref=e1271]
+                - row [ref=e1274]:
+                  - gridcell "0" [ref=e1275]
+                  - gridcell "Prompt" [ref=e1277]
+                  - gridcell "false" [ref=e1279]
+                  - gridcell "PROMPT(Hello World) ICON(DEFAULT) RESPONSE(OK()) DEFAULTRESPONSE(OK)" [ref=e1281]
+            - table [ref=e1283]:
+              - rowgroup [ref=e1284]:
+                - row [ref=e1285]:
+                  - gridcell "1" [ref=e1286]
+                  - gridcell "Set Values" [ref=e1288]
+                  - gridcell "false" [ref=e1290]
+                  - gridcell "SETVARVALUES(FX_VarTest=P(FX_Description))" [ref=e1292]
+        - toolbar [ref=e1294]:
+          - button "" [ref=e1295] [cursor=pointer]
+          - button "" [ref=e1296] [cursor=pointer]
+          - button "" [ref=e1297] [cursor=pointer]
+          - button "" [ref=e1298] [cursor=pointer]
+          - button "" [ref=e1299] [cursor=pointer]
+      - separator [ref=e1300]: ⁞
+      - toolbar [ref=e1301]:
+        - generic [ref=e1302]:
+          - generic [ref=e1303]: "Search Properties:"
+          - generic [ref=e1306]:
+            - textbox "Search Properties:" [ref=e1308]
+            - generic [ref=e1309] [cursor=pointer]
+        - button "Expand" [ref=e1310] [cursor=pointer]: 
+        - button "Collapse" [ref=e1311] [cursor=pointer]: 
+      - generic:
+        - generic: Name
+        - generic: Value
+      - tree [ref=e1320]:
+        - generic [ref=e1417]:
+          - table [ref=e1418]:
+            - rowgroup [ref=e1419]:
+              - row "Event To Handle" [ref=e1420]:
+                - treeitem "Event To Handle" [ref=e1421]
+                - gridcell [ref=e1424]
+                - gridcell [ref=e1426]
+          - table [ref=e1427]:
+            - rowgroup [ref=e1428]:
+              - row [ref=e1506]:
+                - treeitem "Event" [ref=e1430]
+                - gridcell [selected] [ref=e1507]
+                - gridcell [ref=e1437]
+          - table [ref=e1438]:
+            - rowgroup [ref=e1439]:
+              - row "Description" [ref=e1440]:
+                - treeitem "Description" [ref=e1441]
+                - gridcell [ref=e1444]
+                - gridcell [ref=e1446]
+          - table [ref=e1447]:
+            - rowgroup [ref=e1448]:
+              - row [ref=e1449]:
+                - treeitem "Sequence" [ref=e1450]
+                - gridcell "0" [ref=e1453]
+                - gridcell [ref=e1455]
+          - table [ref=e1456]:
+            - rowgroup [ref=e1457]:
+              - row [ref=e1458]:
+                - treeitem "Disabled" [ref=e1459]
+                - gridcell "False" [ref=e1462]:
+                  - generic [ref=e1463]:
+                    - generic [ref=e1464]: "False"
+                    - generic [ref=e1465] [cursor=pointer]
+                - gridcell [ref=e1466]
+          - table [ref=e1467]:
+            - rowgroup [ref=e1468]:
+              - row "Response" [ref=e1469]:
+                - treeitem "Response" [ref=e1470]
+                - gridcell [ref=e1472]
+                - gridcell [ref=e1474]
+          - table [ref=e1475]:
+            - rowgroup [ref=e1476]:
+              - row [ref=e1477]:
+                - treeitem "Type" [ref=e1478]
+                - gridcell "Prompt" [ref=e1481]:
+                  - generic [ref=e1482]:
+                    - generic [ref=e1483]: Prompt
+                    - generic [ref=e1484] [cursor=pointer]
+                - gridcell [ref=e1485]
+          - table [ref=e1486]:
+            - rowgroup [ref=e1487]:
+              - row [ref=e1488]:
+                - treeitem "Parameters" [ref=e1489]
+                - gridcell "PROMPT(Hello World) ICON(DEFAULT) RESPONSE(OK()) DEFAULTRESPONSE(OK)" [ref=e1492]
+                - gridcell [ref=e1494]:
+                  - button "Open Edit Property Dialog" [ref=e1496] [cursor=pointer]: 
+          - table [ref=e1497]:
+            - rowgroup [ref=e1498]:
+              - row "Edit in-line Script" [ref=e1499]:
+                - treeitem "Edit in-line Script" [ref=e1500]
+                - gridcell [ref=e1503]
+                - gridcell [ref=e1505]
+        - generic [ref=e1511]:
+          - combobox [expanded] [active] [ref=e1513]:
+            - text: FX_Test
+            - listbox [ref=e1514]:
+              - list [ref=e1515]:
+                - table [ref=e1516]:
+                  - rowgroup [ref=e1517]:
+                    - option [ref=e1518]:
+                      - cell "StdAppLaunchInbox" [ref=e1519]
+                    - option [ref=e1520]:
+                      - cell "StdAppLaunchTasks" [ref=e1521]
+                    - option [ref=e1522]:
+                      - cell "StdCurCompAction" [ref=e1523]
+                    - option [ref=e1524]:
+                      - cell "StdCurCompAdd" [ref=e1525]
+                    - option [ref=e1526]:
+                      - cell "StdCurCompClipboardCopy" [ref=e1527]
+                    - option [ref=e1528]:
+                      - cell "StdCurCompClipboardCut" [ref=e1529]
+                    - option [ref=e1530]:
+                      - cell "StdCurCompClipboardPaste" [ref=e1531]
+                    - option [ref=e1532]:
+                      - cell "StdCurCompClipboardPasteAppend" [ref=e1533]
+                    - option [ref=e1534]:
+                      - cell "StdCurCompClipboardPasteAppendCompleted" [ref=e1535]
+                    - option [ref=e1536]:
+                      - cell "StdCurCompClipboardPasteOverwrite" [ref=e1537]
+                    - option [ref=e1538]:
+                      - cell "StdCurCompClipboardPasteOverwriteCompleted" [ref=e1539]
+                    - option [ref=e1540]:
+                      - cell "StdCurCompCriticalDisplaySettings" [ref=e1541]
+                    - option [ref=e1542]:
+                      - cell "StdCurCompCriticalRefresh" [ref=e1543]
+                    - option [ref=e1544]:
+                      - cell "StdCurCompCriticalSetup" [ref=e1545]
+                    - option [ref=e1546]:
+                      - cell "StdCurCompCriticalSnapshots" [ref=e1547]
+                    - option [ref=e1548]:
+                      - cell "StdCurCompDetails" [ref=e1549]
+                    - option [ref=e1550]:
+                      - cell "StdCurCompEditFlexLayout" [ref=e1551]
+                    - option [ref=e1552]:
+                      - cell "StdCurCompEditGridColumns" [ref=e1553]
+                    - option [ref=e1554]:
+                      - cell "StdCurCompFind" [ref=e1555]
+                    - option [ref=e1556]:
+                      - cell "StdCurCompGraphProperties" [ref=e1557]
+                    - option [ref=e1558]:
+                      - cell "StdCurCompSearch" [ref=e1559]
+                    - option [ref=e1560]:
+                      - cell "StdCurCompShowMenu" [ref=e1561]
+                    - option [ref=e1562]:
+                      - cell "StdCurCompSort" [ref=e1563]
+                    - option [ref=e1564]:
+                      - cell "StdFormApplySavedFilter" [ref=e1565]
+                    - option [ref=e1566]:
+                      - cell "StdFormCalledFormReturned" [ref=e1567]
+                    - option [ref=e1568]:
+                      - cell "StdFormClose" [ref=e1569]
+                    - option [ref=e1570]:
+                      - cell "StdFormColFind" [ref=e1571]
+                    - option [ref=e1572]:
+                      - cell "StdFormColFindCompleted" [ref=e1573]
+                    - option [ref=e1574]:
+                      - cell "StdFormColReplace" [ref=e1575]
+                    - option [ref=e1576]:
+                      - cell "StdFormColReplaceCompleted" [ref=e1577]
+                    - option [ref=e1578]:
+                      - cell "StdFormColSort" [ref=e1579]
+                    - option [ref=e1580]:
+                      - cell "StdFormColSortCompleted" [ref=e1581]
+                    - option [ref=e1582]:
+                      - cell "StdFormComponentHelp" [ref=e1583]
+                    - option [ref=e1584]:
+                      - cell "StdFormCopy" [ref=e1585]
+                    - option [ref=e1586]:
+                      - cell "StdFormCopyCompleted" [ref=e1587]
+                    - option [ref=e1588]:
+                      - cell "StdFormCurCacheChanged" [ref=e1589]
+                    - option [ref=e1590]:
+                      - cell "StdFormCurCacheChanging" [ref=e1591]
+                    - option [ref=e1592]:
+                      - cell "StdFormCurrentDocs" [ref=e1593]
+                    - option [ref=e1594]:
+                      - cell "StdFormCurrentEmail" [ref=e1595]
+                    - option [ref=e1596]:
+                      - cell "StdFormCurrentNotes" [ref=e1597]
+                    - option [ref=e1598]:
+                      - cell "StdFormCurrentNotesCompleted" [ref=e1599]
+                    - option [ref=e1600]:
+                      - cell "StdFormDelete" [ref=e1601]
+                    - option [ref=e1602]:
+                      - cell "StdFormDeleteCompleted" [ref=e1603]
+                    - option [ref=e1604]:
+                      - cell "StdFormExitCancel" [ref=e1605]
+                    - option [ref=e1606]:
+                      - cell "StdFormExitOk" [ref=e1607]
+                    - option [ref=e1608]:
+                      - cell "StdFormFilter" [ref=e1609]
+                    - option [ref=e1610]:
+                      - cell "StdFormFilterCompleted" [ref=e1611]
+                    - option [ref=e1612]:
+                      - cell "StdFormFilterInPlaceBegin" [ref=e1613]
+                    - option [ref=e1614]:
+                      - cell "StdFormFilterInPlaceBeginCompleted" [ref=e1615]
+                    - option [ref=e1616]:
+                      - cell "StdFormFilterInPlaceCancel" [ref=e1617]
+                    - option [ref=e1618]:
+                      - cell "StdFormFilterInPlaceCancelCompleted" [ref=e1619]
+                    - option [ref=e1620]:
+                      - cell "StdFormFilterInPlaceExecute" [ref=e1621]
+                    - option [ref=e1622]:
+                      - cell "StdFormFilterInPlaceExecuteCompleted" [ref=e1623]
+                    - option [ref=e1624]:
+                      - cell "StdFormFilterInPlaceToggle" [ref=e1625]
+                    - option [ref=e1626]:
+                      - cell "StdFormFirst" [ref=e1627]
+                    - option [ref=e1628]:
+                      - cell "StdFormFirstCompleted" [ref=e1629]
+                    - option [ref=e1630]:
+                      - cell "StdFormGetBoundValues" [ref=e1631]
+                    - option [ref=e1632]:
+                      - cell "StdFormGetMoreRows" [ref=e1633]
+                    - option [ref=e1634]:
+                      - cell "StdFormGetMoreRowsCompleted" [ref=e1635]
+                    - option [ref=e1636]:
+                      - cell "StdFormGraph" [ref=e1637]
+                    - option [ref=e1638]:
+                      - cell "StdFormGraphCompleted" [ref=e1639]
+                    - option [ref=e1640]:
+                      - cell "StdFormHelp" [ref=e1641]
+                    - option [ref=e1642]:
+                      - cell "StdFormHideSplitterPaneOne" [ref=e1643]
+                    - option [ref=e1644]:
+                      - cell "StdFormHideSplitterPaneTwo" [ref=e1645]
+                    - option [ref=e1646]:
+                      - cell "StdFormInitCompleted" [ref=e1647]
+                    - option [ref=e1648]:
+                      - cell "StdFormLast" [ref=e1649]
+                    - option [ref=e1650]:
+                      - cell "StdFormLastCompleted" [ref=e1651]
+                    - option [ref=e1652]:
+                      - cell "StdFormLinkUpdate" [ref=e1653]
+                    - option [ref=e1654]:
+                      - cell "StdFormLinkUpdateCompleted" [ref=e1655]
+                    - option [ref=e1656]:
+                      - cell "StdFormLoadBoundValues" [ref=e1657]
+                    - option [ref=e1658]:
+                      - cell "StdFormLoadDerivedValues" [ref=e1659]
+                    - option [ref=e1660]:
+                      - cell "StdFormNew" [ref=e1661]
+                    - option [ref=e1662]:
+                      - cell "StdFormNewCompleted" [ref=e1663]
+                    - option [ref=e1664]:
+                      - cell "StdFormNewWorkflow" [ref=e1665]
+                    - option [ref=e1666]:
+                      - cell "StdFormNext" [ref=e1667]
+                    - option [ref=e1668]:
+                      - cell "StdFormNextCompleted" [ref=e1669]
+                    - option [ref=e1670]:
+                      - cell "StdFormNotes" [ref=e1671]
+                    - option [ref=e1672]:
+                      - cell "StdFormNotesCompleted" [ref=e1673]
+                    - option [ref=e1674]:
+                      - cell "StdFormPageFirst" [ref=e1675]
+                    - option [ref=e1676]:
+                      - cell "StdFormPageNext" [ref=e1677]
+                    - option [ref=e1678]:
+                      - cell "StdFormPagePop" [ref=e1679]
+                    - option [ref=e1680]:
+                      - cell "StdFormPasteRow" [ref=e1681]
+                    - option [ref=e1682]:
+                      - cell "StdFormPasteRowCompleted" [ref=e1683]
+                    - option [ref=e1684]:
+                      - cell "StdFormPerformValidations" [ref=e1685]
+                    - option [ref=e1686]:
+                      - cell "StdFormPredisplay" [ref=e1687]
+                    - option [ref=e1688]:
+                      - cell "StdFormPrevious" [ref=e1689]
+                    - option [ref=e1690]:
+                      - cell "StdFormPreviousCompleted" [ref=e1691]
+                    - option [ref=e1692]:
+                      - cell "StdFormPutBoundValues" [ref=e1693]
+                    - option [ref=e1694]:
+                      - cell "StdFormRefresh" [ref=e1695]
+                    - option [selected] [ref=e1696]:
+                      - cell "StdFormRefreshCompleted" [ref=e1697]
+                    - option [ref=e1698]:
+                      - cell "StdFormRefreshCurrent" [ref=e1699]
+                    - option [ref=e1700]:
+                      - cell "StdFormRefreshCurrentCompleted" [ref=e1701]
+                    - option [ref=e1702]:
+                      - cell "StdFormReportExport" [ref=e1703]
+                    - option [ref=e1704]:
+                      - cell "StdFormReportExportCompleted" [ref=e1705]
+                    - option [ref=e1706]:
+                      - cell "StdFormReportGenerate" [ref=e1707]
+                    - option [ref=e1708]:
+                      - cell "StdFormReportGenerateCompleted" [ref=e1709]
+                    - option [ref=e1710]:
+                      - cell "StdFormReportObjectRefresh" [ref=e1711]
+                    - option [ref=e1712]:
+                      - cell "StdFormReportObjectRefreshCompleted" [ref=e1713]
+                    - option [ref=e1714]:
+                      - cell "StdFormResponsiveBreakpointChanged" [ref=e1715]
+                    - option [ref=e1716]:
+                      - cell "StdFormSave" [ref=e1717]
+                    - option [ref=e1718]:
+                      - cell "StdFormSaveCompleted" [ref=e1719]
+                    - option [ref=e1720]:
+                      - cell "StdFormSaveCurrent" [ref=e1721]
+                    - option [ref=e1722]:
+                      - cell "StdFormSaveCurrentCompleted" [ref=e1723]
+                    - option [ref=e1724]:
+                      - cell "StdFormShowHideSplitterPaneOne" [ref=e1725]
+                    - option [ref=e1726]:
+                      - cell "StdFormShowHideSplitterPaneTwo" [ref=e1727]
+                    - option [ref=e1728]:
+                      - cell "StdFormShowSplitterPaneOne" [ref=e1729]
+                    - option [ref=e1730]:
+                      - cell "StdFormShowSplitterPaneTwo" [ref=e1731]
+                    - option [ref=e1732]:
+                      - cell "StdFormSpreadsheetCopy" [ref=e1733]
+                    - option [ref=e1734]:
+                      - cell "StdFormSpreadsheetCopyCompleted" [ref=e1735]
+                    - option [ref=e1736]:
+                      - cell "StdFormTimerTick" [ref=e1737]
+                    - option [ref=e1738]:
+                      - cell "StdFormViewMyWorkflows" [ref=e1739]
+                    - option [ref=e1740]:
+                      - cell "StdFormViewWorkflow" [ref=e1741]
+                    - option [ref=e1742]:
+                      - cell "StdFormViewWorkflowCompleted" [ref=e1743]
+                    - option [ref=e1744]:
+                      - cell "StdLastIMEValueUpdated" [ref=e1745]
+                    - option [ref=e1746]:
+                      - cell "StdObjectCopy" [ref=e1747]
+                    - option [ref=e1748]:
+                      - cell "StdObjectCopyCompleted" [ref=e1749]
+                    - option [ref=e1750]:
+                      - cell "StdObjectDelete" [ref=e1751]
+                    - option [ref=e1752]:
+                      - cell "StdObjectDeleteCompleted" [ref=e1753]
+                    - option [ref=e1754]:
+                      - cell "StdObjectDeleteExisting" [ref=e1755]
+                    - option [ref=e1756]:
+                      - cell "StdObjectDeleteExistingCompleted" [ref=e1757]
+                    - option [ref=e1758]:
+                      - cell "StdObjectDeleteNew" [ref=e1759]
+                    - option [ref=e1760]:
+                      - cell "StdObjectDeleteNewCompleted" [ref=e1761]
+                    - option [ref=e1762]:
+                      - cell "StdObjectFirst" [ref=e1763]
+                    - option [ref=e1764]:
+                      - cell "StdObjectFirstCompleted" [ref=e1765]
+                    - option [ref=e1766]:
+                      - cell "StdObjectGetMoreRows" [ref=e1767]
+                    - option [ref=e1768]:
+                      - cell "StdObjectGetMoreRowsCompleted" [ref=e1769]
+                    - option [ref=e1770]:
+                      - cell "StdObjectLast" [ref=e1771]
+                    - option [ref=e1772]:
+                      - cell "StdObjectLastCompleted" [ref=e1773]
+                    - option [ref=e1774]:
+                      - cell "StdObjectModified" [ref=e1775]
+                    - option [ref=e1776]:
+                      - cell "StdObjectNew" [ref=e1777]
+                    - option [ref=e1778]:
+                      - cell "StdObjectNewCompleted" [ref=e1779]
+                    - option [ref=e1780]:
+                      - cell "StdObjectNext" [ref=e1781]
+                    - option [ref=e1782]:
+                      - cell "StdObjectNextCompleted" [ref=e1783]
+                    - option [ref=e1784]:
+                      - cell "StdObjectPrevious" [ref=e1785]
+                    - option [ref=e1786]:
+                      - cell "StdObjectPreviousCompleted" [ref=e1787]
+                    - option [ref=e1788]:
+                      - cell "StdObjectRefresh" [ref=e1789]
+                    - option [ref=e1790]:
+                      - cell "StdObjectRefreshCompleted" [ref=e1791]
+                    - option [ref=e1792]:
+                      - cell "StdObjectRefreshCurrent" [ref=e1793]
+                    - option [ref=e1794]:
+                      - cell "StdObjectRefreshCurrentCompleted" [ref=e1795]
+                    - option [ref=e1796]:
+                      - cell "StdObjectSave" [ref=e1797]
+                    - option [ref=e1798]:
+                      - cell "StdObjectSaveCompleted" [ref=e1799]
+                    - option [ref=e1800]:
+                      - cell "StdObjectSaveCurrent" [ref=e1801]
+                    - option [ref=e1802]:
+                      - cell "StdObjectSaveCurrentCompleted" [ref=e1803]
+                    - option [ref=e1804]:
+                      - cell "StdObjectSelectCurrent" [ref=e1805]
+                    - option [ref=e1806]:
+                      - cell "StdObjectSelectCurrentCompleted" [ref=e1807]
+                    - option [ref=e1808]:
+                      - cell "StdQueryFormAddAdditional" [ref=e1809]
+                    - option [ref=e1810]:
+                      - cell "StdQueryFormClear" [ref=e1811]
+                    - option [ref=e1812]:
+                      - cell "StdQueryFormClearCompleted" [ref=e1813]
+                    - option [ref=e1814]:
+                      - cell "StdQueryFormFilterOpen" [ref=e1815]
+                    - option [ref=e1816]:
+                      - cell "StdQueryFormFilterSave" [ref=e1817]
+                    - option [ref=e1818]:
+                      - cell "StdQueryFormInitialize" [ref=e1819]
+                    - option [ref=e1820]:
+                      - cell "StdQueryFormInitializeCompleted" [ref=e1821]
+                    - option [ref=e1822]:
+                      - cell "StdQueryFormRemoveAdditional" [ref=e1823]
+                    - option [ref=e1824]:
+                      - cell "StdQueryFormSelectAdditionalProperty" [ref=e1825]
+                    - option [ref=e1826]:
+                      - cell "StdWebContainerMessageReceived" [ref=e1827]
+                    - option [ref=e1828]:
+                      - cell "StdWebLocationInfoReceived" [ref=e1829]
+          - generic [ref=e1830] [cursor=pointer]
+      - generic [ref=e1410]:
+        - generic [ref=e1411]: Event
+        - textbox "Event" [ref=e1831]: Name
+  - separator [ref=e857]
+  - text: 
+  - generic [ref=e858]: Properties
+  - button "Collapse Panel" [ref=e859] [cursor=pointer]
+  - tabpanel "Form" [ref=e860]:
+    - toolbar [ref=e861]:
+      - button "" [ref=e862] [cursor=pointer]
+      - generic [ref=e863]:
+        - generic [ref=e864]: "Search Properties:"
+        - generic [ref=e867]:
+          - textbox "Search Properties:" [ref=e869]
+          - generic [ref=e870] [cursor=pointer]
+      - button "Expand" [ref=e871] [cursor=pointer]: 
+      - button "Collapse" [ref=e872] [cursor=pointer]: 
+    - generic: Name
+    - generic: Value
+    - tree [ref=e881]:
+      - generic [ref=e882]:
+        - table [ref=e883]:
+          - rowgroup [ref=e884]:
+            - row "Design" [ref=e885]:
+              - treeitem "Design" [ref=e886]
+              - gridcell [ref=e889]
+              - gridcell [ref=e891]
+        - table [ref=e892]:
+          - rowgroup [ref=e893]:
+            - row [ref=e894]:
+              - treeitem "Name" [ref=e895]
+              - gridcell "FX_Items" [ref=e898]
+              - gridcell [ref=e900]
+        - table [ref=e901]:
+          - rowgroup [ref=e902]:
+            - row "Description" [ref=e903]:
+              - treeitem "Description" [ref=e904]
+              - gridcell [ref=e907]
+              - gridcell [ref=e909]
+        - table [ref=e910]:
+          - rowgroup [ref=e911]:
+            - row "Caption Open Edit Property Dialog" [ref=e912]:
+              - treeitem "Caption" [ref=e913]
+              - gridcell [ref=e916]:
+                - generic [ref=e919] [cursor=pointer]
+              - gridcell [ref=e920]:
+                - button "Open Edit Property Dialog" [ref=e922] [cursor=pointer]: 
+        - table [ref=e923]:
+          - rowgroup [ref=e924]:
+            - row [ref=e925]:
+              - treeitem "Version" [ref=e926]
+              - gridcell "User version for user anton.ramos@3mworks.com.ph" [ref=e929]
+              - gridcell [ref=e931]
+        - table [ref=e932]:
+          - rowgroup [ref=e933]:
+            - row [ref=e934]:
+              - treeitem "Device Type" [ref=e935]
+              - gridcell "Default" [ref=e938]
+              - gridcell [ref=e940]
+        - table [ref=e941]:
+          - rowgroup [ref=e942]:
+            - row [ref=e943]:
+              - treeitem "Form Type" [ref=e944]
+              - gridcell "Normal" [ref=e947]
+              - gridcell [ref=e949]
+        - table [ref=e950]:
+          - rowgroup [ref=e951]:
+            - row [ref=e952]:
+              - treeitem "Is Master" [ref=e953]
+              - gridcell "True" [ref=e956]
+              - gridcell [ref=e958]
+        - table [ref=e959]:
+          - rowgroup [ref=e960]:
+            - row "Appearance" [ref=e961]:
+              - treeitem "Appearance" [ref=e962]
+              - gridcell [ref=e964]
+              - gridcell [ref=e966]
+        - table [ref=e967]:
+          - rowgroup [ref=e968]:
+            - row "Theme Class" [ref=e969]:
+              - treeitem "Theme Class" [ref=e970]
+              - gridcell [ref=e973]:
+                - generic [ref=e976] [cursor=pointer]
+              - gridcell [ref=e977]
+        - table [ref=e978]:
+          - rowgroup [ref=e979]:
+            - row "Background Color Open Edit Property Dialog" [ref=e980]:
+              - treeitem "Background Color" [ref=e981]
+              - gridcell [ref=e984]
+              - gridcell [ref=e986]:
+                - button "Open Edit Property Dialog" [ref=e988] [cursor=pointer]: 
+        - table [ref=e989]:
+          - rowgroup [ref=e990]:
+            - row [ref=e991]:
+              - treeitem "Foreground Color" [ref=e992]
+              - gridcell "#000000" [ref=e995]:
+                - generic [ref=e996]:
+                  - generic [ref=e997]: "#000000"
+                  - generic [ref=e998] [cursor=pointer]
+              - gridcell [ref=e999]:
+                - button "Open Edit Property Dialog" [ref=e1001] [cursor=pointer]: 
+        - table [ref=e1002]:
+          - rowgroup [ref=e1003]:
+            - row "Background Image" [ref=e1004]:
+              - treeitem "Background Image" [ref=e1005]
+              - gridcell [ref=e1008]
+              - gridcell [ref=e1010]
+        - table [ref=e1011]:
+          - rowgroup [ref=e1012]:
+            - row "Icon" [ref=e1013]:
+              - treeitem "Icon" [ref=e1014]
+              - gridcell [ref=e1017]:
+                - generic [ref=e1020] [cursor=pointer]
+              - gridcell [ref=e1021]
+        - table [ref=e1022]:
+          - rowgroup [ref=e1023]:
+            - row "Behavior" [ref=e1024]:
+              - treeitem "Behavior" [ref=e1025]
+              - gridcell [ref=e1027]
+              - gridcell [ref=e1029]
+        - table [ref=e1030]:
+          - rowgroup [ref=e1031]:
+            - row [ref=e1032]:
+              - treeitem "Initial Command" [ref=e1033]
+              - gridcell "Refresh" [ref=e1036]:
+                - generic [ref=e1037]:
+                  - generic [ref=e1038]: Refresh
+                  - generic [ref=e1039] [cursor=pointer]
+              - gridcell [ref=e1040]
+        - table [ref=e1041]:
+          - rowgroup [ref=e1042]:
+            - row [ref=e1043]:
+              - treeitem "Script Language" [ref=e1044]
+              - gridcell "Visual Basic" [ref=e1047]:
+                - generic [ref=e1048]:
+                  - generic [ref=e1049]: Visual Basic
+                  - generic [ref=e1050] [cursor=pointer]
+              - gridcell [ref=e1051]
+        - table [ref=e1052]:
+          - rowgroup [ref=e1053]:
+            - row [ref=e1054]:
+              - treeitem "Close Box" [ref=e1055]
+              - gridcell "True" [ref=e1058]:
+                - generic [ref=e1059]:
+                  - generic [ref=e1060]: "True"
+                  - generic [ref=e1061] [cursor=pointer]
+              - gridcell [ref=e1062]
+        - table [ref=e1063]:
+          - rowgroup [ref=e1064]:
+            - row [ref=e1065]:
+              - treeitem "Minimize/Maximize Box" [ref=e1066]
+              - gridcell "True" [ref=e1069]:
+                - generic [ref=e1070]:
+                  - generic [ref=e1071]: "True"
+                  - generic [ref=e1072] [cursor=pointer]
+              - gridcell [ref=e1073]
+        - table [ref=e1074]:
+          - rowgroup [ref=e1075]:
+            - row "Filter Form" [ref=e1076]:
+              - treeitem "Filter Form" [ref=e1077]
+              - gridcell [ref=e1080]:
+                - generic [ref=e1083] [cursor=pointer]
+              - gridcell [ref=e1084]
+        - table [ref=e1085]:
+          - rowgroup [ref=e1086]:
+            - row [ref=e1087]:
+              - treeitem "Enable Advanced Filter" [ref=e1088]
+              - gridcell "False" [ref=e1091]:
+                - generic [ref=e1092]:
+                  - generic [ref=e1093]: "False"
+                  - generic [ref=e1094] [cursor=pointer]
+              - gridcell [ref=e1095]:
+                - button "Open Edit Property Dialog" [ref=e1097] [cursor=pointer]: 
+        - table [ref=e1098]:
+          - rowgroup [ref=e1099]:
+            - row "Help" [ref=e1100]:
+              - treeitem "Help" [ref=e1101]
+              - gridcell [ref=e1103]
+              - gridcell [ref=e1105]
+        - table [ref=e1106]:
+          - rowgroup [ref=e1107]:
+            - row [ref=e1108]:
+              - treeitem "Help Context ID" [ref=e1109]
+              - gridcell "-1" [ref=e1112]
+              - gridcell [ref=e1114]
+        - table [ref=e1115]:
+          - rowgroup [ref=e1116]:
+            - row "Help File Name" [ref=e1117]:
+              - treeitem "Help File Name" [ref=e1118]
+              - gridcell [ref=e1121]
+              - gridcell [ref=e1123]
+        - table [ref=e1124]:
+          - rowgroup [ref=e1125]:
+            - row "Layout" [ref=e1126]:
+              - treeitem "Layout" [ref=e1127]
+              - gridcell [ref=e1129]
+              - gridcell [ref=e1131]
+        - table [ref=e1132]:
+          - rowgroup [ref=e1133]:
+            - row [ref=e1134]:
+              - treeitem "Splitter" [ref=e1135]
+              - gridcell "Vertical" [ref=e1138]:
+                - generic [ref=e1139]:
+                  - generic [ref=e1140]: Vertical
+                  - generic [ref=e1141] [cursor=pointer]
+              - gridcell [ref=e1142]
+        - table [ref=e1143]:
+          - rowgroup [ref=e1144]:
+            - row [ref=e1145]:
+              - treeitem "Splitter Position" [ref=e1146]
+              - gridcell "11" [ref=e1149]
+              - gridcell [ref=e1151]
+        - table [ref=e1152]:
+          - rowgroup [ref=e1153]:
+            - row [ref=e1154]:
+              - treeitem "Pane 0 Scroll Bars" [ref=e1155]
+              - gridcell "Never" [ref=e1158]:
+                - generic [ref=e1159]:
+                  - generic [ref=e1160]: Never
+                  - generic [ref=e1161] [cursor=pointer]
+              - gridcell [ref=e1162]
+        - table [ref=e1163]:
+          - rowgroup [ref=e1164]:
+            - row [ref=e1165]:
+              - treeitem "Pane 1 Scroll Bars" [ref=e1166]
+              - gridcell "As Needed" [ref=e1169]:
+                - generic [ref=e1170]:
+                  - generic [ref=e1171]: As Needed
+                  - generic [ref=e1172] [cursor=pointer]
+              - gridcell [ref=e1173]
+        - table [ref=e1174]:
+          - rowgroup [ref=e1175]:
+            - row "Form Pages Open Edit Property Dialog" [ref=e1176]:
+              - treeitem "Form Pages" [ref=e1177]
+              - gridcell [ref=e1180]
+              - gridcell [ref=e1182]:
+                - button "Open Edit Property Dialog" [ref=e1184] [cursor=pointer]: 
+        - table [ref=e1185]:
+          - rowgroup [ref=e1186]:
+            - row [ref=e1187]:
+              - treeitem "Unit" [ref=e1188]
+              - gridcell "Char" [ref=e1191]
+              - gridcell [ref=e1193]
+        - table [ref=e1194]:
+          - rowgroup [ref=e1195]:
+            - row [ref=e1196]:
+              - treeitem "Size" [ref=e1197]
+              - gridcell "69; 21" [ref=e1200]
+              - gridcell [ref=e1202]
+        - table [ref=e1203]:
+          - rowgroup [ref=e1204]:
+            - row [ref=e1205]:
+              - treeitem "Synchronize FlexLayout attributes" [ref=e1206]
+              - gridcell "True" [ref=e1209]:
+                - generic [ref=e1210]:
+                  - generic [ref=e1211]: "True"
+                  - generic [ref=e1212] [cursor=pointer]
+              - gridcell [ref=e1213]
+    - generic [ref=e1214]:
+      - generic [ref=e1215]: Empty Property Description Field
+      - textbox "Empty Property Description Field" [ref=e1220]
+  - tablist [ref=e1221]:
+    - tab [selected] [ref=e1222] [cursor=pointer]:
+      - heading "Form" [level=2] [ref=e1223]
+    - tab [ref=e1224] [cursor=pointer]:
+      - heading "Component" [level=2] [ref=e1225]
+  - toolbar [ref=e1226]:
+    - generic [ref=e1227]: "[ ScopeType: User / ScopeName: anton.ramos@3mworks.com.ph ]"
+    - generic [ref=e1228]: en-US
+    - separator [ref=e1229]
+    - img "Powered by Infor" [ref=e1230]

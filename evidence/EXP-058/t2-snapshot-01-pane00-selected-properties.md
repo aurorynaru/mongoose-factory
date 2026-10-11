@@ -1,0 +1,848 @@
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - button "Form" [ref=e3] [cursor=pointer]
+    - button "Edit" [ref=e5] [cursor=pointer]
+    - button "View" [ref=e7] [cursor=pointer]
+    - button "Help" [ref=e9] [cursor=pointer]
+  - toolbar [ref=e11]:
+    - button [ref=e12] [cursor=pointer]:
+      - button "Design" [ref=e13]
+    - button "Save" [disabled] [ref=e15]:
+      - button "Save" [disabled]
+    - button "Regenerate Form" [disabled] [ref=e16]:
+      - button "Regenerate Form" [disabled]
+    - separator [ref=e17]
+    - button [ref=e18] [cursor=pointer]:
+      - button "New" [ref=e19]
+    - button [ref=e21] [cursor=pointer]:
+      - button "Copy" [ref=e22]
+    - button [ref=e24] [cursor=pointer]:
+      - button "Delete" [ref=e25]
+    - separator [ref=e27]
+    - button "Align Left" [disabled] [ref=e28]:
+      - button "Align Left" [disabled]
+    - button "Align Center" [disabled] [ref=e29]:
+      - button "Align Center" [disabled]
+    - button "Align Right" [disabled] [ref=e30]:
+      - button "Align Right" [disabled]
+    - button "Align Top" [disabled] [ref=e31]:
+      - button "Align Top" [disabled]
+    - button "Align Middle" [disabled] [ref=e32]:
+      - button "Align Middle" [disabled]
+    - button "Align Bottom" [disabled] [ref=e33]:
+      - button "Align Bottom" [disabled]
+    - separator [ref=e34]
+    - button "Make Same Width" [disabled] [ref=e35]:
+      - button "Make Same Width" [disabled]
+    - button "Make Same Height" [disabled] [ref=e36]:
+      - button "Make Same Height" [disabled]
+    - button "Make Same Size" [disabled] [ref=e37]:
+      - button "Make Same Size" [disabled]
+    - separator [ref=e38]
+    - button "Space Horizontally" [disabled] [ref=e39]:
+      - button "Space Horizontally" [disabled]
+    - button "Space Vertically" [disabled] [ref=e40]:
+      - button "Space Vertically" [disabled]
+    - separator [ref=e41]
+    - button [ref=e42] [cursor=pointer]:
+      - button "Tab Order" [ref=e43]
+    - button [ref=e45] [cursor=pointer]:
+      - button "Tab Order At" [ref=e46]
+    - separator [ref=e48]
+    - button "Undo" [disabled] [ref=e49]:
+      - button "Undo" [disabled]
+    - button "Redo" [disabled] [ref=e50]:
+      - button "Redo" [disabled]
+  - grid "Toolbox" [ref=e51]:
+    - text: 
+    - button "Collapse Panel" [ref=e53] [cursor=pointer]
+    - generic [ref=e54]:
+      - generic [ref=e55]: "Search Toolbox:"
+      - generic [ref=e58]:
+        - textbox "Search Toolbox:" [ref=e60]:
+          - /placeholder: Search Toolbox
+        - generic [ref=e61] [cursor=pointer]
+    - columnheader "Name"
+    - tree [ref=e66]:
+      - generic [ref=e67]:
+        - table [ref=e68]:
+          - rowgroup [ref=e69]:
+            - row [ref=e70]:
+              - treeitem "Framework Components" [ref=e71]
+        - table [ref=e73]:
+          - rowgroup [ref=e74]:
+            - row [ref=e75]:
+              - treeitem "Pointer" [ref=e76]
+        - table [ref=e78]:
+          - rowgroup [ref=e79]:
+            - row [ref=e80]:
+              - treeitem "Barcode" [ref=e81]
+        - table [ref=e83]:
+          - rowgroup [ref=e84]:
+            - row [ref=e85]:
+              - treeitem "Browser" [ref=e86]
+        - table [ref=e88]:
+          - rowgroup [ref=e89]:
+            - row [ref=e90]:
+              - treeitem "Button" [ref=e91]
+        - table [ref=e93]:
+          - rowgroup [ref=e94]:
+            - row [ref=e95]:
+              - treeitem "Calendar" [ref=e96]
+        - table [ref=e98]:
+          - rowgroup [ref=e99]:
+            - row [ref=e100]:
+              - treeitem "Chart" [ref=e101]
+        - table [ref=e103]:
+          - rowgroup [ref=e104]:
+            - row [ref=e105]:
+              - treeitem "CheckBox" [ref=e106]
+        - table [ref=e108]:
+          - rowgroup [ref=e109]:
+            - row [ref=e110]:
+              - treeitem "ComboBox" [ref=e111]
+        - table [ref=e113]:
+          - rowgroup [ref=e114]:
+            - row [ref=e115]:
+              - treeitem "DataView" [ref=e116]
+        - table [ref=e118]:
+          - rowgroup [ref=e119]:
+            - row [ref=e120]:
+              - treeitem "DateCombo" [ref=e121]
+        - table [ref=e123]:
+          - rowgroup [ref=e124]:
+            - row [ref=e125]:
+              - treeitem "Diagram" [ref=e126]
+        - table [ref=e128]:
+          - rowgroup [ref=e129]:
+            - row [ref=e130]:
+              - treeitem "DropList" [ref=e131]
+        - table [ref=e133]:
+          - rowgroup [ref=e134]:
+            - row [ref=e135]:
+              - treeitem "Edit" [ref=e136]
+        - table [ref=e138]:
+          - rowgroup [ref=e139]:
+            - row [ref=e140]:
+              - treeitem "FlexLayout" [ref=e141]
+        - table [ref=e143]:
+          - rowgroup [ref=e144]:
+            - row [ref=e145]:
+              - treeitem "FormPage" [ref=e146]
+        - table [ref=e148]:
+          - rowgroup [ref=e149]:
+            - row [ref=e150]:
+              - treeitem "Gauge" [ref=e151]
+        - table [ref=e153]:
+          - rowgroup [ref=e154]:
+            - row [ref=e155]:
+              - treeitem "Grid" [ref=e156]
+        - table [ref=e158]:
+          - rowgroup [ref=e159]:
+            - row [ref=e160]:
+              - treeitem "GroupBox" [ref=e161]
+        - table [ref=e163]:
+          - rowgroup [ref=e164]:
+            - row [ref=e165]:
+              - treeitem "HyperLinkButton" [ref=e166]
+        - table [ref=e168]:
+          - rowgroup [ref=e169]:
+            - row [ref=e170]:
+              - treeitem "Infocon" [ref=e171]
+        - table [ref=e173]:
+          - rowgroup [ref=e174]:
+            - row [ref=e175]:
+              - treeitem "Infor Chart" [ref=e176]
+        - table [ref=e178]:
+          - rowgroup [ref=e179]:
+            - row [ref=e180]:
+              - treeitem "List" [ref=e181]
+        - table [ref=e183]:
+          - rowgroup [ref=e184]:
+            - row [ref=e185]:
+              - treeitem "MenuItem" [ref=e186]
+        - table [ref=e188]:
+          - rowgroup [ref=e189]:
+            - row [ref=e190]:
+              - treeitem "MultiLineEdit" [ref=e191]
+        - table [ref=e193]:
+          - rowgroup [ref=e194]:
+            - row [ref=e195]:
+              - treeitem "NoteBook" [ref=e196]
+        - table [ref=e198]:
+          - rowgroup [ref=e199]:
+            - row [ref=e200]:
+              - treeitem "Process Intelligence" [ref=e201]
+        - table [ref=e203]:
+          - rowgroup [ref=e204]:
+            - row [ref=e205]:
+              - treeitem "RadioButton" [ref=e206]
+        - table [ref=e208]:
+          - rowgroup [ref=e209]:
+            - row [ref=e210]:
+              - treeitem "Static" [ref=e211]
+        - table [ref=e213]:
+          - rowgroup [ref=e214]:
+            - row [ref=e215]:
+              - treeitem "SubForm" [ref=e216]
+        - table [ref=e218]:
+          - rowgroup [ref=e219]:
+            - row [ref=e220]:
+              - treeitem "ToolbarButton" [ref=e221]
+        - table [ref=e223]:
+          - rowgroup [ref=e224]:
+            - row [ref=e225]:
+              - treeitem "Tree" [ref=e226]
+        - table [ref=e228]:
+          - rowgroup [ref=e229]:
+            - row [ref=e230]:
+              - treeitem "UserControl" [ref=e231]
+        - table [ref=e233]:
+          - rowgroup [ref=e234]:
+            - row [ref=e235]:
+              - treeitem "VerticalGrid" [ref=e236]
+        - table [ref=e238]:
+          - rowgroup [ref=e239]:
+            - row [ref=e240]:
+              - treeitem "User Components" [ref=e241]
+  - separator [ref=e243]
+  - text: 
+  - tablist [ref=e244]:
+    - tab [selected] [ref=e245] [cursor=pointer]:
+      - heading "FX_Items" [level=2] [ref=e246]
+      - button "closable FX_Items" [ref=e247]:
+        - img "closable FX_Items"
+  - tabpanel [ref=e248]:
+    - generic [ref=e249]:
+      - grid [ref=e250]:
+        - grid [ref=e251]:
+          - row [ref=e252]:
+            - columnheader [ref=e253]
+          - grid [ref=e258]
+        - grid [ref=e260]:
+          - row [ref=e261]:
+            - columnheader "Item" [ref=e262]
+            - columnheader "Description" [ref=e267]
+            - columnheader "Cost" [ref=e272]
+            - columnheader "Unit of Measure" [ref=e277]
+          - grid [ref=e282]
+        - generic [ref=e284] [cursor=pointer]: 
+      - separator [ref=e285]: ⁞
+      - button "FX_Refresh" [ref=e287] [cursor=pointer]
+      - generic [ref=e289]:
+        - textbox [ref=e293]
+        - generic [ref=e294] [cursor=pointer]
+      - generic [ref=e295]:
+        - generic [ref=e296]: "Item:"
+        - generic [ref=e297] [cursor=pointer]
+      - generic [ref=e298]:
+        - generic [ref=e299]: "Item:"
+        - textbox "Item:" [ref=e304]
+        - generic [ref=e305] [cursor=pointer]
+      - generic [ref=e306]:
+        - generic [ref=e307]: "Description:"
+        - generic [ref=e308] [cursor=pointer]
+      - generic [ref=e309]:
+        - generic [ref=e310]: "Description:"
+        - textbox "Description:" [ref=e315]
+        - generic [ref=e316] [cursor=pointer]
+      - generic [ref=e317]:
+        - generic [ref=e318]: "Cost:"
+        - generic [ref=e319] [cursor=pointer]
+      - generic [ref=e320]:
+        - generic [ref=e321]: "Cost:"
+        - textbox "Cost:" [ref=e326]
+        - generic [ref=e327] [cursor=pointer]
+      - generic [ref=e328]:
+        - generic [ref=e329]: "Unit of Measure:"
+        - generic [ref=e330] [cursor=pointer]
+      - generic [ref=e331]:
+        - generic [ref=e332]: "Unit of Measure:"
+        - combobox "Unit of Measure:" [ref=e337]
+        - generic [ref=e338] [cursor=pointer]
+    - separator [ref=e347]
+    - text: 
+    - generic [ref=e348]: Details
+    - button "Collapse Panel" [ref=e349] [cursor=pointer]
+    - tablist [ref=e350]:
+      - tab [ref=e351] [cursor=pointer]:
+        - heading "Collections" [level=2] [ref=e352]
+      - tab [selected] [ref=e353] [cursor=pointer]:
+        - heading "Components" [level=2] [ref=e354]
+      - tab [ref=e355] [cursor=pointer]:
+        - heading "Event Handlers" [level=2] [ref=e356]
+      - tab [ref=e357] [cursor=pointer]:
+        - heading "Variables" [level=2] [ref=e358]
+      - tab [ref=e359] [cursor=pointer]:
+        - heading "Design View Size" [level=2] [ref=e360]
+    - tabpanel "Components" [ref=e361]:
+      - grid [ref=e362]:
+        - generic [ref=e366]:
+          - textbox [ref=e368]
+          - generic [ref=e369] [cursor=pointer]
+        - button "Expand" [ref=e370] [cursor=pointer]: 
+        - button "Collapse" [ref=e371] [cursor=pointer]: 
+        - row [ref=e372]:
+          - columnheader "Name" [ref=e373]
+          - columnheader "Type" [ref=e378]
+          - columnheader "Data Source" [ref=e383]
+          - columnheader "Pane" [ref=e388]
+          - columnheader "Container" [ref=e393]
+          - columnheader "Tab" [ref=e398]
+          - columnheader "Event to generate" [ref=e403]
+          - columnheader "Component Class" [ref=e408]
+          - columnheader "Enabled When" [ref=e413]
+          - columnheader "Visible When" [ref=e418]
+          - columnheader "Required When" [ref=e423]
+        - tree [ref=e428]:
+          - generic [ref=e429]:
+            - table [ref=e430]:
+              - rowgroup [ref=e431]:
+                - row "Pane (00)" [ref=e432]:
+                  - treeitem "Pane (00)" [active] [ref=e433]
+                  - gridcell [ref=e435]
+                  - gridcell [ref=e437]
+                  - gridcell [ref=e439]
+                  - gridcell [ref=e441]
+                  - gridcell [ref=e443]
+                  - gridcell [ref=e445]
+                  - gridcell [ref=e447]
+                  - gridcell [ref=e449]
+                  - gridcell [ref=e451]
+                  - gridcell [ref=e453]
+            - table [ref=e455]:
+              - rowgroup [ref=e456]:
+                - row "FormCollectionGrid Grid objects 0 0" [ref=e457]:
+                  - treeitem "FormCollectionGrid" [ref=e458]
+                  - gridcell "Grid" [ref=e460]
+                  - gridcell "objects" [ref=e462]
+                  - gridcell "0" [ref=e464]
+                  - gridcell [ref=e466]
+                  - gridcell "0" [ref=e468]
+                  - gridcell [ref=e470]
+                  - gridcell [ref=e472]
+                  - gridcell [ref=e474]
+                  - gridcell [ref=e476]
+                  - gridcell [ref=e478]
+            - table [ref=e480]:
+              - rowgroup [ref=e481]:
+                - row "FX_ItemGridCol GridColumn object.FX_Item 0 FormCollectionGrid 1" [ref=e482]:
+                  - treeitem "FX_ItemGridCol" [ref=e483]
+                  - gridcell "GridColumn" [ref=e485]
+                  - gridcell "object.FX_Item" [ref=e487]
+                  - gridcell "0" [ref=e489]
+                  - gridcell "FormCollectionGrid" [ref=e491]
+                  - gridcell "1" [ref=e493]
+                  - gridcell [ref=e495]
+                  - gridcell [ref=e497]
+                  - gridcell [ref=e499]
+                  - gridcell [ref=e501]
+                  - gridcell [ref=e503]
+            - table [ref=e505]:
+              - rowgroup [ref=e506]:
+                - row "FX_DescriptionGridCol GridColumn object.FX_Description 0 FormCollectionGrid 2" [ref=e507]:
+                  - treeitem "FX_DescriptionGridCol" [ref=e508]
+                  - gridcell "GridColumn" [ref=e510]
+                  - gridcell "object.FX_Description" [ref=e512]
+                  - gridcell "0" [ref=e514]
+                  - gridcell "FormCollectionGrid" [ref=e516]
+                  - gridcell "2" [ref=e518]
+                  - gridcell [ref=e520]
+                  - gridcell [ref=e522]
+                  - gridcell [ref=e524]
+                  - gridcell [ref=e526]
+                  - gridcell [ref=e528]
+            - table [ref=e530]:
+              - rowgroup [ref=e531]:
+                - row "FX_CostGridCol GridColumn object.FX_Cost 0 FormCollectionGrid 3" [ref=e532]:
+                  - treeitem "FX_CostGridCol" [ref=e533]
+                  - gridcell "GridColumn" [ref=e535]
+                  - gridcell "object.FX_Cost" [ref=e537]
+                  - gridcell "0" [ref=e539]
+                  - gridcell "FormCollectionGrid" [ref=e541]
+                  - gridcell "3" [ref=e543]
+                  - gridcell [ref=e545]
+                  - gridcell [ref=e547]
+                  - gridcell [ref=e549]
+                  - gridcell [ref=e551]
+                  - gridcell [ref=e553]
+            - table [ref=e555]:
+              - rowgroup [ref=e556]:
+                - row "FX_UMGridCol GridColumn object.FX_UM 0 FormCollectionGrid 4" [ref=e557]:
+                  - treeitem "FX_UMGridCol" [ref=e558]
+                  - gridcell "GridColumn" [ref=e560]
+                  - gridcell "object.FX_UM" [ref=e562]
+                  - gridcell "0" [ref=e564]
+                  - gridcell "FormCollectionGrid" [ref=e566]
+                  - gridcell "4" [ref=e568]
+                  - gridcell [ref=e570]
+                  - gridcell [ref=e572]
+                  - gridcell [ref=e574]
+                  - gridcell [ref=e576]
+                  - gridcell [ref=e578]
+            - table [ref=e580]:
+              - rowgroup [ref=e581]:
+                - row "Pane (01)" [ref=e582]:
+                  - treeitem "Pane (01)" [ref=e583]
+                  - gridcell [ref=e585]
+                  - gridcell [ref=e587]
+                  - gridcell [ref=e589]
+                  - gridcell [ref=e591]
+                  - gridcell [ref=e593]
+                  - gridcell [ref=e595]
+                  - gridcell [ref=e597]
+                  - gridcell [ref=e599]
+                  - gridcell [ref=e601]
+                  - gridcell [ref=e603]
+            - table [ref=e605]:
+              - rowgroup [ref=e606]:
+                - row "FX_ItemStatic Static 1 5" [ref=e607]:
+                  - treeitem "FX_ItemStatic" [ref=e608]
+                  - gridcell "Static" [ref=e610]
+                  - gridcell [ref=e612]
+                  - gridcell "1" [ref=e614]
+                  - gridcell [ref=e616]
+                  - gridcell "5" [ref=e618]
+                  - gridcell [ref=e620]
+                  - gridcell [ref=e622]
+                  - gridcell [ref=e624]
+                  - gridcell [ref=e626]
+                  - gridcell [ref=e628]
+            - table [ref=e630]:
+              - rowgroup [ref=e631]:
+                - row "FX_ItemEdit Edit object.FX_Item 1 6" [ref=e632]:
+                  - treeitem "FX_ItemEdit" [ref=e633]
+                  - gridcell "Edit" [ref=e635]
+                  - gridcell "object.FX_Item" [ref=e637]
+                  - gridcell "1" [ref=e639]
+                  - gridcell [ref=e641]
+                  - gridcell "6" [ref=e643]
+                  - gridcell [ref=e645]
+                  - gridcell [ref=e647]
+                  - gridcell [ref=e649]
+                  - gridcell [ref=e651]
+                  - gridcell [ref=e653]
+            - table [ref=e655]:
+              - rowgroup [ref=e656]:
+                - row "FX_DescriptionStatic Static 1 7" [ref=e657]:
+                  - treeitem "FX_DescriptionStatic" [ref=e658]
+                  - gridcell "Static" [ref=e660]
+                  - gridcell [ref=e662]
+                  - gridcell "1" [ref=e664]
+                  - gridcell [ref=e666]
+                  - gridcell "7" [ref=e668]
+                  - gridcell [ref=e670]
+                  - gridcell [ref=e672]
+                  - gridcell [ref=e674]
+                  - gridcell [ref=e676]
+                  - gridcell [ref=e678]
+            - table [ref=e680]:
+              - rowgroup [ref=e681]:
+                - row "FX_DescriptionEdit Edit object.FX_Description 1 8" [ref=e682]:
+                  - treeitem "FX_DescriptionEdit" [ref=e683]
+                  - gridcell "Edit" [ref=e685]
+                  - gridcell "object.FX_Description" [ref=e687]
+                  - gridcell "1" [ref=e689]
+                  - gridcell [ref=e691]
+                  - gridcell "8" [ref=e693]
+                  - gridcell [ref=e695]
+                  - gridcell [ref=e697]
+                  - gridcell [ref=e699]
+                  - gridcell [ref=e701]
+                  - gridcell [ref=e703]
+            - table [ref=e705]:
+              - rowgroup [ref=e706]:
+                - row "FX_CostStatic Static 1 9" [ref=e707]:
+                  - treeitem "FX_CostStatic" [ref=e708]
+                  - gridcell "Static" [ref=e710]
+                  - gridcell [ref=e712]
+                  - gridcell "1" [ref=e714]
+                  - gridcell [ref=e716]
+                  - gridcell "9" [ref=e718]
+                  - gridcell [ref=e720]
+                  - gridcell [ref=e722]
+                  - gridcell [ref=e724]
+                  - gridcell [ref=e726]
+                  - gridcell [ref=e728]
+            - table [ref=e730]:
+              - rowgroup [ref=e731]:
+                - row "FX_CostEdit Edit object.FX_Cost 1 10" [ref=e732]:
+                  - treeitem "FX_CostEdit" [ref=e733]
+                  - gridcell "Edit" [ref=e735]
+                  - gridcell "object.FX_Cost" [ref=e737]
+                  - gridcell "1" [ref=e739]
+                  - gridcell [ref=e741]
+                  - gridcell "10" [ref=e743]
+                  - gridcell [ref=e745]
+                  - gridcell [ref=e747]
+                  - gridcell [ref=e749]
+                  - gridcell [ref=e751]
+                  - gridcell [ref=e753]
+            - table [ref=e755]:
+              - rowgroup [ref=e756]:
+                - row "FX_UMStatic Static 1 11" [ref=e757]:
+                  - treeitem "FX_UMStatic" [ref=e758]
+                  - gridcell "Static" [ref=e760]
+                  - gridcell [ref=e762]
+                  - gridcell "1" [ref=e764]
+                  - gridcell [ref=e766]
+                  - gridcell "11" [ref=e768]
+                  - gridcell [ref=e770]
+                  - gridcell [ref=e772]
+                  - gridcell [ref=e774]
+                  - gridcell [ref=e776]
+                  - gridcell [ref=e778]
+            - table [ref=e780]:
+              - rowgroup [ref=e781]:
+                - row "FX_UMCombobox ComboBox object.FX_UM 1 12" [ref=e782]:
+                  - treeitem "FX_UMCombobox" [ref=e783]
+                  - gridcell "ComboBox" [ref=e785]
+                  - gridcell "object.FX_UM" [ref=e787]
+                  - gridcell "1" [ref=e789]
+                  - gridcell [ref=e791]
+                  - gridcell "12" [ref=e793]
+                  - gridcell [ref=e795]
+                  - gridcell [ref=e797]
+                  - gridcell [ref=e799]
+                  - gridcell [ref=e801]
+                  - gridcell [ref=e803]
+            - table [ref=e805]:
+              - rowgroup [ref=e806]:
+                - row "FX_RefreshButton PushButton 1 0 StdFormRefresh" [ref=e807]:
+                  - treeitem "FX_RefreshButton" [ref=e808]
+                  - gridcell "PushButton" [ref=e810]
+                  - gridcell [ref=e812]
+                  - gridcell "1" [ref=e814]
+                  - gridcell [ref=e816]
+                  - gridcell "0" [ref=e818]
+                  - gridcell "StdFormRefresh" [ref=e820]
+                  - gridcell [ref=e822]
+                  - gridcell [ref=e824]
+                  - gridcell [ref=e826]
+                  - gridcell [ref=e828]
+            - table [ref=e830]:
+              - rowgroup [ref=e831]:
+                - row "FX_VarTestEdit Edit variables.FX_VarTest 1 0" [ref=e832]:
+                  - treeitem "FX_VarTestEdit" [ref=e833]
+                  - gridcell "Edit" [ref=e835]
+                  - gridcell "variables.FX_VarTest" [ref=e837]
+                  - gridcell "1" [ref=e839]
+                  - gridcell [ref=e841]
+                  - gridcell "0" [ref=e843]
+                  - gridcell [ref=e845]
+                  - gridcell [ref=e847]
+                  - gridcell [ref=e849]
+                  - gridcell [ref=e851]
+                  - gridcell [ref=e853]
+        - toolbar [ref=e855]:
+          - button "" [disabled]
+  - separator [ref=e857]
+  - text: 
+  - generic [ref=e858]: Properties
+  - button "Collapse Panel" [ref=e859] [cursor=pointer]
+  - tabpanel [aria-hidden] [ref=e1618]:
+    - toolbar [ref=e1619]:
+      - button [ref=e1620] [cursor=pointer]: 
+      - generic [ref=e1621]:
+        - generic [ref=e1622]: "Search Properties:"
+        - generic [ref=e1625]:
+          - textbox [ref=e1627]
+          - generic [ref=e1628] [cursor=pointer]
+      - button [ref=e1629] [cursor=pointer]: 
+      - button [ref=e1630] [cursor=pointer]: 
+    - generic: Name
+    - generic [ref=e1631]: Value
+    - tree [ref=e1639]:
+      - generic [ref=e1640]:
+        - table [ref=e1641]:
+          - rowgroup [ref=e1642]:
+            - row [ref=e1643]:
+              - treeitem [ref=e1644]:
+                - generic [ref=e1645]: Design
+              - gridcell [ref=e1647]
+              - gridcell [ref=e1649]
+        - table [ref=e1650]:
+          - rowgroup [ref=e1651]:
+            - row [ref=e1652]:
+              - treeitem [ref=e1653]:
+                - generic [ref=e1654]: Name
+              - gridcell [ref=e1656]:
+                - generic [ref=e1657]: FX_Items
+              - gridcell [ref=e1658]
+        - table [ref=e1659]:
+          - rowgroup [ref=e1660]:
+            - row [ref=e1661]:
+              - treeitem [ref=e1662]:
+                - generic [ref=e1663]: Description
+              - gridcell [ref=e1665]
+              - gridcell [ref=e1667]
+        - table [ref=e1668]:
+          - rowgroup [ref=e1669]:
+            - row [ref=e1670]:
+              - treeitem [ref=e1671]:
+                - generic [ref=e1672]: Caption
+              - gridcell [ref=e1674]:
+                - generic [ref=e1677] [cursor=pointer]
+              - gridcell [ref=e1678]:
+                - button [ref=e1680] [cursor=pointer]: 
+        - table [ref=e1681]:
+          - rowgroup [ref=e1682]:
+            - row [ref=e1683]:
+              - treeitem [ref=e1684]:
+                - generic [ref=e1685]: Version
+              - gridcell [ref=e1687]:
+                - generic [ref=e1688]: User version for user anton.ramos@3mworks.com.ph
+              - gridcell [ref=e1689]
+        - table [ref=e1690]:
+          - rowgroup [ref=e1691]:
+            - row [ref=e1692]:
+              - treeitem [ref=e1693]:
+                - generic [ref=e1694]: Device Type
+              - gridcell [ref=e1696]:
+                - generic [ref=e1697]: Default
+              - gridcell [ref=e1698]
+        - table [ref=e1699]:
+          - rowgroup [ref=e1700]:
+            - row [ref=e1701]:
+              - treeitem [ref=e1702]:
+                - generic [ref=e1703]: Form Type
+              - gridcell [ref=e1705]:
+                - generic [ref=e1706]: Normal
+              - gridcell [ref=e1707]
+        - table [ref=e1708]:
+          - rowgroup [ref=e1709]:
+            - row [ref=e1710]:
+              - treeitem [ref=e1711]:
+                - generic [ref=e1712]: Is Master
+              - gridcell [ref=e1714]:
+                - generic [ref=e1715]: "True"
+              - gridcell [ref=e1716]
+        - table [ref=e1717]:
+          - rowgroup [ref=e1718]:
+            - row [ref=e1719]:
+              - treeitem [ref=e1720]:
+                - generic [ref=e1721]: Appearance
+              - gridcell [ref=e1722]
+              - gridcell [ref=e1724]
+        - table [ref=e1725]:
+          - rowgroup [ref=e1726]:
+            - row [ref=e1727]:
+              - treeitem [ref=e1728]:
+                - generic [ref=e1729]: Theme Class
+              - gridcell [ref=e1731]:
+                - generic [ref=e1734] [cursor=pointer]
+              - gridcell [ref=e1735]
+        - table [ref=e1736]:
+          - rowgroup [ref=e1737]:
+            - row [ref=e1738]:
+              - treeitem [ref=e1739]:
+                - generic [ref=e1740]: Background Color
+              - gridcell [ref=e1742]
+              - gridcell [ref=e1744]:
+                - button [ref=e1746] [cursor=pointer]: 
+        - table [ref=e1747]:
+          - rowgroup [ref=e1748]:
+            - row [ref=e1749]:
+              - treeitem [ref=e1750]:
+                - generic [ref=e1751]: Foreground Color
+              - gridcell [ref=e1753]:
+                - generic [ref=e1754]:
+                  - generic [ref=e1755]: "#000000"
+                  - generic [ref=e1756] [cursor=pointer]
+              - gridcell [ref=e1757]:
+                - button [ref=e1759] [cursor=pointer]: 
+        - table [ref=e1760]:
+          - rowgroup [ref=e1761]:
+            - row [ref=e1762]:
+              - treeitem [ref=e1763]:
+                - generic [ref=e1764]: Background Image
+              - gridcell [ref=e1766]
+              - gridcell [ref=e1768]
+        - table [ref=e1769]:
+          - rowgroup [ref=e1770]:
+            - row [ref=e1771]:
+              - treeitem [ref=e1772]:
+                - generic [ref=e1773]: Icon
+              - gridcell [ref=e1775]:
+                - generic [ref=e1778] [cursor=pointer]
+              - gridcell [ref=e1779]
+        - table [ref=e1780]:
+          - rowgroup [ref=e1781]:
+            - row [ref=e1782]:
+              - treeitem [ref=e1783]:
+                - generic [ref=e1784]: Behavior
+              - gridcell [ref=e1785]
+              - gridcell [ref=e1787]
+        - table [ref=e1788]:
+          - rowgroup [ref=e1789]:
+            - row [ref=e1790]:
+              - treeitem [ref=e1791]:
+                - generic [ref=e1792]: Initial Command
+              - gridcell [ref=e1794]:
+                - generic [ref=e1795]:
+                  - generic [ref=e1796]: Refresh
+                  - generic [ref=e1797] [cursor=pointer]
+              - gridcell [ref=e1798]
+        - table [ref=e1799]:
+          - rowgroup [ref=e1800]:
+            - row [ref=e1801]:
+              - treeitem [ref=e1802]:
+                - generic [ref=e1803]: Script Language
+              - gridcell [ref=e1805]:
+                - generic [ref=e1806]:
+                  - generic [ref=e1807]: Visual Basic
+                  - generic [ref=e1808] [cursor=pointer]
+              - gridcell [ref=e1809]
+        - table [ref=e1810]:
+          - rowgroup [ref=e1811]:
+            - row [ref=e1812]:
+              - treeitem [ref=e1813]:
+                - generic [ref=e1814]: Close Box
+              - gridcell [ref=e1816]:
+                - generic [ref=e1817]:
+                  - generic [ref=e1818]: "True"
+                  - generic [ref=e1819] [cursor=pointer]
+              - gridcell [ref=e1820]
+        - table [ref=e1821]:
+          - rowgroup [ref=e1822]:
+            - row [ref=e1823]:
+              - treeitem [ref=e1824]:
+                - generic [ref=e1825]: Minimize/Maximize Box
+              - gridcell [ref=e1827]:
+                - generic [ref=e1828]:
+                  - generic [ref=e1829]: "True"
+                  - generic [ref=e1830] [cursor=pointer]
+              - gridcell [ref=e1831]
+        - table [ref=e1832]:
+          - rowgroup [ref=e1833]:
+            - row [ref=e1834]:
+              - treeitem [ref=e1835]:
+                - generic [ref=e1836]: Filter Form
+              - gridcell [ref=e1838]:
+                - generic [ref=e1841] [cursor=pointer]
+              - gridcell [ref=e1842]
+        - table [ref=e1843]:
+          - rowgroup [ref=e1844]:
+            - row [ref=e1845]:
+              - treeitem [ref=e1846]:
+                - generic [ref=e1847]: Enable Advanced Filter
+              - gridcell [ref=e1849]:
+                - generic [ref=e1850]:
+                  - generic [ref=e1851]: "False"
+                  - generic [ref=e1852] [cursor=pointer]
+              - gridcell [ref=e1853]:
+                - button [ref=e1855] [cursor=pointer]: 
+        - table [ref=e1856]:
+          - rowgroup [ref=e1857]:
+            - row [ref=e1858]:
+              - treeitem [ref=e1859]:
+                - generic [ref=e1860]: Help
+              - gridcell [ref=e1861]
+              - gridcell [ref=e1863]
+        - table [ref=e1864]:
+          - rowgroup [ref=e1865]:
+            - row [ref=e1866]:
+              - treeitem [ref=e1867]:
+                - generic [ref=e1868]: Help Context ID
+              - gridcell [ref=e1870]:
+                - generic [ref=e1871]: "-1"
+              - gridcell [ref=e1872]
+        - table [ref=e1873]:
+          - rowgroup [ref=e1874]:
+            - row [ref=e1875]:
+              - treeitem [ref=e1876]:
+                - generic [ref=e1877]: Help File Name
+              - gridcell [ref=e1879]
+              - gridcell [ref=e1881]
+        - table [ref=e1882]:
+          - rowgroup [ref=e1883]:
+            - row [ref=e1884]:
+              - treeitem [ref=e1885]:
+                - generic [ref=e1886]: Layout
+              - gridcell [ref=e1887]
+              - gridcell [ref=e1889]
+        - table [ref=e1890]:
+          - rowgroup [ref=e1891]:
+            - row [ref=e1892]:
+              - treeitem [ref=e1893]:
+                - generic [ref=e1894]: Splitter
+              - gridcell [ref=e1896]:
+                - generic [ref=e1897]:
+                  - generic [ref=e1898]: Vertical
+                  - generic [ref=e1899] [cursor=pointer]
+              - gridcell [ref=e1900]
+        - table [ref=e1901]:
+          - rowgroup [ref=e1902]:
+            - row [ref=e1903]:
+              - treeitem [ref=e1904]:
+                - generic [ref=e1905]: Splitter Position
+              - gridcell [ref=e1907]:
+                - generic [ref=e1908]: "11"
+              - gridcell [ref=e1909]
+        - table [ref=e1910]:
+          - rowgroup [ref=e1911]:
+            - row [ref=e1912]:
+              - treeitem [ref=e1913]:
+                - generic [ref=e1914]: Pane 0 Scroll Bars
+              - gridcell [ref=e1916]:
+                - generic [ref=e1917]:
+                  - generic [ref=e1918]: Never
+                  - generic [ref=e1919] [cursor=pointer]
+              - gridcell [ref=e1920]
+        - table [ref=e1921]:
+          - rowgroup [ref=e1922]:
+            - row [ref=e1923]:
+              - treeitem [ref=e1924]:
+                - generic [ref=e1925]: Pane 1 Scroll Bars
+              - gridcell [ref=e1927]:
+                - generic [ref=e1928]:
+                  - generic [ref=e1929]: As Needed
+                  - generic [ref=e1930] [cursor=pointer]
+              - gridcell [ref=e1931]
+        - table [ref=e1932]:
+          - rowgroup [ref=e1933]:
+            - row [ref=e1934]:
+              - treeitem [ref=e1935]:
+                - generic [ref=e1936]: Form Pages
+              - gridcell [ref=e1938]
+              - gridcell [ref=e1940]:
+                - button [ref=e1942] [cursor=pointer]: 
+        - table [ref=e1943]:
+          - rowgroup [ref=e1944]:
+            - row [ref=e1945]:
+              - treeitem [ref=e1946]:
+                - generic [ref=e1947]: Unit
+              - gridcell [ref=e1949]:
+                - generic [ref=e1950]: Char
+              - gridcell [ref=e1951]
+        - table [ref=e1952]:
+          - rowgroup [ref=e1953]:
+            - row [ref=e1954]:
+              - treeitem [ref=e1955]:
+                - generic [ref=e1956]: Size
+              - gridcell [ref=e1958]:
+                - generic [ref=e1959]: 69; 21
+              - gridcell [ref=e1960]
+        - table [ref=e1961]:
+          - rowgroup [ref=e1962]:
+            - row [ref=e1963]:
+              - treeitem [ref=e1964]:
+                - generic [ref=e1965]: Synchronize FlexLayout attributes
+              - gridcell [ref=e1967]:
+                - generic [ref=e1968]:
+                  - generic [ref=e1969]: "True"
+                  - generic [ref=e1970] [cursor=pointer]
+              - gridcell [ref=e1971]
+    - generic [ref=e1972]:
+      - generic [ref=e1973]: Empty Property Description Field
+      - textbox [ref=e1978]
+  - tablist [ref=e1607]:
+    - tab [selected] [ref=e1608] [cursor=pointer]:
+      - heading "Form" [level=2] [ref=e1609]
+    - tab [ref=e1610] [cursor=pointer]:
+      - heading "Component" [level=2] [ref=e1611]
+  - toolbar [ref=e1612]:
+    - generic [ref=e1613]: "[ ScopeType: User / ScopeName: anton.ramos@3mworks.com.ph ]"
+    - generic [ref=e1614]: en-US
+    - separator [ref=e1615]
+    - img "Powered by Infor" [ref=e1616]
