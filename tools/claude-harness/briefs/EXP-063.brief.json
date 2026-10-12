@@ -62,7 +62,7 @@
     "\\b(?:browser refresh|browser restart|direct URL navigation|JavaScript evaluation)\\b",
     "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
     "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\bExport\\b",
-    "\\b(?:delete|add|create)\\b[^.\\n]{0,20}\\b(?:record|row)s?\\b"
+    "\\b(?:delete|remove)\\b[^.\\n]{0,20}\\b(?:record|row)s?\\b|\\b(?:add|create|insert)\\b[^.\\n]{0,15}\\bnew\\s+(?:record|row)s?\\b"
   ],
   "related_experiments": [
     "EXP-062-R4",
