@@ -48,7 +48,7 @@ describe("Phase 4 controller loop with fake Claude processes",()=>{
     expect(run.status,`${run.pause_reason}: ${run.pause_detail}`).toBe("completed");expect(run.outcome).toBe("accepted");expect(run.counters.workerTasks).toBe(1);expect(run.counters.backendRestarts).toBe(0);
     expect(h.chat.transport("coordinator")).toBe(transport);expect(h.chat.transport("specialist")).toBe("claude");
     const op=h.store.opsForRun(run.id).find(o=>o.kind==="worker")!,j=read<TaskJournal>(h.worker.taskFile(op.session_id!,op.message_id!));
-    expect(j.argv[j.argv.indexOf("--model")+1]).toBe("haiku");expect(j.preamble).toContain(`worker_session_id: ${op.session_id}`);expect(j.preamble).toContain("Never authenticate");
+    expect(j.argv[j.argv.indexOf("--model")+1]).toBe("haiku");expect(j.preamble).toContain(`worker_session_id: ${op.session_id}`);expect(j.preamble).toContain("Authenticate\n  only through the session-expiry procedure");expect(j.preamble).toContain("Never type a real credential");
     expect(op.meta).toMatchObject({windowState:"maximized",bounds:{width:1920,height:1080}});
     if(transport==="claude")expect(h.store.getSetting("claude:conversation:coordinator")).toMatch(/^claude-session:/);
     expect(h.externalChat.submissions).toEqual([]);

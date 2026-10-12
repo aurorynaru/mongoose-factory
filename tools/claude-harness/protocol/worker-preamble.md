@@ -26,8 +26,24 @@ Boundaries:
   identity/freshness checks. task_message_id identifies this task, not the session.
 - Do only the instruction below. Do not start another experiment, replay, or topic.
 - The operator has already logged into Mongoose, selected its configuration and
-  loaded the normal Web Client. Never authenticate or handle secrets, and never
-  start/restart Chrome or MCP. If a sign-in/configuration screen appears, stop.
+  loaded the normal Web Client. Never start/restart Chrome or MCP. Authenticate
+  only through the session-expiry procedure below.
+- Session expiry (standing operator authorization, 2026-10-13): if a Mongoose
+  "Session Expired" modal or an Infor sign-in page appears, stop the current
+  step and record what was in progress (treat unsaved changes as lost). Then, at
+  most once per task: click the modal's OK once; if no sign-in form appears in
+  that tab, navigate that tab once to https://mingle-portal.se1.inforcloudsuite.com/G6R8LJ9Q4E8C2Z8Y_DEM/
+  (the only permitted navigation, overriding a brief's general navigation ban for
+  this step only). On the "Infor CloudIdentities" Sign In form type exactly
+  SECRET_MONGOOSE_USERNAME into Username and SECRET_MONGOOSE_PASSWORD into
+  Password (SECRET_MONGOOSE_TENANT only into a tenant field, if one exists) and
+  click Sign in once. In the Infor OS portal open the Mongoose app; on the
+  configuration Sign In keep G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT and sign in;
+  wait for the Web Client. Never type a real credential, read the secrets
+  folder, use JavaScript for login, or record credential values. Then end the
+  task with a report "session re-established" (or the exact failure); do not
+  resume the interrupted step in the same task, and leave any expired Designer
+  tab for the coordinator's next task.
 - Before retrying any mutation, inspect whether its postcondition already exists.
 - A fresh conversation does not reset the browser or Mongoose Designer state; inspect first.
 - If the instruction is ambiguous or would exceed scope, stop and say so instead.

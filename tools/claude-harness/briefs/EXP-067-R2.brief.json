@@ -3,14 +3,14 @@
   "title": "EXP-067-R2 - Hello World Part 4 Section 8a: Unload, then Show FX_UMsDescription in a Static and Edit on the User-Scope FX_Items Form (replay after session expiry)",
   "record_path": "experiments/EXP-067-R2-hello-world-part-4-section-8a-um-description-static-and-edit.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Replay of EXP-067, which stopped before any change because the Mongoose session expired during the preflight (unloads 0 of 2). Follow hello-world-pt4.md Section 8 steps 1-4 and 8-9 (09:18-11:04), adapted to FX_ names. First refresh the cached metadata with the operator-authorized unload: read the Unload IDO Metadata With Forms User Preference read-only and require it checked; with no runtime Form dirty and any clean FX_Items runtime Form closed, invoke the Web Client Form > Definition > Unload All Global Form Objects exactly once; close the clean FX_Items Designer Form, invoke the Designer Form > Definition > Unload All Global Form Objects exactly once, and reopen the same User-scoped FX_Items Form. Gate: FX_UMsDescription (added to the FX_Items IDO in EXP-066-R2) must be offered by the Designer binding picker; if it is absent, stop blocked before any Form change, without a second unload. Then add a Static named FX_UMsDescriptionStatic with Caption FX_sDescription (existing string \"Description\") and an Edit named FX_UMsDescriptionEdit with Binding Type Property bound to FX_UMsDescription, placed in the free area right of FX_PictureStatic and below the Unit of Measure field (FX_UMsDescriptionStatic Location 10.5; 42.5 and Size 12; 1.5; FX_UMsDescriptionEdit Location 12.5; 42.5 and Size 12; 1.89). Perform exactly one Designer Save, close and reopen the Designer Form once, and verify both components; then close and reopen the clean runtime FX_Items Form once and verify the description shown for each record (EA -> Each, DZ -> Dozen). The grid column of Section 8 is a later experiment. Findings are observed only.",
   "scope": {
     "in_scope": [
       "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt4.md Section 8 (09:18-11:04), the EXP-062-R2 record (the unload sequence and binding gate), the EXP-062-R4 record (Toolbox drop, explicit Layout Size and Location, Caption string behavior) and the EXP-066-R2 record, and the EXP-067 record and T1/T2 reports (geometry readbacks, preference reading, edge analysis) before browser interaction.",
       "Create or update only experiments/EXP-067-R2-hello-world-part-4-section-8a-um-description-static-and-edit.md and evidence/EXP-067-R2/ documentation and evidence files.",
       "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
-      "Use the existing authenticated session without reauthentication, refresh, restart or configuration change. List the browser tabs before the first tab selection.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task. List the browser tabs before the first tab selection.",
       "Designer baseline: verify the open Form is exactly FX_Items in User scope for the authenticated operator and clean; record the component list and the Layout Size and Location of FX_UMCombobox, FX_PictureStatic, FX_RefreshButton and the Form; prove FX_UMsDescriptionStatic and FX_UMsDescriptionEdit are absent. If the target area (FX_UMsDescriptionStatic Location 10.5; 42.5 and Size 12; 1.5; FX_UMsDescriptionEdit Location 12.5; 42.5 and Size 12; 1.89) overlaps an existing component or exceeds the Form, stop before any change and report the measurements.",
       "Keep the preflight concise: reuse the EXP-067 T1 readbacks only after re-reading them live; accessibility readbacks of Layout Size and Location are sufficient evidence for geometry, with one canvas screenshot of the target area.",
       "Read-only User Preference gate: open the Web Client User Preferences dialog, record whether Unload IDO Metadata With Forms is checked, and close it with its Close Window control without saving. If it is not checked, stop blocked before any unload.",
@@ -35,7 +35,7 @@
       "Creating or changing string resources, IDOs, properties, tables, property classes or themes.",
       "Runtime record changes, runtime Save, imports or exports, and the tutorial step of changing a Unit of Measure.",
       "Check In, Undo Check Out or other checkout-management actions.",
-      "Browser JavaScript, console or network inspection, direct URL navigation, refresh or restart.",
+      "Browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
       "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-067 paths.",
       "Starting another experiment or replay."
     ]
@@ -55,7 +55,7 @@
     "Never click the Designer top-toolbar Delete button (Delete Form Definition).",
     "Never perform check-in, undo checkout or other checkout-management actions.",
     "Never use direct SQL, scripts, application internals or browser JavaScript.",
-    "Never reauthenticate, refresh, restart or replace the browser session.",
+    "Never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
     "Never edit runtime records or use runtime Save.",
     "Never claim cross-session durability beyond the observed close/reopen recovery."
   ],
@@ -144,5 +144,5 @@
     "deny_browser_javascript": true
   },
   "editing_scope": "User (Designer Form FX_Items in User scope: two new components); plus the two operator-authorized tenant-wide global-form-object unloads; runtime read-only",
-  "notes": "Replay of EXP-067 (run R-20261013-002531-dQHH, blocked in T2 by a Mongoose Session Expired modal in both tabs; no change, unloads 0 of 2; preference Unload IDO Metadata With Forms read as checked). Changes from EXP-067: both components are 12 columns wide (columns 42.5-54.5) instead of 14, clearing the visible canvas edge reported in EXP-067 T1/T2; User Preferences closes with Close Window (it has no Cancel); concise preflight with readback-based geometry. Operator authorization of 2026-10-13 for exactly one Web Client and one Designer Unload All Global Form Objects carries over unchanged (the EXP-067 run invoked neither). Everything else is unchanged from EXP-067. Approval pending from the operator."
+  "notes": "Replay of EXP-067 (run R-20261013-002531-dQHH, blocked in T2 by a Mongoose Session Expired modal in both tabs; no change, unloads 0 of 2; preference Unload IDO Metadata With Forms read as checked). Changes from EXP-067: both components are 12 columns wide (columns 42.5-54.5) instead of 14, clearing the visible canvas edge reported in EXP-067 T1/T2; User Preferences closes with Close Window (it has no Cancel); concise preflight with readback-based geometry. Operator authorization of 2026-10-13 for exactly one Web Client and one Designer Unload All Global Form Objects carries over unchanged (the EXP-067 run invoked neither). Everything else is unchanged from EXP-067. Operator decision 2026-10-13: on session expiry the worker may re-login once per task through the worker-preamble procedure (secret placeholders substituted by Playwright MCP --secrets; the worker never reads the secrets folder). Approved by the operator 2026-10-13 with precondition attestation: logged in, configuration OK, Web Client and Web Designer (FX_Items) loaded, no unsaved changes."
 }
