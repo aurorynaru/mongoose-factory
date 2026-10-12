@@ -29,7 +29,7 @@ export function registerShadowCommands(program: Command): void {
   };
   const datasetPath = (root: string, name: string) => existsSync(name) ? resolve(name) : join(root, "datasets", `${safeName(name)}.json`);
   const resultPath = (root: string, name: string) => existsSync(name) ? resolve(name) : join(root, "runs", safeName(name));
-  const shadow = program.command("shadow").description("Frozen worker-checkpoint comparisons: local models, no tool execution or live browser");
+  const shadow = program.command("shadow").description("Frozen worker-checkpoint comparisons: no tool execution or live browser");
 
   shadow.command("capture").description("Capture past observations and withheld replies from archived OpenCode sessions")
     .requiredOption("--run <id>", "source harness run ID")
@@ -77,7 +77,7 @@ export function registerShadowCommands(program: Command): void {
       for (const c of d.cases) console.log(`${c.id}  ${c.source.taskId}  ${c.context.length} chars  ${c.images.length} image(s)  source ${c.source.baselineModel}`);
     });
 
-  shadow.command("run").description("Request next-action proposals from one local model; persist each trial without executing it")
+  shadow.command("run").description("Request next-action proposals; persist each trial without executing it")
     .requiredOption("--dataset <name-or-file>")
     .requiredOption("--model <provider/model>")
     .option("--case <ids...>", "run only specified case IDs")
@@ -85,9 +85,10 @@ export function registerShadowCommands(program: Command): void {
     .option("--max-tokens <n>", "output token cap, 1..32768", integer, 4096)
     .option("--timeout-seconds <n>", "per-request timeout", integer, 180)
     .option("--temperature <n>", "common temperature, 0..2", number, 0)
+    .option("--allow-deepseek-api", "send frozen history/screenshots to the official paid DeepSeek API (local-only by default)")
     .action(async o => {
       const { root, modelConfig } = settings();
-      const dataset = loadDataset(datasetPath(root, o.dataset)), model = loadShadowModel(modelConfig, o.model);
+      const dataset = loadDataset(datasetPath(root, o.dataset)), model = loadShadowModel(modelConfig, o.model, { allowDeepSeekApi: o.allowDeepseekApi });
       if (o.case) {
         if (o.case.some((id: string) => !dataset.cases.some(c => c.id === id))) throw new Error("Unknown dataset case ID");
         dataset.cases = dataset.cases.filter(c => o.case.includes(c.id));
@@ -95,6 +96,8 @@ export function registerShadowCommands(program: Command): void {
       const id = `S-${new Date().toISOString().replace(/[-:.TZ]/g, "")}-${randomUUID().slice(0, 8)}`, out = join(root, "runs", id);
       const abort = new AbortController(), stop = () => abort.abort();
       process.on("SIGINT", stop);
+      if (new URL(model.endpoint).hostname === "api.deepseek.com")
+        console.log("DeepSeek API test: frozen history and embedded screenshots will be sent to https://api.deepseek.com. Paid API usage applies; no proposed actions execute.");
       console.log(`Shadow ${id}: ${dataset.cases.length} cases x ${o.repeats} trial(s), model ${model.id}. Proposed actions will not execute.\n${out}`);
       try {
         const result = await runShadow(dataset, model, out, { repeats: o.repeats, maxTokens: o.maxTokens, temperature: o.temperature, timeoutMs: o.timeoutSeconds * 1000, signal: abort.signal },

@@ -105,22 +105,24 @@ PowerShell 7 or Windows PowerShell 5.1.
 
 ### Use Strata for the OpenCode worker
 
-The project `opencode.json` selects `strata/qwen3.8-flash-next-coder-iq1_m` at
+The project `opencode.json` selects `strata/qwen3.8-flash-next-iq2_xs` at
 `http://127.0.0.1:8080/v1` as OpenCode's default. The harness config also selects that model
 explicitly for every worker task. Start the installed Strata server in a separate terminal before
 starting a harness run, then check that OpenCode sees the model:
 
 ```powershell
-& C:\AI\Strata\run-coder-iq1_m.bat
+& C:\AI\Strata\run-iq2_xs.bat
 # In another terminal, from C:\AI\mongoose-factory:
 opencode models strata
-opencode run -m strata/qwen3.8-flash-next-coder-iq1_m "Reply with READY"
+opencode run -m strata/qwen3.8-flash-next-iq2_xs "Reply with READY"
 ```
 
-The Strata model is configured with `reasoningEffort: none` for OpenCode tool use. In a live smoke
+IQ2_XS is configured with `reasoningEffort: none`; Coder IQ1_M now uses `medium` for the requested
+reasoning comparison. Earlier IQ1_M shadow baselines used `none` and retain that recorded setting. In a live smoke
 test, the default thinking mode spent the entire 32,000-token output allowance thinking without
 calling a requested tool; with this option, OpenCode called its Bash tool and returned the result.
-This setting applies only to this OpenCode model entry, not to Strata's other clients.
+This setting applies to these OpenCode model entries, not to Strata's other clients.
+IQ2_XS has not yet been tested on a live factory task; the smoke observation above was with Coder IQ1_M.
 
 The Strata model's OpenCode output cap is 16,384 tokens, and automatic compaction reserves a
 48,000-token buffer. This gives more room than the previous 32,000-token request allowance,
@@ -128,7 +130,8 @@ which was rejected when a rendered prompt reached about 165,000 tokens in a 196,
 context. Compaction is still enabled with old-tool-output pruning; these settings reduce
 context pressure but do not guarantee that every rendered request fits.
 
-In the installed Strata model configuration (`C:\AI\Strata\strata-coder-iq1_m.json`), enable
+In the installed Strata model configuration (`C:\AI\Strata\strata-iq2_xs.json` for IQ2_XS,
+or `C:\AI\Strata\strata-coder-iq1_m.json` for Coder), enable
 `"fit_max_tokens": true`. Strata then reduces a requested reply allowance to the space remaining
 after the actual prompt and its safety margin. It never truncates the prompt, and still rejects
 a prompt that leaves no room to answer. This local server setting is outside the factory repo.
@@ -140,10 +143,28 @@ A backend restart closes OpenCode's Playwright/Mongoose browser. Resume the same
 its experiment scope allows browser/session reconnection and the worker can re-inspect state.
 
 For an existing `harness.config.json`, set `opencode.model` to
-`{"providerID":"strata","modelID":"qwen3.8-flash-next-coder-iq1_m"}`; the example config already
+`{"providerID":"strata","modelID":"qwen3.8-flash-next-iq2_xs"}`; the example config already
 has this setting. Change it between runs, and restart the harness-owned OpenCode backend with
 `.\harness.ps1 backend restart` if it is already running. You do not need a second `opencode.json`
 to switch models: both providers are already defined in the same file.
+
+To install IQ2_XS, run this in `C:\AI\Strata` when no worker request is running:
+
+```powershell
+.\START-HERE.bat --setup --family qwen --model IQ2_XS --context 196608 --vision gpu --low-ram on --kv k8v4
+Invoke-RestMethod http://127.0.0.1:8080/health
+```
+
+This writes a separate `strata-iq2_xs.json` and `run-iq2_xs.bat`; the Coder configuration remains available.
+Check the health response for the loaded model, context and images before sending tasks. Strata can
+accept arbitrary request model names, so an OpenCode label alone does not establish which weights
+are loaded. Keep only one model server running on port 8080.
+
+To switch back to Coder, stop IQ2_XS and start `C:\AI\Strata\run-coder-iq1_m.bat`. Select
+`{"providerID":"strata","modelID":"qwen3.8-flash-next-coder-iq1_m"}` in `harness.config.json`
+and `strata/qwen3.8-flash-next-coder-iq1_m` as the top-level `model` in `opencode.json`.
+Make live worker switches between experiments. Restarting the OpenCode backend can close the
+Mongoose browser; an already paused experiment may prohibit that lifecycle change.
 
 To return to Qwen, stop Strata, start `C:\AI\tabbyAPI\start.bat` and load the 27B EXL3 model using
 your usual TabbyAPI workflow. Set `TABBY_API_KEY` in the shell that runs the harness. In
@@ -414,13 +435,14 @@ tools/learning-harness/
     backend/                backend-state.json (owned PID) + OpenCode stdout/stderr logs
 ```
 
-## Shadow testing: compare Strata and TabbyAPI on saved work
+## Shadow testing: compare models on saved work
 
 Shadow testing evaluates **one next-action decision at a frozen historical checkpoint**. It imports
 the full archived OpenCode messages (including tool observations and embedded screenshots), asks
-each local model for an inert JSON proposal, and records the response. It never executes the proposal,
+each selected model for an inert JSON proposal, and records the response. It never executes the proposal,
 opens the Mongoose browser, contacts ChatGPT, starts an experiment, or changes controller/autopilot state.
-Model requests go directly to the local OpenAI-compatible endpoints in the factory's `opencode.json`.
+Model requests go directly to the OpenAI-compatible endpoints in the factory's `opencode.json`.
+Endpoints are local by default; the official DeepSeek API requires explicit per-command opt-in.
 This tests model decisions and vision, rather than OpenCode's complete tool-execution loop.
 
 Build once after updating the code, then capture a completed run:
@@ -457,7 +479,7 @@ before sharing. Do not import any credentials file.
 Run Strata while its server is loaded:
 
 ```powershell
-.\harness.ps1 shadow run --dataset exp009-shadow --model strata/qwen3.8-flash-next-coder-iq1_m --repeats 2
+.\harness.ps1 shadow run --dataset exp009-shadow --model strata/qwen3.8-flash-next-iq2_xs --repeats 2
 ```
 
 Record the printed `S-...` result ID. Then stop/unload Strata, start TabbyAPI with the Qwen model,
@@ -467,16 +489,63 @@ and set `TABBY_API_KEY` in this terminal through your usual secure method. Run t
 .\harness.ps1 shadow run --dataset exp009-shadow --model tabby/Qwen3.8-27B-EXL3-4.00bpw --repeats 2
 ```
 
+For a Coder comparison, load `run-coder-iq1_m.bat` instead and use
+`--model strata/qwen3.8-flash-next-coder-iq1_m` with the same dataset, repeats and token limits.
+Frozen shadow responses measure decision/report quality, not sustained live tool-loop reliability.
+
 No worker-default or harness-config change is needed for shadow runs: `--model` selects the provider
 for this command only. The runner checks `/models` before inference, so an unloaded/wrong model fails
-preflight. It accepts only local OpenAI-compatible providers and environment-based API keys, and
+preflight. It accepts local OpenAI-compatible providers and environment-based API keys, and
 does not follow HTTP redirects. It never starts or stops a model server. On the 3090, load one model
 at a time. Avoid running shadow requests alongside an experiment if you want useful latency measurements.
+
+### DeepSeek V4.1 Flash API comparison
+
+The configured `deepseek/deepseek-flash` model uses the official
+`https://api.deepseek.com/v1` endpoint and `reasoningEffort: high`, enabling thinking.
+This differs from the Strata non-thinking baseline; comparison reports record the
+difference. DeepSeek ignores temperature in thinking mode, and the 8,192-token
+shadow output cap includes reasoning as well as the final answer. DeepSeek documents
+`deepseek-flash` as the current V4.1 Flash
+model with image input: [API guide](https://api-docs.deepseek.com/).
+See [thinking-mode behavior](https://api-docs.deepseek.com/guides/thinking_mode/).
+The OpenCode default and harness worker selection remain unchanged.
+
+Put your API key in `DEEPSEEK_API_KEY` in the **same PowerShell terminal** that runs
+the shadow command. This masked prompt avoids a literal key in shell history or
+repository files; it does not persist the key after the terminal closes:
+
+```powershell
+$deepseekKey = Read-Host "DeepSeek API key" -AsSecureString
+$env:DEEPSEEK_API_KEY = [System.Net.NetworkCredential]::new("", $deepseekKey).Password
+Remove-Variable deepseekKey
+.\harness.ps1 shadow run --dataset exp009-shadow-v3 --model deepseek/deepseek-flash --repeats 2 --max-tokens 8192 --timeout-seconds 300 --allow-deepseek-api
+```
+
+`--allow-deepseek-api` explicitly authorizes uploading the frozen history and embedded
+screenshots to the paid DeepSeek API. Inspect the dataset before sending: automated text
+redaction cannot remove account/tenant information visible in screenshots or all metadata.
+Other remote hosts, insecure HTTP, alternate ports, credential-bearing URLs, queries,
+fragments and redirects remain rejected. The API key is used in authorization headers,
+registered for redaction, and excluded from saved results. Missing keys fail before requests.
+OpenCode `/connect` credentials and the harness's separate DeepSeek fallback do not supply
+this environment variable. No local model or OpenCode backend is needed for this test.
+
+Compare the printed result ID with the graded local run, then review the new proposals:
+
+```powershell
+.\harness.ps1 shadow compare S-20261006132033062-d0f4b782 NEW_DEEPSEEK_RUN_ID
+Remove-Item Env:DEEPSEEK_API_KEY
+```
+
+Different providers can tokenize the same inputs differently. Matching input hashes is
+the comparison criterion, not equal token counts; local and network latency also differ.
 
 Each case/trial gets a fresh request with identical historical inputs; there is no conversational
 memory between trials. Defaults are `--temperature 0`, `--max-tokens 4096`, and
 `--timeout-seconds 180`. Supported model options are `reasoningEffort`, `temperature`, and `topP`;
-the common CLI temperature takes precedence. Strata inherits its configured `reasoningEffort: none`.
+the common CLI temperature takes precedence. Strata inherits the selected model's configured
+`reasoningEffort` (`none` for IQ2_XS, `medium` for Coder IQ1_M). Thinking shares the output token cap.
 Options and common limits are recorded; unsupported model options fail explicitly. `--case <ids...>`
 runs a subset. Ctrl+C cancels the current request and stops further trials; completed trials remain saved.
 Timeouts, malformed responses, unknown evidence citations or proposed tool names, returned tool calls, truncated output,

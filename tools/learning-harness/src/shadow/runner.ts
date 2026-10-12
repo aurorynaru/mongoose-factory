@@ -23,19 +23,25 @@ export interface ShadowModel {
   options: Record<string, unknown>; supportsImages: boolean;
 }
 
-/** Supports the local OpenAI-compatible providers already used by the worker. No secret-file expansion. */
-export function loadShadowModel(configPath: string, id: string): ShadowModel {
+/** Local providers by default; the official DeepSeek API requires explicit per-command opt-in. */
+export function loadShadowModel(configPath: string, id: string, opts: { allowDeepSeekApi?: boolean } = {}): ShadowModel {
   const raw = JSON.parse(readFileSync(configPath, "utf8"));
   const slash = id.indexOf("/");
   if (slash < 1 || slash === id.length - 1) throw new Error("Use provider/model, e.g. strata/qwen3.8-flash-next-coder-iq1_m");
   const provider = raw.provider?.[id.slice(0, slash)], apiModel = id.slice(slash + 1), model = provider?.models?.[apiModel];
   if (!model || provider.npm !== "@ai-sdk/openai-compatible") throw new Error(`Shadow testing needs a configured OpenAI-compatible model: ${id}`);
   const url = new URL(provider.options?.baseURL);
-  if (!["127.0.0.1", "localhost", "[::1]"].includes(url.hostname) || !["http:", "https:"].includes(url.protocol) || url.username || url.password || url.search || url.hash) {
+  const local = ["127.0.0.1", "localhost", "[::1]"].includes(url.hostname);
+  const deepseek = url.protocol === "https:" && url.hostname === "api.deepseek.com" && !url.port
+    && ["/", "/v1", "/v1/"].includes(url.pathname);
+  if ((!local && !(deepseek && opts.allowDeepSeekApi)) || !["http:", "https:"].includes(url.protocol) || url.username || url.password || url.search || url.hash) {
+    if (deepseek && !opts.allowDeepSeekApi && !url.username && !url.password && !url.search && !url.hash)
+      throw new Error("DeepSeek shadow requests send frozen history and screenshots to a paid API; pass --allow-deepseek-api to opt in");
     throw new Error("Shadow endpoints must be local HTTP(S) URLs without credentials, queries or fragments");
   }
   const headers: Record<string, string> = { "content-type": "application/json" };
   const key = provider.options?.apiKey;
+  if (!local && !key) throw new Error("DeepSeek shadow requests require an environment-based API key ({env:DEEPSEEK_API_KEY})");
   if (key) {
     const env = typeof key === "string" ? key.match(/^\{env:([A-Za-z_][A-Za-z0-9_]*)\}$/) : null;
     if (!env) throw new Error("Shadow API keys must use {env:NAME}; secret-file and literal-key configuration is unsupported");

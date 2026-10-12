@@ -113,6 +113,74 @@ describe("Local provider selection", () => {
   });
 });
 
+describe("DeepSeek shadow opt-in", () => {
+  const configured = (url = "https://api.deepseek.com/v1", apiKey: string | undefined = "{env:DEEPSEEK_SHADOW_TEST_KEY}") => {
+    const path = join(dir, "opencode.json");
+    saveJson(path, { provider: { deepseek: { npm: "@ai-sdk/openai-compatible", options: { baseURL: url, apiKey },
+      models: { "deepseek-flash": { options: { reasoningEffort: "none" }, modalities: { input: ["text", "image"] } } } } } });
+    return path;
+  };
+  it("requires per-command opt-in and environment authentication for the official HTTPS API", () => {
+    vi.stubEnv("DEEPSEEK_SHADOW_TEST_KEY", "fake-deepseek-secret");
+    const path = configured();
+    expect(() => loadShadowModel(path, "deepseek/deepseek-flash")).toThrow("--allow-deepseek-api");
+    const m = loadShadowModel(path, "deepseek/deepseek-flash", { allowDeepSeekApi: true });
+    expect(m).toMatchObject({ endpoint: "https://api.deepseek.com/v1", apiModel: "deepseek-flash", supportsImages: true, options: { reasoning_effort: "none" } });
+    expect(m.headers.authorization).toBe("Bearer fake-deepseek-secret");
+    expect(scrubText("fake-deepseek-secret")).toBe("[REDACTED]");
+    expect(() => loadShadowModel(configured(undefined, ""), m.id, { allowDeepSeekApi: true })).toThrow("environment-based");
+    expect(() => loadShadowModel(configured(undefined, "literal-key"), m.id, { allowDeepSeekApi: true })).toThrow("{env:NAME}");
+    vi.stubEnv("DEEPSEEK_SHADOW_TEST_KEY", "");
+    expect(() => loadShadowModel(configured(), m.id, { allowDeepSeekApi: true })).toThrow("Set DEEPSEEK_SHADOW_TEST_KEY");
+  });
+  it.each([
+    "http://api.deepseek.com/v1", "https://api.deepseek.com.evil.example/v1", "https://other.example/v1",
+    "https://api.deepseek.com:8443/v1", "https://api.deepseek.com/anthropic", "https://api.deepseek.com/v1?key=value",
+    "https://user:password@api.deepseek.com/v1", "https://api.deepseek.com/v1#fragment",
+  ])("does not authorize another endpoint or credential-bearing URL: %s", url => {
+    expect(() => loadShadowModel(configured(url), "deepseek/deepseek-flash", { allowDeepSeekApi: true })).toThrow("local HTTP");
+  });
+  it("runs via CLI only with opt-in, retaining images and hashes without executing tools or persisting the key", async () => {
+    vi.stubEnv("DEEPSEEK_SHADOW_TEST_KEY", "fake-deepseek-secret");
+    const root = join(dir, "factory"), data = join(dir, "data");
+    const configPath = configured();
+    saveJson(join(root, "opencode.json"), JSON.parse(readFileSync(configPath, "utf8")));
+    const config = join(dir, "harness.json"); saveJson(config, { factoryRoot: root, dataDir: data });
+    const d = dataset(); saveJson(join(data, "shadow", "datasets", "past.json"), d);
+    const logs = vi.spyOn(console, "log").mockImplementation(() => {});
+    const fetchImpl = vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
+      expect(String(url).startsWith("https://api.deepseek.com/v1/")).toBe(true);
+      expect(init?.redirect).toBe("error");
+      expect(init?.headers).toMatchObject({ authorization: "Bearer fake-deepseek-secret" });
+      return String(url).endsWith("/models") ? Response.json({data:[{id:"deepseek-flash"}]})
+        : Response.json(reply({model:"deepseek-flash"}));
+    });
+    vi.stubGlobal("fetch", fetchImpl);
+    const invoke = async (extra: string[]) => {
+      const p = new Command().option("-c, --config <file>"); registerShadowCommands(p);
+      await p.parseAsync(["node", "harness", "-c", config, "shadow", "run", "--dataset", "past", "--model", "deepseek/deepseek-flash", ...extra]);
+    };
+    await expect(invoke([])).rejects.toThrow("--allow-deepseek-api");
+    expect(fetchImpl).not.toHaveBeenCalled();
+    await invoke(["--allow-deepseek-api"]);
+    const completion = fetchImpl.mock.calls.filter(([url]) => String(url).endsWith("/chat/completions"));
+    expect(completion).toHaveLength(d.cases.length);
+    const body = JSON.parse(completion[1][1]!.body as string);
+    expect(body).toMatchObject({model:"deepseek-flash",reasoning_effort:"none",temperature:0,stream:false});
+    expect(body).not.toHaveProperty("tools");
+    expect(JSON.stringify(body.messages)).toContain(image);
+    expect(JSON.stringify(logs.mock.calls)).toContain("Paid API usage");
+    expect(JSON.stringify(logs.mock.calls)).not.toContain("fake-deepseek-secret");
+    const runs = join(data, "shadow", "runs"), run = join(runs, readdirSync(runs)[0]);
+    const resultText = readFileSync(join(run,"result.json"),"utf8");
+    expect(resultText).not.toContain("fake-deepseek-secret");
+    expect(loadResult(run).trials.every(t=>t.status==="completed")).toBe(true);
+    expect(loadResult(run).datasetHash).toBe(inputHash(d));
+    expect(existsSync(join(data,"harness.sqlite"))).toBe(false);
+    vi.unstubAllGlobals();
+  });
+});
+
 describe("Inert model requests and persisted results", () => {
   it("sends independent identical packets, no executable tools, and records timing, usage and settings", async () => {
     const fetchImpl = mockFetch(), d = dataset();

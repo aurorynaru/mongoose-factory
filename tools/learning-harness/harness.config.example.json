@@ -21,7 +21,7 @@
     "passwordEnv": "OPENCODE_SERVER_PASSWORD",
     "executable": null,
     "agent": null,
-    "model": {"providerID": "strata", "modelID": "qwen3.8-flash-next-coder-iq1_m"},
+    "model": {"providerID": "strata", "modelID": "qwen3.8-flash-next-iq2_xs"},
     "taskTimeoutMinutes": 90,
     "pollIntervalMs": 3000,
     "noResponseGraceSeconds": 120,
