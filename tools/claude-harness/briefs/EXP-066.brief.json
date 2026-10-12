@@ -1,0 +1,139 @@
+{
+  "experiment_id": "EXP-066",
+  "title": "EXP-066 - Hello World Part 4 Section 7: Join FX_UMs to the FX_Items IDO and Add the FX_UMsDescription Property",
+  "record_path": "experiments/EXP-066-hello-world-part-4-section-7-join-fx-ums-and-add-property.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt4.md Section 7 (07:29-09:18), adapted to FX_ names, in the Web Client IDO Collections runtime Form. For the FX_Items IDO (base table FX_Items, alias fxitms; checked out to the operator since EXP-061), open its Tables view, add the FX_UMs table once with alias fxum and the join condition fxum.FX_UM = fxitms.FX_UM (the tutorial's \"UMs.UM = Items.UM\"), and confirm the join. Then run the New Property wizard once: keep the default Bound type, bind to the FX_Description column of the joined fxum table, and name the property FX_UMsDescription (the tutorial's UMsDescription, prefixed for the factory). Finish once. Verify the IDO now lists the join and exactly one added property, close and reopen IDO Collections once to verify recovery, and confirm the three FX_Items runtime records still load. The tutorial's unload after this section is deferred to the Section 8 experiment. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt4.md Section 7 (07:29-09:18) and the EXP-061 record and evidence (IDO Collections route, New Property wizard, checkout state) before browser interaction.",
+      "Create or update only experiments/EXP-066-hello-world-part-4-section-7-join-fx-ums-and-add-property.md and evidence/EXP-066/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without reauthentication, refresh, restart or configuration change. List the browser tabs before the first tab selection. Leave the Web Designer tab untouched.",
+      "Open IDO Collections in the Web Client through Form > Open > Select Form (or reuse a clean open IDO Collections Form). Perform one exact-name F4 query for FX_Items and require exactly one matching IDO.",
+      "Record the IDO identity (project, base table, alias, revision), the checkout state and Locked By owner, the complete property inventory (expected 12, including FX_Picture) and the Tables view inventory (expected: FX_Items, alias fxitms, Primary Base). Prove FX_UMsDescription and any fxum table entry are absent. If FX_Items is not checked out to the operator, or either target already exists, stop before any change.",
+      "Open the Tables view of FX_Items and use its New Table control once: choose the FX_UMs table, enter alias fxum, and enter the join condition fxum.FX_UM = fxitms.FX_UM exactly. Record every field of the dialog verbatim, including any join type and its default; keep the default join type. Confirm with Add and OK once each, record the native responses, and close the Tables view.",
+      "Verify the Tables view now lists FX_Items (fxitms, Primary Base) and FX_UMs (fxum) with the recorded join, and nothing else.",
+      "Open the New Property wizard for FX_Items once. Keep the default Bound type. In Bind To, choose the FX_Description column of the joined fxum table (record how joined columns are listed beside the base columns). Name the property FX_UMsDescription. Leave the property class and other wizard fields at their defaults and record them. Capture the configuration, then Finish once and record the native response verbatim.",
+      "If the Form is left dirty after Finish, perform exactly one ordinary Save after verifying the values; otherwise do not Save.",
+      "Verify exactly one added property FX_UMsDescription (Bound, bound to the fxum FX_Description column) and the 12 original properties unchanged; verify the IDO is still checked out to the operator and record the revision.",
+      "Close the clean IDO Collections Form once and reopen it once through Form > Open > Select Form; perform one exact-name F4 query for FX_Items and re-verify the Tables view, the property inventory, FX_UMsDescription and the checkout state.",
+      "Close the clean FX_Items runtime Form once if it is open and reopen it once through Form > Open > Select Form; verify that the three records dumbbell, eggs and guitar still load and the Form is clean. Make no record edits.",
+      "Capture screenshots of the baseline property and Tables inventories, the New Table dialog before Add, the Tables view after OK, the wizard configuration before Finish, the Finish response, the post-change inventories, the reopened inventories and the runtime records.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Any change to IDOs other than FX_Items, to its existing properties or base table, or to other table entries.",
+      "Joining any table other than FX_UMs, adding a second table entry, or adding any property other than FX_UMsDescription.",
+      "Check In, Undo Check Out, a second checkout or any other checkout-management action.",
+      "Changing SQL tables, columns, property classes, strings, Forms, themes or User Preferences.",
+      "Any unload, cache, FormSync, deployment or regeneration operation (the Section 7 unload is deferred to the Section 8 experiment).",
+      "Runtime record changes, runtime Save, imports or exports.",
+      "Any Web Designer action.",
+      "Browser JavaScript, console or network inspection, direct URL navigation, refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-066 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never change, delete or rename an existing IDO property, table entry or the FX_Items base table.",
+    "Never add a table entry other than FX_UMs (fxum) or a property other than FX_UMsDescription.",
+    "Never invoke New Table, Finish or Save more than once, or retry an uncertain one.",
+    "Never close a dirty Form or discard changes without operator approval.",
+    "Never perform check-in, undo checkout or other checkout-management actions.",
+    "Never perform any unload, cache, FormSync or deployment action.",
+    "Never act in the Web Designer, and never click the Designer top-toolbar Delete button (Delete Form Definition).",
+    "Never use direct SQL, scripts, application internals or browser JavaScript.",
+    "Never reauthenticate, refresh, restart or replace the browser session.",
+    "Never edit runtime records or use runtime Save.",
+    "Never claim database durability or generated-SQL behavior beyond the observed close/reopen recovery."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:execute|run|apply)\\b[^.\\n]{0,50}\\b(?:SQL script|generated SQL|DDL)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\b(?:Unload All Global Form Objects|Unload IDO Metadata)\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:check[- ]?out|checkout)\\s+(?:the\\s+|any\\s+|an?\\s+)?(?:other IDO|another IDO|different IDO|IDO project|project|property class)\\b",
+    "\\b(?:browser refresh|browser restart|direct URL navigation|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:delete|remove|rename)\\b[^.\\n]{0,30}\\b(?:propert(?:y|ies)|table entr(?:y|ies)|join)\\b",
+    "\\b(?:create|modify|delete|regenerate)\\b[^.\\n]{0,50}\\b(?:Form definition|event handler|SQL table)\\b"
+  ],
+  "related_experiments": [
+    "EXP-061",
+    "EXP-044",
+    "EXP-049"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "ido": "FX_Items",
+    "artifacts": [
+      "FX_Items",
+      "FX_UMs",
+      "fxum",
+      "FX_UMsDescription"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; IDO Collections open with one exact-name match for FX_Items; identity, revision, checkout (to the operator) and Locked By recorded; the property inventory (12, including FX_Picture) and the Tables inventory (FX_Items fxitms Primary Base) recorded; FX_UMsDescription and a fxum table entry absent. Evidence: identity, property and Tables screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "One New Table: FX_UMs with alias fxum and join condition fxum.FX_UM = fxitms.FX_UM, with every dialog field and the default join type recorded verbatim; Add and OK once each with native responses; the Tables view lists FX_Items (fxitms) and FX_UMs (fxum) only. Evidence: dialog-before-Add and Tables-after screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "One New Property wizard: Bound, Bind To the fxum FX_Description column (joined columns listing recorded), name FX_UMsDescription, other fields at recorded defaults; Finish once with the native response verbatim; at most one Save, only if needed. Evidence: wizard configuration and Finish screenshots, Save count."
+    },
+    {
+      "id": "AC-4",
+      "description": "After Finish: exactly one added property FX_UMsDescription (Bound, fxum FX_Description), the 12 original properties unchanged, the IDO still checked out to the operator, revision recorded. Evidence: post-change inventory screenshot."
+    },
+    {
+      "id": "AC-5",
+      "description": "IDO Collections closed once and reopened once; one exact-name F4 query; the Tables view, the property inventory with FX_UMsDescription and the checkout state match AC-2 and AC-4. Evidence: reopen route and screenshots."
+    },
+    {
+      "id": "AC-6",
+      "description": "The FX_Items runtime Form closed once (if open) and reopened once; dumbbell, eggs and guitar load; the Form is clean; no record edits. Evidence: runtime screenshot."
+    },
+    {
+      "id": "AC-7",
+      "description": "No other change: no other IDO, property, table entry, checkout, SQL, Form, preference or Designer change; no unload. Evidence: the audit."
+    },
+    {
+      "id": "AC-8",
+      "description": "The final EXP-066 report gives decisive evidence for AC-1 to AC-6, the complete action audit with exact counts (one New Table, one Add, one OK, one wizard, one Finish, at most one Save, one IDO Collections close/reopen, one runtime close/reopen, zero check-in, zero unload, zero Designer actions), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-066",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only preflight for EXP-066. Review AGENTS.md, hello-world-pt4.md Section 7 and the EXP-061 record and evidence. Without shell/git access, record the starting state. List the browser tabs before selecting one; identify the Web Client tab and leave the Web Designer tab untouched. In the Web Client, open IDO Collections through Form > Open > Select Form (or reuse a clean open one), perform one exact-name F4 query for FX_Items, and record the IDO identity, revision, checkout state and Locked By owner, the complete property inventory and the Tables view inventory, proving FX_UMsDescription and any fxum table entry absent. Create the EXP-066 record with the baseline, action audit and worker-written-file inventory, with screenshots under evidence/EXP-066/. Stop before opening New Table or making any change.",
+  "notes": "Proposed by the operator assistant after EXP-065 (accepted; Part 4 section 6 complete). Section 7 adapted to FX_ names: table FX_UMs (FX_UM nvarchar 10 PK, FX_Description nvarchar 50; EXP-044), alias fxum (the FX_UMs IDO convention), join fxum.FX_UM = fxitms.FX_UM, property FX_UMsDescription (the tutorial UMsDescription, alias-prefixed per the speaker, FX_-prefixed for the factory). FX_Items is a tenant-wide FX_ IDO (scope extension) and stays checked out to the operator (EXP-061 decision). The tutorial's unload after Section 7 is deferred to the Section 8 experiment, where the Designer needs it, so this brief has no tenant-wide cache operation. The default join type is kept and recorded (the tutorial does not choose one); AC-6 checks that the three runtime records still load. exact_values: FX_Items, FX_UMs, fxum, FX_UMsDescription, FX_Description. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Items",
+    "FX_UMs",
+    "fxum",
+    "FX_UMsDescription",
+    "FX_Description"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "Tenant-wide FX_Items IDO change (FX_ scope extension) through the Web Client IDO Collections runtime Form: one FX_UMs table entry and one FX_UMsDescription property; checkout unchanged; no Forms, Designer, preferences or unload"
+}
