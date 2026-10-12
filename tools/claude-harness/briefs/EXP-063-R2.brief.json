@@ -1,0 +1,136 @@
+{
+  "experiment_id": "EXP-063-R2",
+  "title": "EXP-063-R2 - Hello World Part 4 Section 5: Import Item Pictures at Runtime on FX_Items (replay with the Select File coordinate click)",
+  "record_path": "experiments/EXP-063-R2-hello-world-part-4-section-5-import-item-pictures.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Replay of EXP-063, which was blocked at AC-2 before any upload because the Select File click inside the Import dialog was intercepted by an Ext JS mask. Follow hello-world-pt4.md Section 5 (05:13–05:51) on the runtime FX_Items Form built in EXP-062-R4. For each of the three existing records, select the record, activate the Import button (Primary event FX_ImportPicture, Binary Value Action Import into FX_PictureStatic) and import the operator-provided PNG whose name matches the Item: dumbbell -> C:\\AI\\mongoose-factory\\assets\\dumbbell.png, eggs -> C:\\AI\\mongoose-factory\\assets\\eggs.png, guitar -> C:\\AI\\mongoose-factory\\assets\\guitar.png. The Import click opens the in-page Mongoose dialog \"Import Binary Data From File\" (Files for property FX_Picture (*.png), Drop File Here / Select File, Upload disabled, Cancel), observed in EXP-063. In EXP-063 a semantic click on Select File resolved to the hidden file input and timed out because an Ext JS mask (div.x-mask) intercepted pointer events at its actionability point. Corrected method (coordinates as the documented last resort after the semantic click failed): take a fresh screenshot of the open dialog, read the centre of the visible blue Select File button from that screenshot, and click it exactly once with browser_mouse_click_xy; when the tool reports a pending file chooser, supply exactly the matching file path with the browser file-upload tool; verify the dialog shows the chosen file and Upload is enabled; then click the dialog Upload button once. The three records currently hold different pictures that the operator saved deliberately (dumbbell showed Elden Ring artwork in EXP-063); the operator authorized overwriting them, because this run tests whether the worker can perform the import. Verify each new picture appears in the picture Static and that the record shows as modified. Then perform exactly one runtime Save, verify the clean state, close and reopen the runtime Form once, and verify that each record displays its asset picture. Change no other field, record, Form or object. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt4.md Section 5 (05:13–05:51), the EXP-063 record and evidence (the T3 dialog and mask blocker) and the EXP-062-R4 record and evidence (T13 runtime check) before browser interaction.",
+      "Create or update only experiments/EXP-063-R2-hello-world-part-4-section-5-import-item-pictures.md and evidence/EXP-063-R2/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without reauthentication, refresh, restart or configuration change. List the browser tabs before the first tab selection.",
+      "In the Web Client, record the open runtime Forms and their dirty state. Open the FX_Items runtime Form once through Form > Open > Select Form (or reuse a clean open FX_Items Form) and verify the Form identity, three records (dumbbell, eggs, guitar), the visible Import button, the picture each record currently shows (operator-saved pictures that differ from the assets; record what each shows) and runtime Save disabled.",
+      "For each record in the order dumbbell, eggs, guitar: select the record through its grid row; verify the Item value; click the Import button once; verify the Import Binary Data From File dialog opened for FX_Picture; take a fresh screenshot and click the centre of the visible Select File button once with browser_mouse_click_xy; supply exactly the matching file path with the browser file-upload tool; verify the dialog shows the chosen file and Upload is enabled; click the dialog Upload button once; verify the dialog closed, the picture Static shows the new picture for that record and the record is marked modified. Never supply a file to a different record.",
+      "If the dialog does not open, the coordinate click produces no pending file chooser, the upload tool is unavailable or refused, the dialog does not show the file, Upload shows an error, the record does not become modified, or the picture does not change, stop blocked before any Save and record the exact message. If the dialog is still open when stopping, close it once with its Cancel button. Never repeat the coordinate click, the upload or the dialog Upload click for the same record.",
+      "After all three imports, verify each record still shows its own picture when reselected, and no other field changed.",
+      "Perform exactly one runtime Save through the native toolbar Save. Record the native response verbatim and verify the clean state (Save disabled, no modified markers).",
+      "Close the clean FX_Items runtime Form once and reopen it once through Form > Open > Select Form. Verify each of the three records displays its asset picture after the reopen.",
+      "For the picture comparison, the worker may read the three asset PNGs with the Read tool (read-only, no copy or change).",
+      "Capture screenshots that show the Item value together with its picture for each record, before Save, after Save and after the reopen.",
+      "Leave the Designer untouched and the FX_Items IDO checkout as it is.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Any Designer change, Form definition change, Save in the Designer or Form-level edit.",
+      "Changing any field other than the picture through the Import action, or creating, deleting or editing records.",
+      "Supplying any file other than the three named PNGs from the assets folder, or a file to the wrong record.",
+      "Exporting pictures, or any other Binary Value Action.",
+      "Changing the FX_Items IDO, its checkout, property classes, SQL tables, strings or other tenant objects.",
+      "Any unload, cache, FormSync, deployment or preference operation.",
+      "Browser JavaScript, console or network inspection, direct URL navigation, refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-063 paths, and the assets folder itself.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never change a record field other than the picture set by the Import action.",
+    "Never supply a picture file to a record whose Item value does not match the file name.",
+    "Never invoke runtime Save more than once or retry an uncertain Save.",
+    "Never close a dirty Form or discard changes without operator approval.",
+    "Never open or change anything in the Designer.",
+    "Never click the Designer top-toolbar Delete button (Delete Form Definition).",
+    "Never perform check-in, undo checkout or other checkout-management actions.",
+    "Never perform any unload, cache, FormSync or deployment action.",
+    "Never use direct SQL, scripts, application internals or browser JavaScript.",
+    "Never reauthenticate, refresh, restart or replace the browser session.",
+    "Never repeat an uncertain import, Save, close or reopen.",
+    "Never claim database durability beyond the observed close/reopen recovery.",
+    "Never use coordinate clicks except the single Select File click per record inside the Import dialog.",
+    "Never drag or drop files, and never type a file path into a page field.",
+    "Never click Select File, call the file-upload tool or click the dialog Upload button more than once per record."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\b(?:Unload All Global Form Objects|Unload IDO Metadata)\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|direct URL navigation|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\bExport\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,20}\\b(?:record|row)s?\\b|\\b(?:add|create|insert)\\b[^.\\n]{0,15}\\bnew\\s+(?:record|row)s?\\b"
+  ],
+  "related_experiments": [
+    "EXP-063",
+    "EXP-062-R4",
+    "EXP-061",
+    "EXP-059"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Items",
+    "artifacts": [
+      "FX_Items",
+      "FX_PictureStatic",
+      "FX_ImportPicture",
+      "FX_Picture"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable without challenge; the runtime FX_Items Form is open with verified identity, the three records dumbbell, eggs and guitar, the visible Import button, the picture each record currently shows (operator-saved, differing from the assets), and Save disabled. Evidence: tab list, open route, identity and three-record screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "For dumbbell: record selected and verified; one Import click opened the Import Binary Data From File dialog; one coordinate click on the visible Select File button produced a pending file chooser; exactly C:\\AI\\mongoose-factory\\assets\\dumbbell.png was supplied with the upload tool; the dialog showed the file; one dialog Upload click closed it; the picture Static shows the dumbbell asset picture and the record is marked modified. Evidence: before/after screenshots showing Item value and picture, the dialog with the chosen file, and the audit of the coordinate click, upload and Upload click."
+    },
+    {
+      "id": "AC-3",
+      "description": "Same as AC-2 for eggs with C:\\AI\\mongoose-factory\\assets\\eggs.png. Evidence: before/after screenshots, dialog screenshot, click/upload audit."
+    },
+    {
+      "id": "AC-4",
+      "description": "Same as AC-2 for guitar with C:\\AI\\mongoose-factory\\assets\\guitar.png. Evidence: before/after screenshots, dialog screenshot, click/upload audit."
+    },
+    {
+      "id": "AC-5",
+      "description": "Before Save, reselecting each record shows its own picture, and no other field changed (Item, Description, Cost, Unit of Measure match the EXP-062-R4 T13 values). Evidence: per-record screenshots and field readbacks."
+    },
+    {
+      "id": "AC-6",
+      "description": "Exactly one runtime Save; the native response is recorded verbatim; Save becomes disabled and no modified markers remain. Evidence: pre/post-Save screenshots, Save count."
+    },
+    {
+      "id": "AC-7",
+      "description": "The clean runtime Form is closed once and reopened once; each of the three records displays its asset picture after the reopen. Evidence: reopen route, three per-record screenshots after reopen."
+    },
+    {
+      "id": "AC-8",
+      "description": "The final EXP-063-R2 report gives decisive evidence for AC-1 to AC-7, the complete action audit with exact counts (three Import clicks, three Select File coordinate clicks, three uploads, three dialog Upload clicks, zero other coordinate clicks, one Save, one close/reopen, zero Designer actions, zero other field edits), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-063-R2",
+  "replay_of": "EXP-063",
+  "initial_instruction": "T1 — Read-only preflight for EXP-063-R2 (replay of EXP-063 with the corrected Select File method). Review AGENTS.md, hello-world-pt4.md Section 5, the EXP-063 record and evidence (T3 report and t3-02 dialog screenshot) and the EXP-062-R4 record and evidence (T13). Without shell/git access, record the starting state. List the browser tabs before selecting one; identify the Web Client and any Designer tab and record open Forms and their dirty state. In the Web Client, open the FX_Items runtime Form once through Form > Open > Select Form (or reuse a clean open FX_Items Form) and verify identity, the three records (dumbbell, eggs, guitar) with their Item, Description, Cost and Unit of Measure values, the visible Import button, the picture each record currently shows (operator-saved, expected to differ from the assets) and Save disabled. Confirm that the browser file-upload tool and browser_mouse_click_xy are listed among your available tools, without calling them. Create the EXP-063-R2 record with the baseline, action audit and worker-written-file inventory, with screenshots under evidence/EXP-063-R2/. Stop before clicking the Import button or making any change.",
+  "notes": "Replay of EXP-063 (run R-20261012-205347-bjNF, blocked at AC-2: the Import click opened the in-page \"Import Binary Data From File\" dialog; the semantic Select File click resolved to the hidden filefield input and timed out because div.x-mask intercepted pointer events; zero uploads; dialog cancelled; Form clean). Correction proposed by the operator assistant: one coordinate click per record at the centre of the visible Select File button (browser_mouse_click_xy, vision capability enabled, not denied), then the file-upload tool, then the dialog Upload button. Coordinates are the AGENTS.md last resort after the semantic click failed; other coordinate clicks are prohibited. EXP-063 also showed that the approved wording \"the same pictures\" was wrong: the operator saved different pictures and authorized overwriting them (operator, 2026-10-12); this brief states that. Unchanged from EXP-063: one Save, one close/reopen, runtime only, FX_Items FX_Picture data in the FX_ demo table only, exact_values FX_Items, deny_browser_javascript, Export/record-creation/Designer/unload bans. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Items"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "Runtime data only: FX_Items FX_Picture values of the three existing records (FX_ demo table); no Designer or Form-definition change"
+}
