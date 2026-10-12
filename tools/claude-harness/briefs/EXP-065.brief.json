@@ -1,0 +1,134 @@
+{
+  "experiment_id": "EXP-065",
+  "title": "EXP-065 - Hello World Part 4 Section 6b: Select the FX_HelloWorld Theme and Apply FX_BlueButton to the Import Button",
+  "record_path": "experiments/EXP-065-hello-world-part-4-section-6b-apply-theme-and-button-class.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt4.md Section 6 steps 9-11 (05:51-07:29), adapted to FX_ names. First record the current state read-only: the Layout theme in the Web Client User Preferences and the theme class of the Import button FX_RefreshButton on the User-scoped FX_Items Designer Form (the operator changed both deliberately before this run). Then, only where a value differs from its target: in the Web Client open View > User Preferences > Layout, select the FX_HelloWorld theme and confirm with OK; in the Web Designer select FX_RefreshButton, expand Appearance and choose FX_BlueButton as its theme class. Perform exactly one Designer Save, close and reopen the Designer Form once, and verify the class persisted; then close and reopen the clean FX_Items runtime Form once and record how the Import button is styled. Change no other preference, property, component, theme or record. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt4.md Section 6 (05:51-07:29) and the EXP-064 record and evidence before browser interaction.",
+      "Create or update only experiments/EXP-065-hello-world-part-4-section-6b-apply-theme-and-button-class.md and evidence/EXP-065/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without reauthentication, refresh, restart or configuration change. List the browser tabs before the first tab selection.",
+      "Identify the Web Client and Web Designer tabs. In the Designer, verify the open Form is exactly FX_Items in User scope for the authenticated operator and clean. If the Designer is not open or another Form is open, stop and report it.",
+      "Read-only baseline: open View > User Preferences in the Web Client, record the Layout theme value verbatim and the available theme list, and close the dialog with Cancel. In the Designer, select FX_RefreshButton and record its Appearance properties, including the exact theme-class property label and value.",
+      "Preference step: if the Layout theme is not FX_HelloWorld, open View > User Preferences > Layout once, select FX_HelloWorld in the theme field, confirm with OK once, and record the visible result. Reopen User Preferences once to read back the theme, then close with Cancel. If it is already FX_HelloWorld, record that and leave it unchanged.",
+      "Class step: if the FX_RefreshButton theme class is not FX_BlueButton, select FX_BlueButton in that property once and verify the readback and the canvas appearance. If it is already FX_BlueButton, record that and make no change.",
+      "Perform exactly one Designer Save through the native toolbar Save only if the class step changed the Form, and record the native response verbatim.",
+      "Close the clean FX_Items Designer Form once (no unsaved-changes prompt) and reopen it once through the Designer toolbar Open button; verify Name, User scope and that FX_RefreshButton shows FX_BlueButton.",
+      "Close the clean FX_Items runtime Form once if it is open and reopen it once through Form > Open > Select Form; record the Import button appearance with a screenshot. If the styling does not appear, record it as observed; do not unload.",
+      "Capture screenshots of the preference baseline, the theme selection before OK, the Web Client after OK, the class readback, the Designer after Save, after the Designer reopen and the runtime Import button.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Changing any User Preference other than the Layout theme, or selecting any theme other than FX_HelloWorld.",
+      "Editing the theme itself: Designer Edit > Theme, Global Objects and Edit Styles changes.",
+      "Changing any property other than the theme class of FX_RefreshButton, or any other component, Form, string or event handler.",
+      "Runtime record changes, runtime Save, imports or exports.",
+      "Changing the FX_Items IDO, its checkout, property classes, SQL tables or other tenant objects.",
+      "Any unload, cache, FormSync, deployment or regeneration operation.",
+      "Browser JavaScript, console or network inspection, direct URL navigation, refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-065 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never change a User Preference other than the Layout theme, and never select a theme other than FX_HelloWorld.",
+    "Never open Global Objects or Edit Styles, and never edit, rename, delete or save a theme.",
+    "Never change a property other than the theme class of FX_RefreshButton.",
+    "Never invoke the Designer Save more than once or retry an uncertain Save.",
+    "Never close a dirty Form or discard changes without operator approval.",
+    "Never click the Designer top-toolbar Delete button (Delete Form Definition).",
+    "Never perform check-in, undo checkout or other checkout-management actions.",
+    "Never perform any unload, cache, FormSync or deployment action.",
+    "Never use direct SQL, scripts, application internals or browser JavaScript.",
+    "Never reauthenticate, refresh, restart or replace the browser session.",
+    "Never repeat an uncertain preference change, class change, Save, close or reopen.",
+    "Never claim cross-session durability beyond the observed close/reopen recovery."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\b(?:Unload All Global Form Objects|Unload IDO Metadata)\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|direct URL navigation|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:delete|remove|rename)\\b[^.\\n]{0,30}\\b(?:theme|class)(?:es|s)?\\b",
+    "\\b(?:open|click|use)\\b[^.\\n]{0,25}\\b(?:Global Objects|Edit Styles)\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b(?!\\s+button\\s+appearance)"
+  ],
+  "related_experiments": [
+    "EXP-064",
+    "EXP-062-R4"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Items",
+    "artifacts": [
+      "FX_Items",
+      "FX_RefreshButton",
+      "FX_BlueButton",
+      "FX_HelloWorld"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; Web Client and Web Designer tabs identified; the Designer Form is FX_Items in User scope and clean; the baseline Layout theme (verbatim, with the theme list) and the FX_RefreshButton theme-class label and value are recorded read-only. Evidence: tab list, preference baseline screenshot, Designer identity and Appearance screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "The Layout theme is FX_HelloWorld: either set once (selection, one OK, visible result) or recorded as already FX_HelloWorld; the read-back after reopening User Preferences shows FX_HelloWorld and no other preference changed. Evidence: before-OK and after-OK screenshots, read-back screenshot."
+    },
+    {
+      "id": "AC-3",
+      "description": "The FX_RefreshButton theme class is FX_BlueButton: either selected once (exact property label and readback recorded) or recorded as already FX_BlueButton; no other property changed. Evidence: Appearance readback and canvas screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "If the class changed, exactly one Designer Save with the native response verbatim and Save disabled afterwards; otherwise zero Saves. Evidence: post-Save screenshot and the Save count."
+    },
+    {
+      "id": "AC-5",
+      "description": "The clean Designer Form was closed once and reopened once through the toolbar Open button; Name FX_Items, User scope and the FX_RefreshButton theme class FX_BlueButton are verified. Evidence: reopen route and screenshots."
+    },
+    {
+      "id": "AC-6",
+      "description": "The clean FX_Items runtime Form was closed once (if open) and reopened once; the Import button appearance is recorded with a screenshot (styled or not, observed only, no unload). Evidence: runtime screenshot."
+    },
+    {
+      "id": "AC-7",
+      "description": "No other change: no other preference, theme, property, component, record or object changed; no dialog left open. Evidence: the audit and final screenshots."
+    },
+    {
+      "id": "AC-8",
+      "description": "The final EXP-065 report gives decisive evidence for AC-1 to AC-7, the complete action audit with exact counts (at most one preference OK, at most one class change, at most one Designer Save, one Designer close/reopen, one runtime close/reopen, zero theme edits, zero other edits), the baseline theme for restoring it later, the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-065",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only preflight for EXP-065. Review AGENTS.md, hello-world-pt4.md Section 6 and the EXP-064 record. Without shell/git access, record the starting state. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. In the Designer, verify the open Form is FX_Items in User scope and clean, select FX_RefreshButton and record its Appearance properties, including the exact theme-class label and value. In the Web Client, open View > User Preferences, record the Layout theme value verbatim and the theme list, and close it with Cancel. Create the EXP-065 record with the baseline, action audit and worker-written-file inventory, with screenshots under evidence/EXP-065/. Stop before changing any preference or property.",
+  "notes": "Proposed by the operator assistant after EXP-064 (accepted; Part 4 section 6a complete). Section 6b: the operator first performed steps 9-11 manually (colors changed), then changed them again and asked the worker to recreate them (2026-10-12). Operator authorization: the worker may change the operator's own Layout theme User Preference to FX_HelloWorld (the baseline value is recorded so it can be restored later) and the theme class of FX_RefreshButton on the User-scoped FX_Items Form, with one Designer Save. Each step runs only when its value differs from the target; T1 records both read-only. The Designer must already be open (the EXP-064 T1 deviation launched it). No unload: if the runtime does not show the style after reopen, that is an observed finding. Patterns ban theme edits (Global Objects, Edit Styles), theme/class deletion, runtime Import/Export clicks and the standard JS, SQL, unload, Delete Form Definition and Check-In bans. exact_values: FX_HelloWorld, FX_BlueButton, FX_RefreshButton, FX_Items. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_HelloWorld",
+    "FX_BlueButton",
+    "FX_RefreshButton",
+    "FX_Items"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User: the operator's Layout theme User Preference and the FX_RefreshButton theme class on the User-scoped FX_Items Designer Form; no theme, other preference or other property change"
+}
