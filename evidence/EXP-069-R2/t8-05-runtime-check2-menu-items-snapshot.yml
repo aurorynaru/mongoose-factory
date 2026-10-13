@@ -1,0 +1,56 @@
+- menu [ref=f1e509]:
+  - menuitemcheckbox [ref=f1e510] [cursor=pointer]:
+    - menuitem "Refresh" [ref=f1e511]
+  - menuitemcheckbox [ref=f1e513] [cursor=pointer]:
+    - menuitem "Refresh current" [ref=f1e514]
+  - separator "&#160;" [ref=f1e516] [cursor=pointer]
+  - menuitemcheckbox [ref=f1e517] [cursor=pointer]:
+    - menuitem "Filter" [ref=f1e518]
+  - separator "&#160;" [ref=f1e520] [cursor=pointer]
+  - menuitemcheckbox [ref=f1e521] [cursor=pointer]:
+    - menuitem "Next" [ref=f1e522]
+  - menuitemcheckbox [disabled] [ref=f1e524]:
+    - menuitem "Previous" [disabled] [ref=f1e525]
+  - menuitemcheckbox [disabled] [ref=f1e527]:
+    - menuitem "First" [disabled] [ref=f1e528]
+  - menuitemcheckbox [ref=f1e530] [cursor=pointer]:
+    - menuitem "Last" [ref=f1e531]
+  - menuitemcheckbox [disabled] [ref=f1e533]:
+    - menuitem "Get More Rows" [disabled] [ref=f1e534]
+  - separator "&#160;" [ref=f1e536] [cursor=pointer]
+  - menuitemcheckbox [ref=f1e537] [cursor=pointer]:
+    - menuitem "New" [ref=f1e538]
+  - menuitemcheckbox [ref=f1e540] [cursor=pointer]:
+    - menuitem "Duplicate" [ref=f1e541]
+  - menuitemcheckbox [disabled] [ref=f1e543]:
+    - menuitem "Save" [disabled] [ref=f1e544]
+  - menuitemcheckbox [disabled] [ref=f1e546]:
+    - menuitem "Save current" [disabled] [ref=f1e547]
+  - menuitemcheckbox [ref=f1e549] [cursor=pointer]:
+    - menuitem "Delete" [ref=f1e550]
+  - menuitemcheckbox [ref=f1e552] [cursor=pointer]:
+    - menuitem "Validate" [ref=f1e553]
+  - separator "&#160;" [ref=f1e555] [cursor=pointer]
+  - menuitemcheckbox [ref=f1e556] [cursor=pointer]:
+    - menuitem "Notes for All" [ref=f1e557]
+  - menuitemcheckbox [ref=f1e559] [cursor=pointer]:
+    - menuitem "Documents for Current" [ref=f1e560]
+  - menuitemcheckbox [ref=f1e562] [cursor=pointer]:
+    - menuitem "Email for Current" [ref=f1e563]
+  - menuitemcheckbox [ref=f1e565] [cursor=pointer]:
+    - menuitem "Notes for Current" [ref=f1e566]
+  - menuitemcheckbox [ref=f1e568] [cursor=pointer]:
+    - menuitem "Graph" [ref=f1e569]
+  - menuitemcheckbox [ref=f1e571] [cursor=pointer]:
+    - menuitem "To Excel" [ref=f1e572]
+  - menuitemcheckbox [ref=f1e574] [cursor=pointer]:
+    - menuitem "To Form DataView" [ref=f1e575]
+  - menuitemcheckbox [disabled] [ref=f1e577]:
+    - menuitem "View Event Status" [disabled] [ref=f1e578]
+  - menuitemcheckbox [ref=f1e580] [cursor=pointer]:
+    - menuitem "View Workflows" [ref=f1e581]
+  - menuitemcheckbox [ref=f1e583] [cursor=pointer]:
+    - menuitem "New Workflow" [ref=f1e584]
+  - separator "&#160;" [ref=f1e586] [cursor=pointer]
+  - menuitemcheckbox [ref=f1e587] [cursor=pointer]:
+    - menuitem "Help" [ref=f1e588]

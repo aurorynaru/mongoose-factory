@@ -1,0 +1,565 @@
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - button "Form" [ref=e3] [cursor=pointer]
+    - button "Edit" [ref=e5] [cursor=pointer]
+    - button "View" [ref=e7] [cursor=pointer]
+    - button "Help" [ref=e9] [cursor=pointer]
+  - toolbar [ref=e11]:
+    - button [ref=e12] [cursor=pointer]:
+      - button "Design" [ref=e13]
+    - button "Save" [disabled] [ref=e15]:
+      - button "Save" [disabled] [active]
+    - button "Regenerate Form" [disabled] [ref=e16]:
+      - button "Regenerate Form" [disabled]
+    - separator [ref=e17]
+    - button [ref=e18] [cursor=pointer]:
+      - button "New" [ref=e19]
+    - button [ref=e21] [cursor=pointer]:
+      - button "Copy" [ref=e22]
+    - button [ref=e24] [cursor=pointer]:
+      - button "Delete" [ref=e25]
+    - separator [ref=e27]
+    - button "Align Left" [disabled] [ref=e28]:
+      - button "Align Left" [disabled]
+    - button "Align Center" [disabled] [ref=e29]:
+      - button "Align Center" [disabled]
+    - button "Align Right" [disabled] [ref=e30]:
+      - button "Align Right" [disabled]
+    - button "Align Top" [disabled] [ref=e31]:
+      - button "Align Top" [disabled]
+    - button "Align Middle" [disabled] [ref=e32]:
+      - button "Align Middle" [disabled]
+    - button "Align Bottom" [disabled] [ref=e33]:
+      - button "Align Bottom" [disabled]
+    - separator [ref=e34]
+    - button "Make Same Width" [disabled] [ref=e35]:
+      - button "Make Same Width" [disabled]
+    - button "Make Same Height" [disabled] [ref=e36]:
+      - button "Make Same Height" [disabled]
+    - button "Make Same Size" [disabled] [ref=e37]:
+      - button "Make Same Size" [disabled]
+    - separator [ref=e38]
+    - button "Space Horizontally" [disabled] [ref=e39]:
+      - button "Space Horizontally" [disabled]
+    - button "Space Vertically" [disabled] [ref=e40]:
+      - button "Space Vertically" [disabled]
+    - separator [ref=e41]
+    - button [ref=e42] [cursor=pointer]:
+      - button "Tab Order" [ref=e43]
+    - button [ref=e45] [cursor=pointer]:
+      - button "Tab Order At" [ref=e46]
+    - separator [ref=e48]
+    - button "Undo" [disabled] [ref=e49]:
+      - button "Undo" [disabled]
+    - button "Redo" [disabled] [ref=e50]:
+      - button "Redo" [disabled]
+  - grid "Toolbox" [ref=e51]:
+    - text: 
+    - button "Collapse Panel" [ref=e53] [cursor=pointer]
+    - generic [ref=e54]:
+      - generic [ref=e55]: "Search Toolbox:"
+      - generic [ref=e58]:
+        - textbox "Search Toolbox:" [ref=e60]:
+          - /placeholder: Search Toolbox
+        - generic [ref=e61] [cursor=pointer]
+    - columnheader "Name"
+    - tree [ref=e66]:
+      - generic [ref=e67]:
+        - table [ref=e68]:
+          - rowgroup [ref=e69]:
+            - row "Framework Components" [ref=e70]
+        - table [ref=e73]:
+          - rowgroup [ref=e74]:
+            - row "Pointer" [ref=e75]
+        - table [ref=e78]:
+          - rowgroup [ref=e79]:
+            - row "Barcode" [ref=e80]
+        - table [ref=e83]:
+          - rowgroup [ref=e84]:
+            - row "Browser" [ref=e85]
+        - table [ref=e88]:
+          - rowgroup [ref=e89]:
+            - row "Button" [ref=e90]
+        - table [ref=e93]:
+          - rowgroup [ref=e94]:
+            - row "Calendar" [ref=e95]
+        - table [ref=e98]:
+          - rowgroup [ref=e99]:
+            - row "Chart" [ref=e100]
+        - table [ref=e103]:
+          - rowgroup [ref=e104]:
+            - row "CheckBox" [ref=e105]
+        - table [ref=e108]:
+          - rowgroup [ref=e109]:
+            - row "ComboBox" [ref=e110]
+        - table [ref=e113]:
+          - rowgroup [ref=e114]:
+            - row "DataView" [ref=e115]
+        - table [ref=e118]:
+          - rowgroup [ref=e119]:
+            - row "DateCombo" [ref=e120]
+        - table [ref=e123]:
+          - rowgroup [ref=e124]:
+            - row "Diagram" [ref=e125]
+        - table [ref=e128]:
+          - rowgroup [ref=e129]:
+            - row "DropList" [ref=e130]
+        - table [ref=e133]:
+          - rowgroup [ref=e134]:
+            - row "Edit" [ref=e135]
+        - table [ref=e138]:
+          - rowgroup [ref=e139]:
+            - row "FlexLayout" [ref=e140]
+        - table [ref=e143]:
+          - rowgroup [ref=e144]:
+            - row "FormPage" [ref=e145]
+        - table [ref=e148]:
+          - rowgroup [ref=e149]:
+            - row "Gauge" [ref=e150]
+        - table [ref=e153]:
+          - rowgroup [ref=e154]:
+            - row "Grid" [ref=e155]
+        - table [ref=e158]:
+          - rowgroup [ref=e159]:
+            - row "GroupBox" [ref=e160]
+        - table [ref=e163]:
+          - rowgroup [ref=e164]:
+            - row "HyperLinkButton" [ref=e165]
+        - table [ref=e168]:
+          - rowgroup [ref=e169]:
+            - row "Infocon" [ref=e170]
+        - table [ref=e173]:
+          - rowgroup [ref=e174]:
+            - row "Infor Chart" [ref=e175]
+        - table [ref=e178]:
+          - rowgroup [ref=e179]:
+            - row "List" [ref=e180]
+        - table [ref=e183]:
+          - rowgroup [ref=e184]:
+            - row "MenuItem" [ref=e185]
+        - table [ref=e188]:
+          - rowgroup [ref=e189]:
+            - row "MultiLineEdit" [ref=e190]
+        - table [ref=e193]:
+          - rowgroup [ref=e194]:
+            - row "NoteBook" [ref=e195]
+        - table [ref=e198]:
+          - rowgroup [ref=e199]:
+            - row "Process Intelligence" [ref=e200]
+        - table [ref=e203]:
+          - rowgroup [ref=e204]:
+            - row "RadioButton" [ref=e205]
+        - table [ref=e208]:
+          - rowgroup [ref=e209]:
+            - row "Static" [ref=e210]
+        - table [ref=e213]:
+          - rowgroup [ref=e214]:
+            - row "SubForm" [ref=e215]
+        - table [ref=e218]:
+          - rowgroup [ref=e219]:
+            - row "ToolbarButton" [ref=e220]
+        - table [ref=e223]:
+          - rowgroup [ref=e224]:
+            - row "Tree" [ref=e225]
+        - table [ref=e228]:
+          - rowgroup [ref=e229]:
+            - row "UserControl" [ref=e230]
+        - table [ref=e233]:
+          - rowgroup [ref=e234]:
+            - row "VerticalGrid" [ref=e235]
+        - table [ref=e238]:
+          - rowgroup [ref=e239]:
+            - row "User Components" [ref=e240]
+  - separator [ref=e243]
+  - text: 
+  - tablist [ref=e244]:
+    - tab [selected] [ref=e245] [cursor=pointer]:
+      - heading "FX_Items" [level=2] [ref=e246]
+      - button "closable FX_Items" [ref=e247]:
+        - img "closable FX_Items"
+  - tabpanel [ref=e248]:
+    - generic [ref=e249]:
+      - grid [ref=e250]:
+        - grid [ref=e251]:
+          - row [ref=e252]:
+            - columnheader [ref=e253]
+          - grid [ref=e258]
+        - grid [ref=e260]:
+          - row "Item Description Cost Unit of Measure" [ref=e261]:
+            - columnheader "Item" [ref=e262]
+            - columnheader "Description" [ref=e267]
+            - columnheader "Cost" [ref=e272]
+            - columnheader "Unit of Measure" [ref=e277]
+            - columnheader [ref=e282]
+          - grid [ref=e286]
+        - generic [ref=e288] [cursor=pointer]: 
+      - separator [ref=e289]: ⁞
+      - generic [ref=e292] [cursor=pointer]
+      - button "Import" [ref=e294] [cursor=pointer]
+      - generic [ref=e296]:
+        - textbox [ref=e300]
+        - generic [ref=e301] [cursor=pointer]
+      - generic [ref=e302]:
+        - generic [ref=e303]: "Description:"
+        - generic [ref=e304] [cursor=pointer]
+      - generic [ref=e305]:
+        - generic [ref=e306]: "Item:"
+        - generic [ref=e307] [cursor=pointer]
+      - generic [ref=e308]:
+        - generic [ref=e309]: "Item:"
+        - textbox "Item:" [ref=e314]
+        - generic [ref=e315] [cursor=pointer]
+      - generic [ref=e316]:
+        - generic [ref=e317]: "Description:"
+        - generic [ref=e318] [cursor=pointer]
+      - generic [ref=e319]:
+        - generic [ref=e320]: "Description:"
+        - textbox "Description:" [ref=e325]
+        - generic [ref=e326] [cursor=pointer]
+      - generic [ref=e327]:
+        - generic [ref=e328]: "Cost:"
+        - generic [ref=e329] [cursor=pointer]
+      - generic [ref=e330]:
+        - generic [ref=e331]: "Cost:"
+        - textbox "Cost:" [ref=e336]
+        - generic [ref=e337] [cursor=pointer]
+      - generic [ref=e338]:
+        - generic [ref=e339]: "Unit of Measure:"
+        - generic [ref=e340] [cursor=pointer]
+      - generic [ref=e341]:
+        - generic [ref=e342]: "Unit of Measure:"
+        - combobox "Unit of Measure:" [ref=e347]
+    - separator [ref=e357]
+    - text: 
+    - generic [ref=e358]: Details
+    - button "Collapse Panel" [ref=e359] [cursor=pointer]
+    - tablist [ref=e360]:
+      - tab [ref=e361] [cursor=pointer]:
+        - heading "Collections" [level=2] [ref=e362]
+      - tab [selected] [ref=e363] [cursor=pointer]:
+        - heading "Components" [level=2] [ref=e364]
+      - tab [ref=e365] [cursor=pointer]:
+        - heading "Event Handlers" [level=2] [ref=e366]
+      - tab [ref=e367] [cursor=pointer]:
+        - heading "Variables" [level=2] [ref=e368]
+      - tab [ref=e369] [cursor=pointer]:
+        - heading "Design View Size" [level=2] [ref=e370]
+    - tabpanel "Components" [ref=e371]:
+      - grid [ref=e372]:
+        - generic [ref=e376]:
+          - textbox [ref=e378]: FX_UMCombobox
+          - generic [ref=e379] [cursor=pointer]
+        - button "Expand" [ref=e380] [cursor=pointer]: 
+        - button "Collapse" [ref=e381] [cursor=pointer]: 
+        - row [ref=e382]:
+          - columnheader "Name" [ref=e383]
+          - columnheader "Type" [ref=e388]
+          - columnheader "Data Source" [ref=e393]
+          - columnheader "Pane" [ref=e398]
+          - columnheader "Container" [ref=e403]
+          - columnheader "Tab" [ref=e408]
+          - columnheader "Event to generate" [ref=e413]
+          - columnheader "Component Class" [ref=e418]
+          - columnheader "Enabled When" [ref=e423]
+          - columnheader "Visible When" [ref=e428]
+          - columnheader "Required When" [ref=e433]
+        - tree [ref=e438]:
+          - generic [ref=e439]:
+            - table [ref=e440]
+            - table [ref=e465]
+            - table [ref=e490]
+            - table [ref=e515]
+            - table [ref=e540]
+            - table [ref=e565]
+            - table [ref=e590]
+            - table [ref=e615]
+            - table [ref=e640]
+            - table [ref=e665]
+            - table [ref=e690]
+            - table [ref=e715]
+            - table [ref=e740]
+            - table [ref=e765]
+            - table [ref=e790]
+            - table [ref=e815]
+            - table [ref=e840]
+            - table [ref=e865]
+            - table [ref=e890]
+            - table [ref=e915]
+        - toolbar [ref=e940]:
+          - button "" [ref=e941] [cursor=pointer]
+  - separator [ref=e942]
+  - text: 
+  - generic [ref=e943]: Properties
+  - button "Collapse Panel" [ref=e944] [cursor=pointer]
+  - tabpanel [aria-hidden] [ref=e945]:
+    - generic [ref=e948]:
+      - textbox [ref=e950]: FX_UMCombobox (EnhancedCombo)
+      - generic [ref=e951] [cursor=pointer]
+    - button [ref=e952] [cursor=pointer]:
+      - button [ref=e953]:
+        - generic [ref=e956]: d
+    - toolbar [ref=e957]:
+      - generic [ref=e958]:
+        - generic [ref=e959]: "Search Properties:"
+        - generic [ref=e962]:
+          - textbox [ref=e964]
+          - generic [ref=e965] [cursor=pointer]
+      - button [ref=e966] [cursor=pointer]: 
+      - button [ref=e967] [cursor=pointer]: 
+    - generic: Name
+    - generic [ref=e968]: Value
+    - tree [ref=e976]:
+      - generic [ref=e977]:
+        - table [ref=e978]:
+          - rowgroup [ref=e979]:
+            - row [ref=e980]
+        - table [ref=e987]:
+          - rowgroup [ref=e988]:
+            - row [ref=e989]
+        - table [ref=e996]:
+          - rowgroup [ref=e997]:
+            - row [ref=e998]
+        - table [ref=e1005]:
+          - rowgroup [ref=e1006]:
+            - row [ref=e1007]
+        - table [ref=e1018]:
+          - rowgroup [ref=e1019]:
+            - row [ref=e1020]
+        - table [ref=e1029]:
+          - rowgroup [ref=e1030]:
+            - row [ref=e1031]
+        - table [ref=e1038]:
+          - rowgroup [ref=e1039]:
+            - row [ref=e1040]
+        - table [ref=e1046]:
+          - rowgroup [ref=e1047]:
+            - row [ref=e1048]
+        - table [ref=e1057]:
+          - rowgroup [ref=e1058]:
+            - row [ref=e1059]
+        - table [ref=e1068]:
+          - rowgroup [ref=e1069]:
+            - row [ref=e1070]
+        - table [ref=e1081]:
+          - rowgroup [ref=e1082]:
+            - row [ref=e1083]
+        - table [ref=e1090]:
+          - rowgroup [ref=e1091]:
+            - row [ref=e1092]
+        - table [ref=e1101]:
+          - rowgroup [ref=e1102]:
+            - row [ref=e1103]
+        - table [ref=e1110]:
+          - rowgroup [ref=e1111]:
+            - row [ref=e1112]
+        - table [ref=e1118]:
+          - rowgroup [ref=e1119]:
+            - row [ref=e1120]
+        - table [ref=e1127]:
+          - rowgroup [ref=e1128]:
+            - row [ref=e1129]
+        - table [ref=e1138]:
+          - rowgroup [ref=e1139]:
+            - row [ref=e1140]
+        - table [ref=e1149]:
+          - rowgroup [ref=e1150]:
+            - row [ref=e1151]
+        - table [ref=e1160]:
+          - rowgroup [ref=e1161]:
+            - row [ref=e1162]
+        - table [ref=e1171]:
+          - rowgroup [ref=e1172]:
+            - row [ref=e1173]
+        - table [ref=e1182]:
+          - rowgroup [ref=e1183]:
+            - row [ref=e1184]
+        - table [ref=e1190]:
+          - rowgroup [ref=e1191]:
+            - row [ref=e1192]
+        - table [ref=e1203]:
+          - rowgroup [ref=e1204]:
+            - row [ref=e1205]
+        - table [ref=e1216]:
+          - rowgroup [ref=e1217]:
+            - row [ref=e1218]
+        - table [ref=e1227]:
+          - rowgroup [ref=e1228]:
+            - row [ref=e1229]
+        - table [ref=e1235]:
+          - rowgroup [ref=e1236]:
+            - row [ref=e1237]
+        - table [ref=e1246]:
+          - rowgroup [ref=e1247]:
+            - row [ref=e1248]
+        - table [ref=e1257]:
+          - rowgroup [ref=e1258]:
+            - row [ref=e1259]
+        - table [ref=e1265]:
+          - rowgroup [ref=e1266]:
+            - row [ref=e1267]
+        - table [ref=e1276]:
+          - rowgroup [ref=e1277]:
+            - row [ref=e1278]
+        - table [ref=e1287]:
+          - rowgroup [ref=e1288]:
+            - row [ref=e1289]
+        - table [ref=e1298]:
+          - rowgroup [ref=e1299]:
+            - row [ref=e1300]
+        - table [ref=e1309]:
+          - rowgroup [ref=e1310]:
+            - row [ref=e1311]
+        - table [ref=e1320]:
+          - rowgroup [ref=e1321]:
+            - row [ref=e1322]
+        - table [ref=e1331]:
+          - rowgroup [ref=e1332]:
+            - row [ref=e1333]
+        - table [ref=e1343]:
+          - rowgroup [ref=e1344]:
+            - row [ref=e1345]
+        - table [ref=e1354]:
+          - rowgroup [ref=e1355]:
+            - row [ref=e1356]
+        - table [ref=e1365]:
+          - rowgroup [ref=e1366]:
+            - row [ref=e1367]
+        - table [ref=e1376]:
+          - rowgroup [ref=e1377]:
+            - row [ref=e1378]
+        - table [ref=e1387]:
+          - rowgroup [ref=e1388]:
+            - row [ref=e1389]
+        - table [ref=e1398]:
+          - rowgroup [ref=e1399]:
+            - row [ref=e1400]
+        - table [ref=e1406]:
+          - rowgroup [ref=e1407]:
+            - row [ref=e1408]
+        - table [ref=e1417]:
+          - rowgroup [ref=e1418]:
+            - row [ref=e1419]
+        - table [ref=e1430]:
+          - rowgroup [ref=e1431]:
+            - row [ref=e1432]
+        - table [ref=e1441]:
+          - rowgroup [ref=e1442]:
+            - row [ref=e1443]
+        - table [ref=e1452]:
+          - rowgroup [ref=e1453]:
+            - row [ref=e1454]
+        - table [ref=e1463]:
+          - rowgroup [ref=e1464]:
+            - row [ref=e1465]
+        - table [ref=e1472]:
+          - rowgroup [ref=e1473]:
+            - row [ref=e1474]
+        - table [ref=e1481]:
+          - rowgroup [ref=e1482]:
+            - row [ref=e1483]
+        - table [ref=e1492]:
+          - rowgroup [ref=e1493]:
+            - row [ref=e1494]
+        - table [ref=e1501]:
+          - rowgroup [ref=e1502]:
+            - row [ref=e1503]
+        - table [ref=e1510]:
+          - rowgroup [ref=e1511]:
+            - row [ref=e1512]
+        - table [ref=e1518]:
+          - rowgroup [ref=e1519]:
+            - row [ref=e1520]
+        - table [ref=e1531]:
+          - rowgroup [ref=e1532]:
+            - row [ref=e1533]
+        - table [ref=e1544]:
+          - rowgroup [ref=e1545]:
+            - row [ref=e1546]
+        - table [ref=e1557]:
+          - rowgroup [ref=e1558]:
+            - row [ref=e1559]
+        - table [ref=e1570]:
+          - rowgroup [ref=e1571]:
+            - row [ref=e1572]
+        - table [ref=e1581]:
+          - rowgroup [ref=e1582]:
+            - row [ref=e1583]
+        - table [ref=e1592]:
+          - rowgroup [ref=e1593]:
+            - row [ref=e1594]
+        - table [ref=e1600]:
+          - rowgroup [ref=e1601]:
+            - row [ref=e1602]
+        - table [ref=e1613]:
+          - rowgroup [ref=e1614]:
+            - row [ref=e1615]
+        - table [ref=e1622]:
+          - rowgroup [ref=e1623]:
+            - row [ref=e1624]
+        - table [ref=e1631]:
+          - rowgroup [ref=e1632]:
+            - row [ref=e1633]
+        - table [ref=e1639]:
+          - rowgroup [ref=e1640]:
+            - row [ref=e1641]
+        - table [ref=e1652]:
+          - rowgroup [ref=e1653]:
+            - row [ref=e1654]
+        - table [ref=e1663]:
+          - rowgroup [ref=e1664]:
+            - row [ref=e1665]
+        - table [ref=e1674]:
+          - rowgroup [ref=e1675]:
+            - row [ref=e1676]
+        - table [ref=e1685]:
+          - rowgroup [ref=e1686]:
+            - row [ref=e1687]
+        - table [ref=e1696]:
+          - rowgroup [ref=e1697]:
+            - row [ref=e1698]
+        - table [ref=e1704]:
+          - rowgroup [ref=e1705]:
+            - row [ref=e1706]
+        - table [ref=e1713]:
+          - rowgroup [ref=e1714]:
+            - row [ref=e1715]
+        - table [ref=e1722]:
+          - rowgroup [ref=e1723]:
+            - row [ref=e1724]
+        - table [ref=e1731]:
+          - rowgroup [ref=e1732]:
+            - row [ref=e1733]
+        - table [ref=e1740]:
+          - rowgroup [ref=e1741]:
+            - row [ref=e1742]
+        - table [ref=e1749]:
+          - rowgroup [ref=e1750]:
+            - row [ref=e1751]
+        - table [ref=e1758]:
+          - rowgroup [ref=e1759]:
+            - row [ref=e1760]
+        - table [ref=e1769]:
+          - rowgroup [ref=e1770]:
+            - row [ref=e1771]
+        - table [ref=e1777]:
+          - rowgroup [ref=e1778]:
+            - row [ref=e1779]
+        - table [ref=e1788]:
+          - rowgroup [ref=e1789]:
+            - row [ref=e1790]
+        - table [ref=e1797]:
+          - rowgroup [ref=e1798]:
+            - row [ref=e1799]
+    - generic [ref=e1806]:
+      - generic [ref=e1807]: Right-Click Menu
+      - textbox [ref=e1812]: Right-Click Menu
+  - tablist [ref=e1813]:
+    - tab [ref=e1814] [cursor=pointer]:
+      - heading "Form" [level=2] [ref=e1815]
+    - tab [selected] [ref=e1816] [cursor=pointer]:
+      - heading "Component" [level=2] [ref=e1817]
+  - toolbar [ref=e1818]:
+    - generic [ref=e1819]: "[ ScopeType: User / ScopeName: <secret>SECRET_MONGOOSE_USERNAME</secret> ]"
+    - generic [ref=e1820]: en-US
+    - separator [ref=e1821]
+    - img "Powered by Infor" [ref=e1822]
