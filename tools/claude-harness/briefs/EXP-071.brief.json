@@ -1,0 +1,147 @@
+{
+  "experiment_id": "EXP-071",
+  "title": "EXP-071 - Hello World Part 4 Section 11a: Create the FX_Orders SQL Table and IDO with the Maintenance Wizard",
+  "record_path": "experiments/EXP-071-hello-world-part-4-section-11a-fx-orders-table-and-ido.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt4.md Section 11 steps 1-4 (14:56-15:50), adapted to FX_ names, with the Web Designer New Form Definition > New Data > Maintenance wizard as in EXP-049. Prove the IDO FX_Orders and the SQL table dbo.FX_Orders absent and the dependencies available, then create them in one wizard run in FX_HelloWorldProject01 with Table Alias fxords and exactly four properties in order: FX_OrderNumber (Property Class FX_OrderNumBase, Primary Key, Required); FX_CustomerID (Property Class FX_CustomerID, Required); FX_Item (Property Class FX_Item, Length overridden to 50, Required); FX_Count (Data Type Long Integer, Label String ID FX_sCount, Default Value 1). The wizard Property Class lookup must list FX_OrderNumBase, FX_CustomerID and FX_Item; only if a class is missing, one Designer metadata unload (operator-authorized for this experiment) is allowed before one re-check. Verify the configuration, invoke Finish once, and answer No to the Create Form prompt (the FX_Orders Form follows in EXP-072). Check in the new FX_Orders IDO once if it is left checked out. Close and reopen the IDOs and SQL Tables Forms once each and recover both objects. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt4.md Section 11 (14:56-16:34) and its Orders schema quick reference, the EXP-049 record (wizard route, read-only Table Name, grid-editor intercepts, check-in, SQL Columns verification) and the EXP-070 record (the three property classes) before browser interaction; read EXP-044 only as needed.",
+      "Create or update only experiments/EXP-071-hello-world-part-4-section-11a-fx-orders-table-and-ido.md and evidence/EXP-071/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task. List the browser tabs before the first tab selection.",
+      "Collision gate: in the Web Client IDOs Form and SQL Tables Form, run one fresh exact-name query each proving FX_Orders and dbo.FX_Orders absent (zero data rows, visible criteria), with FX_Items and dbo.FX_Items as positive controls.",
+      "Dependency gate (read-only): FX_HelloWorldProject01 exists; in Property Classes, FX_OrderNumBase, FX_CustomerID and FX_Item read as in EXP-070 (FX_OrderNumBase Long Integer, AUTONUMBER(), int, FX_sOrderNumber, Right; FX_CustomerID String 30 nvarchar FX_sCustomerID with domain FX_HelloWorld01.FX_Code; FX_Item on FX_ItemBase with domain FX_Items.FX_Item). Change nothing.",
+      "Wizard: in the Web Designer open New Form Definition > New Data > Maintenance once (EXP-049 route); set IDO Name FX_Orders, IDO Project FX_HelloWorldProject01 and Table Alias fxords. With Site Split unchecked the Table Name is read-only and empty and derived from the IDO name on Finish (EXP-049); do not type into it.",
+      "Properties, in order: FX_OrderNumber with Property Class FX_OrderNumBase, Primary Key and Required; FX_CustomerID with Property Class FX_CustomerID and Required; FX_Item with Property Class FX_Item, Length 50 and Required; FX_Count with Data Type Long Integer, Label String ID FX_sCount and Default Value 1. Use the native Property Class lookup and commit typed values with Tab; record each resolved inherited value and any SQL Column Data Type the wizard shows or requires (the tutorial sets one for Customer ID; FX_CustomerID already supplies nvarchar).",
+      "Grid editors (EXP-049 rule): per cell, one editor-intercepted timeout is allowed; take one fresh snapshot and continue with the now-active editor of the target cell. A second intercept on the same cell, an unexpected value or any other timeout is a stop.",
+      "Lookup contingency: only if the Property Class lookup does not list one of FX_OrderNumBase, FX_CustomerID and FX_Item, record the visible list, invoke the Web Designer Unload All Global Form Objects once (Designer clean, wizard closed with its native Cancel first), reopen the wizard once and re-check; if a class is still missing, stop blocked.",
+      "Verify all four rows, their order, values, classes and key and required flags before Finish; invoke Finish once and record the completion message; answer No once to the Create Form prompt.",
+      "Inspect FX_Orders in the IDOs Form (project, table, alias, the four properties with their classes, effective values and the Count default) and dbo.FX_Orders in SQL Tables / SQL Columns (business column types, lengths, nullability, primary key, system columns distinguished).",
+      "If FX_Orders is visibly checked out after creation, perform exactly one native check-in of FX_Orders only and record the result; otherwise perform none.",
+      "Close and reopen the IDOs Form once and the SQL Tables Form once after clean states; recover each object with one fresh exact-name query and compare with the post-creation readbacks.",
+      "Capture screenshots of the gates, the wizard header, each configured property row, the four-row grid before Finish, the completion and Create Form prompts, the IDO and SQL readbacks, any check-in and the recoveries.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Creating the FX_Orders Form (EXP-072) or any other Form, and editing existing Forms.",
+      "Changing any property class, existing IDO, table, project, string, extension or theme; creating the FX_sCount string or other strings.",
+      "Any unload other than the single lookup-contingency Designer unload; any Web Client unload, FormSync, deployment or regeneration.",
+      "Checkout-management actions other than the single conditional check-in of the new FX_Orders IDO.",
+      "Creating records in FX_Orders or editing any runtime records.",
+      "Browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-071 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never proceed if FX_Orders or dbo.FX_Orders already exists, a gate is ambiguous, or a dependency is missing.",
+    "Never modify a property class, an existing IDO or table, FX_HelloWorldProject01 or any string.",
+    "Never invoke Finish before all four properties are verified, more than once, or retry an ambiguous Finish; never recreate a partial object.",
+    "Never accept the Create Form prompt; answer No once.",
+    "Never invoke more than one Unload All Global Form Objects, never one in the Web Client, and never one unless a required class is missing from the lookup.",
+    "Never perform a checkout-management action other than the single conditional check-in of FX_Orders.",
+    "Never repair, rename or remove a partial SQL or IDO artifact if blocked; stop and report.",
+    "Never close a dirty Form or discard changes without operator approval.",
+    "Never click the Designer top-toolbar Delete button (Delete Form Definition).",
+    "Never use direct SQL, scripts, application internals or browser JavaScript.",
+    "Never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never run more than one recovery query per object after its reopen, or more than one close and one reopen per Form.",
+    "Never claim database durability or replay verification from same-session UI recovery."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\bUndo\\s+Check[- ]?Out\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:delete|remove|rename)\\b[^.\\n]{0,30}\\b(?:class|classes|table|ido|property|properties)s?\\b",
+    "\\b(?:create|add)\\b[^.\\n]{0,40}\\b(?:event\\s+handler|script)s?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b"
+  ],
+  "related_experiments": [
+    "EXP-049",
+    "EXP-070",
+    "EXP-044",
+    "EXP-050"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "New Form Definition > New Data > Maintenance wizard",
+    "artifacts": [
+      "FX_Orders",
+      "dbo.FX_Orders",
+      "FX_OrderNumber",
+      "FX_CustomerID",
+      "FX_Item",
+      "FX_Count"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; Web Client and Web Designer clean; collision gate: FX_Orders and dbo.FX_Orders absent by exact-name queries with FX_Items and dbo.FX_Items positive controls. Evidence: query screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "Dependency gate: FX_HelloWorldProject01 available; FX_OrderNumBase, FX_CustomerID and FX_Item read with their EXP-070 values; nothing changed. Evidence: read-only screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "Wizard route and header: New Form Definition > New Data > Maintenance; IDO Name FX_Orders, Project FX_HelloWorldProject01, Alias fxords; Table Name read-only and empty. The Property Class lookup lists the three classes (or the single contingency unload is recorded with its reason and re-check). Evidence: header and lookup screenshots; unload count."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly four properties in order with the specified classes, values and flags: FX_OrderNumber (Property Class FX_OrderNumBase, Primary Key, Required); FX_CustomerID (Property Class FX_CustomerID, Required); FX_Item (Property Class FX_Item, Length overridden to 50, Required); FX_Count (Data Type Long Integer, Label String ID FX_sCount, Default Value 1); the inherited values and any SQL Column Data Type recorded. Evidence: per-row and four-row screenshots."
+    },
+    {
+      "id": "AC-5",
+      "description": "One Finish with its completion message; one No to Create Form; no Form created. Evidence: completion and prompt screenshots."
+    },
+    {
+      "id": "AC-6",
+      "description": "FX_Orders readback in the IDOs Form (project, table, alias, four properties, classes, effective values, Count default) and dbo.FX_Orders readback in SQL Columns (types, lengths, nullability, primary key FX_OrderNumber); the conditional check-in performed once or not needed. Evidence: IDO, SQL and check-in screenshots."
+    },
+    {
+      "id": "AC-7",
+      "description": "The IDOs and SQL Tables Forms each closed once and reopened once; one exact-name query recovers each object matching its readback. Evidence: recovery screenshots."
+    },
+    {
+      "id": "AC-8",
+      "description": "The final EXP-071 report gives decisive evidence for AC-1 to AC-7, the complete action audit with exact counts (one Finish, one Create Form No, unloads 0 or 1 with reason, check-ins 0 or 1, Form close/reopen counts, recovery queries, zero changes to existing objects, zero strings created, re-login count), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-071",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only preflight for EXP-071. Review AGENTS.md, hello-world-pt4.md Section 11 and the Orders schema quick reference, and the EXP-049 and EXP-070 records. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs and their clean states. In the Web Client, run the collision gate (one exact-name query each for FX_Orders in the IDOs Form and dbo.FX_Orders in the SQL Tables Form, with FX_Items and dbo.FX_Items as positive controls) and the read-only dependency gate (FX_HelloWorldProject01 and the three property classes FX_OrderNumBase, FX_CustomerID and FX_Item). Create the EXP-071 record with the baseline, action audit and worker-written-file inventory, with screenshots under evidence/EXP-071/. Stop before opening the wizard.",
+  "notes": "Proposed by the operator assistant after EXP-070 (accepted; Part 4 section 10 complete). Section 11 is split as in Part 2 (EXP-049 table/IDO, EXP-050 Form): this experiment creates FX_Orders and dbo.FX_Orders (tutorial Orders, alias Ords becomes fxords); the Create Form prompt is answered No and the FX_Orders Form follows in EXP-072. Properties adapted: Order Number becomes FX_OrderNumber (FX_OrderNumBase, PK, Required); Customer ID becomes FX_CustomerID (FX_CustomerID, Required; its class already supplies nvarchar); Item becomes FX_Item (FX_Item, Length 50 override, Required); Count becomes FX_Count (Long Integer, FX_sCount, Default 1). FX_sCount is referenced but not created (as FX_sCustomerID and FX_sOrderNumber). Unload: the tutorial unloads before the wizard; EXP-049 observed that the wizard lookup lists new checked-out classes without one. The operator authorized one Designer Unload All Global Form Objects for this section (2026-10-13); the brief uses it only as a lookup contingency. The single conditional check-in of the new IDO follows the EXP-049/EXP-044 procedure; the new property classes stay checked out. EXP-049 needed 18 worker tasks; the coordinator may need the same limit. Session-expiry re-login follows the worker preamble. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Orders",
+    "fxords",
+    "FX_HelloWorldProject01",
+    "FX_OrderNumber",
+    "FX_OrderNumBase",
+    "FX_CustomerID",
+    "FX_Item",
+    "FX_Count",
+    "FX_sCount",
+    "FX_Items"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "Tenant-wide FX_ SQL table and IDO (AGENTS.md scope extension): one new FX_Orders IDO and dbo.FX_Orders table via the Maintenance wizard; no Form; at most one contingency Designer unload; at most one check-in of FX_Orders"
+}
