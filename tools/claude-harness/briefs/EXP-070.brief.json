@@ -1,0 +1,146 @@
+{
+  "experiment_id": "EXP-070",
+  "title": "EXP-070 - Hello World Part 4 Section 10: Create the FX_CustomerID, FX_Item and FX_OrderNumBase Property Classes for Orders",
+  "record_path": "experiments/EXP-070-hello-world-part-4-section-10-orders-property-classes.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt4.md Section 10 (13:12-14:56), adapted to FX_ names, in the Web Client Property Classes Form (IdoPropertyClasses) as in EXP-048. Prove FX_CustomerID, FX_Item and FX_OrderNumBase absent with exact-name queries and a positive control, then create exactly three property classes with one New each and one shared Save: FX_CustomerID (Data Type String, Length 30, Column Data Type nvarchar, Label String ID FX_sCustomerID, Domain IDO Name FX_HelloWorld01, Domain Property FX_Code, Domain List Properties FX_Label; the tutorial Customer IDO is the factory Part 1 IDO FX_HelloWorld01); FX_Item (Base Class FX_ItemBase, Domain IDO Name FX_Items, Domain Property FX_Item, Domain List Properties FX_Description); and FX_OrderNumBase (Data Type Long Integer, Default Value AUTONUMBER(), Column Data Type int, Label String ID FX_sOrderNumber, Justify Right). Close and reopen the Form once and recover each class with one exact-name query. The label strings are not created here, and no unload is performed (the Section 11 brief carries the Designer unload). Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt4.md Section 10 (13:12-14:56) and its schema quick reference, and the EXP-047-R2 and EXP-048 records (Property Classes navigation, Filter in Place queries, field lookups, asterisk and checkout findings) before browser interaction; read the EXP-040 record header for FX_HelloWorld01 (FX_Code, FX_Label).",
+      "Create or update only experiments/EXP-070-hello-world-part-4-section-10-orders-property-classes.md and evidence/EXP-070/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task. List the browser tabs before the first tab selection.",
+      "Baseline: in the Web Client, open the Property Classes Form (IdoPropertyClasses) once through Form > Open > Select Form if it is not open; verify its identity and clean Save state. Read FX_ItemBase (String, 20, nvarchar, FX_sItem) read-only as the positive control and record its Locked By and checkout indications.",
+      "Absence gate: run one fresh exact-name Filter in Place Class Name query each for FX_CustomerID, FX_Item and FX_OrderNumBase, each returning zero rows with visible criteria; clear restrictive criteria before each query. Stop if any name exists or a result is ambiguous.",
+      "Create FX_CustomerID with one New: set only Class Name, Data Type String, Length 30, Column Data Type nvarchar, Label String ID FX_sCustomerID, Domain IDO Name FX_HelloWorld01, Domain Property FX_Code and Domain List Properties FX_Label. Verify each value after entry.",
+      "Create FX_Item with a second New: set only Class Name, Base Class FX_ItemBase, Domain IDO Name FX_Items, Domain Property FX_Item and Domain List Properties FX_Description; leave the inherited type and label fields blank. Verify each value after entry.",
+      "Create FX_OrderNumBase with a third New: set only Class Name, Data Type Long Integer, Default Value, Column Data Type int, Label String ID FX_sOrderNumber and Justify Right. For Default Value, if the field offers a lookup or list, record its options and use its auto-number entry if one exists; otherwise type AUTONUMBER() exactly. Record the exact stored text. Verify each value after entry.",
+      "Use native controls and lookups where offered (EXP-048: F2 lookups for Column Data Type), and commit typed values with Tab. Record the asterisk states without inventing explanations.",
+      "Verify that the three new rows are pending together with all values correct, then invoke exactly one toolbar Save and record the native response, row indicators, checkout indications and the settled Save state.",
+      "After a clean Save, close Property Classes once through its Form-tab control and reopen it once through Form > Open > Select Form; run one fresh exact-name recovery query per new class and compare each with its pre-Save configuration (including inherited values displayed for FX_Item).",
+      "Capture screenshots of the baseline, each absence query, each configured row before Save, the three pending rows, the Save result, the reopen and each recovery query.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Changing FX_ItemBase, FX_UMBase, FX_UM, FX_Cost or any other existing property class, and creating any class other than the three named.",
+      "Creating the string resources FX_sCustomerID or FX_sOrderNumber, or any other string, IDO, table, extension, theme or Form.",
+      "Any unload, cache, FormSync, deployment or regeneration operation.",
+      "Checkout-management actions on any class (new classes stay checked out as created).",
+      "Runtime record changes in any Form other than the three new property-class rows; imports or exports.",
+      "Browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-070 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never modify an existing property class, including FX_ItemBase, FX_UMBase, FX_UM and FX_Cost, or its checkout state.",
+    "Never create a class before all three absence queries and the positive control succeed, and never proceed after a name collision or an ambiguous result.",
+    "Never invoke New more than three times or create a class other than FX_CustomerID, FX_Item and FX_OrderNumBase.",
+    "Never set fields beyond those listed for each new class.",
+    "Never create the referenced label strings.",
+    "Never invoke Save before all three rows are verified, more than once, or retry an ambiguous Save.",
+    "Never repair, delete, overwrite or rename a partial record if blocked; stop and report.",
+    "Never close a dirty Form or discard changes without operator approval.",
+    "Never perform check-in, undo checkout or other checkout-management actions.",
+    "Never perform any unload, cache, FormSync or deployment action.",
+    "Never use direct SQL, scripts, application internals or browser JavaScript.",
+    "Never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never run more than one recovery query per new class after the reopen, or more than one Form close and one reopen.",
+    "Never claim database durability or replay verification from same-session UI recovery."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\b(?:Unload All Global Form Objects|Unload IDO Metadata)\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:delete|remove|rename)\\b[^.\\n]{0,30}\\b(?:class|classes|record|row)s?\\b",
+    "\\b(?:create|add)\\b[^.\\n]{0,40}\\b(?:event\\s+handler|script)s?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b"
+  ],
+  "related_experiments": [
+    "EXP-048",
+    "EXP-047-R2",
+    "EXP-040",
+    "EXP-069-R4"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "IdoPropertyClasses",
+    "artifacts": [
+      "FX_CustomerID",
+      "FX_Item",
+      "FX_OrderNumBase",
+      "FX_ItemBase",
+      "FX_HelloWorld01",
+      "FX_Items"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; Property Classes (IdoPropertyClasses) open and clean; FX_ItemBase positive control read (String, 20, nvarchar, FX_sItem) with its checkout indication. Evidence: identity and positive-control screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "Absence gate: one fresh exact-name query each for FX_CustomerID, FX_Item and FX_OrderNumBase with visible criteria returns zero rows. Evidence: three query screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "FX_CustomerID pending with exactly String, 30, nvarchar, FX_sCustomerID, FX_HelloWorld01, FX_Code, FX_Label (one New). Evidence: configured-row screenshot."
+    },
+    {
+      "id": "AC-4",
+      "description": "FX_Item pending with exactly Base Class FX_ItemBase, FX_Items, FX_Item, FX_Description and blank local type and label fields (one New). Evidence: configured-row screenshot."
+    },
+    {
+      "id": "AC-5",
+      "description": "FX_OrderNumBase pending with exactly Long Integer, the recorded auto-number Default Value text, int, FX_sOrderNumber, Justify Right (one New); the Default Value route (lookup options or typed AUTONUMBER()) recorded. Evidence: configured-row screenshot."
+    },
+    {
+      "id": "AC-6",
+      "description": "Exactly three News and one toolbar Save for the three pending rows; native response verbatim; clean settled state; checkout indications recorded. Evidence: pending-rows and Save screenshots."
+    },
+    {
+      "id": "AC-7",
+      "description": "The clean Form closed once and reopened once; one exact-name recovery query per class retrieves exactly one row matching its pre-Save configuration (differences, such as inherited values shown for FX_Item, recorded). Evidence: reopen and recovery screenshots."
+    },
+    {
+      "id": "AC-8",
+      "description": "The final EXP-070 report gives decisive evidence for AC-1 to AC-7, the complete action audit with exact counts (three News, one Save, one close/reopen, three recovery queries, zero changes to existing classes, zero strings created, zero unloads, zero checkout actions, re-login count), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-070",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only preflight for EXP-070. Review AGENTS.md, hello-world-pt4.md Section 10 and its schema quick reference, and the EXP-047-R2 and EXP-048 records, and the EXP-040 record header. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client tab. Open the Property Classes Form (IdoPropertyClasses) once through Form > Open > Select Form if it is not open; verify its identity and clean Save state. Read FX_ItemBase read-only as the positive control (Data Type, Length, Column Data Type, Label String ID, Locked By and checkout indications), then run one fresh exact-name Class Name query each for FX_CustomerID, FX_Item and FX_OrderNumBase and record the results. Create the EXP-070 record with the baseline, action audit and worker-written-file inventory, with screenshots under evidence/EXP-070/. Stop before any New.",
+  "notes": "Proposed by the operator assistant after EXP-069-R4 (accepted; Part 4 section 9 complete). Section 10 adapted to FX_ names: Customer ID becomes FX_CustomerID with domain FX_HelloWorld01.FX_Code and list FX_Label (the factory Part 1 customer IDO, EXP-040; FX_Code is nvarchar(30), so Length 30 instead of the tutorial 50); Item becomes FX_Item on FX_ItemBase with domain FX_Items.FX_Item and list FX_Description; Order Num Base becomes FX_OrderNumBase. Column Data Type nvarchar is set on FX_CustomerID (the tutorial leaves it blank for the wizard; set here as in EXP-048 to avoid a validation stop). The Default Value spelling AUTONUMBER() is unverified; the worker records any offered lookup first. Strings FX_sCustomerID and FX_sOrderNumber are referenced but not created (EXP-048 pattern; created in a later Form step). No unload in this experiment: the tutorial unload at 14:56 opens Section 11, whose brief will carry it for separate authorization. New classes remain checked out as created. Session-expiry re-login follows the worker preamble. exact_values: FX_CustomerID, FX_Item, FX_OrderNumBase, FX_ItemBase, FX_HelloWorld01, FX_Code, FX_Label, FX_Items, FX_Description, FX_sCustomerID, FX_sOrderNumber. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_CustomerID",
+    "FX_Item",
+    "FX_OrderNumBase",
+    "FX_ItemBase",
+    "FX_HelloWorld01",
+    "FX_Code",
+    "FX_Label",
+    "FX_Items",
+    "FX_Description",
+    "FX_sCustomerID",
+    "FX_sOrderNumber"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "Tenant-wide FX_ property classes (AGENTS.md scope extension): three new IdoPropertyClasses rows in the Web Client Property Classes Form; no Form or other object change; no unload"
+}
