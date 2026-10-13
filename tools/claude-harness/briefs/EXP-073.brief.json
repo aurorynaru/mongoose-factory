@@ -1,0 +1,140 @@
+{
+  "experiment_id": "EXP-073",
+  "title": "EXP-073 - Hello World Part 4 Section 12: Enter Two FX_Orders Records at Runtime and Observe AUTONUMBER() Order Numbers and the Domain Lists",
+  "record_path": "experiments/EXP-073-hello-world-part-4-section-12-fx-orders-runtime-records.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt4.md Section 12 (16:34-17:04), adapted to FX_ names: in the Web Client, open the existing User-scoped runtime Form FX_Orders (EXP-072), establish a zero-record baseline for the factory-owned table dbo.FX_Orders with the accepted EXP-042-R3/EXP-046 empty-criteria gate and count rule, and inspect the FX_CustomerID and FX_Item drop-down lists read-only (expected FX001 and FX002 from FX_HelloWorld01; dumbbell, eggs and guitar from FX_Items). Then enter exactly two order rows, one at a time: row one FX_CustomerID = FX001, FX_Item = dumbbell, FX_Count = 2; row two (after one toolbar New) FX_CustomerID = FX002, FX_Item = eggs, FX_Count left at its default 1. FX_OrderNumber is never typed: record the number the AUTONUMBER() default displays for each row (the tutorial says 1, then increasing by 1). Verify both rows before exactly one ordinary toolbar Save, record the order numbers after the Save, close and reopen FX_Orders once, run one empty-criteria query and verify that exactly those two rows are recovered. Findings are observed only (same session, UI level; no claim about uniqueness across parallel sessions).",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt4.md Section 12 (16:34-17:04), the EXP-072 record (FX_Orders Form, captions, runtime Add-mode baseline with Order Number 1), the EXP-071-R2 record (IDO FX_Orders and dbo.FX_Orders), the EXP-046 record (empty-criteria gate, count rule, status-bar caption prefix) and the EXP-051 record (ComboBox list selection by clicking the native option, closing a list with its Open toggle, focus move to settle the editor) before browser interaction.",
+      "Create or update only experiments/EXP-073-hello-world-part-4-section-12-fx-orders-runtime-records.md and evidence/EXP-073/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task. List the browser tabs before the first tab selection. Do not touch the Web Designer tab.",
+      "Preflight: in the Web Client, open FX_Orders once through Form > Open (or the toolbar Open button) and Select Form; record the identity (tab caption FX_Orders), the Add-mode state, the captions Order Number, Customer ID, Item and Count, and the status bar. If FX_Orders is already open and clean, use it without reopening.",
+      "Empty-collection gate (accepted EXP-042-R3/EXP-046 count rule): run one empty-criteria query (Filter in Place with blank criteria, then one F4). Emptiness holds only when, immediately afterwards, the grid shows exactly one row with the blue new-row star, Customer ID and Item are blank, and the status-bar count token reads exactly (Object 1 of 1); the focused-field caption prefix is expected. Any unstarred row or other count closes the gate: stop without entering anything.",
+      "List sources (read-only): open the FX_CustomerID combo box list once and record every option; open the FX_Item combo box list once and record every option; close each list with its Open toggle (never Escape) without selecting anything. Expected: FX001 and FX002 (with their FX_Label text) and dumbbell, eggs and guitar (with their FX_Description text). If a list is empty, has no FX001/FX002 or dumbbell/eggs options, or a value was committed by accident, stop and record it.",
+      "Row one: on the add-mode row, record the displayed Order Number without typing in it. Select FX001 from the FX_CustomerID list and dumbbell from the FX_Item list by clicking the native options (no typing into the combo boxes), replace the Count value 1 with 2 by one fill, move focus once to settle the editor, and verify all four values in the row and grid.",
+      "Row two: invoke the toolbar New button once; record the new row's displayed Order Number without typing in it. Select FX002 and eggs from the native lists as above, leave Count at its default (record the value shown, expected 1), move focus once, and verify both rows. If the two displayed Order Numbers are equal, blank or otherwise not distinct, stop before the Save and record it; never edit FX_OrderNumber.",
+      "Perform exactly one ordinary toolbar Save after both rows are verified; record the native response, the order numbers, customer IDs, items and counts of both rows after the Save, the Save state, whether stars are gone and whether the Order Number field is read-only for saved rows, and the status-bar count.",
+      "Close the clean FX_Orders runtime Form once through its Form-tab control and reopen it once through Form > Open (or the toolbar Open button) and Select Form; run one empty-criteria query (Filter in Place with blank criteria, then one F4) and verify that exactly two rows are recovered with their four values and the status-bar count. Close nothing else.",
+      "Capture screenshots of the preflight, the gate result, each open list, each row before the next action, both rows before Save, the Save result, the reopened Form and the recovery query result.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Changing any Form, IDO, property class, SQL table, string or other metadata, including FX_Orders, FX_Items and FX_HelloWorld01 definitions.",
+      "Rows other than the two authorized FX_Orders rows; editing, deleting or repairing rows in FX_Orders, FX_Items, FX_HelloWorld01 or any other table.",
+      "Any Web Designer action.",
+      "Any unload, cache, FormSync, deployment or regeneration operation; checkout-management actions.",
+      "Browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-073 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never enter a row unless the exact FX_Orders runtime Form and the zero-record gate under the accepted count rule are demonstrated.",
+    "Never type into FX_OrderNumber, and never type into the FX_CustomerID or FX_Item combo boxes; select their values from the native lists only.",
+    "Never close a combo box list with Escape.",
+    "Never enter more than two rows, invoke the toolbar New button more than once, or change fields other than FX_CustomerID, FX_Item and FX_Count.",
+    "Never invoke the toolbar Save more than once or retry an ambiguous Save; stop after a validation error, alert, unexpected prompt or duplicate Order Number without retrying.",
+    "Never edit, delete, overwrite or repair an existing row.",
+    "Never close a dirty Form or discard changes without operator approval.",
+    "Never perform any Web Designer action, metadata change, check-in, undo checkout or other checkout-management action, or any unload, cache, FormSync or deployment action.",
+    "Never use direct SQL, scripts, application internals or browser JavaScript.",
+    "Never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim database durability, uniqueness across sessions or replay verification from same-session UI recovery."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\b(?:Unload All Global Form Objects|Unload IDO Metadata)\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:create|add)\\b[^.\\n]{0,40}\\b(?:event\\s+handler|script)s?\\b"
+  ],
+  "related_experiments": [
+    "EXP-072",
+    "EXP-071-R2",
+    "EXP-070",
+    "EXP-051",
+    "EXP-046",
+    "EXP-042-R3"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Orders",
+    "artifacts": [
+      "FX_Orders",
+      "dbo.FX_Orders"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; the FX_Orders runtime Form open in the Web Client with its identity, Add mode, captions Order Number, Customer ID, Item, Count and the status bar recorded; no mutation yet. Evidence: preflight screenshot."
+    },
+    {
+      "id": "AC-2",
+      "description": "Empty-collection gate: one empty-criteria query, then exactly one starred blank row and the count token (Object 1 of 1). Evidence: settled gate screenshot."
+    },
+    {
+      "id": "AC-3",
+      "description": "List sources: the FX_CustomerID list shows FX001 and FX002 and the FX_Item list shows dumbbell, eggs and guitar (every option and its description recorded); both closed by the Open toggle with nothing selected. Evidence: open-list screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "Row one: displayed Order Number recorded (not typed); FX001 and dumbbell selected from the native lists; Count 2; values verified in the row and grid. Evidence: row screenshot."
+    },
+    {
+      "id": "AC-5",
+      "description": "Row two after one toolbar New: displayed Order Number recorded (not typed) and distinct from row one; FX002 and eggs selected from the native lists; Count default recorded; both rows verified; no third row. Evidence: two-row screenshot before Save."
+    },
+    {
+      "id": "AC-6",
+      "description": "Exactly one toolbar Save with the native response; afterwards the order numbers, customer IDs, items and counts of both rows, the Save state, stars, Order Number read-only state and status-bar count recorded. Evidence: Save screenshot."
+    },
+    {
+      "id": "AC-7",
+      "description": "The clean runtime Form closed once without an unexpected prompt and reopened once through Select Form. Evidence: reopen screenshot."
+    },
+    {
+      "id": "AC-8",
+      "description": "One empty-criteria query after reopen recovers exactly two rows with the saved order numbers, FX001/dumbbell/2 and FX002/eggs/1 (or the recorded default), and the status-bar count; no unsaved-change indication. Evidence: recovery screenshot (the accessibility tree may supplement clipped grid cells, stated explicitly)."
+    },
+    {
+      "id": "AC-9",
+      "description": "The final EXP-073 report gives decisive evidence for AC-1 to AC-8, the complete action audit with exact counts (one runtime open, one gate query, two list inspections, two rows, one New, one Save, one close/reopen, one recovery query, zero Designer actions, zero metadata changes, zero unloads, re-login count), the AUTONUMBER() observations (displayed versus saved numbers), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-073",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only preflight, gate and list inspection for EXP-073. Review AGENTS.md, hello-world-pt4.md Section 12, and the EXP-072, EXP-071-R2, EXP-046 and EXP-051 records. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; select the Web Client and do not touch the Web Designer. Open FX_Orders once through Form > Open (or the toolbar Open button) and Select Form, and record its identity, Add mode, captions and status bar. Run one empty-criteria query (Filter in Place, blank criteria, one F4) and apply the accepted count rule. If the gate holds, open the FX_CustomerID list once and the FX_Item list once, record every option, and close each with its Open toggle without selecting anything. Create the EXP-073 record with the baseline, the gate result, the list contents, the action audit and the worker-written-file inventory, with screenshots under evidence/EXP-073/. Stop before entering any value.",
+  "notes": "Proposed by the operator assistant after EXP-072 (accepted; Part 4 section 11 complete). Section 12 is the last section of Part 4. Data values: FX001/FX002 are the EXP-042-R3 rows of dbo.FX_HelloWorld01 (domain of FX_CustomerID, list FX_Label) and dumbbell/eggs the EXP-051 rows of dbo.FX_Items (domain of FX_Item, list FX_Description); Count 2 on row one exercises a non-default value and row two keeps the default 1. The two rows are tutorial test data inside the factory-owned table dbo.FX_Orders and stay for later FX_ cleanup. The runtime route, gate and list handling reuse EXP-046 and EXP-051; the Web Designer is not used. No unload or tenant-wide operation. Session-expiry re-login follows the worker preamble. exact_values: FX_Orders, FX001, FX002, dumbbell, eggs, FX_OrderNumber, FX_CustomerID, FX_Item, FX_Count. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Orders",
+    "FX001",
+    "FX002",
+    "dumbbell",
+    "eggs",
+    "FX_OrderNumber",
+    "FX_CustomerID",
+    "FX_Item",
+    "FX_Count"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "Runtime data only: two rows in the factory-owned table dbo.FX_Orders through the existing User-scope FX_Orders Form; no metadata change; no Designer action; no unload"
+}
