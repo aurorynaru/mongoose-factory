@@ -1,0 +1,143 @@
+{
+  "experiment_id": "EXP-072",
+  "title": "EXP-072 - Hello World Part 4 Section 11b: Create the User-Scoped FX_Orders Multi-View Form and Its Caption Strings",
+  "record_path": "experiments/EXP-072-hello-world-part-4-section-11b-fx-orders-form.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt4.md Section 11 steps 5-9 (15:50-16:34), adapted to FX_ names and the EXP-050 route: create exactly one User-scoped Classic Multi-View Form FX_Orders on the existing IDO FX_Orders with the business fields ordered FX_OrderNumber, FX_CustomerID, FX_Item, FX_Count. Create the caption strings FX_sOrderNumber = Order Number, FX_sCustomerID = Customer ID, FX_sCount = Count through the EXP-050 Caption ellipsis procedure; FX_sItem = Item already exists and is reused unchanged (the tutorial sets the Item caption here). Perform one Designer Save, close and reopen the Form once and verify it, then open FX_Orders once in the Web Client read-only and record its mode, the initial Order Number, the captions and the FX_CustomerID and FX_Item control types. No order record is entered (Section 12). Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt4.md Section 11 (14:56-16:34) and Section 12, the EXP-071-R2 record (the FX_Orders IDO and table), and the EXP-050 record (Classic Multi-View route, Components grid, Caption ellipsis string creation with Tab-commit before OK, Edit > String readback, captions after reopen) before browser interaction.",
+      "Create or update only experiments/EXP-072-hello-world-part-4-section-11b-fx-orders-form.md and evidence/EXP-072/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task. List the browser tabs before the first tab selection.",
+      "Preflight: the Designer is in User scope and clean (it may show FX_Items; do not change it). Cite the EXP-071-R2 readback for the IDO FX_Orders and its four properties; do not change the IDO.",
+      "Collision gate: in the Web Client Select Form, search FX_Items as the positive control and FX_Orders as the target, with settled captures; zero visible FX_Orders matches is required; cancel Select Form. In the Designer Edit > String view, confirm FX_sOrderNumber, FX_sCustomerID and FX_sCount absent and FX_sItem = Item present, with one positive control; then cancel. Stop if a target exists or a result is ambiguous.",
+      "Wizard: Web Designer New > Classic > Multi-View (EXP-050 route). Form Name FX_Orders by one plain fill, Data Source FX_Orders; accept the default properties and order the business fields FX_OrderNumber, FX_CustomerID, FX_Item, FX_Count; uncheck Save Template; verify, then invoke Finish once and confirm the new Form FX_Orders in User scope.",
+      "Captions: through the Details > Components grid, select the label component of each business field and read its Caption. For FX_OrderNumber, FX_CustomerID and FX_Count, open the Caption ellipsis, answer Yes once only to the exact \"String <ID> does not exist. Create it?\" prompt for that ID, replace the generated String Value with the exact value (FX_sOrderNumber = Order Number, FX_sCustomerID = Customer ID, FX_sCount = Count), commit the cell with Tab, verify, then press OK. For FX_Item, verify the Caption is FX_sItem (set it to FX_sItem through the Caption field if the wizard left it undefined) without editing the FX_sItem string.",
+      "Verify the three new strings and FX_sItem in the Edit > String read-only view (exact IDs and values), then cancel.",
+      "Perform exactly one Designer Save and record the native response and the clean state.",
+      "Close the clean FX_Orders Designer Form once through its Form-tab control and reopen it once through the toolbar Open button and Select Form; verify Name, ScopeType and ScopeName, the four fields in order, their bindings and caption references.",
+      "Runtime: open FX_Orders once in the Web Client through Form > Open > Select Form; record the mode (the tutorial says Add mode), the displayed Order Number (the tutorial says 1), the captions Order Number, Customer ID, Item and Count, the Count default, and whether FX_CustomerID and FX_Item render as combo boxes. Do not type, choose list values, save or navigate records; close the runtime Form once at the end, discarding nothing (if a close prompt asks to save a new record, answer No once and record it).",
+      "Capture screenshots of the gates, the pre-Finish wizard state, the creation result, each string commit before OK, the Edit > String readback, the Save, the reopened Form and the runtime display.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Changing the FX_Orders IDO or dbo.FX_Orders table, the property classes, FX_Items or any other Form, and the FX_sItem or other existing strings.",
+      "Creating strings other than FX_sOrderNumber, FX_sCustomerID and FX_sCount, or more than one Form.",
+      "Entering, saving or deleting FX_Orders records (Section 12), and choosing list values at runtime.",
+      "Any unload, cache, FormSync, deployment or regeneration operation; checkout-management actions.",
+      "Event handlers, scripts, variables or controls beyond what the wizard generates.",
+      "Browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-072 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never create a Form if FX_Orders already exists or its absence is ambiguous, and never invoke Finish more than once or retry an ambiguous Finish.",
+    "Never change the FX_Orders IDO or table, a property class, FX_Items or another Form, or an existing string such as FX_sItem.",
+    "Never create a string other than FX_sOrderNumber, FX_sCustomerID and FX_sCount, never overwrite one that unexpectedly exists, and never press OK in a String dialog before the String Value is committed and verified.",
+    "Never invoke the Designer Save more than once or retry an uncertain Save.",
+    "Never close a dirty Form or discard changes without operator approval (the runtime close prompt for an unsaved new record is answered No once, as allowed in scope).",
+    "Never click the Designer top-toolbar Delete button (Delete Form Definition).",
+    "Never enter, save or delete runtime records or choose list values.",
+    "Never perform check-in, undo checkout or other checkout-management actions, or any unload, cache, FormSync or deployment action.",
+    "Never use direct SQL, scripts, application internals or browser JavaScript.",
+    "Never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim database durability or replay verification from same-session UI recovery."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\b(?:Unload All Global Form Objects|Unload IDO Metadata)\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:create|add)\\b[^.\\n]{0,40}\\b(?:event\\s+handler|script)s?\\b",
+    "\\b(?:create|insert|enter|save|delete)\\b[^.\\n]{0,30}\\b(?:order\\s+records?|test\\s+records?|FX_Orders\\s+rows?)\\b"
+  ],
+  "related_experiments": [
+    "EXP-071-R2",
+    "EXP-050",
+    "EXP-045",
+    "EXP-070"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Orders",
+    "artifacts": [
+      "FX_Orders",
+      "FX_sOrderNumber",
+      "FX_sCustomerID",
+      "FX_sCount",
+      "FX_sItem"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; Designer in User scope and clean; the FX_Orders IDO cited from EXP-071-R2. Evidence: identity and scope screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "Collision gate: Select Form shows the FX_Items positive control and no FX_Orders Form; Edit > String shows FX_sOrderNumber, FX_sCustomerID and FX_sCount absent and FX_sItem = Item present. Evidence: settled search screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "Pre-Finish wizard: Classic Multi-View route, Form Name FX_Orders, Data Source FX_Orders, fields ordered FX_OrderNumber, FX_CustomerID, FX_Item, FX_Count, Save Template unchecked; then one Finish creating one User-scoped FX_Orders Form. Evidence: wizard and creation screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly three new strings FX_sOrderNumber = Order Number, FX_sCustomerID = Customer ID, FX_sCount = Count, each created through the Caption ellipsis with one Yes to its exact prompt and the value committed before OK; FX_sItem reused unchanged as the FX_Item caption; Edit > String readback of all four. Evidence: commit and readback screenshots."
+    },
+    {
+      "id": "AC-5",
+      "description": "Exactly one Designer Save with the native response; clean state. Evidence: Save screenshot."
+    },
+    {
+      "id": "AC-6",
+      "description": "The clean Designer Form closed once and reopened once; Name FX_Orders, User scope, the four fields in order with bindings and caption references. Evidence: reopen screenshots."
+    },
+    {
+      "id": "AC-7",
+      "description": "One read-only runtime opening of FX_Orders: mode, displayed Order Number, captions Order Number, Customer ID, Item, Count, the Count default and the FX_CustomerID and FX_Item control types recorded; no record entered or saved; the runtime Form closed once (any save prompt answered No once). Evidence: runtime screenshots."
+    },
+    {
+      "id": "AC-8",
+      "description": "The final EXP-072 report gives decisive evidence for AC-1 to AC-7, the complete action audit with exact counts (one Finish, three strings created, one Designer Save, one Designer close/reopen, one runtime open/close, zero records, zero changes to existing objects, zero unloads, re-login count), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-072",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only preflight and gates for EXP-072. Review AGENTS.md, hello-world-pt4.md Sections 11 and 12, and the EXP-071-R2 and EXP-050 records. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs; confirm the Designer is in User scope and clean. In the Web Client Select Form, search FX_Items (positive control) and FX_Orders (target) with settled captures, then cancel. In the Designer Edit > String view, check FX_sOrderNumber, FX_sCustomerID and FX_sCount (expected absent) and FX_sItem (expected Item), with one positive control, then cancel. Create the EXP-072 record with the baseline, action audit and worker-written-file inventory, with screenshots under evidence/EXP-072/. Stop before opening the Form wizard.",
+  "notes": "Proposed by the operator assistant after EXP-071-R2 (accepted; Part 4 section 11a complete). Section 11b: the tutorial answers Yes to Create Form after the Maintenance wizard; the factory declined it (EXP-049 pattern) and creates the Form here through the EXP-050 Classic Multi-View route. Captions: the three missing strings are created through the Caption ellipsis (EXP-045/EXP-050 procedure); the tutorial Item caption fix becomes reusing FX_sItem = Item. The runtime check only records the Add-mode Order Number and control types; order entry and the AUTONUMBER() behavior are Section 12. Session-expiry re-login follows the worker preamble. exact_values: FX_Orders, FX_OrderNumber, FX_CustomerID, FX_Item, FX_Count, FX_sOrderNumber, FX_sCustomerID, FX_sCount, FX_sItem, Order Number, Customer ID, Count. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Orders",
+    "FX_OrderNumber",
+    "FX_CustomerID",
+    "FX_Item",
+    "FX_Count",
+    "FX_sOrderNumber",
+    "FX_sCustomerID",
+    "FX_sCount",
+    "FX_sItem",
+    "Order Number",
+    "Customer ID",
+    "Count"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User (one new Designer Form FX_Orders in User scope) plus three tenant-wide FX_ caption strings; runtime read-only; no unload"
+}
