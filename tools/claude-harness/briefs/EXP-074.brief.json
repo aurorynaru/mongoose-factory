@@ -1,0 +1,130 @@
+{
+  "experiment_id": "EXP-074",
+  "title": "EXP-074 - Hello World Part 5 Prerequisite A: Add the Nullable FX_Address Column to dbo.FX_HelloWorld01",
+  "record_path": "experiments/EXP-074-hello-world-part-5-prereq-a-fx-address-column.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Hello World Part 5 joins Orders to Customer and shows the customer Name and Address. The factory customer table dbo.FX_HelloWorld01 (EXP-040) has FX_Code and FX_Label but no Address column (hello-world-pt1.md Section 6 has Address, String, length 150). Operator decision 2026-10-13: add it. Using the native Web Client SQL Tables runtime Form and the EXP-059 route (Columns, New), retrieve exactly one dbo.FX_HelloWorld01 table and record its complete column baseline; add exactly one column FX_Address with data type nvarchar, Length 150 and Is Nullable checked; verify it before exactly one ordinary Save; close and reopen SQL Tables once, retrieve dbo.FX_HelloWorld01 again and prove the recovered inventory equals the baseline plus FX_Address. Finally open the FX_HelloWorld01 runtime Form once, read-only, and verify that its two records FX001 / Factory test one and FX002 / Factory test two still load. The IDO property and Form field are later experiments. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt1.md Section 6 (Address, String 150) and hello-world-pt5.md Sections 1-2, the EXP-059 record (Sql Tables > Columns > New route, data-type combobox selection from the list, Is Nullable via its label, Save without confirmation text, Column Id after reopen, the informational caution alert), the EXP-040 record (dbo.FX_HelloWorld01 columns) and the EXP-042-R3 record (FX_HelloWorld01 runtime Form, uncaptioned inputs, Refresh loads the rows) before browser interaction.",
+      "Create or update only experiments/EXP-074-hello-world-part-5-prereq-a-fx-address-column.md and evidence/EXP-074/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task. List the browser tabs before the first tab selection. Do not touch the Web Designer tab.",
+      "SQL Tables: if the Sql Tables runtime tab is already open and clean, use it; otherwise open it once through Form > Open > Select Form. Capture the exact text of the informational caution alert if shown and dismiss it with OK only.",
+      "Target and baseline: enter Filter in Place once, type FX_HelloWorld01 into the Table Name criterion, commit it with Tab, capture a screenshot with the criterion visible before F4, press F4 once and establish exactly one dbo.FX_HelloWorld01 row. Open its Columns and record every column with Column Id, Name, Data Type, Length, Is Nullable and Primary Key (expected FX_Code nvarchar 30 not nullable primary key, FX_Label nvarchar 100 nullable, plus the system columns). Establish that FX_Address is absent, including a case-insensitive comparison.",
+      "New column: invoke New once in the Sql Columns view; enter Column Name FX_Address by one plain fill; open the Data Type combobox list and select the exact nvarchar option (typing a prefix to filter the list is allowed; close lists only by selecting, never with Escape); set Length 150 and commit with Tab; check Is Nullable (click its label); verify the four values and the unchanged existing rows before Save.",
+      "Perform exactly one ordinary toolbar Save after the pre-Save check; record the native response, any displayed generated SQL (evidence only), the System Data Type readback and the clean state.",
+      "Close the clean Sql Columns and Sql Tables tabs once each through their Form-tab controls (only the tabs this task opened or used; close Sql Columns first if it is a separate tab) and reopen Sql Tables once through Form > Open > Select Form; retrieve dbo.FX_HelloWorld01 again with the same visible-criterion query and compare the recovered column inventory field by field with the baseline plus FX_Address (record its Column Id).",
+      "Runtime check: open the FX_HelloWorld01 runtime Form once through Form > Open > Select Form; load the rows with one toolbar Refresh (or one empty-criteria Filter in Place + F4); verify exactly FX001 / Factory test one and FX002 / Factory test two with Save disabled; change nothing.",
+      "Capture screenshots of the pre-F4 criterion, the baseline columns, the unsaved new column, the Save result, the reopened inventory and the runtime rows.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Any SQL table other than dbo.FX_HelloWorld01, including all non-FX_ tables.",
+      "Changing existing dbo.FX_HelloWorld01 columns, keys, indexes, system columns or rows; any column other than FX_Address.",
+      "The FX_HelloWorld01 IDO (its FX_Address property is a later experiment), property classes, Forms and strings.",
+      "Entering address values or any runtime record change.",
+      "Any Web Designer action; any unload, cache, FormSync, deployment or regeneration operation; checkout-management actions.",
+      "Direct SQL or script execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-074 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never change any table except the existing dbo.FX_HelloWorld01.",
+    "Never alter, rename, remove or recreate an existing column, index, key, constraint or row.",
+    "Never create FX_Address if a column with that name exists under any case, or unless exactly one dbo.FX_HelloWorld01 target and a complete column baseline are verified.",
+    "Never invoke Columns New more than once or the SQL Tables Save more than once, and never save an ambiguous or incomplete column configuration or retry an uncertain Save.",
+    "Never close a combobox list with Escape.",
+    "Never run, paste or apply generated SQL or DDL; only the native Save performs the schema update.",
+    "Never approve an unexpected destructive, data-conversion, table-recreation or other consequential confirmation; record its exact text and stop.",
+    "Never change an IDO, property class, Form definition, string or runtime record.",
+    "Never perform check-in, check-out, regeneration, unload, FormSync, cache or deployment operations, or any Web Designer action.",
+    "Never close a dirty Form or discard changes without operator approval.",
+    "Never use browser JavaScript, internal APIs, direct navigation URLs, browser refresh or restart; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim database durability or replay verification from same-session UI recovery."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:DROP|TRUNCATE)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO)\\s+(?:dbo\\.)?(?!FX_)[A-Za-z_][A-Za-z0-9_]*|\\bUPDATE\\s+(?:dbo\\.)?(?!FX_)[A-Za-z_][A-Za-z0-9_]*\\s+SET\\b",
+    "\\b(?:execute|run|apply)\\b[^.\\n]{0,50}\\b(?:DDL|SQL script|generated SQL|FormSync)\\b",
+    "\\b(?:create|modify|delete|regenerate)\\b[^.\\n]{0,50}\\b(?:IDO|property class|event handler|Form definition)\\b",
+    "\\b(?:check[- ]?in|check[- ]?out|unload all global form objects|clear cache)\\b",
+    "\\b(?:browser refresh|browser restart|direct URL navigation|javascript evaluation)\\b",
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:Deploy(?:ment)?|Form\\s+Sync)\\b"
+  ],
+  "related_experiments": [
+    "EXP-059",
+    "EXP-040",
+    "EXP-042-R3",
+    "EXP-071-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": null,
+    "artifacts": [
+      "dbo.FX_HelloWorld01 (existing factory table; schema change only)",
+      "FX_Address (new nullable nvarchar(150) column)",
+      "FX_HelloWorld01 (existing runtime Form; read-only check)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; the Sql Tables runtime Form in use, with any caution alert captured verbatim and dismissed with OK only. Evidence: identity screenshot."
+    },
+    {
+      "id": "AC-2",
+      "description": "One visible-criterion query (FX_HelloWorld01 captured before F4) returns exactly one dbo.FX_HelloWorld01 row; the complete column baseline (Column Id, Name, Data Type, Length, Is Nullable, Primary Key) is recorded; FX_Address is absent under a case-insensitive comparison. Evidence: pre-F4 criterion, result and column screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "Exactly one unsaved new column FX_Address with Data Type nvarchar (selected from the list), Length 150 and Is Nullable checked; existing columns unchanged. Evidence: pre-Save screenshot and readback."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly one toolbar Save; native response (or its absence) and any displayed generated SQL recorded; Save disabled and no error afterwards; System Data Type readback. Evidence: post-Save screenshot."
+    },
+    {
+      "id": "AC-5",
+      "description": "The clean Sql Tables Form (and Sql Columns, if separate) closed once without a prompt and Sql Tables reopened once through Select Form. Evidence: tab readbacks and reopen screenshot."
+    },
+    {
+      "id": "AC-6",
+      "description": "After the reopen, one visible-criterion query recovers exactly one dbo.FX_HelloWorld01 whose columns equal the AC-2 baseline plus FX_Address (nvarchar, 150, nullable, with a Column Id), compared field by field. Evidence: recovered-inventory screenshots."
+    },
+    {
+      "id": "AC-7",
+      "description": "The FX_HelloWorld01 runtime Form opened once and loaded with one Refresh or empty-criteria query shows exactly FX001 / Factory test one and FX002 / Factory test two, Save disabled, nothing changed. Evidence: runtime screenshot."
+    },
+    {
+      "id": "AC-8",
+      "description": "The final EXP-074 report gives decisive evidence for AC-1 to AC-7, the complete action audit with exact counts (one New, one Save, one Sql Tables close/reopen, one runtime open and one load, zero IDO/Form/string/record changes, zero Designer actions, zero unloads, re-login count), the baseline and recovered inventories, the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-074",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only preflight and column baseline for EXP-074. Review AGENTS.md, hello-world-pt1.md Section 6, hello-world-pt5.md Sections 1-2, and the EXP-059, EXP-040 and EXP-042-R3 records. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; select the Web Client and do not touch the Web Designer. Use the Sql Tables tab if it is open and clean, otherwise open it once through Form > Open > Select Form (capture and OK any informational caution alert). Enter Filter in Place once, type FX_HelloWorld01 into Table Name, commit with Tab, capture the criterion before F4, press F4 once and confirm exactly one dbo.FX_HelloWorld01 row. Open its Columns and record the complete column baseline; establish that FX_Address is absent, case-insensitively. Create the EXP-074 record with the baseline, the action audit and the worker-written-file inventory, with screenshots under evidence/EXP-074/. Stop before New.",
+  "notes": "Proposed by the operator assistant after EXP-073 (Part 4 complete). Operator decision 2026-10-13: add Address to the factory customer table so Part 5 can join and validate Name and Address as in the tutorial (FX_Label is the Name equivalent). Address prerequisite sequence: A (this) the SQL column; B the FX_Address IDO property on FX_HelloWorld01 (one check-out of the checked-in IDO, EXP-061 route); C the Address field on the FX_HelloWorld01 Form; D address values for FX001 and FX002. Then Part 5 Section 1 (the FX_Orders joins). Length 150 and nullable follow hello-world-pt1.md (Address, String 150) and EXP-059 (nullable so the two existing rows stay valid). The visible-criterion query follows EXP-071-R2. No unload, no Designer. Run pauses are brought to the operator (auto-accept not renewed for Part 5). Session-expiry re-login follows the worker preamble. exact_values: FX_HelloWorld01, FX_Address, nvarchar, FX_Code, FX_Label. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_HelloWorld01",
+    "FX_Address",
+    "nvarchar",
+    "FX_Code",
+    "FX_Label"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "Tenant-wide schema change limited to one new nullable column in dbo.FX_HelloWorld01 (AGENTS.md FX_ scope extension) through the Web Client SQL Tables runtime Form; IDO, Forms and data untouched; no Designer action; no unload"
+}
