@@ -1,0 +1,135 @@
+{
+  "experiment_id": "EXP-069",
+  "title": "EXP-069 - Hello World Part 4 Section 9: FX_UM Property Class Extension with the Details/Add/Find Right-Click Menu on FX_UMCombobox",
+  "record_path": "experiments/EXP-069-hello-world-part-4-section-9-um-property-class-extension-right-click.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt4.md Section 9 (11:04-13:12), adapted to FX_ names, on the User-scoped FX_Items Designer Form. Select FX_UMCombobox, open Inheritance > Edit Property Class Extensions through its ellipsis, accept the prompt to create the extension once, and in it set Behavior > Add Details and Find Form: Add Details Form FX_UMs, Find Form FX_UMs, Property FX_UM, and Right-Click Menu the standard Details/Add/Find menu (record its exact name). Confirm and perform one Designer Save. Then test at runtime: reopen the runtime FX_Items Form once and right-click the Unit of Measure combobox once, recording the menu (the tutorial expects it NOT to appear, because a component-level menu overrides it). If the extension menu does not appear and FX_UMCombobox has a component-level Behavior > Right-Click Menu value (for example StdDefault), record it, clear only that value, perform a second Designer Save, reopen the runtime Form once and right-click again. If the menu then appears, choose Details once and verify that the FX_UMs Form opens on the current record's UM, then close it. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt4.md Section 9 (11:04-13:12) including the inheritance lesson, and the EXP-045, EXP-048 and EXP-068-R2 records before browser interaction.",
+      "Create or update only experiments/EXP-069-hello-world-part-4-section-9-um-property-class-extension-right-click.md and evidence/EXP-069/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task. List the browser tabs before the first tab selection.",
+      "Designer baseline: if no Form is loaded, open FX_Items once through the Designer toolbar Open button and Select Form; verify FX_Items in User scope and clean. Select FX_UMCombobox and record its Data Source binding, its Inheritance properties (property class and any existing extension) and every Behavior property value, in particular Right-Click Menu and the Add Details and Find Form group.",
+      "Runtime baseline: with the runtime FX_Items Form open (open it once through Form > Open > Select Form if needed), right-click the Unit of Measure combobox once, record the menu items verbatim with a screenshot, and dismiss the menu with Escape without choosing an item.",
+      "Extension: in the Designer, open FX_UMCombobox Inheritance > Edit Property Class Extensions through its ellipsis once; record the prompt verbatim and accept the creation once. In the extension, set Behavior > Add Details and Find Form: Add Details Form FX_UMs, Find Form FX_UMs, Property FX_UM, and Right-Click Menu the standard Details/Add/Find menu offered by its dropdown (record the exact option name and the full option list). Record every field, confirm the extension dialog once, and record its scope if shown.",
+      "Perform Designer Save 1 through the native toolbar Save and record the native response verbatim.",
+      "Runtime check 1: close the clean runtime FX_Items Form once and reopen it once; right-click the Unit of Measure combobox once; record the menu items verbatim with a screenshot; dismiss with Escape.",
+      "Override step, only if check 1 does not show the Details/Add/Find menu and FX_UMCombobox has a non-blank component-level Right-Click Menu: record the value, clear only that property on FX_UMCombobox, verify the readback, perform Designer Save 2 and record the response; then Runtime check 2 exactly like check 1.",
+      "Cache contingency, only if the last check still does not show the menu and no component-level value remains: invoke the Web Client Form > Definition > Unload All Global Form Objects once (no runtime Form dirty; close the clean runtime FX_Items Form first), reopen the runtime Form once and right-click once more. Never use the Designer unload.",
+      "Drill-down: when the Details/Add/Find menu appears, with dumbbell selected (UM EA), choose Details once; verify the FX_UMs Form opens on the EA record with its description Each; close that FX_UMs Form once (clean, no edits). Never choose Add or Find.",
+      "Designer recovery: close the clean FX_Items Designer Form once and reopen it once through the toolbar Open button; verify the extension settings and the final component-level Right-Click Menu value of FX_UMCombobox.",
+      "Capture screenshots of the baseline Behavior properties, the baseline runtime menu, the extension prompt, the configured extension, each Save, each runtime menu, the FX_UMs drill-down and the Designer reopen.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Changing any component other than FX_UMCombobox, or any FX_UMCombobox property other than its component-level Right-Click Menu (in the override step).",
+      "Changing the FX_UM or FX_UMBase property classes themselves, other property class extensions, IDOs, strings, themes or User Preferences.",
+      "Any unload other than the single Web Client contingency unload; any Designer unload, FormSync, deployment or regeneration.",
+      "Choosing Add or Find in the right-click menu, editing records, runtime Save, imports or exports.",
+      "Check In, Undo Check Out or other checkout-management actions.",
+      "Browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-069 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never change a component other than FX_UMCombobox, or a property other than its component-level Right-Click Menu.",
+    "Never delete a property class extension, property class or component.",
+    "Never invoke the Designer Save more than twice, or retry an uncertain Save.",
+    "Never invoke more than one Web Client Unload All Global Form Objects, and never the Designer one.",
+    "Never choose Add or Find in a right-click menu, edit a record or use runtime Save.",
+    "Never close a dirty Form or discard changes without operator approval.",
+    "Never click the Designer top-toolbar Delete button (Delete Form Definition).",
+    "Never perform check-in, undo checkout or other checkout-management actions.",
+    "Never use direct SQL, scripts, application internals or browser JavaScript.",
+    "Never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability beyond the observed close/reopen recovery."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:extension|class|component|combobox)(?:es|s)?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b"
+  ],
+  "related_experiments": [
+    "EXP-068-R2",
+    "EXP-048",
+    "EXP-045"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Items",
+    "artifacts": [
+      "FX_Items",
+      "FX_UMCombobox",
+      "FX_UM",
+      "FX_UMs"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; FX_Items open in the Designer in User scope and clean; FX_UMCombobox binding, Inheritance and all Behavior values recorded (Right-Click Menu and the Add Details and Find Form group); the baseline runtime right-click menu recorded. Evidence: Properties and runtime-menu screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "The property class extension created once (prompt verbatim): Add Details Form FX_UMs, Find Form FX_UMs, Property FX_UM, Right-Click Menu the standard Details/Add/Find option (exact name and option list recorded); confirmed once; scope recorded. Evidence: prompt and configured-extension screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "Designer Save 1 with the native response verbatim; Runtime check 1 after one runtime close/reopen with the menu items recorded. Evidence: Save and menu screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "Override step (if required): the component-level Right-Click Menu value of FX_UMCombobox recorded and cleared, Save 2 with its response, Runtime check 2 recorded; or the step recorded as not required. The contingency unload used at most once and only under its condition. Evidence: readback, Save and menu screenshots; unload count."
+    },
+    {
+      "id": "AC-5",
+      "description": "The Details/Add/Find menu appears at runtime, and Details on dumbbell opens the FX_UMs Form on EA (Each); that Form closed clean. Evidence: menu and drill-down screenshots."
+    },
+    {
+      "id": "AC-6",
+      "description": "The clean Designer Form closed once and reopened once; the extension settings and the final component-level Right-Click Menu of FX_UMCombobox verified. Evidence: reopen screenshots."
+    },
+    {
+      "id": "AC-7",
+      "description": "No other change: no other component, property, class, extension, record or object changed; no Designer unload; no Add or Find used; no dialog or menu left open. Evidence: the audit and final screenshots."
+    },
+    {
+      "id": "AC-8",
+      "description": "The final EXP-069 report gives decisive evidence for AC-1 to AC-7, the complete action audit with exact counts (one extension creation, at most two Designer Saves, runtime close/reopen count, right-click count, at most one Web Client unload, one Details drill-down, one Designer close/reopen, zero other changes, re-login count), the negative/positive inheritance observation, the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-069",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only preflight for EXP-069. Review AGENTS.md, hello-world-pt4.md Section 9 and the EXP-045, EXP-048 and EXP-068-R2 records. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. In the Designer, if no Form is loaded, open FX_Items once through the toolbar Open button and Select Form; verify FX_Items in User scope and clean. Select FX_UMCombobox and record its Data Source binding, Inheritance properties and every Behavior value, including Right-Click Menu and the Add Details and Find Form group. In the Web Client, with the runtime FX_Items Form open (open it once through Form > Open > Select Form if needed), right-click the Unit of Measure combobox once, record the menu items with a screenshot and dismiss it with Escape. Create the EXP-069 record with the baseline, action audit and worker-written-file inventory, with screenshots under evidence/EXP-069/. Stop before opening Edit Property Class Extensions or making any change.",
+  "notes": "Proposed by the operator assistant after EXP-068-R2 (accepted; Part 4 section 8 complete). Section 9 on FX_UMCombobox (bound to object.FX_UM, property class FX_UM: base FX_UMBase, domain FX_UMs / FX_UM / FX_Description, EXP-048); drill-down target is the FX_UMs User-scope Form (EXP-045). Components default to Right-Click Menu StdDefault (EXP-068-R2), the likely component-level override the tutorial clears. The extension is a global form object attached to the FX_ property class FX_UM (FX_ scope extension). The two-phase structure (check 1 negative, override cleared, check 2 positive) follows the tutorial inheritance lesson; each phase runs only when needed. Contingency: at most one Web Client Unload All Global Form Objects if the menu is still absent with no component-level value left (global objects may be cached at runtime); the Designer unload is not authorized. Drill-down adds one Details choice (read-only navigation; Add and Find banned). Session-expiry re-login follows the worker preamble. exact_values: FX_Items, FX_UMCombobox, FX_UM, FX_UMs. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Items",
+    "FX_UMCombobox",
+    "FX_UM",
+    "FX_UMs"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User (Designer Form FX_Items: FX_UMCombobox component-level Right-Click Menu only, if needed) plus one FX_UM property class extension (global form object, FX_ scope extension); at most one contingency Web Client unload; runtime read-only"
+}
