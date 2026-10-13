@@ -1,0 +1,216 @@
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - button "Form" [ref=e3] [cursor=pointer]
+    - button "Edit" [ref=e5] [cursor=pointer]
+    - button "View" [ref=e7] [cursor=pointer]
+    - button "Help" [ref=e9] [cursor=pointer]
+  - toolbar [ref=e11]:
+    - button [active] [ref=e12] [cursor=pointer]:
+      - button "Design" [ref=e13]
+    - button "Save" [disabled] [ref=e15]:
+      - button "Save" [disabled]
+    - button "Regenerate Form" [disabled] [ref=e16]:
+      - button "Regenerate Form" [disabled]
+    - separator [ref=e17]
+    - button [ref=e18] [cursor=pointer]:
+      - button "New" [ref=e19]
+    - button [ref=e21] [cursor=pointer]:
+      - button "Copy" [ref=e22]
+    - button [ref=e24] [cursor=pointer]:
+      - button "Delete" [ref=e25]
+    - separator [ref=e27]
+    - button "Align Left" [disabled] [ref=e28]:
+      - button "Align Left" [disabled]
+    - button "Align Center" [disabled] [ref=e29]:
+      - button "Align Center" [disabled]
+    - button "Align Right" [disabled] [ref=e30]:
+      - button "Align Right" [disabled]
+    - button "Align Top" [disabled] [ref=e31]:
+      - button "Align Top" [disabled]
+    - button "Align Middle" [disabled] [ref=e32]:
+      - button "Align Middle" [disabled]
+    - button "Align Bottom" [disabled] [ref=e33]:
+      - button "Align Bottom" [disabled]
+    - separator [ref=e34]
+    - button "Make Same Width" [disabled] [ref=e35]:
+      - button "Make Same Width" [disabled]
+    - button "Make Same Height" [disabled] [ref=e36]:
+      - button "Make Same Height" [disabled]
+    - button "Make Same Size" [disabled] [ref=e37]:
+      - button "Make Same Size" [disabled]
+    - separator [ref=e38]
+    - button "Space Horizontally" [disabled] [ref=e39]:
+      - button "Space Horizontally" [disabled]
+    - button "Space Vertically" [disabled] [ref=e40]:
+      - button "Space Vertically" [disabled]
+    - separator [ref=e41]
+    - button [ref=e42] [cursor=pointer]:
+      - button "Tab Order" [ref=e43]
+    - button [ref=e45] [cursor=pointer]:
+      - button "Tab Order At" [ref=e46]
+    - separator [ref=e48]
+    - button "Undo" [disabled] [ref=e49]:
+      - button "Undo" [disabled]
+    - button "Redo" [disabled] [ref=e50]:
+      - button "Redo" [disabled]
+  - grid "Toolbox" [ref=e51]:
+    - text: 
+    - button "Collapse Panel" [ref=e53] [cursor=pointer]
+    - generic [ref=e54]:
+      - generic [ref=e55]: "Search Toolbox:"
+      - generic [ref=e58]:
+        - textbox "Search Toolbox:" [ref=e60]:
+          - /placeholder: Search Toolbox
+        - generic [ref=e61] [cursor=pointer]
+    - columnheader "Name"
+    - tree [ref=e66]:
+      - generic [ref=e67]:
+        - table [ref=e68]
+        - table [ref=e73]
+        - table [ref=e78]
+        - table [ref=e83]
+        - table [ref=e88]
+        - table [ref=e93]
+        - table [ref=e98]
+        - table [ref=e103]
+        - table [ref=e108]
+        - table [ref=e113]
+        - table [ref=e118]
+        - table [ref=e123]
+        - table [ref=e128]
+        - table [ref=e133]
+        - table [ref=e138]
+        - table [ref=e143]
+        - table [ref=e148]
+        - table [ref=e153]
+        - table [ref=e158]
+        - table [ref=e163]
+        - table [ref=e168]
+        - table [ref=e173]
+        - table [ref=e178]
+        - table [ref=e183]
+        - table [ref=e188]
+        - table [ref=e193]
+        - table [ref=e198]
+        - table [ref=e203]
+        - table [ref=e208]
+        - table [ref=e213]
+        - table [ref=e218]
+        - table [ref=e223]
+        - table [ref=e228]
+        - table [ref=e233]
+        - table [ref=e238]
+  - separator [ref=e243]
+  - text: 
+  - tablist [ref=e244]:
+    - tab [selected] [ref=e245] [cursor=pointer]:
+      - heading "FX_Items" [level=2] [ref=e246]
+      - button "closable FX_Items" [ref=e247]:
+        - img "closable FX_Items"
+  - tabpanel [aria-hidden] [ref=e248]:
+    - generic [ref=e249]:
+      - grid [ref=e250]:
+        - grid [ref=e251]
+        - grid [ref=e260]
+        - generic [ref=e288] [cursor=pointer]: 
+      - separator [ref=e289]: ⁞
+      - generic [ref=e292] [cursor=pointer]
+      - button [ref=e294] [cursor=pointer]: Import
+      - generic [ref=e296]:
+        - textbox [ref=e300]
+        - generic [ref=e301] [cursor=pointer]
+      - generic [ref=e302]:
+        - generic [ref=e303]: "Description:"
+        - generic [ref=e304] [cursor=pointer]
+      - generic [ref=e305]:
+        - generic [ref=e306]: "Item:"
+        - generic [ref=e307] [cursor=pointer]
+      - generic [ref=e308]:
+        - generic [ref=e309]: "Item:"
+        - textbox [ref=e314]
+        - generic [ref=e315] [cursor=pointer]
+      - generic [ref=e316]:
+        - generic [ref=e317]: "Description:"
+        - generic [ref=e318] [cursor=pointer]
+      - generic [ref=e319]:
+        - generic [ref=e320]: "Description:"
+        - textbox [ref=e325]
+        - generic [ref=e326] [cursor=pointer]
+      - generic [ref=e327]:
+        - generic [ref=e328]: "Cost:"
+        - generic [ref=e329] [cursor=pointer]
+      - generic [ref=e330]:
+        - generic [ref=e331]: "Cost:"
+        - textbox [ref=e336]
+        - generic [ref=e337] [cursor=pointer]
+      - generic [ref=e338]:
+        - generic [ref=e339]: "Unit of Measure:"
+        - generic [ref=e340] [cursor=pointer]
+      - generic [ref=e341]:
+        - generic [ref=e342]: "Unit of Measure:"
+        - combobox [ref=e347]
+        - generic [ref=e348] [cursor=pointer]
+    - separator [ref=e349]
+    - text: 
+    - generic [ref=e350]: Details
+    - button [ref=e351] [cursor=pointer]
+    - tablist [ref=e352]:
+      - tab [ref=e353] [cursor=pointer]:
+        - heading [level=2] [ref=e354]: Collections
+      - tab [selected] [ref=e355] [cursor=pointer]:
+        - heading [level=2] [ref=e356]: Components
+      - tab [ref=e357] [cursor=pointer]:
+        - heading [level=2] [ref=e358]: Event Handlers
+      - tab [ref=e359] [cursor=pointer]:
+        - heading [level=2] [ref=e360]: Variables
+      - tab [ref=e361] [cursor=pointer]:
+        - heading [level=2] [ref=e362]: Design View Size
+    - tabpanel [ref=e363]:
+      - grid [ref=e364]:
+        - generic [ref=e368]
+        - button [ref=e373] [cursor=pointer]: 
+        - button [ref=e374] [cursor=pointer]: 
+        - row [ref=e375]
+        - tree [ref=e431]
+        - toolbar [ref=e483]
+  - separator [ref=e485]
+  - text: 
+  - generic [ref=e486]: Properties
+  - button "Collapse Panel" [ref=e487] [cursor=pointer]
+  - tabpanel [aria-hidden] [ref=e488]:
+    - toolbar [ref=e489]:
+      - button [ref=e490] [cursor=pointer]: 
+      - generic [ref=e491]:
+        - generic [ref=e492]: "Search Properties:"
+        - generic [ref=e495]
+      - button [ref=e499] [cursor=pointer]: 
+      - button [ref=e500] [cursor=pointer]: 
+    - generic: Name
+    - generic [ref=e501]: Value
+    - tree [ref=e509]:
+      - generic [ref=e510]:
+        - table [ref=e511]
+        - table [ref=e520]
+        - table [ref=e529]
+        - table [ref=e538]
+        - table [ref=e551]
+        - table [ref=e560]
+        - table [ref=e569]
+        - table [ref=e578]
+        - table [ref=e587]
+        - table [ref=e596]
+        - table [ref=e605]
+        - table [ref=e614]
+    - generic [ref=e623]:
+      - generic [ref=e624]: Empty Property Description Field
+      - textbox [ref=e629]
+  - tablist [ref=e630]:
+    - tab [selected] [ref=e631] [cursor=pointer]:
+      - heading "Form" [level=2] [ref=e632]
+    - tab [ref=e633] [cursor=pointer]:
+      - heading "Component" [level=2] [ref=e634]
+  - toolbar [ref=e635]:
+    - generic [ref=e636]: "[ ScopeType: User / ScopeName: <secret>SECRET_MONGOOSE_USERNAME</secret> ]"
+    - generic [ref=e637]: en-US
+    - separator [ref=e638]
+    - img "Powered by Infor" [ref=e639]
