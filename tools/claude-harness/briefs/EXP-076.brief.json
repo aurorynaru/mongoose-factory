@@ -1,0 +1,148 @@
+{
+  "experiment_id": "EXP-076",
+  "title": "EXP-076 - Hello World Part 5 Prerequisite C: Add the Address Field (FX_AddressStatic, Multi-Line FX_AddressEdit, Caption FX_sAddress) to the User-Scoped FX_HelloWorld01 Form",
+  "record_path": "experiments/EXP-076-hello-world-part-5-prereq-c-fx-address-form-field.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Third Address prerequisite for Hello World Part 5 (operator decision 2026-10-13), following hello-world-pt1.md Sections 8 and 10 (Address as a Multi-Line Edit; the s Address caption string), adapted to FX_ names. EXP-075 added the Bound property FX_Address (String 150) to the FX_HelloWorld01 IDO. In the Web Designer, open the existing User-scoped Form FX_HelloWorld01 (EXP-041; components FX_LabelStatic, FX_LabelEdit, FX_CodeStatic, FX_CodeEdit and the grid) and record its baseline and geometry. Binding gate: check whether the Designer binding picker of a new Edit offers FX_Address; only if it does not, perform the operator-authorized EXP-067-R2 unload pair once (one Web Client and one Designer Unload All Global Form Objects) and check again. Then add exactly two components one row below the Code field: a Static FX_AddressStatic with Caption FX_sAddress (string created through the Caption ellipsis, value Address) and an Edit FX_AddressEdit with Type Multi-Line Edit bound to FX_Address. One Designer Save, one close/reopen, then verify at runtime that the Address field appears, empty, for FX001 and FX002. No values are entered (prerequisite D). Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt1.md Sections 8 and 10 (Multi-Line Edit, the Address caption string) and hello-world-pt5.md Sections 1-2, the EXP-075 and EXP-041-R3 records (FX_Address property; FX_HelloWorld01 Form components), the EXP-067-R2 record (unload sequence, Unload IDO Metadata With Forms preference gate, binding gate, Toolbox drops with explicit Layout Size and Location), the EXP-062-R4 record (Toolbox and geometry), and the EXP-050 and EXP-072 records (Caption ellipsis string creation, Tab commit before OK; the Designer Select Form cache and the Form menu recent-forms route) before browser interaction.",
+      "Create or update only experiments/EXP-076-hello-world-part-5-prereq-c-fx-address-form-field.md and evidence/EXP-076/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task. List the browser tabs before the first tab selection.",
+      "Designer open: if another Form (for example FX_Orders) is open and clean in the Designer, close it once through its Form-tab control; open FX_HelloWorld01 once through the toolbar Open button and Select Form (or the Form menu recent-forms entry if Select Form does not list it). Verify Name FX_HelloWorld01, User scope for the operator and the clean state.",
+      "Baseline: record the component list and the Layout Location and Size of FX_LabelStatic, FX_LabelEdit, FX_CodeStatic, FX_CodeEdit and the Form, in the UI's own format; prove FX_AddressStatic, FX_AddressEdit and a string FX_sAddress absent (Edit > String view, then cancel).",
+      "Placement rule: the row spacing is the difference between the FX_CodeEdit and FX_LabelEdit rows. FX_AddressStatic takes the column and size of FX_CodeStatic, one row spacing below it; FX_AddressEdit takes the column and width of FX_CodeEdit, one row spacing below it, with a height of 4. Before any change, compute and record both target rectangles; if either overlaps an existing component or exceeds the Form, stop and report the measurements.",
+      "Binding gate (first check): drop one Edit from the Toolbox onto a free area of the canvas once, rename it FX_AddressEdit, set Binding Type Property and open the Binding picker; if FX_Address is offered, select it and continue without any unload.",
+      "Conditional unload (only if FX_Address is not offered): close the picker without selecting (never Escape); close the FX_HelloWorld01 Designer Form once and answer No once to its save prompt, which discards only the unsaved FX_AddressEdit drop (no other change exists at that point; record the prompt text). Follow EXP-067-R2: read the Web Client User Preference Unload IDO Metadata With Forms read-only (require it checked; close with Close Window); close the clean FX_HelloWorld01 runtime Form if open; invoke the Web Client Form > Definition > Unload All Global Form Objects exactly once; with the Designer Form closed invoke the Designer Form > Definition > Unload All Global Form Objects exactly once; reopen FX_HelloWorld01, drop one new Edit once more, rename it FX_AddressEdit and repeat the binding check once. If FX_Address is still missing, stop blocked without a second unload.",
+      "FX_AddressEdit: set Type Multi-Line Edit through its Type property, Binding Type Property, Binding FX_Address, and the Layout Location and Size from the placement rule explicitly; record each readback.",
+      "FX_AddressStatic: drop one Static from the Toolbox once, rename it FX_AddressStatic, set its Layout Location and Size from the placement rule explicitly, set Caption FX_sAddress and create the string through the Caption ellipsis (EXP-050 procedure: answer Yes once only to the exact \"String FX_sAddress does not exist. Create it?\" prompt, replace the String Value with Address, commit with Tab, verify, then OK); record each readback.",
+      "Verify on the canvas that both components sit in their target rectangles without overlap and that no other component changed; verify FX_sAddress = Address in the Edit > String view, then cancel.",
+      "Perform exactly one Designer Save through the native toolbar Save and record the native response verbatim.",
+      "Close the clean FX_HelloWorld01 Designer Form once and reopen it once (toolbar Open and Select Form, or the Form menu recent-forms entry); verify both components with their names, Type, geometry, Caption and binding.",
+      "Runtime: close the clean FX_HelloWorld01 runtime Form once if it is open and reopen it once through Form > Open > Select Form; invoke one toolbar Refresh; for FX001 and FX002 in turn record the Code and Label values and that the Address field is shown (caption Address, multi-line, empty). Make no record edits.",
+      "Capture screenshots of the baseline, the binding picker offering FX_Address (and, if used, the preference reading and both unload menu labels), each component after configuration, the string prompt and value before OK, the Designer after Save, after the reopen and the runtime with each record.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Changing, moving or deleting existing components (FX_LabelStatic, FX_LabelEdit, FX_CodeStatic, FX_CodeEdit, the grid and its columns), Form properties, events or variables; a grid column for Address.",
+      "Captions for the Code and Label fields; strings other than FX_sAddress; editing existing strings.",
+      "Any IDO, property class, SQL table or column change; checkout-management actions.",
+      "Entering address values or any runtime record change (prerequisite D).",
+      "Any unload other than the conditional operator-authorized pair; cache, FormSync, deployment or regeneration operations; User Preference changes.",
+      "Browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-076 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never invoke an unload unless the binding picker does not offer FX_Address; then at most exactly one Web Client and exactly one Designer Unload All Global Form Objects, never repeated.",
+    "Never change the Unload IDO Metadata With Forms preference or any other User Preference.",
+    "Never perform any other cache operation, deployment, regeneration or FormSync action.",
+    "Never change, move or delete an existing component, and never add components other than FX_AddressStatic and FX_AddressEdit (one Toolbox drop each, plus one repeated Edit drop only after the conditional unload discard).",
+    "Never create a string other than FX_sAddress, never overwrite one that unexpectedly exists, and never press OK in a String dialog before the String Value is committed and verified.",
+    "Never close a picker, lookup or combobox list with Escape.",
+    "Never invoke the Designer Save more than once or retry an uncertain Save.",
+    "Never close a dirty Form or discard changes without operator approval; the only approved discard is the single No in the conditional-unload branch, which drops only the unsaved FX_AddressEdit.",
+    "Never click the Designer top-toolbar Delete button (Delete Form Definition).",
+    "Never perform check-in, undo checkout or other checkout-management actions, or change an IDO, property class or SQL object.",
+    "Never use direct SQL, scripts, application internals or browser JavaScript.",
+    "Never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never edit runtime records or use runtime Save.",
+    "Never claim cross-session durability beyond the observed close/reopen recovery."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|direct URL navigation|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:component|static|edit|button|grid)s?\\b",
+    "\\bEdit Grid Columns\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b"
+  ],
+  "related_experiments": [
+    "EXP-075",
+    "EXP-074",
+    "EXP-067-R2",
+    "EXP-062-R4",
+    "EXP-050",
+    "EXP-072",
+    "EXP-041-R3"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_HelloWorld01",
+    "artifacts": [
+      "FX_HelloWorld01",
+      "FX_AddressStatic",
+      "FX_AddressEdit",
+      "FX_Address",
+      "FX_sAddress"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; the Designer Form is FX_HelloWorld01 in User scope and clean; the component list and the geometry of FX_LabelStatic, FX_LabelEdit, FX_CodeStatic, FX_CodeEdit and the Form recorded; FX_AddressStatic, FX_AddressEdit and FX_sAddress absent; both target rectangles computed by the placement rule, free and inside the Form. Evidence: identity, component and geometry screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "Binding gate: the Binding picker of the new FX_AddressEdit offers FX_Address, either without an unload (unloads 0) or after the conditional EXP-067-R2 pair (preference read as checked and unchanged; exactly one Web Client and one Designer Unload All Global Form Objects, labels recorded; FX_HelloWorld01 reopened in User scope). Evidence: binding-picker screenshot, plus preference and menu-label screenshots if the unload was used."
+    },
+    {
+      "id": "AC-3",
+      "description": "FX_AddressEdit added once: Edit with Type Multi-Line Edit, Binding Type Property, Binding FX_Address, Location and Size per the placement rule (height 4); readbacks recorded. Evidence: Properties and canvas screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "FX_AddressStatic added once: Static, Location and Size per the placement rule, Caption FX_sAddress; exactly one new string FX_sAddress = Address created through the Caption ellipsis with one Yes and the value committed before OK; Edit > String readback. Evidence: prompt, value-before-OK and readback screenshots."
+    },
+    {
+      "id": "AC-5",
+      "description": "Exactly one Designer Save with the native response verbatim; Save disabled afterwards; no other component changed. Evidence: post-Save screenshot and the Save count."
+    },
+    {
+      "id": "AC-6",
+      "description": "The clean Designer Form closed once and reopened once; both components present with the same names, Type, geometry, Caption and binding. Evidence: reopen screenshots."
+    },
+    {
+      "id": "AC-7",
+      "description": "The runtime FX_HelloWorld01 Form closed once (if open), reopened once and refreshed once; for FX001 and FX002 the Code and Label values are unchanged and the Address field is shown with caption Address, multi-line and empty; no record edits; the Form clean. Evidence: runtime screenshots for both records."
+    },
+    {
+      "id": "AC-8",
+      "description": "The final EXP-076 report gives decisive evidence for AC-1 to AC-7, the complete action audit with exact counts (unloads 0 or 2 with the gate result, Designer close/reopen pairs, two Toolbox drops (three if the conditional unload discard was used), one string created, one Designer Save, one runtime close/reopen and Refresh, zero other component changes, zero record edits, re-login count), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-076",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only Designer baseline for EXP-076. Review AGENTS.md, hello-world-pt1.md Sections 8 and 10, hello-world-pt5.md Sections 1-2, and the EXP-075, EXP-041-R3, EXP-067-R2, EXP-062-R4, EXP-050 and EXP-072 records. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one. In the Web Designer: if another Form is open and clean, close it once; open FX_HelloWorld01 once through the toolbar Open button and Select Form (or the Form menu recent-forms entry). Verify Name, User scope and the clean state. Record the component list and the Layout Location and Size of FX_LabelStatic, FX_LabelEdit, FX_CodeStatic, FX_CodeEdit and the Form; compute both target rectangles by the placement rule and check them for overlap and Form bounds; check in the Edit > String view that FX_sAddress is absent, then cancel. Create the EXP-076 record with the baseline, the computed rectangles, the action audit and the worker-written-file inventory, with screenshots under evidence/EXP-076/. Stop before the first Toolbox drop.",
+  "notes": "Proposed by the operator assistant after EXP-075 (accepted; Bound FX_Address on the checked-out FX_HelloWorld01 IDO). Address prerequisite C of four. Operator decision 2026-10-13: the EXP-067-R2 unload pair (exactly one Web Client and one Designer Unload All Global Form Objects) is authorized only if the Designer binding picker does not offer FX_Address; the binding is checked first. The tutorial Part 1 makes Address a Multi-Line Edit and creates the s Address caption string; the factory uses FX_AddressStatic / FX_AddressEdit and FX_sAddress = Address. Placement is derived from the live geometry (one row spacing below the Code field). Code and Label captions stay unchanged (out of scope). Run pauses are brought to the operator (auto-accept not renewed for Part 5). Session-expiry re-login follows the worker preamble. exact_values: FX_HelloWorld01, FX_AddressStatic, FX_AddressEdit, FX_Address, FX_sAddress, Address. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_HelloWorld01",
+    "FX_AddressStatic",
+    "FX_AddressEdit",
+    "FX_Address",
+    "FX_sAddress",
+    "Address"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User (Designer Form FX_HelloWorld01 in User scope: two new components) plus one tenant-wide FX_ caption string FX_sAddress; the conditional operator-authorized tenant-wide unload pair only if the binding gate needs it; runtime read-only"
+}
