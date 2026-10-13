@@ -1,0 +1,134 @@
+{
+  "experiment_id": "EXP-081",
+  "title": "EXP-081 - Hello World Part 5 Sections 2-3: Label String ID Overrides and Read Only on FX_DerOrderTotal in the FX_Orders IDO",
+  "record_path": "experiments/EXP-081-hello-world-part-5-section-2-3-fx-orders-label-overrides.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Finish the property attributes of hello-world-pt5.md Sections 2 and 3, adapted to FX_ names. In the Web Client IDO Collections runtime Form (titled IDOs), retrieve exactly the IDO FX_Orders (checked out to the operator; 17 properties after EXP-080-R3) and record its baseline, including where Label String ID and Read Only can be edited for an existing property. Then set the Label String ID of four existing properties, in this order: FX_CusAddress -> FX_sAddress (existing string, value Address (EXP-076)); FX_DerOrderTotal -> FX_sOrderTotal (string not yet created); FX_CusName -> FX_sCustomerName (string not yet created); FX_ItmsDescription -> FX_sItemDescription (string not yet created); and tick Read Only on FX_DerOrderTotal (the tutorial checks Read Only on the derived property). The base FX_CustomerID label already comes from its class FX_CustomerID (FX_sCustomerID, EXP-070) and is not changed. One ordinary Save; close and reopen IDO Collections once and verify the five changes and that nothing else changed. Strings are not created here (the missing strings follow with the Section 5 Form work). FX_Orders stays checked out. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt5.md Sections 2-3 (01:44-05:05), the EXP-080-R3 record (FX_DerOrderTotal; how the Properties grid shows a Derived property; session recovery from the top-level portal URL), the EXP-079 and EXP-078 records (the joined properties; Filter in Place on reopen), the EXP-070 record (FX_CustomerID class label FX_sCustomerID; a Label String ID typed for a string that does not exist yet) and the EXP-076 record (FX_sAddress = Address) before browser interaction.",
+      "Create or update only experiments/EXP-081-hello-world-part-5-section-2-3-fx-orders-label-overrides.md and evidence/EXP-081/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task; never sign in inside the portal's embedded app frame (it is refused, EXP-080-R2) but use the procedure's top-level portal navigation instead. List the browser tabs before the first tab selection. Do not touch the Web Designer tab.",
+      "Session warning: if the yellow strip \"Your session is about to expire\" is visible before the first edit and no Form is dirty, run the worker-preamble session-expiry procedure once proactively through the top-level portal navigation (it counts as the task's one re-login); afterwards reopen the IDOs Form once through Select Form and re-run the visible-criterion FX_Orders query once (one extra target query is authorized for this case).",
+      "Fresh IDOs Form: if the IDOs tab is open and clean, close it once through its Form-tab control and reopen it once through Form > Open > Select Form; if it is not open, open it once that way. Check the status bar for Filter in Place before clicking it.",
+      "Target and baseline: in Filter in Place, type FX_Orders into the IDO Name criterion, commit with Tab, capture the criterion before F4, press F4 once and establish exactly one FX_Orders row checked out to the operator. Record the complete 17-property inventory, and for the five target properties their current Label String ID and Read Only values.",
+      "Edit route (read-only inspection first): find where Label String ID and Read Only are shown for an existing property, by scrolling the in-form Properties grid horizontally and, only if the grid has no Label String ID column, by clicking the blue Properties button once and recording the Form it opens. Choose one route, record it, and use only that route for all edits. Opening the Properties button Form is a read action; close it again only while it is clean.",
+      "Edits (no Save until all are verified): for each target in the order above, make its row current once, click its Label String ID cell or field, type the string ID with keystrokes (browser_type with slowly true, not a programmatic fill) and press Tab once; verify the readback and that no message or prompt appeared. Then tick the Read Only checkbox of FX_DerOrderTotal once and verify it. Leave every other field and row untouched.",
+      "Stop rule: if a message or prompt appears for a string that does not exist (for example a create offer), record its exact text, answer it with the non-creating choice (No or OK) once, perform no Save, close the dirty Form once through its Form-tab control and discard the unsaved changes once at the discard prompt (authorized), and stop. The same applies to any other unexpected message before the Save.",
+      "Perform exactly one ordinary toolbar Save after all five changes are verified; record the native response, the Save state and the five values afterwards.",
+      "Close the clean IDOs Form once more and reopen it once more (the recovery pair); run one fresh visible-criterion FX_Orders query and verify the five changes, the 17-property inventory otherwise unchanged and the checkout state.",
+      "Capture screenshots of the pre-F4 criteria, the baseline values of the five targets, the chosen edit route, the five changes before Save, the Save result and the recovered values.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Creating or editing any string (FX_sOrderTotal, FX_sCustomerName and FX_sItemDescription are created later); the FX_CustomerID label (comes from its class); renumbering property sequences.",
+      "Any IDO other than FX_Orders; any property field other than the four Label String IDs and the one Read Only checkbox; the Tables view; adding or deleting properties.",
+      "Check Out, Check In, Undo Check Out or any other checkout-management action.",
+      "Property classes, SQL tables or columns, Forms, runtime records; any Web Designer action.",
+      "Any unload, cache, FormSync, deployment or regeneration operation.",
+      "Direct SQL or script execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-081 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never change an IDO other than FX_Orders, or any field other than the four Label String IDs and the FX_DerOrderTotal Read Only checkbox.",
+    "Never edit unless exactly one FX_Orders target, checked out to the operator, and a complete baseline of the five target values are verified.",
+    "Never click Check Out, Check In or Undo Check Out; stop if FX_Orders is not checked out to the operator.",
+    "Never create a string: answer any create offer with the non-creating choice and follow the stop rule.",
+    "Never invoke the toolbar Save more than once or retry an ambiguous Save; never Save after a stop.",
+    "Never close a combobox or lookup list with Escape; never use a programmatic fill for a Label String ID.",
+    "Never close a dirty Form or discard changes without operator approval, except the discard authorized by the stop rule.",
+    "Never perform any Web Designer action, unload, cache, FormSync, regeneration or deployment action.",
+    "Never use direct SQL, scripts, internal APIs or browser JavaScript, direct navigation URLs, browser refresh or restart; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim database durability or replay verification from same-session UI recovery."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:execute|run|apply)\\b[^.\\n]{0,50}\\b(?:SQL script|generated SQL|DDL)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\b(?:Unload All Global Form Objects|Unload IDO Metadata)\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:check[- ]?out|checkout)\\s+(?:the\\s+|any\\s+|an?\\s+)?(?:other IDO|another IDO|different IDO|IDO project|project|property class)\\b",
+    "\\b(?:browser refresh|browser restart|direct URL navigation|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:delete|remove|rename)\\b[^.\\n]{0,30}\\b(?:propert(?:y|ies)|table entr(?:y|ies)|join)\\b",
+    "\\b(?:create|modify|delete|regenerate)\\b[^.\\n]{0,50}\\b(?:Form definition|event handler|SQL table)\\b"
+  ],
+  "related_experiments": [
+    "EXP-080-R3",
+    "EXP-079",
+    "EXP-078",
+    "EXP-070",
+    "EXP-076"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": null,
+    "artifacts": [
+      "FX_Orders (existing IDO, checked out; attribute changes on four existing properties)",
+      "FX_CusAddress",
+      "FX_DerOrderTotal",
+      "FX_CusName",
+      "FX_ItmsDescription"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; a fresh IDOs Form; one visible-criterion query returns exactly one FX_Orders IDO checked out to the operator; the 17-property inventory and the baseline Label String ID and Read Only values of the five targets recorded. Evidence: pre-F4 criterion and baseline screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "One edit route identified and recorded (in-form grid columns or the Properties button Form) before any edit. Evidence: route screenshot."
+    },
+    {
+      "id": "AC-3",
+      "description": "Label String IDs set by keystrokes and Tab: FX_CusAddress -> FX_sAddress (existing string, value Address (EXP-076)); FX_DerOrderTotal -> FX_sOrderTotal (string not yet created); FX_CusName -> FX_sCustomerName (string not yet created); FX_ItmsDescription -> FX_sItemDescription (string not yet created); Read Only ticked on FX_DerOrderTotal; each readback verified with no message or prompt; nothing else changed. Evidence: screenshots before Save."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly one toolbar Save with its native response; Save disabled afterwards; the five values shown. Evidence: Save screenshot."
+    },
+    {
+      "id": "AC-5",
+      "description": "The clean IDOs Form closed once more and reopened once more; one visible-criterion query recovers FX_Orders with the five changes, the other properties unchanged and still checked out to the operator. Evidence: recovery screenshots."
+    },
+    {
+      "id": "AC-6",
+      "description": "The final EXP-081 report gives decisive evidence for AC-1 to AC-5, the complete action audit with exact counts (zero checkout-management actions, four Label String ID entries, one Read Only tick, one Save, two IDOs close/reopen pairs or one opening and one pair, two target queries plus any authorized extra, zero strings created, zero Designer actions, zero unloads, re-login count), the baseline and recovered values, the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-081",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only preflight, baseline and edit-route inspection for EXP-081. Review AGENTS.md, hello-world-pt5.md Sections 2-3, and the EXP-080-R3, EXP-079, EXP-078, EXP-070 and EXP-076 records. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; select the Web Client and do not touch the Web Designer. If the session has expired, use the top-level portal navigation of the session-expiry procedure (never the embedded frame) and end the task. If the IDOs tab is open and clean, close it once and reopen it once through Form > Open > Select Form (open it once if absent). Check the status bar before clicking Filter in Place; type FX_Orders into IDO Name, commit with Tab, capture the criterion before F4, press F4 once and confirm exactly one FX_Orders IDO checked out to the operator. Record the 17-property inventory and the current Label String ID and Read Only values of FX_CusAddress, FX_DerOrderTotal, FX_CusName and FX_ItmsDescription; identify the edit route read-only as the scope says. Create the EXP-081 record with the baseline, the route, the action audit and the worker-written-file inventory, with screenshots under evidence/EXP-081/. Stop before any edit.",
+  "notes": "Proposed and approved by the operator assistant under the user's overnight authorization of 2026-10-14 (fifth and last experiment of that authorization). Part 5 Sections 2-3 attribute overrides. The tutorial strings s address, s order total, s customer name and s item description become FX_sAddress (exists), FX_sOrderTotal, FX_sCustomerName and FX_sItemDescription; a Label String ID may name a string that does not exist yet (EXP-048, EXP-070 for property classes; unverified for IDO properties, hence the stop rule). FX_Orders stays checked out. No unload, no Designer. Session-expiry re-login uses the top-level portal navigation only. exact_values: FX_Orders, FX_CusAddress, FX_DerOrderTotal, FX_CusName, FX_ItmsDescription, FX_sAddress, FX_sOrderTotal, FX_sCustomerName, FX_sItemDescription. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Orders",
+    "FX_CusAddress",
+    "FX_DerOrderTotal",
+    "FX_CusName",
+    "FX_ItmsDescription",
+    "FX_sAddress",
+    "FX_sOrderTotal",
+    "FX_sCustomerName",
+    "FX_sItemDescription"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "Tenant-wide FX_Orders IDO change (AGENTS.md FX_ scope extension) through the Web Client IDO Collections runtime Form: FX_Orders already checked out and left checked out; four Label String ID values and one Read Only checkbox on existing FX_ properties; one Save; no strings, classes, SQL, Forms or data; no Designer action; no unload"
+}
