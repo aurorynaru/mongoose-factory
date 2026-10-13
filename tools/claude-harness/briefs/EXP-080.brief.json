@@ -1,0 +1,123 @@
+{
+  "experiment_id": "EXP-080",
+  "title": "EXP-080 - Hello World Part 5 Section 3: Add the Derived Property FX_DerOrderTotal to the FX_Orders IDO",
+  "record_path": "experiments/EXP-080-hello-world-part-5-section-3-fx-orders-derived-order-total.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt5.md Section 3 (03:33-05:05), adapted to FX_ names. In the Web Client IDO Collections runtime Form (titled IDOs), retrieve exactly the IDO FX_Orders (checked out to the operator; tables fxcus, fxitms and fxords; 16 properties after EXP-079) and record its identity, checkout state, Tables view and complete property inventory. Run the New Property wizard once, choose Derived instead of Bound on the first page, name the property FX_DerOrderTotal (the tutorial's Der-prefixed order total), select the existing property class FX_Cost, and enter the derived expression FX_Count * FX_ItmsCost (the tutorial's \"count * itms cost\", using the saved FX_Orders property names). Finish once. Close and reopen IDO Collections once and verify the inventory equals the baseline plus FX_DerOrderTotal, Derived, with its class and expression. The tutorial's Label String ID override and Read Only setting are EXP-081; its unload is deferred. FX_Orders stays checked out. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt5.md Section 3 (03:33-05:05) with its source cautions, the EXP-079 and EXP-078 records (FX_Orders tables and properties; New Property wizard pages; Filter in Place on reopen), the EXP-061 record (property class selection in the wizard, inherited types) and the EXP-048 record (property class FX_Cost: Decimal 18/2, decimal, Label String ID FX_sCost) before browser interaction.",
+      "Create or update only experiments/EXP-080-hello-world-part-5-section-3-fx-orders-derived-order-total.md and evidence/EXP-080/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task. List the browser tabs before the first tab selection. Do not touch the Web Designer tab.",
+      "Fresh IDOs Form: if the IDOs tab is open and clean, close it once through its Form-tab control and reopen it once through Form > Open > Select Form. Check the status bar for Filter in Place before clicking it.",
+      "Target and baseline: in Filter in Place, type FX_Orders into the IDO Name criterion, commit with Tab, capture the criterion before F4, press F4 once and establish exactly one FX_Orders row checked out to the operator. Record Revision and Locked By; the Tables view (expected FX_HelloWorld01 fxcus, FX_Items fxitms, FX_Orders fxords); and the complete property inventory (expected 16, including FX_Count and FX_ItmsCost). Prove FX_DerOrderTotal and any other Derived property absent.",
+      "Checkout gate: proceed only if FX_Orders is checked out to the operator. This experiment contains no checkout-management action at all; if it is checked in, locked by another user or ambiguous, stop.",
+      "Derived wizard: open the New Property wizard once. On the first page record every property-type option shown, choose Derived once and record the page; continue with Next as the wizard requires and record each page and its fields before filling. Fill Property Name FX_DerOrderTotal by one plain fill; select FX_Cost once from the Property Class lookup and record the readback, the inherit checkboxes and the shown types (expected Decimal, Length 18, Decimal Position 2, decimal); fill the expression field with FX_Count * FX_ItmsCost by one plain fill and record its readback verbatim. If the wizard offers no expression field, a Read Only option or other required field, record it, leave it untouched and stop before Finish. Finish once and record the response verbatim.",
+      "After the Finish, perform at most one ordinary Save only if the Form was left dirty. Verify exactly one added property FX_DerOrderTotal with its property type (Derived), class, sequence, expression (where the grid or detail shows it) and Read Only state, and the 16 baseline properties unchanged; verify FX_Orders is checked out to the operator.",
+      "Close the clean IDOs Form once more and reopen it once more (the recovery pair); run one fresh visible-criterion FX_Orders query and compare the recovered property inventory, the FX_DerOrderTotal details and the checkout state with the baseline plus the one property.",
+      "Capture screenshots of the pre-F4 criteria, the baseline inventory, each wizard page before filling, the configured wizard before Finish, the post-Finish inventory and the recovered inventory and details.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "The Label String ID override (s order total) and the Read Only setting (EXP-081); the tutorial's Unload All Global Form Objects (deferred; tenant-wide).",
+      "Any runtime Form change or runtime evaluation of the expression; Sections 4 onwards.",
+      "Any IDO other than FX_Orders; changing the existing FX_Orders properties or table entries.",
+      "Check Out, Check In, Undo Check Out or any other checkout-management action.",
+      "Strings, property classes (FX_Cost is selected, never edited), SQL tables or columns, Forms, runtime records; any Web Designer action.",
+      "Any unload, cache, FormSync, deployment or regeneration operation.",
+      "Direct SQL or script execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-080 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never change an IDO other than FX_Orders, its existing properties or its table entries.",
+    "Never add the property if FX_DerOrderTotal already exists under any case, or unless exactly one FX_Orders target and a complete baseline are verified.",
+    "Never click Check Out, Check In or Undo Check Out; stop if FX_Orders is not checked out to the operator.",
+    "Never open the New Property wizard more than once, invoke Finish more than once, or retry an ambiguous Finish or Save.",
+    "Never invoke Finish if the wizard shows an unexpected data type, length, decimal position or SQL type, a wrong property class, an expression readback other than FX_Count * FX_ItmsCost, a validation message or a consequential prompt; record its exact text and stop.",
+    "Never close a combobox or lookup list with Escape.",
+    "Never create or edit a string, property class, SQL object, Form or runtime record.",
+    "Never close a dirty Form or discard changes without operator approval.",
+    "Never perform any Web Designer action, unload, cache, FormSync, regeneration or deployment action.",
+    "Never use direct SQL, scripts, internal APIs or browser JavaScript, direct navigation URLs, browser refresh or restart; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim database durability, expression correctness or replay verification from same-session UI recovery."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:execute|run|apply)\\b[^.\\n]{0,50}\\b(?:SQL script|generated SQL|DDL)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\b(?:Unload All Global Form Objects|Unload IDO Metadata)\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:check[- ]?out|checkout)\\s+(?:the\\s+|any\\s+|an?\\s+)?(?:other IDO|another IDO|different IDO|IDO project|project|property class)\\b",
+    "\\b(?:browser refresh|browser restart|direct URL navigation|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:delete|remove|rename)\\b[^.\\n]{0,30}\\b(?:propert(?:y|ies)|table entr(?:y|ies)|join)\\b",
+    "\\b(?:create|modify|delete|regenerate)\\b[^.\\n]{0,50}\\b(?:Form definition|event handler|SQL table)\\b"
+  ],
+  "related_experiments": [
+    "EXP-079",
+    "EXP-078",
+    "EXP-061",
+    "EXP-048"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": null,
+    "artifacts": [
+      "FX_Orders (existing IDO, checked out; one new derived property)",
+      "FX_DerOrderTotal (Derived, class FX_Cost, expression FX_Count * FX_ItmsCost)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; a fresh IDOs Form; one visible-criterion query returns exactly one FX_Orders IDO checked out to the operator; Tables view (three entries) and the complete 16-property inventory recorded; FX_DerOrderTotal absent. Evidence: pre-F4 criterion, identity and inventory screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "One New Property wizard: every page recorded; Derived chosen; Property Name FX_DerOrderTotal; class FX_Cost with the shown types and inherit checkboxes; expression readback FX_Count * FX_ItmsCost; one Finish with its response. Evidence: wizard page screenshots and the configured state before Finish."
+    },
+    {
+      "id": "AC-3",
+      "description": "After the Finish (and at most one Save if needed) the Form is clean; exactly one new property FX_DerOrderTotal (Derived, FX_Cost, sequence and Read Only state recorded); the 16 baseline properties unchanged; still checked out to the operator. Evidence: post-Finish inventory screenshot."
+    },
+    {
+      "id": "AC-4",
+      "description": "The clean IDOs Form closed once more and reopened once more; one visible-criterion query recovers FX_Orders with 17 properties including FX_DerOrderTotal with the recorded type, class and expression. Evidence: recovery screenshots."
+    },
+    {
+      "id": "AC-5",
+      "description": "The final EXP-080 report gives decisive evidence for AC-1 to AC-4, the complete action audit with exact counts (zero checkout-management actions, one property wizard, one Derived choice, one class selection, one expression fill, one Finish, Save 0 or 1, two IDOs close/reopen pairs, two target queries, zero strings, class edits, SQL, Form or record changes, zero Designer actions, zero unloads, re-login count), the baseline and recovered inventories, the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-080",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only preflight and IDO baseline for EXP-080. Review AGENTS.md, hello-world-pt5.md Section 3 with its cautions, and the EXP-079, EXP-078, EXP-061 and EXP-048 records. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; select the Web Client and do not touch the Web Designer. If the IDOs tab is open and clean, close it once and reopen it once through Form > Open > Select Form. Check the status bar before clicking Filter in Place; type FX_Orders into IDO Name, commit with Tab, capture the criterion before F4, press F4 once and confirm exactly one FX_Orders IDO checked out to the operator. Record its identity, revision, Tables view and complete property inventory; establish that FX_DerOrderTotal is absent. Create the EXP-080 record with the baseline, the action audit and the worker-written-file inventory, with screenshots under evidence/EXP-080/. Stop before the New Property wizard.",
+  "notes": "Proposed and approved by the operator assistant under the user's overnight authorization of 2026-10-14 (auto-run the next five experiments). Part 5 Section 3. The name FX_DerOrderTotal follows the tutorial's Der prefix; the expression uses the saved property names FX_Count (base) and FX_ItmsCost (joined, EXP-079), per the tutorial's statement that derived expressions reference case-sensitive property names; its runtime evaluation is not tested here. The Label String ID override (FX_sOrderTotal) and Read Only are EXP-081 together with the joined-property labels. The tutorial's unload is deferred because it is tenant-wide and only needed before the Section 5 Form wizard. FX_Orders stays checked out. Session-expiry re-login follows the worker preamble. exact_values: FX_Orders, FX_DerOrderTotal, FX_Cost, FX_Count, FX_ItmsCost, FX_Count * FX_ItmsCost. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Orders",
+    "FX_DerOrderTotal",
+    "FX_Cost",
+    "FX_Count",
+    "FX_ItmsCost",
+    "FX_Count * FX_ItmsCost"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "Tenant-wide FX_Orders IDO change (AGENTS.md FX_ scope extension) through the Web Client IDO Collections runtime Form: FX_Orders already checked out and left checked out, one new Derived property using the existing FX_Cost class; no strings, class edits, SQL, Forms or data; no Designer action; no unload"
+}
