@@ -1,0 +1,142 @@
+{
+  "experiment_id": "EXP-069-R4",
+  "title": "EXP-069-R4 - Hello World Part 4 Section 9: FX_UM Property Class Extension with the Details/Add/Find Right-Click Menu on FX_UMCombobox (replay: edit the extension through Edit > Property Class Extension)",
+  "record_path": "experiments/EXP-069-R4-hello-world-part-4-section-9-um-property-class-extension-right-click.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Replay of EXP-069-R3, which found the inline FX_UM Property Class Extension editor (left open by EXP-069-R2) read-only: the Right-Click Menu cell offered no dropdown. The FX_UM extension exists (User version; Add/Details Form FX_UMs, Find Form FX_UMs, Property FX_UM; Right-Click Menu blank) and the FX_UMCombobox component-level Right-Click Menu is blank. Close the read-only inline editor with one no-change OK, then edit the existing extension through the documented global-object route, Designer Edit > Property Class Extension (docs/mongoose/guides/web-designer.md; cf. EXP-064 Edit > Theme): select FX_UM, set Right-Click Menu StdDetailsAddFind and commit it with Tab before OK. Re-read the extension, perform one Designer Save, and verify at runtime that right-clicking the Unit of Measure combobox offers Details, Add and Find; choose Details once on dumbbell and verify that the FX_UMs Form opens on EA (Each); close it. Close and reopen the Designer Form once and verify the extension. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt4.md Section 9 (11:04-13:12), docs/mongoose/guides/web-designer.md \"Creating a Property Class Extension object\", the EXP-069-R3 record and final report, the EXP-069-R2 T4 and T10 sections, and the EXP-064 T2 and T7 sections (the Edit > Theme global-object dialogs) before browser interaction.",
+      "Create or update only experiments/EXP-069-R4-hello-world-part-4-section-9-um-property-class-extension-right-click.md and evidence/EXP-069-R4/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task. List the browser tabs before the first tab selection.",
+      "Designer baseline: verify the Designer Form is FX_Items in User scope. The FX_UM Property Class Extension editor may still be open from EXP-069-R2 (buttons OK and Help only; Escape does not close it): record whether it is open, its four field values and whether its rows are editable (Right-Click Menu dropdown arrow present or absent), without changing anything. Record FX_UMCombobox Data Source, Inheritance and component-level Right-Click Menu (expected blank). If no Form is loaded, open FX_Items once through the toolbar Open button and Select Form.",
+      "Runtime baseline: with the runtime FX_Items Form open (open it once through Form > Open > Select Form if needed), right-click the Unit of Measure combobox once, record the menu items (expected the 25 standard items without Details, Add or Find) with a screenshot, and dismiss with one Escape and, if the menu is still open, one click on blank Form space; never choose an item.",
+      "Extension: if the inline FX_UM Property Class Extension editor is open, click its OK once without changing any field and record the response and whether the Designer Save became enabled. Then open the Designer Edit menu > Property Class Extension once and record the editor layout (the extension list, its controls and buttons). Select FX_UM in the list and record its property sheet. If its Right-Click Menu row is editable: open its dropdown, choose StdDetailsAddFind once, press Tab once to commit it, and verify that the row shows StdDetailsAddFind as committed text and that Add/Details Form FX_UMs, Find Form FX_UMs and Property FX_UM are unchanged. Then confirm the editor with its OK once, and any parent dialog it returns to with its OK once (as in EXP-064), recording each response and whether the Designer Save became enabled. If the row is not editable, record the evidence, close it with its Cancel control (or, if it has none, its OK without changing any field), and stop blocked.",
+      "Pre-Save readback: open Edit > Property Class Extension once more, select FX_UM and record all four fields; then close it with its Cancel control (or, if it has none, its OK without changing any field). If the Right-Click Menu is blank, stop blocked. Otherwise perform Designer Save 1 through the native toolbar Save and record the native response verbatim; if Save is disabled at that point, record it and stop blocked.",
+      "Runtime check 1: close the clean runtime FX_Items Form once and reopen it once; right-click the Unit of Measure combobox once; record the menu items verbatim with a screenshot; dismiss as in the baseline.",
+      "Never change FX_UMCombobox or any other component: its component-level Right-Click Menu stays blank (cleared and saved by EXP-069-R2). There is no override step.",
+      "Cache contingency, only if runtime check 1 does not show Details, Add and Find: invoke the Web Client Form > Definition > Unload All Global Form Objects once (no runtime Form dirty; close the clean runtime FX_Items Form first), reopen the runtime Form once and right-click once more. Never use the Designer unload.",
+      "Drill-down: when the Details/Add/Find menu appears, with dumbbell selected (UM EA), choose Details once; verify the FX_UMs Form opens on the EA record with its description Each; close that FX_UMs Form once (clean, no edits). Never choose Add or Find.",
+      "Designer recovery: close the clean FX_Items Designer Form once and reopen it once through the toolbar Open button; open Edit > Property Class Extension once, select FX_UM and verify the four extension settings, then close it with its Cancel control (or, if it has none, its OK without changing any field); verify the blank component-level Right-Click Menu of FX_UMCombobox. If a no-change OK made the Designer dirty, perform Designer Save 2 once and record its response; otherwise make no further Save.",
+      "Capture screenshots of the baseline Designer state (with the inline editor if open), the baseline runtime menu, the Property Class Extensions editor layout, FX_UM with the committed Right-Click Menu before OK, the pre-Save readback, each Save, each runtime menu, the FX_UMs drill-down and the Designer reopen readback.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Changing any component or component property, and changing any field of the FX_UM extension other than its Right-Click Menu.",
+      "Changing the FX_UM or FX_UMBase property classes themselves, other property class extensions, IDOs, strings, themes or User Preferences.",
+      "Any unload other than the single Web Client contingency unload; any Designer unload, FormSync, deployment or regeneration.",
+      "Choosing Add or Find in the right-click menu, editing records, runtime Save, imports or exports.",
+      "Check In, Undo Check Out or other checkout-management actions.",
+      "Browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-069-R4 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never change any component or component property; in the FX_UM extension change only the Right-Click Menu.",
+    "Never delete a property class extension, property class or component.",
+    "Never invoke the Designer Save more than twice (Save 2 only after a no-change OK made the Designer dirty), or retry an uncertain Save.",
+    "Never invoke more than one Web Client Unload All Global Form Objects, and never the Designer one.",
+    "Never choose Add or Find in a right-click menu, edit a record or use runtime Save.",
+    "Never close a dirty Form or discard changes without operator approval.",
+    "Never click the Designer top-toolbar Delete button (Delete Form Definition).",
+    "Never perform check-in, undo checkout or other checkout-management actions.",
+    "Never use direct SQL, scripts, application internals or browser JavaScript.",
+    "Never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability beyond the observed close/reopen recovery.",
+    "Never click OK on the extension editor while a combobox in it is still active; commit with Tab first.",
+    "Never use New in the Property Class Extensions editor, and never create, rename or delete an extension; change only the FX_UM Right-Click Menu."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:extension|class|component|combobox)(?:es|s)?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b"
+  ],
+  "related_experiments": [
+    "EXP-069-R3",
+    "EXP-064",
+    "EXP-069-R2",
+    "EXP-069",
+    "EXP-068-R2",
+    "EXP-048",
+    "EXP-045"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Items",
+    "artifacts": [
+      "FX_Items",
+      "FX_UMCombobox",
+      "FX_UM",
+      "FX_UMs"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; FX_Items in the Designer in User scope; the leftover extension editor state recorded (open or not, four fields, editability); FX_UMCombobox component-level Right-Click Menu blank; the baseline runtime menu recorded. Evidence: Designer and runtime-menu screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "The inline editor closed with one no-change OK (response and Save state recorded); Edit > Property Class Extension opened once with its layout recorded; FX_UM selected; Right-Click Menu set to StdDetailsAddFind and committed with Tab (committed text visible, the other three fields unchanged) before one OK (plus one parent-dialog OK if present); responses and Save state recorded. Evidence: layout, committed-row and after-OK screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "The pre-Save readback through Edit > Property Class Extension shows StdDetailsAddFind with the other three fields; the editor closed without change; Designer Save 1 with the native response verbatim; runtime check 1 after one runtime close/reopen with the menu items recorded. Evidence: readback, Save and menu screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "No component changed (the component-level Right-Click Menu stays blank); the contingency unload used at most once and only under its condition. Evidence: readbacks and the unload count."
+    },
+    {
+      "id": "AC-5",
+      "description": "The Details/Add/Find menu appears at runtime, and Details on dumbbell opens the FX_UMs Form on EA (Each); that Form closed clean. Evidence: menu and drill-down screenshots."
+    },
+    {
+      "id": "AC-6",
+      "description": "The clean Designer Form closed once and reopened once; one Edit > Property Class Extension readback shows the four FX_UM settings including StdDetailsAddFind; the component-level Right-Click Menu blank; the editor closed without change; Save 2 only if a no-change OK made the Form dirty. Evidence: reopen and readback screenshots."
+    },
+    {
+      "id": "AC-7",
+      "description": "No other change: no other component, property, class, extension, record or object changed; no Designer unload; no Add or Find used; no dialog or menu left open. Evidence: the audit and final screenshots."
+    },
+    {
+      "id": "AC-8",
+      "description": "The final EXP-069-R4 report gives decisive evidence for AC-1 to AC-7, the complete action audit with exact counts (zero extension creations, one extension field change, at most two Designer Saves, runtime close/reopen count, right-click count, at most one Web Client unload, one Details drill-down, OK count, one Designer close/reopen, zero other changes, re-login count), the negative/positive inheritance observation, the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-069-R4",
+  "replay_of": "EXP-069",
+  "initial_instruction": "T1 - Read-only preflight for EXP-069-R4 (replay of EXP-069-R3, whose inline extension editor was read-only). Review AGENTS.md, hello-world-pt4.md Section 9, the web-designer.md section \"Creating a Property Class Extension object\", the EXP-069-R3 record and final report, the EXP-069-R2 T4 and T10 sections and the EXP-064 T2 and T7 sections. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. In the Designer, verify FX_Items in User scope; record whether the inline FX_UM Property Class Extension editor is still open and its four field values, without clicking OK or changing anything. Record FX_UMCombobox Data Source, Inheritance and component-level Right-Click Menu (expected blank). In the Web Client, with the runtime FX_Items Form open (open it once through Form > Open > Select Form if needed), right-click the Unit of Measure combobox once, record the menu items with a screenshot and dismiss it with one Escape and, if still open, one blank-area click. Create the EXP-069-R4 record with the baseline, action audit and worker-written-file inventory, with screenshots under evidence/EXP-069-R4/. Stop before clicking OK on the inline editor or opening the Edit menu.",
+  "exact_values": [
+    "FX_Items",
+    "FX_UMCombobox",
+    "FX_UM",
+    "FX_UMs",
+    "StdDetailsAddFind"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User (Designer Form FX_Items in User scope; FX_UM property class extension User version: Right-Click Menu only); runtime read-only apart from the Details drill-down; at most one Web Client unload",
+  "notes": "Replay of EXP-069-R3 (run R-20261013-121005-dSie, blocked at AC-2 with no change): the inline FX_UM editor left open by EXP-069-R2 is read-only (no dropdown on the Right-Click Menu cell; it was editable only when newly created). Change: close it with one no-change OK and edit the existing extension through Designer Edit > Property Class Extension (documented global-object editor; EXP-064 used Edit > Theme with Edit, OK and Cancel), committing StdDetailsAddFind with Tab before OK; readbacks use the same route and close with Cancel. Everything else is unchanged from EXP-069-R3: no component change, Save 1 plus Save 2 only after a no-change OK made the Form dirty, one Web Client Unload All Global Form Objects as a contingency (fresh authorization for this run, never the Designer unload), the Details drill-down and the Designer close/reopen. exact_values: FX_Items, FX_UMCombobox, FX_UM, FX_UMs, StdDetailsAddFind. deny_browser_javascript. Approval pending from the operator."
+}
