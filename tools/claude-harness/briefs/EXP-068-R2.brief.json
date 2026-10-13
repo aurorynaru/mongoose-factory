@@ -3,7 +3,7 @@
   "title": "EXP-068-R2 - Hello World Part 4 Section 8b: Add the FX_UMsDescriptionGridCol Grid Column on the User-Scope FX_Items Form (replay; worker opens the Designer Form)",
   "record_path": "experiments/EXP-068-R2-hello-world-part-4-section-8b-um-description-grid-column.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Follow hello-world-pt4.md Section 8 steps 5-9 (09:18-11:04), adapted to FX_ names, on the User-scoped FX_Items Designer Form. Select the Form grid (FormCollectionGrid) and open Edit Grid Columns; select the last column (FX_UMGridCol), add one new column after it, name it FX_UMsDescriptionGridCol, and set its Data Source Binding Type Property and Binding FX_UMsDescription (offered by the binding picker since EXP-067-R2). Leave its other properties at their defaults and record them. Perform exactly one Designer Save, close and reopen the Designer Form once, and verify the column; then close and reopen the clean runtime FX_Items Form once and verify that the grid shows the column with Each, Dozen and Each for dumbbell, eggs and guitar. No unload is needed. Findings are observed only.",
   "scope": {
     "in_scope": [
@@ -130,5 +130,5 @@
     "deny_browser_javascript": true
   },
   "editing_scope": "User (Designer Form FX_Items in User scope: one new grid column); runtime read-only; no unload",
-  "notes": "Replay of EXP-068 (run R-20261013-094425-Rjnr, blocked at AC-1 with no change: the Designer was open in User scope with no Form loaded). Change: the worker may open FX_Items once through the Designer toolbar Open button and Select Form (observed route, EXP-065, EXP-067-R2) when no Form is loaded. Everything else is unchanged from EXP-068. Approval pending from the operator."
+  "notes": "Replay of EXP-068 (run R-20261013-094425-Rjnr, blocked at AC-1 with no change: the Designer was open in User scope with no Form loaded). Change: the worker may open FX_Items once through the Designer toolbar Open button and Select Form (observed route, EXP-065, EXP-067-R2) when no Form is loaded. Everything else is unchanged from EXP-068. Approved by the operator 2026-10-13 with precondition attestation: logged in, configuration OK, Web Client and Web Designer loaded, no unsaved changes."
 }
