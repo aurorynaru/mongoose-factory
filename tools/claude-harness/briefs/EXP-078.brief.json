@@ -1,0 +1,146 @@
+{
+  "experiment_id": "EXP-078",
+  "title": "EXP-078 - Hello World Part 5 Sections 1-2a: Join FX_HelloWorld01 to the FX_Orders IDO and Add FX_CusName and FX_CusAddress",
+  "record_path": "experiments/EXP-078-hello-world-part-5-section-1-2a-fx-orders-customer-join.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt5.md Sections 1-2 (00:28-03:33) for the customer table, adapted to FX_ names and the EXP-066-R2 route. In the Web Client IDO Collections runtime Form (titled IDOs), retrieve exactly the IDO FX_Orders (project FX_HelloWorldProject01, base table FX_Orders alias fxords; checked in since EXP-071-R2) and record its identity, revision, checkout state, Tables view and complete property inventory. Perform exactly one Check Out of FX_Orders. Add the secondary table FX_HelloWorld01 once with alias fxcus and the join fxcus.FX_Code = fxords.FX_CustomerID (the tutorial's \"Customer.ID = Orders.Customer ID\"). Then run the New Property wizard twice, Bound: FX_CusName bound to fxcus.FX_Label (the tutorial's customer Name) and FX_CusAddress bound to fxcus.FX_Address. Close and reopen IDO Collections once, verify the Tables view and the inventory equal the baseline plus the join and the two properties, and confirm the two FX_Orders runtime records still load. The FX_Items join is EXP-079. FX_Orders stays checked out. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt5.md Sections 1-2 (00:28-03:33), the EXP-066-R2 record (IDO Table Wizard: Table Name typed and Tab-committed, alias, Secondary / Left Outer defaults, join builder and bracketed join text; New Property wizard on a joined column; joined properties Read Only), the EXP-075 and EXP-061 records (Check Out without confirmation; New Property wizard pages; no label field), the EXP-071-R2 record (FX_Orders IDO and its four properties) and the EXP-073 record (the two FX_Orders runtime rows; blank-criteria query) before browser interaction.",
+      "Create or update only experiments/EXP-078-hello-world-part-5-section-1-2a-fx-orders-customer-join.md and evidence/EXP-078/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task. List the browser tabs before the first tab selection. Do not touch the Web Designer tab.",
+      "Fresh IDOs Form: if the IDOs tab is open and clean, close it once through its Form-tab control and reopen it once through Form > Open > Select Form. Check the status bar for Filter in Place before clicking it.",
+      "Target and baseline: in Filter in Place, type FX_Orders into the IDO Name criterion, commit with Tab, capture the criterion before F4, press F4 once and establish exactly one FX_Orders row. Record project, Revision, Locked By and the checkout state; the Tables view (expected one entry: FX_Orders, fxords, Primary Base, Inner); and the complete property inventory (expected FX_OrderNumber, FX_CustomerID, FX_Item, FX_Count and the 7 system properties). Prove FX_CusName, FX_CusAddress and any fxcus entry absent.",
+      "Check Out: if FX_Orders is checked in, invoke Check Out exactly once and record the response, Locked By and revision; if already checked out to the operator, perform none; if locked by another user or ambiguous, stop.",
+      "Join: in the Tables view click New Table once. Type FX_HelloWorld01 into the Table Name combobox once and press Tab once (never Enter, never a list pick); verify the readback FX_HelloWorld01 with no message. Type fxcus into Table Alias and press Tab once. Keep Table Type Secondary and Join Type Left Outer. In the join builder choose FX_Code as the first Column Name, fxords as the Table Name and FX_CustomerID as the second Column Name, click the builder Add once and record the join text verbatim; it must express fxcus.FX_Code = fxords.FX_CustomerID. If the builder lacks these values, type fxcus.[FX_Code] = fxords.[FX_CustomerID] into the join-text area once instead. Record every field, click the wizard OK once and record the response. Verify the Tables view lists exactly FX_Orders and FX_HelloWorld01 (fxcus) with the join.",
+      "Property FX_CusName: open the New Property wizard once, keep Bound, select fxcus.FX_Label from the Bind To lookup, Property Name FX_CusName by one plain fill, leave Property Class blank and record the shown Data Type, Length and SQL type (expected String, 100, nvarchar); Finish once and record the response.",
+      "Property FX_CusAddress: open the New Property wizard once more, keep Bound, select fxcus.FX_Address, Property Name FX_CusAddress by one plain fill, leave Property Class blank and record the shown types (expected String, 150, nvarchar); Finish once and record the response.",
+      "After each Finish, perform at most one ordinary Save only if the Form was left dirty. Verify exactly two added properties (Bound to the fxcus columns, Read Only as recorded) and the original 11 unchanged; verify FX_Orders is checked out to the operator.",
+      "Close the clean IDOs Form once more and reopen it once more (the recovery pair); run one fresh visible-criterion FX_Orders query and compare the recovered Tables view, property inventory and checkout state with the baseline plus the join and the two properties.",
+      "Runtime check: in the FX_Orders runtime Form (close it once if open and clean, reopen it once through Form > Open > Select Form) run one blank-criteria query (Filter in Place, blank criteria, one F4) and verify exactly the two rows 1 / FX001 / dumbbell / 2 and 2 / FX002 / eggs / 1 with Save disabled; change nothing.",
+      "Capture screenshots of the pre-F4 criteria, the baseline Tables view and inventory, the checkout result, the New Table dialog before OK, the Tables view after OK, each wizard before Finish, the post-change inventory, the recovered Tables view and inventory, and the runtime rows.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "The FX_Items join and the FX_Itms properties (EXP-079); the derived order total (Section 3).",
+      "Any IDO other than FX_Orders; changing the existing FX_Orders properties or the base table entry; any table other than FX_HelloWorld01 in the join.",
+      "Check In or Undo Check Out, or any checkout-management action beyond the one Check Out.",
+      "Strings, property classes, SQL tables or columns, Forms, runtime records; any Web Designer action.",
+      "Any unload, cache, FormSync, deployment or regeneration operation.",
+      "Direct SQL or script execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-078 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never change an IDO other than FX_Orders, its existing properties or its base table entry.",
+    "Never add a join, table or property if it already exists under any case, or unless exactly one FX_Orders target and complete baselines are verified.",
+    "Never check out more than once, and never click Check In or Undo Check Out; stop if the IDO is locked by another user.",
+    "Never click New Table more than once or the wizard OK more than once; never press Enter in the Table Name combobox or pick it from the list.",
+    "Never open the New Property wizard more than twice (once per property), invoke Finish more than once per property, or retry an ambiguous Finish or Save.",
+    "Never invoke Finish if the wizard shows an unexpected data type, length or SQL type, conversion or consequential prompt; record its exact text and stop.",
+    "Never close a combobox or lookup list with Escape.",
+    "Never create or edit a string, property class, SQL object, Form or runtime record.",
+    "Never close a dirty Form or discard changes without operator approval.",
+    "Never perform any Web Designer action, unload, cache, FormSync, regeneration or deployment action.",
+    "Never use direct SQL, scripts, internal APIs or browser JavaScript, direct navigation URLs, browser refresh or restart; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim database durability or replay verification from same-session UI recovery."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:execute|run|apply)\\b[^.\\n]{0,50}\\b(?:SQL script|generated SQL|DDL)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\b(?:Unload All Global Form Objects|Unload IDO Metadata)\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:check[- ]?out|checkout)\\s+(?:the\\s+|any\\s+|an?\\s+)?(?:other IDO|another IDO|different IDO|IDO project|project|property class)\\b",
+    "\\b(?:browser refresh|browser restart|direct URL navigation|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:delete|remove|rename)\\b[^.\\n]{0,30}\\b(?:propert(?:y|ies)|table entr(?:y|ies)|join)\\b",
+    "\\b(?:create|modify|delete|regenerate)\\b[^.\\n]{0,50}\\b(?:Form definition|event handler|SQL table)\\b"
+  ],
+  "related_experiments": [
+    "EXP-066-R2",
+    "EXP-075",
+    "EXP-061",
+    "EXP-071-R2",
+    "EXP-073",
+    "EXP-077"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": null,
+    "artifacts": [
+      "FX_Orders (existing IDO; one Check Out, one joined table, two new properties)",
+      "FX_HelloWorld01 (joined table, alias fxcus)",
+      "FX_CusName",
+      "FX_CusAddress",
+      "FX_Orders (existing runtime Form; read-only check)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; a fresh IDOs Form; one visible-criterion query returns exactly one FX_Orders IDO; identity, revision, checkout state, Tables view (FX_Orders / fxords only) and the complete property inventory recorded; FX_CusName, FX_CusAddress and fxcus absent. Evidence: pre-F4 criterion, identity, Tables and inventory screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "Exactly one Check Out of FX_Orders (or none if already checked out to the operator), with the response, Locked By and revision. Evidence: checkout screenshot."
+    },
+    {
+      "id": "AC-3",
+      "description": "One IDO Table Wizard: Table Name FX_HelloWorld01 (typed, Tab-committed), alias fxcus, Secondary, Left Outer, join text expressing fxcus.FX_Code = fxords.FX_CustomerID; one OK; the Tables view lists exactly FX_Orders and FX_HelloWorld01 (fxcus). Evidence: dialog-before-OK and Tables-after-OK screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "Two New Property wizards, one Finish each: FX_CusName Bound to fxcus.FX_Label and FX_CusAddress Bound to fxcus.FX_Address, no property class, shown types recorded; responses recorded. Evidence: wizard screenshots before each Finish."
+    },
+    {
+      "id": "AC-5",
+      "description": "After the Finishes (and at most one Save if needed) the Form is clean; exactly two new properties with the recorded bindings, types and Read Only state; the 11 original properties unchanged; checked out to the operator. Evidence: post-change inventory screenshots."
+    },
+    {
+      "id": "AC-6",
+      "description": "The clean IDOs Form closed once more and reopened once more; one visible-criterion query recovers FX_Orders with the Tables view (two entries and the join) and the inventory equal to the baseline plus FX_CusName and FX_CusAddress. Evidence: recovery screenshots."
+    },
+    {
+      "id": "AC-7",
+      "description": "The FX_Orders runtime Form after one close/reopen and one blank-criteria query shows exactly 1 / FX001 / dumbbell / 2 and 2 / FX002 / eggs / 1, Save disabled, nothing changed. Evidence: runtime screenshot."
+    },
+    {
+      "id": "AC-8",
+      "description": "The final EXP-078 report gives decisive evidence for AC-1 to AC-7, the complete action audit with exact counts (Check Out 0 or 1, one New Table, one wizard OK, two property wizards, two Finishes, Save 0 or 1, two IDOs close/reopen pairs, two target queries, one runtime close/reopen and query, zero strings, classes, SQL, Form or record changes, zero Designer actions, zero unloads, re-login count), the baseline and recovered inventories, the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-078",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only preflight and IDO baseline for EXP-078. Review AGENTS.md, hello-world-pt5.md Sections 1-2, and the EXP-066-R2, EXP-075, EXP-061, EXP-071-R2 and EXP-073 records. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; select the Web Client and do not touch the Web Designer. If the IDOs tab is open and clean, close it once and reopen it once through Form > Open > Select Form. Check the status bar before clicking Filter in Place; type FX_Orders into IDO Name, commit with Tab, capture the criterion before F4, press F4 once and confirm exactly one FX_Orders IDO. Record its identity, revision, checkout state, Tables view and complete property inventory; establish that FX_CusName, FX_CusAddress and any fxcus entry are absent. Create the EXP-078 record with the baseline, the action audit and the worker-written-file inventory, with screenshots under evidence/EXP-078/. Stop before Check Out.",
+  "notes": "Proposed by the operator assistant after EXP-077 (accepted; Address prerequisites A-D complete). Part 5 Sections 1-2 are split by joined table: this experiment the customer table FX_HelloWorld01 (alias fxcus; the tutorial Customer with alias Cus), EXP-079 the FX_Items table. Property names follow the tutorial (CusName, CusAddress) with the FX_ prefix; FX_Label is the factory Name equivalent. The tutorial binds through Bind Properties and Massage Property Names; the factory uses the established one-property New Property wizard (EXP-066-R2, EXP-075). Label strings (s customer name, s address) are not set on the IDO (the wizard has no label field); they become Form captions in Section 5. FX_Orders has been checked in since EXP-071-R2 (Revision 2); one Check Out is authorized and it stays checked out. No unload, no Designer. Run pauses are brought to the operator. Session-expiry re-login follows the worker preamble. exact_values: FX_Orders, FX_HelloWorld01, fxcus, FX_CusName, FX_CusAddress, FX_Code, FX_CustomerID, FX_Label, FX_Address. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Orders",
+    "FX_HelloWorld01",
+    "fxcus",
+    "FX_CusName",
+    "FX_CusAddress",
+    "FX_Code",
+    "FX_CustomerID",
+    "FX_Label",
+    "FX_Address"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "Tenant-wide FX_Orders IDO change (AGENTS.md FX_ scope extension) through the Web Client IDO Collections runtime Form: one authorized Check Out, left checked out, one joined table and two new Bound properties; no strings, classes, SQL, Forms or data; no Designer action; no unload"
+}
