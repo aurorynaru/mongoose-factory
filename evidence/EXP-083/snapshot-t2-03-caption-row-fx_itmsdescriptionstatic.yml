@@ -1,0 +1,11 @@
+- table [ref=e1844]:
+  - rowgroup [ref=e1845]:
+    - row [ref=e1846]:
+      - treeitem [ref=e1847]:
+        - generic [ref=e1848]: Caption
+      - gridcell [ref=e1850]:
+        - generic [ref=e1851]:
+          - generic [ref=e1852]: FX_sItemDescription
+          - generic [ref=e1853] [cursor=pointer]
+      - gridcell [ref=e1854]:
+        - button [ref=e1856] [cursor=pointer]: 

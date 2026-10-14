@@ -1,0 +1,11 @@
+- table [ref=e1594]:
+  - rowgroup [ref=e1595]:
+    - row [ref=e1596]:
+      - treeitem [ref=e1597]:
+        - generic [ref=e1598]: Caption
+      - gridcell [ref=e1600]:
+        - generic [ref=e1601]:
+          - generic [ref=e1602]: FX_sCustomerName
+          - generic [ref=e1603] [cursor=pointer]
+      - gridcell [ref=e1604]:
+        - button [ref=e1606] [cursor=pointer]: 
