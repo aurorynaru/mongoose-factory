@@ -1,0 +1,134 @@
+{
+  "experiment_id": "EXP-091",
+  "title": "EXP-091 - Hello World Part 5 Section 12: Create the FX_Item Component Class and Apply It to the FX_Orders Item Combobox and Grid Column",
+  "record_path": "experiments/EXP-091-hello-world-part-5-section-12-fx-item-component-class-and-assignment.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt5.md Section 12 (17:31-19:24), adapted to FX_ names and User scope, merging the accepted EXP-088 (create a component class) and EXP-089 (apply it) Designer procedures. Through Designer Edit > Component Class create one Component Class FX_Item: Validators FX_Item(%1,%2); Validate Immediately True; List Source Type IDO Collection, IDO FX_Items, Properties FX_Item, FX_Description, FX_Cost in that order, Columns to Display FX_Item and FX_Description only (expected List Source STDOLE FX_Items( PROPERTIES(FX_Item,FX_Description,FX_Cost) DISPLAY(1,2)RECORDCAP(0))). Read it back and perform Designer Save 1. Then on the FX_Orders Form set Inheritance > Component Class FX_Item with Component Class Parameters FX_ItmsDescription,FX_ItmsCost on FX_ItemCombobox and on FX_ItemGridCol (the FX_Orders joined Item Description and Item Cost properties), and perform Designer Save 2. Close and reopen the FX_Orders Designer Form once and read back the class and both components. Commit every field with Tab before OK. The runtime test is Section 13, a later experiment. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Before browser interaction read AGENTS.md, docs/mongoose/transcripts/hello-world-pt5.md Section 12 and its transcript lines (17:31-19:24), recipes/global-objects/create-component-class.md, recipes/components/apply-component-class.md (the Designer steps only) and recipes/session/session-expiry-and-stale-designer.md, and only the final Outcome (operator) sections of the EXP-088, EXP-089 and EXP-090 records. Do not read those records in full.",
+      "Create or update only experiments/EXP-091-hello-world-part-5-section-12-fx-item-component-class-and-assignment.md and evidence/EXP-091/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts. Keep the record concise: per task a short status, a step table, counts and the next permitted action.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task; never sign in inside the portal's embedded app frame (refused, EXP-080-R2) but use the procedure's top-level portal navigation. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt or dialog open across tasks unless the coordinator's next task explicitly continues it. After any pause, inspect the state read-only before acting and never replay an earlier action.",
+      "Session gate: if the Designer's Edit menu returns \"The server event processing returned an error\" once, answer its OK once, record it and stop for the coordinator: a Designer page loaded before a session expiry needs an operator reload (EXP-089); never retry it or reload it yourself.",
+      "Preflight and gates (read-only): the Designer is in User scope and clean with FX_Orders open (open it once through the Form menu recent-forms entry if needed). Open Edit > Component Class once, record whether FX_Item exists (at its sorted position and among nearby FX_ entries) and that FX_CustomerID is present, and close it with Cancel. Open Edit > Validator once, select FX_Item and record Type and Parameters (expected In Collection and FX_Items( PROPERTY(FX_Item) SETP(%1=FX_Description,%2=FX_Cost) )), then Cancel. For FX_ItemCombobox and FX_ItemGridCol record Binding, Inheritance (Component Class, Component Class Parameters, View Attributes and Edit Property Class Extension), List Source, Validators and Validate Immediately as shown. If the component class FX_Item already exists, the validator differs from expected, or either component already has a Component Class, record it and stop blocked without changing anything.",
+      "Class creation: open Edit > Component Class once, use the list New (+) control once, enter the Name FX_Item, Tab, confirm the name prompt with its OK once. Under Data Source > Validation open the Validators ellipsis once, use its + control once and choose the existing validator FX_Item, OK; with that row selected open its Parameters (cube) control once, enter %1,%2 exactly, Tab, OK once; confirm the validators editor with OK once. Set Validate Immediately to True (choose from its list, Tab once, verify).",
+      "List Source: open the List Source ellipsis once. Set Type IDO Collection and IDO FX_Items (choose each from its list, or type the exact IDO name if the list is empty; Tab and verify). Open the Properties ellipsis once, add FX_Item, FX_Description and FX_Cost in that order, verify, OK once. Open the Columns to Display control once, select FX_Item and FX_Description only (Ctrl-click the second), verify the result reads 1,2 and FX_Cost is not selected, OK once. Record the list source value verbatim, then confirm the List Source dialog with OK once. Confirm the Global Objects dialog with OK once and record whether the Designer Save became enabled.",
+      "String or message stop rule: if any prompt offers to create a string or message, answer No once and record it; never create one.",
+      "Class readback: open Edit > Component Class once, select FX_Item, record Validators, Validate Immediately and the List Source value verbatim (open an ellipsis read-only only if a value is not fully visible, and close it with Cancel), and close the dialog with Cancel. Correction contingency, at most once and only for a value that reads blank or wrong: in that dialog select FX_Item, correct only that value (Tab, verify), OK, and repeat the readback once.",
+      "Designer Save 1: invoke the native toolbar Save once and record the native response verbatim; if Save is disabled at that point, record it and make no Save.",
+      "Assignment, one component at a time, FX_ItemCombobox first: select it in the Details > Components grid, under Inheritance choose Component Class FX_Item from its list, Tab once and verify; then click the Component Class Parameters value cell, enter FX_ItmsDescription,FX_ItmsCost exactly, Tab once and verify the committed text. Record any prompt and any value that changes as a result. Then the same for FX_ItemGridCol. If FX_Item is not offered in the Component Class list, record it and stop blocked. Never change any other property.",
+      "Designer Save 2: invoke the native toolbar Save once and record the native response verbatim; if Save is disabled after the assignments, record it and stop blocked.",
+      "Close the clean FX_Orders Designer Form once through its Form-tab control and reopen it once through the Form menu recent-forms entry. Read FX_Item back once more through Edit > Component Class (Cancel) and verify both components show Component Class FX_Item and Component Class Parameters FX_ItmsDescription,FX_ItmsCost, with their other recorded values unchanged. Confirm the Designer stays clean.",
+      "Capture screenshots of the gates, the class validators editor with %1,%2 before OK, the List Source Properties and Columns to Display before OK, the class readback, each Save response, both components' Inheritance before and after assignment, and the reopened class and component readbacks.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "The runtime test of Section 13 and any Web Client action; the Customer ID combobox, grid column and class.",
+      "Changing the FX_Item validator, other validators, other component classes, property class extensions or property classes; any component property other than Component Class and Component Class Parameters on FX_ItemCombobox and FX_ItemGridCol.",
+      "Any caption, string, message or layout change; any Form other than FX_Orders.",
+      "The FX_Orders or FX_Items IDOs, SQL objects and runtime data.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; any cache unload, FormSync, deployment or regeneration.",
+      "Direct SQL or script execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-091 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never create any component class other than FX_Item, never use New more than once in the Component Classes list, and never change, copy or rename an existing component class.",
+    "Never change, create or delete a validator; in the class validators editor add only FX_Item, once.",
+    "Never create a string or message; answer No to any such prompt.",
+    "Never press OK in a dialog while a field is still in its editing state; commit with Tab first.",
+    "Never change any component property other than Component Class and Component Class Parameters of FX_ItemCombobox and FX_ItemGridCol; never change a caption, the layout or another Form; never click the Designer top-toolbar Delete button (Delete Form Definition) or Regenerate Form.",
+    "Never switch the editing scope away from User.",
+    "Never invoke the Designer Save more than twice in total (Save 1 after the class readback, Save 2 after the assignments) or retry an uncertain Save.",
+    "Never close a dirty Form or discard changes without operator approval.",
+    "Never change a property class, an extension, an IDO, SQL objects or runtime data; never open the runtime Form.",
+    "Never perform check-in, undo checkout or other checkout-management actions, or any cache unload, FormSync or deployment action.",
+    "Never use direct SQL, scripts, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim runtime behavior, database durability or replay verification from Designer readbacks."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\b(?:Unload All Global Form Objects|Unload IDO Metadata)\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:create|add)\\b[^.\\n]{0,40}\\b(?:event\\s+handler|script)s?\\b",
+    "\\b(?:create|insert|enter|save|delete)\\b[^.\\n]{0,30}\\b(?:order\\s+records?|test\\s+records?|FX_Orders\\s+rows?)\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:extension|class|component|combobox)(?:es|s)?\\b"
+  ],
+  "related_experiments": [
+    "EXP-090",
+    "EXP-089",
+    "EXP-088",
+    "EXP-087",
+    "EXP-085"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Orders",
+    "artifacts": [
+      "FX_Item (Component Class, User version)",
+      "FX_ItemCombobox (Component Class FX_Item, parameters FX_ItmsDescription,FX_ItmsCost)",
+      "FX_ItemGridCol (Component Class FX_Item, parameters FX_ItmsDescription,FX_ItmsCost)",
+      "FX_Orders (User-scoped Designer Form; at most two Saves; no runtime)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed (recipes and Outcome sections); session usable; Designer in User scope and clean with FX_Orders open; component class FX_Item absent and FX_CustomerID present; validator FX_Item read back as In Collection with FX_Items( PROPERTY(FX_Item) SETP(%1=FX_Description,%2=FX_Cost) ); FX_ItemCombobox and FX_ItemGridCol recorded with no Component Class. Evidence: gate screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "Component class FX_Item created once through New; validator FX_Item added once with Parameters %1,%2; Validate Immediately True; List Source Type IDO Collection, IDO FX_Items, Properties FX_Item, FX_Description, FX_Cost, Columns to Display 1,2 (FX_Item and FX_Description); each value committed before OK and each dialog confirmed once; the readback shows these values with the List Source verbatim; Designer Save 1 with its native response. Evidence: dialog screenshots before each OK, readback and Save screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "Component Class FX_Item and Component Class Parameters FX_ItmsDescription,FX_ItmsCost set and committed on FX_ItemCombobox and FX_ItemGridCol, with any resulting value changes recorded; Designer Save 2 with its native response. Evidence: before/after Inheritance and Save screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "The clean Form closed once and reopened once; the reopened class readback matches AC-2; both components show the AC-3 assignment; no other component, validator or class changed. Evidence: reopen readback screenshots."
+    },
+    {
+      "id": "AC-5",
+      "description": "The final EXP-091 report gives decisive evidence for AC-1 to AC-4, the complete action audit with exact counts (component classes created 1, New 1, validators added 1, list-source properties 3, displayed columns 2, class assignments 2, parameter entries 2, dialog OKs, Tab commits, string prompts and answers, contingency corrections, Designer Saves at most 2, Designer close/reopen 1, zero other component changes, zero runtime actions, zero checkout actions, re-login count), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-091",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only preflight and gates for EXP-091. Read AGENTS.md, hello-world-pt5.md Section 12 with its transcript lines, recipes/global-objects/create-component-class.md, recipes/components/apply-component-class.md (Designer steps), recipes/session/session-expiry-and-stale-designer.md, and only the Outcome sections of the EXP-088, EXP-089 and EXP-090 records. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Designer tab. If it shows a session expiry or sign-in, follow the worker-preamble procedure (top-level portal navigation only) and end the task. Confirm the Designer is in User scope and clean with FX_Orders open (open it once through the Form menu recent-forms entry if needed). Open Designer Edit > Component Class once; if it returns the server-event error, answer OK once, record it and stop for the coordinator. Otherwise record whether FX_Item exists and that FX_CustomerID is present, and close it with Cancel. Open Edit > Validator once, select FX_Item, record Type and Parameters, and close it with Cancel. Record Binding, Inheritance, List Source, Validators and Validate Immediately of FX_ItemCombobox and FX_ItemGridCol without changing anything. Create the EXP-091 record with the baseline, the action audit and the worker-written-file inventory, with screenshots under evidence/EXP-091/. Stop before using New in the Component Classes list.",
+  "notes": "Proposed by the operator assistant after EXP-090; the operator chose on 2026-10-14 one merged run for Section 12 (class creation plus assignment) because EXP-088 and EXP-089 established both procedures. Workers read the new recipes and only the Outcome sections of earlier records. Mapping: Item component class -> FX_Item; Items IDO -> FX_Items; Item, Description, Cost -> FX_Item, FX_Description, FX_Cost; Orders joined Item Description and Item Cost -> FX_ItmsDescription, FX_ItmsCost (passed to the validator outputs %1 and %2). Two Designer Saves are authorized: whether an unsaved class appears in the Component Class list is untested (in EXP-089 the class had been saved earlier), so Save 1 follows the class readback and Save 2 follows the assignments. No unload and no runtime action; the runtime test is Section 13. exact_values: FX_Item, %1,%2, True, IDO Collection, FX_Items, FX_Description, FX_Cost, 1,2, FX_ItemCombobox, FX_ItemGridCol, FX_ItmsDescription,FX_ItmsCost. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Item",
+    "%1,%2",
+    "True",
+    "IDO Collection",
+    "FX_Items",
+    "FX_Description",
+    "FX_Cost",
+    "1,2",
+    "FX_ItemCombobox",
+    "FX_ItemGridCol",
+    "FX_ItmsDescription,FX_ItmsCost"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User (one FX_ Component Class, User version; Component Class and parameters on two FX_Orders components; at most two Designer Saves of the factory-owned FX_Orders Form); no validator, other class, extension, IDO or data changes; no runtime"
+}
