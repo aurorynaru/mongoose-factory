@@ -1,6 +1,6 @@
 # Recipe: Create a Component Class with a Validator and an IDO List Source
 
-Status: **observed** in one run (EXP-088, FX_CustomerID), with one Save and a matching readback after a Designer close/reopen. It has not been repeated yet. EXP-089 confirmed it works at runtime once the class is applied to components.
+Status: **observed** in one run (EXP-088, FX_CustomerID), with one Save and a matching readback after a Designer close/reopen. EXP-089 confirmed it works at runtime once the class is applied to components. Repeated in EXP-091 (FX_Item: validator plus IDO Collection List Source), with Save and a matching readback after close/reopen. **Candidate for verified**; still pending the EXP-091 class's runtime check (Part 5 section 13).
 Category: global-objects (tenant-wide; FX_ names only; User version)
 Source experiments: Outcome section of `experiments/EXP-088-…md`
 

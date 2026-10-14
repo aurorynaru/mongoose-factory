@@ -1,6 +1,6 @@
 # Recipe: Apply a Component Class to a Combobox and a Grid Column (plus unsaved runtime check)
 
-Status: **observed** in one run (EXP-089: FX_CustomerIDCombobox and FX_CustomerIDGridCol on FX_Orders). The assignment persisted after a Save and a Designer close/reopen, and the runtime outputs filled before Save. It has not been repeated yet, and the grid column was not exercised at runtime.
+Status: **observed** in one run (EXP-089: FX_CustomerIDCombobox and FX_CustomerIDGridCol on FX_Orders). The assignment persisted after a Save and a Designer close/reopen, and the runtime outputs filled before Save. The grid column was not exercised at runtime. Repeated in EXP-091 (FX_Item on FX_ItemCombobox and FX_ItemGridCol, Parameters `FX_ItmsDescription,FX_ItmsCost`); the assignment persisted after Save and a Designer close/reopen. **Candidate for verified**; still pending the EXP-091 runtime check (Part 5 section 13).
 Category: components (Form-level change, User scope)
 Source experiments: Outcome section of `experiments/EXP-089-…md`
 
