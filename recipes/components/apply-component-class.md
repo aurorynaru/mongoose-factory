@@ -1,6 +1,6 @@
 # Recipe: Apply a Component Class to a Combobox and a Grid Column (plus unsaved runtime check)
 
-Status: **observed** in one run (EXP-089: FX_CustomerIDCombobox and FX_CustomerIDGridCol on FX_Orders). The assignment persisted after a Save and a Designer close/reopen, and the runtime outputs filled before Save. The grid column was not exercised at runtime. Repeated in EXP-091 (FX_Item on FX_ItemCombobox and FX_ItemGridCol, Parameters `FX_ItmsDescription,FX_ItmsCost`); the assignment persisted after Save and a Designer close/reopen. **Candidate for verified**; still pending the EXP-091 runtime check (Part 5 section 13).
+Status: **verified** (two runs with persistence: EXP-089 FX_CustomerID, EXP-091 FX_Item, on a combobox and a grid column each, with Save and a Designer close/reopen). Runtime fill before Save confirmed for the combobox (EXP-089, EXP-092) and the grid column (EXP-092). Same-session UI evidence only; database durability not checked.
 Category: components (Form-level change, User scope)
 Source experiments: Outcome section of `experiments/EXP-089-…md`
 
@@ -28,12 +28,14 @@ Make a component inherit a component class (validator, Validate Immediately, lis
 1. In the Web Client, close the runtime Form if it is open. Reopen it with **Form > Open > Select Form**; it opens as an add-mode placeholder.
 2. Click the toolbar **Filter in Place**, leave all criteria blank, press **F4**. Move between records only by clicking their **row-number cells**.
 3. Open the component's drop-down once. It shows the `DISPLAY` columns only. Choose a different value once. The output targets update **immediately, before any Save**.
-4. **Discard:** close the Form. Answer **No** to `Do you want to save your changes to primary collection?` (Yes / No / Cancel). Reopen and F4 to confirm the stored values.
+4. **Grid column (optional):** if the grid's target column is not visible, widen the grid with one drag of the splitter between grid and detail view. The handle has no accessibility reference, so this is a coordinate drag. The widened layout did not persist, and no layout prompt appeared (EXP-092). Click the row's cell, open its drop-down, and choose a value once; the row's output cells update immediately.
+5. **Discard:** close the Form. Answer **No** to `Do you want to save your changes to primary collection?` (Yes / No / Cancel). Reopen and F4 to confirm the stored values.
 
 ## Known pitfalls
 
 - **The Components grid's Component Class column does not refresh until after Save and reopen.** Verify in the Properties panel instead.
-- **No unload was needed:** the outputs filled after one Designer Save and a runtime close/reopen. Treat the Web Client **Unload All Global Form Objects** as a contingency that needs explicit brief authorization. Never use the Designer unload.
+- **No unload was needed** (EXP-089, EXP-092): the outputs filled after the Designer Save and a runtime close/reopen.
+- A derived property such as Order Total does not recalculate before Save (EXP-092). Treat the Web Client **Unload All Global Form Objects** as a contingency that needs explicit brief authorization. Never use the Designer unload.
 - Never press Save at runtime during a check. Discard with close and then **No**.
 
 ## Evidence
