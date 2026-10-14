@@ -1,0 +1,124 @@
+{
+  "experiment_id": "EXP-084",
+  "title": "EXP-084 - Hello World Part 5 Section 6b: Display the Item Picture on the FX_Orders Form",
+  "record_path": "experiments/EXP-084-hello-world-part-5-section-6b-fx-orders-picture-display.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt5.md Section 6 steps 3 and 7 (08:15-10:38), adapted to FX_ names and the EXP-062-R4 picture route. In the Web Designer (User scope) open the FX_Orders Form (EXP-082/EXP-083: 31 components), record the picture pair FX_ItmsPictureStatic (Static, blank caption) and FX_ItmsPictureEdit (Edit, object.FX_ItmsPicture), delete exactly FX_ItmsPictureStatic with the Components-grid trash button, change FX_ItmsPictureEdit to Type Static, keep its Location, set its Layout Size height to 9 (width unchanged), set No Colon True and, if the Formatting group offers Image and Text, Image Only. One Designer Save; close and reopen the Form once and verify; then open FX_Orders in the Web Client read-only, run one blank-criteria query and verify that order 1 (dumbbell) and order 2 (eggs) each show their item picture (EXP-063-R2: dumbbell a golden retriever puppy, eggs a small grey-faced figure) with no caption. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt5.md Section 6 (08:15-10:38) with its boundary note, the EXP-083 and EXP-082 records (the FX_Orders components; the picture pair; the runtime blank-criteria query), the EXP-062-R4 record (Components-grid trash-button deletion with a confirmation naming the component; Layout Size and Location as Top; Left; Miscellaneous > Specific Attributes > No Colon through its True/False control; the Static bound to a Binary property) and the EXP-063-R2 record (the item pictures) before browser interaction.",
+      "Create or update only experiments/EXP-084-hello-world-part-5-section-6b-fx-orders-picture-display.md and evidence/EXP-084/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task; never sign in inside the portal's embedded app frame (refused, EXP-080-R2) but use the procedure's top-level portal navigation. If the Web Designer tab shows an expiry or sign-in, record it and stop the task for the coordinator. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt open across tasks (EXP-082 timeout).",
+      "Preflight and baseline: the Designer is in User scope and clean. Open FX_Orders once through the Form menu recent-forms entry (or use it if already open and clean) and record identity, scope, the Components count (expected 31) and, for FX_ItmsPictureStatic and FX_ItmsPictureEdit, every Design, Data Source, Layout (Size, Location) and Miscellaneous value shown, plus whether a Formatting group with Image and Text exists. Record the Layout Size and Location of FX_DerOrderTotalEdit for reference. Change nothing in the baseline task.",
+      "Delete: select FX_ItmsPictureStatic in the Details > Components grid, verify its exact name and Type Static, click the grid trash button once, and confirm only a confirmation that names FX_ItmsPictureStatic (once); verify 30 components remain and FX_ItmsPictureEdit and FX_ItmsPictureGridCol are unchanged. If the confirmation names anything else, cancel and stop.",
+      "Retype and configure FX_ItmsPictureEdit: select it in the Components grid, change Design > Type from Edit to Static once through its dropdown and verify the binding object.FX_ItmsPicture is kept; set Layout > Size to <current width>; 9 (height 9, width unchanged) and keep Location; set Miscellaneous > Specific Attributes > No Colon to True through its True/False control; if Data Source > Formatting offers Image and Text, set Image Only once; verify each committed value after reselecting the component. Never rename the component.",
+      "Perform exactly one Designer Save after all values are verified; record the native response and the clean state.",
+      "Close the clean FX_Orders Designer Form once through its Form-tab control and reopen it once through the Form menu recent-forms entry; verify 30 components, FX_ItmsPictureStatic absent, and FX_ItmsPictureEdit Type Static, binding, Size, Location, No Colon and (if set) Image Only.",
+      "Runtime (read-only): in the Web Client open FX_Orders once through Form > Open > Select Form; record the mode; switch to Filter in Place if the status bar shows another mode, leave every criterion blank and press F4 once. For each of the two orders (select by its row-number cell) verify the other fields as in EXP-083 and record what the picture area shows (image, its look and any caption or colon). Do not type into any field, choose list values, press New or Save; close the runtime Form once at the end (if a close prompt asks to save a new record, answer No once).",
+      "Capture screenshots of the baseline pair, the delete confirmation, the configured FX_ItmsPictureEdit before Save, the Save, the reopened Form and each runtime order.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Regenerate Form; moving or resizing other components; Form width or Design View Size changes; the FX_ItmsPictureGridCol grid column.",
+      "Creating or editing strings or captions; component right-click menus; Section 4 property-class extensions; Sections 7 onwards.",
+      "Any Form other than FX_Orders; the FX_Orders IDO, its properties, property classes, SQL objects; adding, changing or deleting runtime records.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; FormSync, deployment or regeneration.",
+      "Direct SQL or script execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-084 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never delete any component other than FX_ItmsPictureStatic, and never delete it before recording its properties and verifying its exact name and Type.",
+    "Never change any component other than FX_ItmsPictureEdit, and on it only Type, Layout Size height, No Colon and Image and Text; never rename it or change its binding.",
+    "Never click the Designer top-toolbar Delete button (Delete Form Definition) or Regenerate Form; if a delete-the-form-definition dialog appears, click No and never press Enter.",
+    "Never create or edit a string or caption.",
+    "Never invoke the Designer Save more than once or retry an uncertain Save.",
+    "Never close a dirty Form or discard changes without operator approval (the runtime close prompt for an unsaved new record is answered No once, as allowed in scope).",
+    "Never type into runtime fields, choose list values, press New, Save or Delete at runtime, or use the Import action.",
+    "Never change the FX_Orders IDO, its properties, a property class, SQL objects or runtime data.",
+    "Never perform check-in, undo checkout or other checkout-management actions, or any cache, FormSync or deployment action.",
+    "Never use direct SQL, scripts, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim database durability or replay verification from same-session UI recovery."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\b(?:Unload All Global Form Objects|Unload IDO Metadata)\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:create|add)\\b[^.\\n]{0,40}\\b(?:event\\s+handler|script)s?\\b",
+    "\\b(?:create|insert|enter|save|delete)\\b[^.\\n]{0,30}\\b(?:order\\s+records?|test\\s+records?|FX_Orders\\s+rows?)\\b"
+  ],
+  "related_experiments": [
+    "EXP-083",
+    "EXP-082",
+    "EXP-062-R4",
+    "EXP-063-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Orders",
+    "artifacts": [
+      "FX_Orders (User-scoped Designer Form; one component deleted, one retyped; one Save; runtime read-only)",
+      "FX_ItmsPictureStatic (deleted)",
+      "FX_ItmsPictureEdit (Type Static)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; Designer in User scope and clean; FX_Orders with 31 components; the full properties of FX_ItmsPictureStatic and FX_ItmsPictureEdit and the presence or absence of Image and Text recorded. Evidence: baseline screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "FX_ItmsPictureStatic deleted once through the Components-grid trash button after a confirmation naming it; 30 components remain; FX_ItmsPictureEdit and FX_ItmsPictureGridCol unchanged. Evidence: confirmation and grid screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "FX_ItmsPictureEdit: Type Static, binding object.FX_ItmsPicture kept, Size height 9 with width and Location unchanged, No Colon True, Image Only if offered; values verified after reselecting. Evidence: screenshot before Save."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly one Designer Save with its native response; the clean Form closed once and reopened once with the AC-2 and AC-3 state recovered. Evidence: Save and reopen screenshots."
+    },
+    {
+      "id": "AC-5",
+      "description": "Runtime: one blank-criteria query shows the two orders; each shows its item picture (dumbbell: golden retriever puppy; eggs: small grey-faced figure) and whether a caption or colon remains is recorded; nothing typed or saved; the runtime Form closed once. Evidence: one screenshot per order."
+    },
+    {
+      "id": "AC-6",
+      "description": "The final EXP-084 report gives decisive evidence for AC-1 to AC-5, the complete action audit with exact counts (component deletions 1, Type changes 1, Size edits 1, No Colon 1, Image Only 0 or 1, Designer Save 1, Designer close/reopen 1, runtime open 1, F4 1, runtime close 1, zero other component edits, zero strings, zero runtime edits, zero IDO changes, zero checkout actions, re-login count), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-084",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only preflight and baseline for EXP-084. Review AGENTS.md, hello-world-pt5.md Section 6, and the EXP-083, EXP-082, EXP-062-R4 and EXP-063-R2 records. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry or sign-in, follow the worker-preamble procedure (top-level portal navigation only) and end the task. Confirm the Designer is in User scope and clean. Open FX_Orders once through the Form menu recent-forms entry (or use it if already open and clean); record identity, scope, the Components count and every shown property of FX_ItmsPictureStatic and FX_ItmsPictureEdit (Design, Data Source including any Formatting > Image and Text, Layout Size and Location, Miscellaneous), plus the Layout of FX_DerOrderTotalEdit. Leave the Form open and clean. Create the EXP-084 record with the baseline, the action audit and the worker-written-file inventory, with screenshots under evidence/EXP-084/. Stop before the deletion.",
+  "notes": "Proposed by the operator assistant after EXP-083 and approved in outline by the operator on 2026-10-14 (\"yes\"). The tutorial moves the image component to the right and enlarges it; the factory keeps its Location below Order Total and only sets the height, to avoid a Form-width change (EXP-062-R4 investigated Form width without changing it). Regenerate Form is not used; one Save and a close/reopen apply the change. Expected pictures from EXP-063-R2. Session-expiry re-login uses the top-level portal navigation only. exact_values: FX_Orders, FX_ItmsPictureStatic, FX_ItmsPictureEdit, object.FX_ItmsPicture, Static, Image Only. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Orders",
+    "FX_ItmsPictureStatic",
+    "FX_ItmsPictureEdit",
+    "object.FX_ItmsPicture",
+    "Static",
+    "Image Only"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User (the factory-owned Designer Form FX_Orders: one component deleted, one component retyped and configured, one Save); runtime read-only; no strings, IDO, class or data changes"
+}
