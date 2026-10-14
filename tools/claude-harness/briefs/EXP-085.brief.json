@@ -1,0 +1,130 @@
+{
+  "experiment_id": "EXP-085",
+  "title": "EXP-085 - Hello World Part 5 Section 4: Create the FX_Item and FX_CustomerID Property Class Extensions for Drill-Downs from FX_Orders",
+  "record_path": "experiments/EXP-085-hello-world-part-5-section-4-fx-orders-property-class-extensions.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt5.md Section 4 (05:05-06:32), adapted to FX_ names and User scope (the tutorial's Site Default scope is not authorized). In the Web Designer open the FX_Orders Form and, through each combobox's Inheritance > Edit Property Class Extension ellipsis, create two User-version Property Class Extensions: FX_ItemCombobox -> extension FX_Item with Add/Details Form FX_Items, Find Form FX_Items, Property FX_Item and Right-Click Menu StdDetailsAddFind; FX_CustomerIDCombobox -> extension FX_CustomerID with Add/Details Form FX_HelloWorld01, Find Form FX_HelloWorld01, Property FX_Code and Right-Click Menu StdDetailsAddFind. The tutorial's Items and Customers Forms map to FX_Items and FX_HelloWorld01, and its Customer property ID maps to FX_Code (the FX_CustomerID class domain, EXP-070). Commit every field with Tab before OK (EXP-069-R2 lost an uncommitted Right-Click Menu). Read both extensions back through Designer Edit > Property Class Extension (the EXP-069-R4 Global Objects route), perform one Designer Save, close and reopen the Form once and read them back again. No component changes: the component-level right-click menus are Section 5 step 8 (EXP-086), which also runs the runtime drill-down test. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt5.md Section 4 (05:05-06:32), docs/mongoose/guides/web-designer.md \"Creating a Property Class Extension object\", the EXP-069-R2 T3, T4 and T10 sections and outcome (the exact creation prompt, the field entry routes, the lost uncommitted Right-Click Menu), the EXP-069-R4 record and outcome (the Global Objects dialog route, Tab commits, Cancel readbacks), the EXP-070 record (the FX_Item and FX_CustomerID class domains) and the EXP-084 record (the FX_Orders components) before browser interaction.",
+      "Create or update only experiments/EXP-085-hello-world-part-5-section-4-fx-orders-property-class-extensions.md and evidence/EXP-085/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task; never sign in inside the portal's embedded app frame (refused, EXP-080-R2) but use the procedure's top-level portal navigation. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt open across tasks (EXP-082 timeout).",
+      "Preflight and gates: the Designer is in User scope and clean. Open FX_Orders once through the Form menu recent-forms entry (or Select Form) and record identity and scope. Open Designer Edit > Property Class Extension once read-only and record the extension list: FX_UM present (positive control), FX_Item and FX_CustomerID expected absent; close it with its Cancel control. For FX_ItemCombobox and FX_CustomerIDCombobox record the Data Source, the Inheritance property class (expected FX_Item and FX_CustomerID) and the component-level Behavior values Add/Details Form, Find Form, Property and Right-Click Menu, without changing anything.",
+      "Stop gate: if either extension already exists, or a combobox's property class is not as expected, record it and stop blocked without creating anything.",
+      "Extension creation, one combobox at a time in the order FX_ItemCombobox then FX_CustomerIDCombobox, each in its own task: select the combobox in the Details > Components grid, expand Inheritance and click the Edit Property Class Extension ellipsis once. Answer Yes once only to the exact prompt \"Property Class Extension <class> does not exist. Create it?\" for that class; if the editor opens without that prompt or the prompt names another class, record it and stop. In the Property Class Extension dialog set Add/Details Form and Find Form by choosing the Form from the field's list, set Property by choosing it from its list or, if the list is empty (EXP-069-R2), by typing the exact name, and choose Right-Click Menu StdDetailsAddFind (not a Search or Action variant). Press Tab once after each field and verify its committed (non-editing) text before the next field. Verify all four values visible, then press the dialog OK once and record the response and the Designer Save state.",
+      "Readback: open Designer Edit > Property Class Extension once, select FX_Item and then FX_CustomerID, record all four fields of each, and close the dialog with its Cancel control.",
+      "Correction contingency, at most once per extension and only for a field that reads blank or wrong: in that Global Objects dialog select the extension, set only that field (choose the value, Tab once, verify the committed text), press OK once and any parent dialog OK once (EXP-069-R4), then repeat the readback once.",
+      "Perform exactly one Designer Save through the native toolbar Save and record the native response verbatim; if Save is disabled at that point, record it and make no Save.",
+      "Close the clean FX_Orders Designer Form once through its Form-tab control and reopen it once through the Form menu recent-forms entry. Read both extensions back once more through Edit > Property Class Extension (closing with Cancel), and record the two comboboxes' component-level Behavior values again (expected unchanged from the preflight).",
+      "Capture screenshots of the gates (the extension list, each combobox's Inheritance and Behavior values), each creation prompt, each extension dialog with all four committed values before OK, each readback, the Save and the reopened readback.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Changing the comboboxes' component-level Right-Click Menu, Add/Details Form, Find Form or Property, and the runtime drill-down test (Section 5 step 8, EXP-086); Sections 7-13.",
+      "Site Default or any scope other than User; any Form other than FX_Orders; any component, caption, string or layout change.",
+      "The FX_UM extension, property classes themselves, the FX_Orders IDO, SQL objects and runtime data; the Web Client runtime.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; any cache unload, FormSync, deployment or regeneration.",
+      "Direct SQL or script execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-085 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never create any extension other than FX_Item and FX_CustomerID, never answer Yes to a creation prompt more than once per class, and never overwrite an extension that unexpectedly exists.",
+    "Never use New, Copy or Delete in the Property Class Extensions list, and never rename or remove an extension; never change the FX_UM extension.",
+    "Never press OK in an extension dialog while a field is still in its editing state; commit with Tab first.",
+    "Never change a component or component property (including the component-level Right-Click Menu), a caption, a string, the layout or another Form; never click the Designer top-toolbar Delete button (Delete Form Definition) or Regenerate Form.",
+    "Never switch the editing scope away from User.",
+    "Never invoke the Designer Save more than once or retry an uncertain Save.",
+    "Never close a dirty Form or discard changes without operator approval.",
+    "Never change a property class, the FX_Orders IDO, SQL objects or runtime data; never open the runtime Form.",
+    "Never perform check-in, undo checkout or other checkout-management actions, or any cache unload, FormSync or deployment action.",
+    "Never use direct SQL, scripts, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim runtime behavior, database durability or replay verification from Designer readbacks."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\b(?:Unload All Global Form Objects|Unload IDO Metadata)\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:create|add)\\b[^.\\n]{0,40}\\b(?:event\\s+handler|script)s?\\b",
+    "\\b(?:create|insert|enter|save|delete)\\b[^.\\n]{0,30}\\b(?:order\\s+records?|test\\s+records?|FX_Orders\\s+rows?)\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:extension|class|component|combobox)(?:es|s)?\\b"
+  ],
+  "related_experiments": [
+    "EXP-069-R4",
+    "EXP-069-R2",
+    "EXP-070",
+    "EXP-084",
+    "EXP-082"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Orders",
+    "artifacts": [
+      "FX_Item (Property Class Extension, User version)",
+      "FX_CustomerID (Property Class Extension, User version)",
+      "FX_Orders (User-scoped Designer Form; one Save; no component change)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; Designer in User scope and clean; FX_Orders opened; the extension list shows FX_UM and no FX_Item or FX_CustomerID; FX_ItemCombobox and FX_CustomerIDCombobox show property classes FX_Item and FX_CustomerID; their component-level Behavior values recorded. Evidence: gate screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "FX_Item created through FX_ItemCombobox: one ellipsis click, one Yes to the exact prompt, Add/Details Form FX_Items, Find Form FX_Items, Property FX_Item, Right-Click Menu StdDetailsAddFind, each committed with Tab and visible before one OK. Evidence: prompt and pre-OK screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "FX_CustomerID created through FX_CustomerIDCombobox the same way with Add/Details Form FX_HelloWorld01, Find Form FX_HelloWorld01, Property FX_Code, Right-Click Menu StdDetailsAddFind. Evidence: prompt and pre-OK screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "The Edit > Property Class Extension readback shows all eight values (corrections, if any, within the contingency); exactly one Designer Save with its native response verbatim, or Save disabled recorded. Evidence: readback and Save screenshots."
+    },
+    {
+      "id": "AC-5",
+      "description": "The clean Form closed once and reopened once; the reopened readback shows all eight values; the component-level Behavior values of both comboboxes unchanged from the preflight; FX_UM unchanged. Evidence: reopen readback screenshots."
+    },
+    {
+      "id": "AC-6",
+      "description": "The final EXP-085 report gives decisive evidence for AC-1 to AC-5, the complete action audit with exact counts (extensions created 2, creation prompts answered Yes 2, extension OKs, contingency corrections, Designer Save at most 1, Designer close/reopen 1, zero component changes, zero runtime actions, zero checkout actions, re-login count), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-085",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only preflight and gates for EXP-085. Review AGENTS.md, hello-world-pt5.md Section 4, the web-designer.md section \"Creating a Property Class Extension object\", the EXP-069-R2 T3, T4 and T10 sections and outcome, the EXP-069-R4 record and outcome, and the EXP-070 and EXP-084 records. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Designer tab. If it shows a session expiry or sign-in, follow the worker-preamble procedure (top-level portal navigation only) and end the task. Confirm the Designer is in User scope and clean. Open FX_Orders once through the Form menu recent-forms entry and record identity and scope. Open Designer Edit > Property Class Extension once, record the extension list (FX_UM expected present, FX_Item and FX_CustomerID expected absent) and close it with Cancel. Record the Data Source, Inheritance property class and component-level Behavior values (Add/Details Form, Find Form, Property, Right-Click Menu) of FX_ItemCombobox and FX_CustomerIDCombobox without changing anything. Create the EXP-085 record with the baseline, the action audit and the worker-written-file inventory, with screenshots under evidence/EXP-085/. Stop before the first Edit Property Class Extension ellipsis click.",
+  "notes": "Proposed by the operator assistant after EXP-084 and approved in outline by the operator on 2026-10-14 (\"Section 4 drill-downs\"). Follows the EXP-069-R2/R4 FX_UM procedure: creation through the inline ellipsis with Yes, every field committed with Tab before OK, readbacks through the Global Objects dialog closed with Cancel. User scope replaces the tutorial's Site Default. Mapping: Items Form -> FX_Items, Property Item -> FX_Item; Customers Form -> FX_HelloWorld01, Property ID -> FX_Code. Section 5 step 8 (clearing the component-level right-click menus) and the runtime drill-down test follow in EXP-086. No unload is authorized. exact_values: FX_Orders, FX_ItemCombobox, FX_CustomerIDCombobox, FX_Item, FX_CustomerID, FX_Items, FX_HelloWorld01, FX_Code, StdDetailsAddFind. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Orders",
+    "FX_ItemCombobox",
+    "FX_CustomerIDCombobox",
+    "FX_Item",
+    "FX_CustomerID",
+    "FX_Items",
+    "FX_HelloWorld01",
+    "FX_Code",
+    "StdDetailsAddFind"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User (two FX_ Property Class Extensions, User version, plus at most one Designer Save of the factory-owned FX_Orders Form); no component, class, IDO or data changes; no runtime"
+}
