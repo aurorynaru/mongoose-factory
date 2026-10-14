@@ -1,0 +1,135 @@
+{
+  "experiment_id": "EXP-089",
+  "title": "EXP-089 - Hello World Part 5 Section 10: Apply the FX_CustomerID Component Class to the FX_Orders Customer ID Combobox and Grid Column, with an Unsaved Runtime Check",
+  "record_path": "experiments/EXP-089-hello-world-part-5-section-10-apply-fx-customerid-component-class.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt5.md Section 10 (15:08-16:22), adapted to FX_ names and User scope. First re-read the FX_CustomerID validator and component class read-only (closing the EXP-088 gap). In the Web Designer on the FX_Orders Form, set Inheritance > Component Class FX_CustomerID with Component Class Parameters FX_CusName,FX_CusAddress on FX_CustomerIDCombobox and on FX_CustomerIDGridCol (the FX_Orders joined properties for Customer Name and Address, EXP-078). Perform one Designer Save and verify after one Designer close/reopen. Then in the Web Client, after one runtime close/reopen and one blank-criteria query, on order 1: Customer ID FX001, Customer Name Factory test one, Address 1 Factory Street, Item dumbbell, Count 2, Order Total 90.00, choose FX002 once from the Customer ID drop-down and verify that Customer Name and Address change immediately, before any Save, to Factory test two and 2 Factory Street. Never save: discard the change by closing the Form and answering No to the save prompt, then reopen and verify that both orders are unchanged. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, docs/mongoose/transcripts/hello-world-pt5.md Sections 7-10 and 13 with their transcript lines (10:38-16:22, 19:24-20:21), the EXP-087 and EXP-088 records and outcomes (validator and class values, the Global Objects dialogs, Cancel readbacks), the EXP-086 record (FX_Orders runtime, right-click menus, menu dismissal, Save toast), the EXP-083 record (runtime blank-criteria query, row-number navigation, order values) and the EXP-082 record (FX_CustomerIDGridCol and the grid columns) before browser interaction.",
+      "Create or update only experiments/EXP-089-hello-world-part-5-section-10-apply-fx-customerid-component-class.md and evidence/EXP-089/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task; never sign in inside the portal's embedded app frame (refused, EXP-080-R2) but use the procedure's top-level portal navigation. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt, menu or unsaved runtime change open across tasks. After any pause, inspect the state read-only before acting and never replay an earlier action.",
+      "Designer gates (read-only): the Designer is in User scope and clean on FX_Orders (open it once through the Form menu recent-forms entry if needed). Open Edit > Validator once, select FX_CustomerID and record Type and Parameters (expected In Collection and FX_HelloWorld01( PROPERTY(FX_Code) SETP(%1=FX_Label,%2=FX_Address) )) and Error Message, then Cancel. Open Edit > Component Class once, select FX_CustomerID and record Validators, Validate Immediately and List Source (expected FX_CustomerID(%1,%2), True and the EXP-088 list source string), then Cancel. For FX_CustomerIDCombobox and FX_CustomerIDGridCol record Binding, Inheritance (Component Class, Component Class Parameters, View Attributes and Edit Property Class Extension), List Source and Validators as shown. If a value differs from expected, or either component already has a Component Class, record it and stop blocked.",
+      "Runtime baseline (read-only): in the Web Client, if FX_Orders is open close it once (clean); open it once through Form > Open > Select Form, record the mode, switch to Filter in Place if needed, leave every criterion blank and press F4 once; verify order 1: Customer ID FX001, Customer Name Factory test one, Address 1 Factory Street, Item dumbbell, Count 2, Order Total 90.00 and order 2: Customer ID FX002, Customer Name Factory test two, Address 2 Factory Street, Item eggs, Count 1, Order Total 6.99 (move between orders only by clicking their row-number cells); record the grid columns visible for each row. Do not open any drop-down in the baseline.",
+      "Assignment, one component at a time, FX_CustomerIDCombobox first: select it in the Details > Components grid, under Inheritance choose Component Class FX_CustomerID from its list, Tab once and verify; then enter Component Class Parameters FX_CusName,FX_CusAddress exactly (type it, or use its editor if the field opens one), Tab once and verify the committed text. Record any prompt and any value that changes as a result (for example List Source or Validators). Then the same for FX_CustomerIDGridCol. Never change any other property.",
+      "Perform exactly one Designer Save through the native toolbar Save and record the native response verbatim; if Save is disabled after the assignments, record it and stop blocked.",
+      "Close the clean FX_Orders Designer Form once through its Form-tab control and reopen it once through the Form menu recent-forms entry; verify both components show Component Class FX_CustomerID and Component Class Parameters FX_CusName,FX_CusAddress and that their other recorded values are as after the assignment.",
+      "Runtime check: close the clean runtime FX_Orders Form once and reopen it once as in the baseline (blank-criteria F4 once) and select order 1. Open the Customer ID drop-down once, record its columns and rows with a screenshot, and choose FX002 once from the list (never type). Without any Save, record Customer ID, Customer Name and Address in the detail view and the order 1 grid row, with a screenshot. Expected: Customer Name Factory test two and Address 2 Factory Street immediately.",
+      "Discard: close the runtime FX_Orders Form once; answer No once to the prompt to save changes and record its exact text (if no prompt appears, record it and stop blocked for the coordinator without further action). Reopen FX_Orders once (blank-criteria F4 once) and verify order 1: Customer ID FX001, Customer Name Factory test one, Address 1 Factory Street, Item dumbbell, Count 2, Order Total 90.00 and order 2: Customer ID FX002, Customer Name Factory test two, Address 2 Factory Street, Item eggs, Count 1, Order Total 6.99 unchanged.",
+      "Cache contingency, only if after choosing FX002 neither Customer Name nor Address changed: first perform the discard step above, then close the clean runtime Form, invoke the Web Client Form > Definition > Unload All Global Form Objects once (no runtime Form dirty), reopen FX_Orders once (F4 once), choose FX002 once more on order 1, record the result, and perform the discard step once more. Never use the Designer unload.",
+      "Close the runtime FX_Orders Form once at the end (clean).",
+      "Capture screenshots of the validator and class readbacks, both components' Inheritance values before and after assignment, the Save, the reopened readback, the runtime baseline, the drop-down list, the detail view after choosing FX002, the save prompt before answering, and the reopened orders after the discard.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "The Item validator and class (Sections 11-12); the Item combobox and grid column; grid-cell editing.",
+      "Changing the FX_CustomerID validator or component class, other validators or classes, property class extensions or property classes; any component property other than Component Class and Component Class Parameters on the two named components.",
+      "Saving any runtime change; New, Delete or Save at runtime; typing into runtime fields; choosing Add, Details or Find.",
+      "The FX_Orders or FX_HelloWorld01 IDOs, SQL objects and stored data.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; FormSync, deployment or regeneration; the Designer unload or IDO metadata unloads.",
+      "Direct SQL or script execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-089 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never change any component property other than Component Class and Component Class Parameters of FX_CustomerIDCombobox and FX_CustomerIDGridCol.",
+    "Never change, create or remove a validator, component class, property class extension, property class or component.",
+    "Never press runtime Save or any save option, never answer Yes to a save prompt, and never leave a changed runtime record open at the end of a task.",
+    "Never type into runtime fields; change the Customer ID only by choosing FX002 from its drop-down, at most once per runtime check.",
+    "Never invoke the Designer Save more than once or retry an uncertain Save.",
+    "Never invoke more than one Web Client Unload All Global Form Objects, only under the contingency condition, and never the Designer one.",
+    "Never press New or Delete at runtime or choose Add, Details or Find.",
+    "Never close a dirty Designer Form or discard Designer changes without operator approval.",
+    "Never click the Designer top-toolbar Delete button (Delete Form Definition) or Regenerate Form.",
+    "Never perform check-in, undo checkout or other checkout-management actions, FormSync or deployment.",
+    "Never use direct SQL, scripts, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability or replay verification from same-session UI observations."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:extension|class|component|combobox)(?:es|s)?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b",
+    "\\b(?:create|add)\\b[^.\\n]{0,40}\\b(?:event\\s+handler|script)s?\\b",
+    "\\b(?:create|insert|enter|save|delete)\\b[^.\\n]{0,30}\\b(?:order\\s+records?|test\\s+records?|FX_Orders\\s+rows?)\\b"
+  ],
+  "related_experiments": [
+    "EXP-088",
+    "EXP-087",
+    "EXP-086",
+    "EXP-083",
+    "EXP-082",
+    "EXP-078"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Orders",
+    "artifacts": [
+      "FX_CustomerIDCombobox (Component Class FX_CustomerID, parameters FX_CusName,FX_CusAddress)",
+      "FX_CustomerIDGridCol (Component Class FX_CustomerID, parameters FX_CusName,FX_CusAddress)",
+      "FX_Orders (User-scoped Designer Form; one Save; runtime change discarded unsaved)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; Designer FX_Orders in User scope and clean; validator FX_CustomerID and component class FX_CustomerID read back with the expected values (closing the EXP-088 gap); both components' Inheritance and Data Source values recorded with no Component Class; runtime baseline shows both orders as expected. Evidence: readback, component and baseline screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "Component Class FX_CustomerID and Component Class Parameters FX_CusName,FX_CusAddress set and committed on FX_CustomerIDCombobox and FX_CustomerIDGridCol, with any resulting value changes recorded; exactly one Designer Save with its native response; after one Designer close/reopen both components show the assignment. Evidence: before/after, Save and reopen screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "At runtime after one close/reopen, choosing FX002 from the Customer ID drop-down on order 1 changes Customer Name to Factory test two and Address to 2 Factory Street before any Save; the drop-down columns recorded; the contingency unload used at most once and only under its condition. Evidence: drop-down and post-choice screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "The change was discarded: one close with one No to the save prompt (exact text recorded); after reopening, order 1: Customer ID FX001, Customer Name Factory test one, Address 1 Factory Street, Item dumbbell, Count 2, Order Total 90.00 and order 2: Customer ID FX002, Customer Name Factory test two, Address 2 Factory Street, Item eggs, Count 1, Order Total 6.99; no runtime Save; the runtime Form closed clean at the end. Evidence: prompt and reopened-order screenshots."
+    },
+    {
+      "id": "AC-5",
+      "description": "The final EXP-089 report gives decisive evidence for AC-1 to AC-4, the complete action audit with exact counts (class assignments 2, parameter entries 2, Designer Save 1, Designer close/reopen 1, runtime opens and closes, F4 count, drop-down choices, save prompts answered No, runtime Saves 0, unloads, zero other component changes, zero checkout actions, re-login count), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-089",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only gates and baseline for EXP-089. Review AGENTS.md, hello-world-pt5.md Sections 7-10 and 13 with their transcript lines, the EXP-087 and EXP-088 records and outcomes, and the EXP-086, EXP-083 and EXP-082 records. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry or sign-in, follow the worker-preamble procedure (top-level portal navigation only) and end the task. In the Designer confirm User scope and a clean FX_Orders Form; read back the FX_CustomerID validator (Edit > Validator) and the FX_CustomerID component class (Edit > Component Class), closing each with Cancel; record Binding, Inheritance, List Source and Validators of FX_CustomerIDCombobox and FX_CustomerIDGridCol without changing anything. In the Web Client perform the runtime baseline: close FX_Orders once if open (clean), open it once through Form > Open > Select Form, leave criteria blank and press F4 once, and verify both orders by clicking their row-number cells; open no drop-down. Create the EXP-089 record with the baseline, the action audit and the worker-written-file inventory, with screenshots under evidence/EXP-089/. Stop before changing any Component Class.",
+  "notes": "Proposed by the operator assistant after EXP-088; the operator chose on 2026-10-14 the Designer assignment plus an unsaved runtime check (\"Designer + unsaved test\"). Component Class Parameters FX_CusName,FX_CusAddress are the FX_Orders joined properties for Customer Name and Address (EXP-078), passed to the validator outputs %1 and %2. The runtime check changes no stored data: the FX002 choice is discarded by closing without saving and the reopen verifies both orders. The Web Client Unload All Global Form Objects is authorized once only as a contingency; never the Designer unload. exact_values: FX_Orders, FX_CustomerIDCombobox, FX_CustomerIDGridCol, FX_CustomerID, FX_CusName,FX_CusAddress, FX002, Factory test two, 2 Factory Street, FX001, Factory test one, 1 Factory Street. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Orders",
+    "FX_CustomerIDCombobox",
+    "FX_CustomerIDGridCol",
+    "FX_CustomerID",
+    "FX_CusName,FX_CusAddress",
+    "FX002",
+    "Factory test two",
+    "2 Factory Street",
+    "FX001",
+    "Factory test one",
+    "1 Factory Street"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User (Component Class and parameters on two FX_Orders components and one Designer Save of the factory-owned FX_Orders Form); runtime change discarded unsaved; at most one Web Client unload as a contingency"
+}
