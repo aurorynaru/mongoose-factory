@@ -1,0 +1,25 @@
+- generic [ref=f2e1]:
+  - generic [ref=f2e3]:
+    - banner [ref=f2e4]:
+      - img "Infor logo" [ref=f2e5]
+    - main [ref=f2e6]:
+      - heading "Infor CloudIdentities - Sign In" [level=1] [ref=f2e7]
+      - textbox "Username" [active] [ref=f2e13]
+      - generic [ref=f2e15]:
+        - generic [ref=f2e16]:
+          - generic [ref=f2e18]:
+            - textbox "Password" [ref=f2e22]
+            - button "Show password" [ref=f2e23] [cursor=pointer]
+          - link "Forgot/reset password?" [ref=f2e27] [cursor=pointer]:
+            - /url: https://mingle-ifspublic.se1.inforcloudsuite.com/ifsui/accounts/recoverpassword/<secret>SECRET_MONGOOSE_TENANT</secret>
+        - button "Sign in" [ref=f2e29] [cursor=pointer]
+      - link "Contact Us" [ref=f2e34] [cursor=pointer]:
+        - /url: https://mingle-ifspublic.se1.inforcloudsuite.com/ifsui/accounts/contactus/<secret>SECRET_MONGOOSE_TENANT</secret>
+  - contentinfo [ref=f2e35]:
+    - generic [ref=f2e36]:
+      - link "Infor Privacy Policy" [ref=f2e37] [cursor=pointer]:
+        - /url: https://www.infor.com/about/privacy
+      - generic [ref=f2e38]: "|"
+      - link "Infor Terms of Use" [ref=f2e39] [cursor=pointer]:
+        - /url: https://www.infor.com/about/legal
+    - generic [ref=f2e40]: Copyright © 2026 Infor. All rights reserved.

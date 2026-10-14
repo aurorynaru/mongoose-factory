@@ -1,0 +1,27 @@
+- generic [ref=f3e5]:
+  - banner "Portal Top Navigation Bar" [ref=f3e8]:
+    - generic [ref=f3e10]:
+      - generic:
+        - generic [ref=f3e12]:
+          - generic:
+            - link "Home" [ref=f3e14] [cursor=pointer]
+            - button "Open navigation menu" [ref=f3e628] [cursor=pointer]
+        - generic [ref=f3e19]:
+          - tablist "Tabs" [ref=f3e20]:
+            - tab "System Administrator" [ref=f3e21] [cursor=pointer]
+            - tab "Mongoose" [selected] [ref=f3e629] [cursor=pointer]
+          - button "Tabs menu more" [ref=f3e33] [cursor=pointer]
+        - generic [ref=f3e35]:
+          - generic:
+            - generic [ref=f3e36]: DEM
+            - button "Health Notifications" [ref=f3e40] [cursor=pointer]
+            - button "User menu" [ref=f3e42] [cursor=pointer]
+            - button "Hide Smart Panel" [ref=f3e44] [cursor=pointer]
+  - main [ref=f3e45]:
+    - iframe [ref=f3e651]
+    - complementary "Smart Panel" [ref=f3e218]:
+      - generic [ref=f3e219]:
+        - button "Insights" [ref=f3e654] [cursor=pointer]
+        - button "Inbox" [ref=f3e222] [cursor=pointer]
+        - button "Smart Help" [ref=f3e225] [cursor=pointer]
+        - button "Popout Smart Panel" [ref=f3e228] [cursor=pointer]

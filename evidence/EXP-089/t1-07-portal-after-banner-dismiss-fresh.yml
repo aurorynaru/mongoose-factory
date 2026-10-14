@@ -1,0 +1,11 @@
+- generic [ref=f3e4]:
+  - generic:
+    - generic [ref=f3e5]:
+      - banner "Portal Top Navigation Bar" [ref=f3e8]:
+        - generic [ref=f3e10]
+        - generic
+      - main [ref=f3e45]:
+        - region "System Administrator" [ref=f3e53]
+        - complementary "Smart Panel" [ref=f3e218]
+    - listbox [ref=f3e449] [cursor=pointer]:
+      - generic: Inbox
