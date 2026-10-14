@@ -1,0 +1,132 @@
+{
+  "experiment_id": "EXP-093",
+  "title": "EXP-093 - Hello World Part 6 Sections 1-4 Discovery: FX_Orders Script Language, Form Script Editor, Event Handlers and Data Change Fields (Read-Only), with an Unsaved Count Change at Runtime",
+  "record_path": "experiments/EXP-093-hello-world-part-6-section-1-4-fx-orders-script-and-event-discovery.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Prepare hello-world-pt6.md Sections 1-4 (00:27-04:16), adapted to FX_ names and User scope, by read-only discovery on the FX_Orders Form. In the Web Designer record Behavior > Script Language, open the form script editor once through its Edit Form Script entry point to record the editor and its current content, and leave it with Cancel without any change; record the Details > Event Handlers grid; and record the Events group (Data Change and any other event fields) of FX_ItemCombobox, FX_CountEdit, FX_DerOrderTotalEdit, FX_ItemGridCol, FX_CountGridCol and FX_DerOrderTotalGridCol. No Designer change and no Designer Save. Then in the Web Client, after one runtime close/reopen and one blank-criteria query, on order 1: Customer ID FX001, Customer Name Factory test one, Address 1 Factory Street, Item dumbbell, Item Description 45 pound iron, Cost 45.00, Count 2, Order Total 90.00, change Count to 3 once (typed, Tab once) and record Order Total before any Save (the tutorial says the derived total changes only after Save). Never save: discard by closing and answering No, reopen and verify both orders. Findings are observed only and prepare EXP-094, which will use operator-supplied script code.",
+  "scope": {
+    "in_scope": [
+      "Before browser interaction read AGENTS.md, docs/mongoose/transcripts/hello-world-pt6.md Sections 1-4 with their transcript lines (00:27-04:16), its Reference data 'Form script / event mapping' table and its open questions 1-4, recipes/components/apply-component-class.md (the runtime steps and pitfalls) and recipes/session/session-expiry-and-stale-designer.md, and only the final Outcome (operator) sections of the EXP-053, EXP-055, EXP-081 and EXP-092 records. Do not read those records in full.",
+      "Create or update only experiments/EXP-093-hello-world-part-6-section-1-4-fx-orders-script-and-event-discovery.md and evidence/EXP-093/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task; never sign in inside the portal's embedded app frame (refused, EXP-080-R2) but use the procedure's top-level portal navigation. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt, menu or unsaved runtime change open across tasks. After any pause, inspect the state read-only before acting and never replay an earlier action.",
+      "Designer gate (read-only): the Designer is in User scope and clean on FX_Orders (open it once through the Form menu recent-forms entry if needed); record the Form-level Properties Behavior group, including Script Language and the control beside it that leads to Edit Form Script (exact labels and icons).",
+      "Form script editor (read-only): open the form script editor once through its Edit Form Script entry point. Record the dialog title, its buttons and controls, the language shown and the full current content verbatim (expected a placeholder such as 'methods go here'; record whatever is shown), with a screenshot. Never click into or type in the editor. Leave it once with Cancel; if there is no Cancel, use its close control; if any prompt about saving appears, answer No once and record its exact text. Afterwards verify the Designer is still clean (Save disabled).",
+      "Event handlers (read-only): open Details > Event Handlers once and record every row shown (event name, sequence, response type, disabled flag and summary), with a screenshot; do not open any row's parameters and do not use New. Record whether a custom event name list is visible anywhere without opening a dialog.",
+      "Component events (read-only): for each of FX_ItemCombobox, FX_CountEdit, FX_DerOrderTotalEdit, FX_ItemGridCol, FX_CountGridCol and FX_DerOrderTotalGridCol, select it in the Details > Components grid (or the Properties component selector) and record its Binding and the full Events group of its Properties panel (Data Change and every other event field, with values), expanding the group by a view click if collapsed; screenshot FX_CountEdit and FX_CountGridCol. Never open an event field's drop-down or editor. If a named component does not exist, record it and continue with the others.",
+      "Runtime baseline (read-only): in the Web Client, if FX_Orders is open close it once (clean); open it once through Form > Open > Select Form, record the mode, switch to Filter in Place if needed, leave every criterion blank and press F4 once; verify order 1: Customer ID FX001, Customer Name Factory test one, Address 1 Factory Street, Item dumbbell, Item Description 45 pound iron, Cost 45.00, Count 2, Order Total 90.00 and order 2: Customer ID FX002, Customer Name Factory test two, Address 2 Factory Street, Item eggs, Item Description cage free, Cost 6.99, Count 1, Order Total 6.99 (move between orders only by clicking their row-number cells).",
+      "Runtime Count check: on order 1 click the detail-view Count field once, select its whole content, type 3 once, press Tab once, and record without any Save the Count, Cost, Order Total and the order 1 grid row values that are visible, with a screenshot. Expected by the tutorial: Order Total stays 90.00 before Save; record whatever is shown as observed only.",
+      "Discard: close the runtime FX_Orders Form once; answer No once to the prompt to save changes and record its exact text; if any other prompt appears answer No once and record its exact text; if no save prompt appears, record it and stop blocked for the coordinator without further action. Then reopen FX_Orders once through Form > Open > Select Form (blank criteria, F4 once; row-number cells only) and verify order 1: Customer ID FX001, Customer Name Factory test one, Address 1 Factory Street, Item dumbbell, Item Description 45 pound iron, Cost 45.00, Count 2, Order Total 90.00 and order 2: Customer ID FX002, Customer Name Factory test two, Address 2 Factory Street, Item eggs, Item Description cage free, Cost 6.99, Count 1, Order Total 6.99 unchanged.",
+      "Close the runtime FX_Orders Form once at the end (clean).",
+      "Capture screenshots of the Designer gate (Behavior group with Script Language), the script editor before leaving it, the Designer after leaving it, the Event Handlers grid, the FX_CountEdit and FX_CountGridCol Events groups, the runtime baseline, the order 1 values after the Count change, the save prompt before answering, and the reopened orders.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Any Designer change: no Designer Save, no property edit, no Script Language change, no typing or pasting in the script editor, no event handler made, edited or removed, no event field set.",
+      "Writing any form-script code (EXP-094 will use operator-supplied code); Sections 5-8 (chart Form, image import, theme).",
+      "Saving any runtime change; New, Delete or Save at runtime; typing into runtime fields other than the one Count entry; choosing Add, Details or Find; changing Item or Customer ID; grid-cell editing; splitter drags.",
+      "The FX_Orders, FX_Items or other IDOs, SQL objects and stored data; any global object.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; FormSync, deployment or regeneration; any cache or metadata unload.",
+      "Direct SQL or script execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-093 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never make any Designer change: no Designer Save, no property edit, no Script Language change, no event field value, no event handler made, edited or removed.",
+    "Never type, paste or click inside the form script editor's text area; leave it only with Cancel or its close control, and never with OK.",
+    "Never press runtime Save or any save option, never answer Yes to any prompt, and never leave a changed runtime record open at the end of a task.",
+    "Never type into runtime fields except one entry of 3 into the order 1 Count field; never change Item or Customer ID.",
+    "Never invoke any unload, in the Web Client or the Designer.",
+    "Never press New or Delete at runtime or choose Add, Details or Find.",
+    "Never click the Designer top-toolbar Delete button (Delete Form Definition) or Regenerate Form.",
+    "Never perform check-in, undo checkout or other checkout-management actions, FormSync or deployment.",
+    "Never use direct SQL, scripts, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability or replay verification from same-session UI observations."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:extension|class|component|combobox)(?:es|s)?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b",
+    "\\b(?:create|add)\\b[^.\\n]{0,40}\\b(?:event\\s+handler|script)s?\\b",
+    "\\b(?:create|insert|enter|save|delete)\\b[^.\\n]{0,30}\\b(?:order\\s+records?|test\\s+records?|FX_Orders\\s+rows?)\\b"
+  ],
+  "related_experiments": [
+    "EXP-092",
+    "EXP-081",
+    "EXP-055",
+    "EXP-053"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Orders",
+    "artifacts": [
+      "FX_Orders (User-scoped Form; Designer read-only: Script Language, form script editor, Event Handlers, component Events groups)",
+      "FX_ItemCombobox, FX_CountEdit, FX_DerOrderTotalEdit, FX_ItemGridCol, FX_CountGridCol and FX_DerOrderTotalGridCol (read-only Events readback)",
+      "FX_CountEdit (runtime: order 1 Count 2 -> 3, unsaved, discarded)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; Designer FX_Orders in User scope and clean; Script Language and the Edit Form Script entry point recorded with exact labels. Evidence: Designer gate screenshot."
+    },
+    {
+      "id": "AC-2",
+      "description": "The form script editor opened once; its title, controls, language and full current content recorded verbatim; left once with Cancel (or its close control) with no change and any prompt answered No; the Designer still clean afterwards. Evidence: editor and post-editor screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "Event Handlers grid rows recorded; Binding and the full Events group recorded for FX_ItemCombobox, FX_CountEdit, FX_DerOrderTotalEdit, FX_ItemGridCol, FX_CountGridCol and FX_DerOrderTotalGridCol (or their absence noted), with no value set and no drop-down or editor opened. Evidence: Event Handlers, FX_CountEdit and FX_CountGridCol screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "Runtime: baseline shows order 1: Customer ID FX001, Customer Name Factory test one, Address 1 Factory Street, Item dumbbell, Item Description 45 pound iron, Cost 45.00, Count 2, Order Total 90.00 and order 2: Customer ID FX002, Customer Name Factory test two, Address 2 Factory Street, Item eggs, Item Description cage free, Cost 6.99, Count 1, Order Total 6.99; Count typed as 3 once on order 1 with Order Total recorded before any Save (observed only); discarded with one close and one No (exact prompt text recorded); the reopen shows both orders unchanged; the runtime Form closed clean at the end; no Designer change. Evidence: baseline, post-change, prompt and reopened-order screenshots."
+    },
+    {
+      "id": "AC-5",
+      "description": "The final EXP-093 report gives decisive evidence for AC-1 to AC-4, the complete action audit with exact counts (Designer dialogs opened and how each was left, components inspected, runtime opens and closes, F4 count, typed entries, prompts answered No with texts, runtime Saves 0, Designer Saves 0, unloads 0, checkout actions 0, re-login count), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-093",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only Designer discovery for EXP-093. Read AGENTS.md, hello-world-pt6.md Sections 1-4 with their transcript lines, its 'Form script / event mapping' table and open questions 1-4, recipes/components/apply-component-class.md (runtime steps and pitfalls), recipes/session/session-expiry-and-stale-designer.md, and only the Outcome (operator) sections of EXP-053, EXP-055, EXP-081 and EXP-092. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry or sign-in, follow the worker-preamble procedure (top-level portal navigation only) and end the task. In the Designer confirm User scope and a clean FX_Orders Form; record the Behavior group with Script Language and the Edit Form Script entry point; open the form script editor once, record it verbatim without touching its text, and leave it with Cancel; confirm the Designer is still clean. Create the EXP-093 record with these observations, the action audit and the worker-written-file inventory, with screenshots under evidence/EXP-093/. Stop before opening Details > Event Handlers.",
+  "notes": "Proposed by the operator assistant after EXP-092 (Part 5 complete); the operator chose on 2026-10-15 a read-only discovery run for Part 6 Sections 1-4 and will supply the form-script code for EXP-094 from the tutorial video (about 01:27-01:58), since the transcript does not contain it. Tenant mapping: Count -> FX_Count (FX_CountEdit, FX_CountGridCol); joined Items cost -> FX_ItmsCost; derived order total -> FX_DerOrderTotal = FX_Count * FX_ItmsCost (Read Only since EXP-081; FX_DerOrderTotalEdit, FX_DerOrderTotalGridCol). The one runtime Count entry tests the tutorial's claim that the derived total changes only after Save; it is discarded by closing without saving and the reopen verifies both orders. exact_values: FX_Orders, FX_ItemCombobox, FX_CountEdit, FX_DerOrderTotalEdit, FX_ItemGridCol, FX_CountGridCol, FX_DerOrderTotalGridCol, 3, 90.00, FX001, FX002, dumbbell, eggs. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Orders",
+    "FX_ItemCombobox",
+    "FX_CountEdit",
+    "FX_DerOrderTotalEdit",
+    "FX_ItemGridCol",
+    "FX_CountGridCol",
+    "FX_DerOrderTotalGridCol",
+    "3",
+    "90.00",
+    "FX001",
+    "FX002",
+    "dumbbell",
+    "eggs"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User (no Designer change; form script editor opened read-only and cancelled); runtime Count change on FX_Orders order 1 discarded unsaved; no unload"
+}
