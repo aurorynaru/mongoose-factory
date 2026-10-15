@@ -1,0 +1,232 @@
+- generic [ref=e5]:
+  - banner "Portal Top Navigation Bar" [ref=e6]:
+    - generic [ref=e8]:
+      - generic:
+        - generic [ref=e10]:
+          - generic:
+            - link "Home" [ref=e12] [cursor=pointer]
+            - button "Open navigation menu" [ref=e15] [cursor=pointer]
+        - generic [ref=e17]:
+          - tablist "Tabs" [ref=e18]:
+            - tab "System Administrator" [ref=e19] [cursor=pointer]:
+              - link "System Administrator" [ref=e20]
+              - button "Close tab System Administrator" [ref=e23]
+            - tab "Mongoose" [selected] [ref=e24] [cursor=pointer]:
+              - link "Mongoose" [ref=e25]
+              - button "Open tab menu" [ref=e28]
+              - button "Close tab Mongoose" [ref=e32]
+          - button "Tabs menu more" [ref=e36] [cursor=pointer]
+        - generic [ref=e38]:
+          - generic:
+            - generic [ref=e39]: DEM
+            - button "Health Notifications" [ref=e43] [cursor=pointer]
+            - button "User menu" [ref=e45] [cursor=pointer]
+            - button "Hide Smart Panel" [ref=e47] [cursor=pointer]
+    - generic:
+      - generic:
+        - generic: Infor OS Portal
+        - generic: 2026.10.01 (20260909-164316, 20260909-154143, 1064, 1583, 727)
+        - generic:
+          - generic:
+            - text: Copyright © 2026 Infor. All rights reserved. The word and design marks set forth herein are trademarks and/or registered trademarks of Infor and/or its affiliates and subsidiaries. All other trademarks listed herein are the property of their respective owners
+            - generic: www.infor.com
+            - text: .
+  - main [ref=e48]:
+    - iframe [active] [ref=e59]:
+      - generic [ref=f1e1]:
+        - banner [ref=f1e2]:
+          - heading "Infor Mongoose Application Development Framework" [level=1] [ref=f1e3]
+          - link "Skip to Main Content" [ref=f1e4] [cursor=pointer]:
+            - /url: "#formContainer"
+          - navigation [ref=f1e5]:
+            - button "Explorer" [ref=f1e6] [cursor=pointer]
+            - separator
+            - button "Form" [ref=f1e10] [cursor=pointer]
+            - separator
+            - button "Actions" [ref=f1e137] [cursor=pointer]
+            - separator
+            - button "Edit" [ref=f1e12] [cursor=pointer]
+            - separator
+            - button "View" [ref=f1e14] [cursor=pointer]
+            - separator
+            - button "Window" [ref=f1e16] [cursor=pointer]
+            - separator
+            - button "Help" [ref=f1e18] [cursor=pointer]
+            - button "<secret>SECRET_MONGOOSE_USERNAME</secret> | G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT" [ref=f1e20] [cursor=pointer]
+          - toolbar [ref=f1e22]:
+            - button "Open" [ref=f1e23] [cursor=pointer]:
+              - button "Open" [ref=f1e24]
+            - button "Save" [disabled] [ref=f1e26]:
+              - button "Save" [disabled]
+            - button "New" [ref=f1e27] [cursor=pointer]:
+              - button "New" [ref=f1e139]
+            - button "Delete" [ref=f1e28] [cursor=pointer]:
+              - button "Delete" [ref=f1e141]
+            - button "Refresh" [ref=f1e29] [cursor=pointer]:
+              - button "Refresh" [ref=f1e143]
+            - button "Filter in Place" [ref=f1e30] [cursor=pointer]:
+              - button "FiP" [ref=f1e145]
+            - button "Get More Rows" [disabled] [ref=f1e31]:
+              - button "Get More Rows" [disabled]
+            - button "System Notes" [ref=f1e32] [cursor=pointer]:
+              - button "System Notes" [ref=f1e370]
+            - button "Documents" [ref=f1e33] [cursor=pointer]:
+              - button "Documents" [ref=f1e372]
+            - button "Send email for the current object" [ref=f1e34] [cursor=pointer]:
+              - button "Send email for the current object" [ref=f1e374]
+            - button "Export To Excel" [ref=f1e35] [cursor=pointer]:
+              - button "Export To Excel" [ref=f1e147]
+            - button [ref=f1e36] [cursor=pointer]:
+              - button "Designer" [ref=f1e37]
+            - button "Designer" [ref=f1e39] [cursor=pointer]:
+              - button "Designer" [ref=f1e40]
+            - button "Help Current Form" [ref=f1e42] [cursor=pointer]:
+              - button "Help Current Form" [ref=f1e149]
+        - region [ref=f1e43]:
+          - heading "Explorer" [ref=f1e44]
+          - button "Collapse Panel"
+          - grid [ref=f1e45]:
+            - columnheader "Name"
+            - tree [ref=f1e50]:
+              - generic [ref=f1e51]:
+                - table [ref=f1e52]:
+                  - rowgroup [ref=f1e53]:
+                    - row [ref=f1e54]:
+                      - treeitem [ref=f1e55]:
+                        - treeitem "My Folders" [ref=f1e57]
+                - table [ref=f1e58]:
+                  - rowgroup [ref=f1e59]:
+                    - row [ref=f1e60]:
+                      - treeitem [ref=f1e61]:
+                        - treeitem "Master Explorer" [ref=f1e63]
+                - table [ref=f1e64]:
+                  - rowgroup [ref=f1e65]:
+                    - row [ref=f1e66]:
+                      - treeitem [ref=f1e67]:
+                        - treeitem "Public Folders" [ref=f1e69]
+                - table [ref=f1e70]:
+                  - rowgroup [ref=f1e71]:
+                    - row [ref=f1e72]:
+                      - treeitem [ref=f1e73]:
+                        - treeitem "User Folders" [ref=f1e75]
+        - region [ref=f1e76]:
+          - main [ref=f1e77]:
+            - tablist [ref=f1e151]:
+              - tab [selected] [ref=f1e152] [cursor=pointer]:
+                - heading "FX_Orders" [level=2] [ref=f1e153]
+                - button "Close Panel FX_Orders" [ref=f1e154]:
+                  - img "Close Panel FX_Orders"
+            - tabpanel "FX_Orders" [ref=f1e155]:
+              - form [ref=f1e156]:
+                - generic [ref=f1e157]:
+                  - grid [ref=f1e158]:
+                    - grid [ref=f1e159]:
+                      - row [ref=f1e160]:
+                        - columnheader [ref=f1e161]
+                      - grid [ref=f1e166]:
+                        - generic [ref=f1e167]:
+                          - table [ref=f1e376]:
+                            - rowgroup [ref=f1e377]:
+                              - row [ref=f1e378]:
+                                - gridcell "1" [ref=f1e379]
+                          - table [ref=f1e382]:
+                            - rowgroup [ref=f1e383]:
+                              - row [ref=f1e384]:
+                                - gridcell "2" [active] [selected] [ref=f1e385]
+                    - grid [ref=f1e174]:
+                      - row [ref=f1e387]:
+                        - columnheader "Order Number" [ref=f1e343]
+                        - columnheader "* Customer ID" [ref=f1e388]
+                        - columnheader "Customer Name" [ref=f1e186]
+                        - columnheader "Address" [ref=f1e191]
+                        - columnheader "* Item" [ref=f1e389]
+                        - columnheader "Item Description" [ref=f1e201]
+                        - columnheader "Cost" [ref=f1e206]
+                        - columnheader "Count" [ref=f1e211]
+                        - columnheader "Order Total" [ref=f1e216]
+                        - columnheader [ref=f1e221]
+                      - grid [ref=f1e225]:
+                        - generic [ref=f1e226]:
+                          - table [ref=f1e390]:
+                            - rowgroup [ref=f1e391]:
+                              - row "1 FX001 Factory test one 1 Factory Street dumbbell 45 pound iron 45.00 2 90.00" [ref=f1e392]:
+                                - gridcell "1" [ref=f1e393]
+                                - gridcell "FX001" [ref=f1e395]
+                                - gridcell "Factory test one" [ref=f1e397]
+                                - gridcell "1 Factory Street" [ref=f1e399]
+                                - gridcell "dumbbell" [ref=f1e401]
+                                - gridcell "45 pound iron" [ref=f1e403]
+                                - gridcell "45.00" [ref=f1e405]
+                                - gridcell "2" [ref=f1e407]
+                                - gridcell "90.00" [ref=f1e409]
+                                - gridcell [ref=f1e411]
+                          - table [ref=f1e413]:
+                            - rowgroup [ref=f1e414]:
+                              - row "2 FX002 Factory test two 2 Factory Street eggs cage free 6.99 1 6.99" [ref=f1e415]:
+                                - gridcell "2" [selected] [ref=f1e416]
+                                - gridcell "FX002" [ref=f1e418]
+                                - gridcell "Factory test two" [ref=f1e420]
+                                - gridcell "2 Factory Street" [ref=f1e422]
+                                - gridcell "eggs" [ref=f1e424]
+                                - gridcell "cage free" [ref=f1e426]
+                                - gridcell "6.99" [ref=f1e428]
+                                - gridcell "1" [ref=f1e430]
+                                - gridcell "6.99" [ref=f1e432]
+                                - gridcell [ref=f1e434]
+                  - separator [ref=f1e250]: ⁞
+                  - generic [ref=f1e251]: "Order Number:"
+                  - generic [ref=f1e253]:
+                    - generic [ref=f1e254]: "Order Number:"
+                    - textbox "Order Number:" [ref=f1e259]: "2"
+                  - generic [ref=f1e260]: "Customer ID:"
+                  - generic [ref=f1e262]:
+                    - text: "*"
+                    - generic [ref=f1e263]: "Customer ID:"
+                    - generic [ref=f1e266]:
+                      - combobox "Customer ID:" [ref=f1e268]: FX002
+                      - button "Open" [ref=f1e269] [cursor=pointer]
+                  - generic [ref=f1e270]: "Customer Name:"
+                  - generic [ref=f1e272]:
+                    - generic [ref=f1e273]: "Customer Name:"
+                    - textbox "Customer Name:" [ref=f1e278]: Factory test two
+                  - generic [ref=f1e279]: "Address:"
+                  - generic [ref=f1e281]:
+                    - generic [ref=f1e282]: "Address:"
+                    - textbox "Address:" [ref=f1e287]: 2 Factory Street
+                  - generic [ref=f1e288]: "Item:"
+                  - generic [ref=f1e290]:
+                    - text: "*"
+                    - generic [ref=f1e291]: "Item:"
+                    - generic [ref=f1e294]:
+                      - combobox "Item:" [ref=f1e296]: eggs
+                      - button "Open" [ref=f1e297] [cursor=pointer]
+                  - generic [ref=f1e298]: "Item Description:"
+                  - generic [ref=f1e300]:
+                    - generic [ref=f1e301]: "Item Description:"
+                    - textbox "Item Description:" [ref=f1e306]: cage free
+                  - generic [ref=f1e307]: "Cost:"
+                  - generic [ref=f1e309]:
+                    - generic [ref=f1e310]: "Cost:"
+                    - textbox "Cost:" [ref=f1e315]: "6.99"
+                  - generic [ref=f1e316]: "Count:"
+                  - generic [ref=f1e318]:
+                    - generic [ref=f1e319]: "Count:"
+                    - textbox "Count:" [ref=f1e324]: "1"
+                  - generic [ref=f1e325]: "Order Total:"
+                  - generic [ref=f1e327]:
+                    - generic [ref=f1e328]: "Order Total:"
+                    - textbox "Order Total:" [ref=f1e333]: "6.99"
+                  - img "C(FX_ItmsPictureStatic)" [ref=f1e335]
+          - text: ⁞
+        - region
+        - region [ref=f1e78]:
+          - textbox [ref=f1e83]: (Object 2 of 2)
+          - generic [ref=f1e85]: en-US
+          - separator [ref=f1e86]
+          - img "Powered by Infor" [ref=f1e87]
+    - complementary "Smart Panel" [ref=e60]:
+      - generic [ref=e61]:
+        - button "Insights" [ref=e64] [cursor=pointer]
+        - button "Inbox" [ref=e67] [cursor=pointer]
+        - button "Smart Help" [ref=e70] [cursor=pointer]
+        - button "Popout Smart Panel" [ref=e73] [cursor=pointer]
