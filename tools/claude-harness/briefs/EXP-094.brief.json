@@ -1,0 +1,125 @@
+{
+  "experiment_id": "EXP-094",
+  "title": "EXP-094 - Hello World Part 6 Section 2: FX_Orders Form Script Method CalcOrderTotal (Operator-Supplied Tutorial Code), One Designer Save, Readback After Close/Reopen",
+  "record_path": "experiments/EXP-094-hello-world-part-6-section-2-fx-orders-form-script-calcordertotal.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt6.md Section 2 (01:07-02:05), adapted to FX_ names and User scope: on the FX_Orders Form in the Web Designer, open the Script Editor once, replace its whole content with the exact text of docs/mongoose/scripts/FX_Orders-form-script.vb (the generated EXP-093 template header with class FX_Orders, plus the operator-supplied tutorial method CalcOrderTotal writing FX_DerOrderTotal), read it back verbatim, confirm with OK, and perform exactly one Designer Save. Verify persistence after one Designer close/reopen by opening the Script Editor once more and reading the content back, then restore a clean Designer with one close answering No and one reopen (the EXP-093 dirty-on-open behavior). No event handler, no component event, no runtime action. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Before browser interaction read AGENTS.md, docs/mongoose/transcripts/hello-world-pt6.md Section 2 and its transcript lines (01:07-02:05), docs/mongoose/transcripts/hello-world-pt6-form-script.md, docs/mongoose/scripts/FX_Orders-form-script.vb (the exact text to enter), recipes/session/session-expiry-and-stale-designer.md, and only the final Outcome (operator) sections of the EXP-081 and EXP-093 records. Do not read those records in full.",
+      "Create or update only experiments/EXP-094-hello-world-part-6-section-2-fx-orders-form-script-calcordertotal.md and evidence/EXP-094/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task; never sign in inside the portal's embedded app frame (refused, EXP-080-R2) but use the procedure's top-level portal navigation. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt, menu or unsaved runtime change open across tasks. After any pause, inspect the state read-only before acting and never replay an earlier action.",
+      "Designer gate (read-only): the Designer is in User scope and clean on FX_Orders (Save, Undo and Regenerate Form disabled; open it once through the Form menu recent-forms entry if needed); Behavior > Script Language reads Visual Basic. If the Designer is not clean or the session shows the server-event error, record it and stop blocked.",
+      "Open the Script Editor once with the blue pencil at the top of the Properties panel (Form selected). Before any edit read its full content and compare it with the EXP-093 template (lines 1-19: Option Explicit On ... Public Class FX_Orders / Inherits FormScript / ' Methods go here ... End Namespace). If it differs (for example it already contains a method), record it verbatim, leave the editor with Cancel and stop blocked.",
+      "Enter the script: click once inside the editor text, select all of its content (Ctrl+A), and enter the complete text of docs/mongoose/scripts/FX_Orders-form-script.vb in one operation, replacing the template. Then read back the whole editor content verbatim (accessibility tree and screenshot, scrolling the editor view if needed) and compare it line by line with the file. Differences only in leading whitespace or a trailing blank line are recorded and accepted. If anything else differs (for example auto-inserted closing brackets or quotes), make at most one correction: Ctrl+A again and re-enter the complete file text once, typing it key by key if the editor auto-completes on fill, then read back again. If it still differs, leave the editor with Cancel, record both texts and stop blocked without Save.",
+      "Confirm the editor with OK once. Record any message, compile error or prompt verbatim with a screenshot. If an error appears, acknowledge it once, leave the editor with Cancel if it is still open, record it and stop blocked without Save; the operator decides how to restore the Designer. Never click the editor's Run, Download or Help buttons.",
+      "Perform exactly one Designer Save through the native toolbar Save and record its native response verbatim (toast, dialog or error) with a screenshot. If an error appears, record it and stop blocked; never retry the Save.",
+      "Persistence: close the clean FX_Orders Designer Form once through its Form-tab control (record any prompt; if a save prompt appears, answer No once and record its text) and reopen it once through the Form menu recent-forms entry. Verify Save is disabled. Open the Script Editor once more, read back the whole content verbatim and compare it with docs/mongoose/scripts/FX_Orders-form-script.vb, then leave the editor with Cancel.",
+      "Restore clean: if Save is enabled after that Cancel (the EXP-093 behavior), close the FX_Orders Designer Form once with its Form-tab control, answer No once to 'Do you want to save the form definition?' (record the exact text), reopen it once through the recent-forms entry and verify Save, Undo and Regenerate Form disabled. If Save is still enabled, record it and stop blocked.",
+      "Capture screenshots of the Designer gate, the editor before the edit, the editor after entry (all lines, scrolling if needed), any OK response, the Save response, the reopened Designer, the editor readback after the reopen, any close prompt before answering, and the final clean Designer.",
+      "Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Event handlers (Section 3: the Calc Order Total event, Form Script Method response, P(FX_Count),P(FX_ItmsCost) parameters) and component Data Change events (Section 4); these are a later experiment.",
+      "Any Designer change other than the Script Editor content and its one Save: no Script Language change, no property edit, no component change.",
+      "Any runtime action in the Web Client; Sections 5-8 (chart Form, image import, theme).",
+      "Changing the script text beyond the exact file content; debugging or fixing compile errors; using the editor's Run, Download or Help buttons.",
+      "The FX_Orders, FX_Items or other IDOs, SQL objects and stored data; any global object.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; FormSync, deployment or regeneration; any cache or metadata unload.",
+      "Direct SQL execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, the script file, recipes or files outside the EXP-094 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never enter script text other than the exact content of docs/mongoose/scripts/FX_Orders-form-script.vb; at most one correction re-entry.",
+    "Never invoke the Designer Save more than once or retry an uncertain Save; never Save after an editor or compile error.",
+    "Never click the Script Editor's Run, Download or Help buttons.",
+    "Never make any other Designer change: no Script Language change, no property edit, no component change, no event field value, no event handler made, edited or removed.",
+    "Never answer Yes to a close prompt; at most two Designer close/reopen pairs (persistence, then restore clean).",
+    "Never perform any runtime action in the Web Client.",
+    "Never invoke any unload, in the Web Client or the Designer.",
+    "Never click the Designer top-toolbar Delete button (Delete Form Definition) or Regenerate Form.",
+    "Never perform check-in, undo checkout or other checkout-management actions, FormSync or deployment.",
+    "Never use direct SQL, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability, compile success at runtime or replay verification from same-session UI observations."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:extension|class|component|combobox)(?:es|s)?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b",
+    "\\b(?:create|insert|enter|save|delete)\\b[^.\\n]{0,30}\\b(?:order\\s+records?|test\\s+records?|FX_Orders\\s+rows?)\\b",
+    "\\b(?:create|add)\\b[^.\\n]{0,40}\\bevent\\s+handlers?\\b"
+  ],
+  "related_experiments": [
+    "EXP-093",
+    "EXP-081"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Orders",
+    "artifacts": [
+      "FX_Orders form script (User scope): class FX_Orders with method CalcOrderTotal(OrderCount As String, ItemCost As String) writing FX_DerOrderTotal",
+      "FX_Orders (User-scoped Designer Form; one Designer Save)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; Designer FX_Orders in User scope and clean; Script Language Visual Basic; the Script Editor opened once and its pre-edit content matches the EXP-093 template. Evidence: gate and pre-edit editor screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "The editor content was replaced with the exact text of docs/mongoose/scripts/FX_Orders-form-script.vb (at most one correction), read back verbatim and compared line by line with recorded differences; OK confirmed once with its response recorded; exactly one Designer Save with its native response recorded; no error. Evidence: post-entry editor, OK and Save screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "After one Designer close/reopen, Save disabled and the Script Editor readback matches docs/mongoose/scripts/FX_Orders-form-script.vb (the method CalcOrderTotal and the line ThisForm.PrimaryIDOCollection.SetCurrentObjectPropertyPlusModifyRefresh(\"FX_DerOrderTotal\",OrderTotal.ToString()) present); the editor left with Cancel; the Designer restored clean (Save, Undo, Regenerate Form disabled) with at most one more close answering No and one reopen. Evidence: reopened Designer, readback and final clean screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "No other Designer change, no event handler or component event, no runtime action, no unload, no checkout action, no Run/Download/Help click, no Yes answer."
+    },
+    {
+      "id": "AC-5",
+      "description": "The final EXP-094 report gives decisive evidence for AC-1 to AC-4, the complete action audit with exact counts (Script Editor opens and how each was left, text entries and corrections, OK clicks, Designer Saves 1, Designer close/reopen pairs, prompts answered No with texts, errors, re-login count), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-094",
+  "replay_of": null,
+  "initial_instruction": "T1 - Gates and script entry for EXP-094. Read AGENTS.md, hello-world-pt6.md Section 2 with its transcript lines, docs/mongoose/transcripts/hello-world-pt6-form-script.md, docs/mongoose/scripts/FX_Orders-form-script.vb, recipes/session/session-expiry-and-stale-designer.md, and only the Outcome (operator) sections of EXP-081 and EXP-093. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry or sign-in, follow the worker-preamble procedure (top-level portal navigation only) and end the task. In the Designer confirm User scope, a clean FX_Orders Form and Script Language Visual Basic; open the Script Editor once with the Properties pencil and compare its content with the EXP-093 template (stop blocked with Cancel if it differs); replace the whole content with the exact text of docs/mongoose/scripts/FX_Orders-form-script.vb and read it back verbatim, with at most one correction as the brief allows. If the readback matches, confirm the editor with OK once and record its response (if not, Cancel and stop blocked). Do not Save: the Designer stays dirty with no dialog open. Create the EXP-094 record with the gate, the readback comparison, the OK response, the action audit and the file inventory, with screenshots under evidence/EXP-094/, and stop before the Designer Save.",
+  "notes": "Proposed by the operator assistant after EXP-093; the operator supplied the tutorial's form-script code as a screenshot on 2026-10-15 (docs/mongoose/transcripts/hello-world-pt6-form-script.png, transcribed in hello-world-pt6-form-script.md) and chose to continue with the script step. docs/mongoose/scripts/FX_Orders-form-script.vb is the EXP-093 generated template (class FX_Orders, Option Explicit On) with the placeholder replaced by the tutorial method, adapted only by the property name DerOrderTotal -> FX_DerOrderTotal (derived FX_Count * FX_ItmsCost, Read Only since EXP-081). EXP-093 found that opening the Script Editor marks the Form changed even on Cancel, so the persistence readback is followed by one authorized close answering No and one reopen. T1 stops after OK and before the Designer Save so the coordinator can review the readback before anything is saved; no dialog is left open across tasks.The event handler and Data Change wiring (Sections 3-4) and the runtime test are later experiments. The prohibited pattern on creating scripts is narrowed to event handlers because entering the script method is the authorized action. exact_values: FX_Orders, CalcOrderTotal, FX_DerOrderTotal, OrderCount, ItemCost, Option Explicit On, Inherits FormScript. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Orders",
+    "CalcOrderTotal",
+    "FX_DerOrderTotal",
+    "OrderCount",
+    "ItemCost",
+    "Option Explicit On",
+    "Inherits FormScript",
+    "ThisForm.PrimaryIDOCollection.SetCurrentObjectPropertyPlusModifyRefresh(\"FX_DerOrderTotal\",OrderTotal.ToString())"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User (FX_Orders form script content and one Designer Save); at most two Designer close/reopen pairs answering No; no runtime action; no unload"
+}
