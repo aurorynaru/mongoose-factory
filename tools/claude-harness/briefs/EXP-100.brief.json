@@ -1,0 +1,151 @@
+{
+  "experiment_id": "EXP-100",
+  "title": "EXP-100 - Hello World Part 6 Section 8: Extend Theme FX_HelloWorld (Form Font Tahoma, Flex Layout Class FX_BlueBackground, Static Classes FX_WhiteHeader and FX_Header), Readback After Reopen",
+  "record_path": "experiments/EXP-100-hello-world-part-6-section-8-fx-theme-classes.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt6.md Section 8 (07:34-09:36), adapted to FX_ names: in the Web Designer open Edit > Theme, edit the factory theme FX_HelloWorld (EXP-064) and record its Edit Styles tree read-only first. Then set the Form element Font Family to Tahoma; add the Flex Layout class FX_BlueBackground with Background Color #FF5CC6C7; add the Static class FX_WhiteHeader with Font Size 16, Bold True and Normal State Foreground Solid White; add the Static class FX_Header with Font Size 16 and Bold True. Commit with Edit Styles OK, Global Objects OK and one Designer Save, then verify every value by reopening the theme editor read-only. Only FX_HelloWorld changes; FX_BlueButton and every other theme stay as they are. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Before browser interaction read AGENTS.md, docs/mongoose/transcripts/hello-world-pt6.md Section 8 and its transcript lines (07:34-09:36), recipes/session/session-expiry-and-stale-designer.md, and only the final Outcome (operator) sections of the EXP-064, EXP-065 and EXP-099 records (EXP-064 holds the proven theme-editor method). Do not read those records in full.",
+      "Create or update only experiments/EXP-100-hello-world-part-6-section-8-fx-theme-classes.md and evidence/EXP-100/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task; never sign in inside the portal's embedded app frame (refused, EXP-080-R2) but use the procedure's top-level portal navigation. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt, menu or unsaved runtime change open across tasks. After any pause, inspect the state read-only before acting and never replay an earlier action.",
+      "Task boundary: do only what the current task instruction lists and stop at its end, even when later steps of this brief remain; report the next step instead of performing it.",
+      "Designer gate (read-only): the Designer is in User scope; no Form is open, or any open Form is clean (Save and Undo disabled). If a Form is dirty or the session shows the server-event error, record it and stop blocked.",
+      "Theme discovery (read-only): open the Designer Edit menu once and choose Theme once. Record the Themes list and confirm FX_HelloWorld exists. Select FX_HelloWorld and use Edit once. In Edit Styles record the Elements tree path of Form, FlexLayout and Static and every existing child class under FlexLayout and Static; select the Form element and record its Categories and the Font attributes with their current values (Font Family, Font Size, Bold and any others); select FlexLayout and Static and record their Categories and the attribute that holds the background color; select FX_BlueButton under Button and record its Normal State Foreground and Background. Selection clicks only. If FX_BlueBackground, FX_WhiteHeader or FX_Header already exists, or FX_HelloWorld is missing, record it and stop blocked. Leave Edit Styles with Cancel once and Global Objects with Cancel once; record any prompt (answer No) and the Designer state afterwards.",
+      "Form font: open Edit > Theme, FX_HelloWorld, Edit once more. Select the Form element and its Font category, and set Font Family to Tahoma (choose Tahoma from the control's list if it offers one, otherwise type Tahoma and press Tab once). Record the readback. Change no other Form attribute.",
+      "Flex Layout class: select FlexLayout, enter FX_BlueBackground in Class Name and use Add once. The tree refreshes (EXP-064): reselect FlexLayout, expand it if needed, and select FX_BlueBackground. Record its Categories, choose the one that holds Background Color, type #FF5CC6C7 exactly into the Background field and press Tab once; record the readback verbatim. Do not use the color picker for this value.",
+      "Static class FX_WhiteHeader: select Static, enter FX_WhiteHeader in Class Name and use Add once; reselect Static and FX_WhiteHeader. In its Font category set Font Size to 16 and Bold to True (record each control type and any unit shown). In its Normal State category open the Foreground field's own picker button once, choose Solid by clicking the visible Solid label text (EXP-064: the radio input itself can time out), accept the default White exactly as offered, record the picker values, confirm with the picker OK once, and record the Foreground readback (expected #FFFFFFFF).",
+      "Static class FX_Header: select Static, enter FX_Header in Class Name and use Add once; reselect Static and FX_Header; in its Font category set Font Size to 16 and Bold to True. Leave every other attribute of all three new classes at its default. At most one correction per field.",
+      "From the first change until the commit step, keep Edit Styles and Global Objects open: never Cancel or close either dialog with unsaved theme changes. Verify by selection that all four changes are present before committing.",
+      "Commit: Edit Styles OK once, then Global Objects OK once, then exactly one Designer toolbar Save only if it is enabled; record each native response verbatim (EXP-064: \"Global object(s) were saved.\"). If Save stays disabled, record it and stop blocked. Never retry a Save.",
+      "Readback (read-only): open Edit > Theme, FX_HelloWorld, Edit once more and verify by selection: Form Font Family Tahoma; FX_BlueBackground Background #FF5CC6C7; FX_WhiteHeader Font Size 16, Bold True, Normal State Foreground #FFFFFFFF; FX_Header Font Size 16, Bold True; FX_BlueButton Normal State Background #FF5CC6C7 and Foreground #FFFFFFFF (unchanged). Leave Edit Styles with Cancel once and Global Objects with Cancel once; verify no prompt and Save disabled.",
+      "Capture screenshots of the Designer gate, the Themes list, the Edit Styles tree before any change, the Form Font attributes before and after Tahoma, each class add (before and after reselecting), each class's values after entry, the Foreground picker before its OK, all values before the commit, each commit response, and each readback. Use a distinct filename for every capture; never overwrite an earlier screenshot.",
+      "Before every click, use references from the most recent snapshot taken in the current task; after any timeout or 'Ref not found', take one fresh untargeted snapshot and use only its references. Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Applying the new classes to any Form or portal component (Part 7) and any later section.",
+      "Any theme other than FX_HelloWorld (ButtonTheme, Classic, Dark, Hi world, High Contrast, Infor, InforReport, Light, MyPortal, Projector): no edit, copy, rename or removal.",
+      "Creating a theme; Copy, Delete or rename in the Themes list; changing FX_BlueButton or any element attribute other than the four listed changes.",
+      "User Preferences and the Layout theme selection; any runtime action in the Web Client.",
+      "Any Form change: no Form is opened for editing or saved; the image library is not opened.",
+      "IDOs, SQL objects and stored data; any global object other than FX_HelloWorld.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; FormSync, deployment or regeneration; any cache or metadata unload.",
+      "Direct SQL execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes, assets or files outside the EXP-100 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never edit, copy, rename or remove any theme other than FX_HelloWorld; never create a theme.",
+    "Never remove or rename any theme class, including FX_BlueButton; never change FX_BlueButton.",
+    "Never add a class whose name lacks the FX_ prefix; never add more than the three named classes or use Add more than once per class.",
+    "Never change a theme attribute other than Form Font Family, the FX_BlueBackground Background, and the FX_WhiteHeader and FX_Header Font Size, Bold and (FX_WhiteHeader only) Normal State Foreground.",
+    "Never Cancel or close Edit Styles or Global Objects while unsaved theme changes exist.",
+    "Never open User Preferences, open or save any Form, open the image library, or perform any runtime action.",
+    "Never go beyond the current task instruction; stop at its end even when later brief steps remain.",
+    "Never invoke the Designer Save more than once or retry an uncertain Save; never Save after an error.",
+    "Never answer Yes to any prompt; record every prompt verbatim and stop.",
+    "Never invoke any unload, in the Web Client or the Designer.",
+    "Never click the Designer top-toolbar Delete button (Delete Form Definition) or Regenerate Form.",
+    "Never perform check-in, undo checkout or other checkout-management actions, FormSync or deployment.",
+    "Never use direct SQL, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability, database-level durability or replay verification from same-session UI observations."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:extension|class|component|combobox)(?:es|s)?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b",
+    "\\b(?:create|insert|enter|save|delete)\\b[^.\\n]{0,30}\\b(?:order\\s+records?|test\\s+records?|FX_Orders\\s+rows?)\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,40}\\bevent\\s+handlers?\\b",
+    "\\b(?:click|press|invoke|perform|use)\\b[^.\\n]{0,30}\\b(?:runtime|Web Client)\\s+Save\\b",
+    "\\b(?:edit|change|modify|retype|replace)\\b[^.\\n]{0,30}\\b(?:form\\s+script|script\\s+text|CalcOrderTotal\\s+method)\\b",
+    "\\b(?:open|launch|click)\\b[^.\\n]{0,30}\\bScript Editor\\b",
+    "\\b(?:delete|remove|overwrite|replace|rename)\\b[^.\\n]{0,30}\\b(?:existing\\s+)?images?\\b",
+    "\\b(?:open|change|edit|save)\\b[^.\\n]{0,20}\\bFX_Orders(?:Chart)?\\b",
+    "\\b(?:delete|remove|rename|copy)\\b[^.\\n]{0,30}\\bthemes?\\b",
+    "\\b(?:edit|change|modify|select|open)\\b[^.\\n]{0,30}\\b(?:Hi world|ButtonTheme|MyPortal|High Contrast|InforReport)\\b",
+    "\\b(?:open|change|edit|save|select)\\b[^.\\n]{0,25}\\bUser Preferences\\b"
+  ],
+  "related_experiments": [
+    "EXP-064",
+    "EXP-065",
+    "EXP-099"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "(none; Designer theme editor)",
+    "artifacts": [
+      "FX_HelloWorld (existing factory theme, EXP-064; tenant-wide): Form Font Family Tahoma",
+      "FX_BlueBackground (new FlexLayout class in FX_HelloWorld): Background #FF5CC6C7",
+      "FX_WhiteHeader (new Static class in FX_HelloWorld): Font Size 16, Bold True, Normal State Foreground #FFFFFFFF",
+      "FX_Header (new Static class in FX_HelloWorld): Font Size 16, Bold True"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; Designer in User scope with no dirty Form; the Themes list, the FX_HelloWorld Edit Styles tree (Form, FlexLayout, Static and their existing classes), the Form Font attributes with values, the FlexLayout and Static categories and FX_BlueButton's Normal State colors recorded read-only; none of the three new class names present; both dialogs left with Cancel and the Designer clean. Evidence: gate, Themes list and Edit Styles screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "Form Font Family reads Tahoma and FX_BlueBackground exists under FlexLayout with Background #FF5CC6C7, each with one Add at most and at most one correction per field. Evidence: before/after and readback screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "FX_WhiteHeader (Font Size 16, Bold True, Normal State Foreground #FFFFFFFF set through the picker as Solid default White) and FX_Header (Font Size 16, Bold True) exist under Static, one Add each. Evidence: class and picker screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "Edit Styles OK once, Global Objects OK once and one Designer Save with its native response recorded verbatim; no Cancel with unsaved changes. Evidence: commit screenshots."
+    },
+    {
+      "id": "AC-5",
+      "description": "Reopened Edit Styles shows all four changes with the expected values and FX_BlueButton unchanged; both dialogs left with Cancel; no prompt; Save disabled. Evidence: readback screenshots."
+    },
+    {
+      "id": "AC-6",
+      "description": "No other theme touched; no class removed or renamed; no other attribute changed; no Form opened or saved; no User Preferences, image library or runtime action; no unload; no checkout action; no task-boundary overrun."
+    },
+    {
+      "id": "AC-7",
+      "description": "The final EXP-100 report gives decisive evidence for AC-1 to AC-6, the complete action audit with exact counts (Theme dialog opens and how each was left, Edit clicks, element selections, Add clicks, field entries and corrections, picker opens and OKs, Edit Styles OKs, Global Objects OKs, Designer Saves, prompts with texts, errors, re-login count), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-100",
+  "replay_of": null,
+  "initial_instruction": "T1 - Gate and read-only theme discovery for EXP-100. Read AGENTS.md, hello-world-pt6.md Section 8 with its transcript lines, recipes/session/session-expiry-and-stale-designer.md, and only the Outcome (operator) sections of EXP-064, EXP-065 and EXP-099. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry or sign-in, follow the worker-preamble procedure (top-level portal navigation only) and end the task. In the Designer confirm User scope and that no Form is dirty. Open the Edit menu once, choose Theme once, record the Themes list, select FX_HelloWorld and use Edit once. In Edit Styles record, by selection clicks only: the tree path of Form, FlexLayout and Static and every existing child class under FlexLayout and Static; the Form element's Categories and Font attributes with their current values; the FlexLayout and Static Categories and which attribute holds the background color; and FX_BlueButton's Normal State Foreground and Background. Report whether FX_BlueBackground, FX_WhiteHeader or FX_Header already exists. Make no change in T1: no typing, no Add, no picker. Leave Edit Styles with Cancel once and Global Objects with Cancel once and record the Designer state. This is the end of T1 even though later brief steps remain. Create the EXP-100 record with the gate, the Themes list, the Edit Styles inventory, the action audit and the file inventory, with screenshots under evidence/EXP-100/ (distinct filenames), and stop with no dialog open.",
+  "notes": "Proposed by the operator assistant after EXP-099. The tutorial extends its existing Hello World theme; the factory equivalent is FX_HelloWorld (EXP-064, class FX_BlueButton), which is tenant-wide and within the AGENTS.md scope extension (themes). Since EXP-065 FX_HelloWorld is the operator's Web Client Layout theme, so the Form-level Tahoma font will change how the operator's Forms render; no unload or preference change is part of this brief. Name mapping (as Blue Button -> FX_BlueButton in EXP-064): Blue Background -> FX_BlueBackground, White Header -> FX_WhiteHeader, Header -> FX_Header. Values from the transcript: Font Family Tahoma (07:54), Background typed #FF5CC6C7 (08:22-08:30), Font Size 16 and Bold True (08:53, 09:24), Foreground picker Solid with the default White (09:02-09:08). Proven theme-editor behavior from EXP-064: Edit Styles tree with Categories and Attributes panes; a new class appears only after the parent is reselected; colors read as 8-digit ARGB; the Solid radio may time out, the Solid label click works; commit is OK, OK, then the Designer Save. Planned tasks: T1 read-only discovery; T2 Form font and FX_BlueBackground (dialogs left open); T3 FX_WhiteHeader and FX_Header (dialogs left open); T4 commit; T5 readback; T6 documentation-only audit. exact_values: FX_HelloWorld, Tahoma, FX_BlueBackground, #FF5CC6C7, FX_WhiteHeader, FX_Header, 16, #FFFFFFFF. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_HelloWorld",
+    "Tahoma",
+    "FX_BlueBackground",
+    "#FF5CC6C7",
+    "FX_WhiteHeader",
+    "FX_Header",
+    "16",
+    "#FFFFFFFF"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "Tenant-wide theme FX_HelloWorld only (Form Font Family; three new FX_ classes); one Designer Save; no Form edited; no other theme; no User Preferences; no runtime action; no unload"
+}
