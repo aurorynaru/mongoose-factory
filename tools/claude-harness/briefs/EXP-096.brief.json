@@ -1,0 +1,139 @@
+{
+  "experiment_id": "EXP-096",
+  "title": "EXP-096 - Hello World Part 6 Section 4: Data Change FX_CalcOrderTotal on FX_ItemGridCol and FX_CountGridCol, Grid Control Check Before the Change, One Designer Save, Runtime Grid Recalculation Check",
+  "record_path": "experiments/EXP-096-hello-world-part-6-section-4-fx-orders-grid-column-data-change.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt6.md Section 4 (03:43-04:16), adapted to FX_ names and User scope. First, as a control, in the Web Client change the order 1 Count to 3 through the grid row (unsaved) before any Designer change and record whether Order Total recalculates (the EXP-095 handler is already wired to the detail-view FX_ItemCombobox and FX_CountEdit only); discard it. Then in the Web Designer set Events > Data Change = FX_CalcOrderTotal on the grid columns FX_ItemGridCol and FX_CountGridCol, perform exactly one Designer Save and verify persistence after one Designer close/reopen. Finally, in the Web Client, on the order 1 grid row change Count 2 -> 3 and Item dumbbell -> eggs without saving, record Order Total after each, discard with close + No and verify both orders unchanged after a reopen. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Before browser interaction read AGENTS.md, docs/mongoose/transcripts/hello-world-pt6.md Section 4 and its transcript lines (03:43-04:16), recipes/components/apply-component-class.md (the runtime steps, the grid splitter step and the pitfalls), recipes/session/session-expiry-and-stale-designer.md, and only the final Outcome (operator) sections of the EXP-092 and EXP-095 records. Do not read those records in full.",
+      "Create or update only experiments/EXP-096-hello-world-part-6-section-4-fx-orders-grid-column-data-change.md and evidence/EXP-096/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task; never sign in inside the portal's embedded app frame (refused, EXP-080-R2) but use the procedure's top-level portal navigation. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt, menu or unsaved runtime change open across tasks. After any pause, inspect the state read-only before acting and never replay an earlier action.",
+      "Designer gate (read-only): the Designer is in User scope and clean on FX_Orders (Save and Undo disabled; open it once through the Form menu recent-forms entry if needed); the Details > Event Handlers grid shows FX_CalcOrderTotal (Form Script Method, CalcOrderTotal(P(FX_Count),P(FX_ItmsCost))); Data Change reads FX_CalcOrderTotal on FX_ItemCombobox and FX_CountEdit and is blank on FX_ItemGridCol and FX_CountGridCol. If anything differs, or the session shows the server-event error, record it and stop blocked.",
+      "Runtime control (before any Designer change): in the Web Client, if FX_Orders is open close it once (clean); open it once through the Form menu recent-forms entry (operator-approved route, EXP-093), switch to Filter in Place if needed, leave every criterion blank and press F4 once (move between orders only by clicking their row-number cells); verify order 1: Customer ID FX001, Customer Name Factory test one, Address 1 Factory Street, Item dumbbell, Item Description 45 pound iron, Cost 45.00, Count 2, Order Total 90.00 and order 2: Customer ID FX002, Customer Name Factory test two, Address 2 Factory Street, Item eggs, Item Description cage free, Cost 6.99, Count 1, Order Total 6.99. With order 1 selected, if the order 1 grid row Count, Item and Order Total cells are not visible, widen the grid once by dragging the splitter between the grid and the detail view (a coordinate drag, as in EXP-092; record the layout before and after with screenshots). Click the order 1 grid row Count cell once, select its whole content, type 3 once and press Tab once; without any Save record the grid row Count, Cost and Order Total and the detail-view Count, Cost and Order Total, with a screenshot, and any message verbatim. Tutorial expectation: no recalculation from the grid (Order Total stays 90.00); record whatever is shown as observed only. Then close the runtime FX_Orders Form once; answer No once to the prompt to save changes and record its exact text; if any other prompt appears (for example about grid or splitter layout changes) answer No once and record its exact text; if no save prompt appears, record it and stop blocked for the coordinator without further action.",
+      "Component events: in the Designer select FX_ItemGridCol in the Details > Components grid (or the Properties component selector), set its Events > Data Change field to FX_CalcOrderTotal (choose from its drop-down; type the exact name only if it is not listed) and commit it; read it back with a screenshot. Do the same once for FX_CountGridCol. Never set Primary, Lose Focus, Gain Focus or any other field, and never change any other component or the grid itself (no column resize, reorder, hide or add). At most one correction per field. If the Properties route offers no Data Change field for a grid column, record it and stop blocked (the tutorial's Edit Grid Columns dialog needs a coordinator decision).",
+      "Perform exactly one Designer Save through the native toolbar Save and record its native response verbatim (toast, dialog or error) with a screenshot. If an error appears, record it and stop blocked; never retry the Save.",
+      "Persistence: close the clean FX_Orders Designer Form once through its Form-tab control (take a fresh snapshot immediately before the click and use only its references; record any prompt; if a save prompt appears, answer No once and record its text) and reopen it once through the Form menu recent-forms entry. Verify Save is disabled; read back the Data Change value of FX_ItemGridCol, FX_CountGridCol, FX_ItemCombobox and FX_CountEdit and the Event Handlers row. If Save is enabled after the readback, close once answering No and reopen once to restore clean; if it is still enabled, record it and stop blocked.",
+      "Runtime grid check: in the Web Client open it once through the Form menu recent-forms entry (operator-approved route, EXP-093), switch to Filter in Place if needed, leave every criterion blank and press F4 once (move between orders only by clicking their row-number cells); verify order 1: Customer ID FX001, Customer Name Factory test one, Address 1 Factory Street, Item dumbbell, Item Description 45 pound iron, Cost 45.00, Count 2, Order Total 90.00 and order 2: Customer ID FX002, Customer Name Factory test two, Address 2 Factory Street, Item eggs, Item Description cage free, Cost 6.99, Count 1, Order Total 6.99 unchanged (this also verifies the control discard). With order 1 selected, if the order 1 grid row Count, Item and Order Total cells are not visible, widen the grid once by dragging the splitter between the grid and the detail view (a coordinate drag, as in EXP-092; record the layout before and after with screenshots). Click the order 1 grid row Count cell once, select its whole content, type 3 once and press Tab once; without any Save record the grid row and detail-view Count, Cost and Order Total with a screenshot. Expected by the tutorial: Order Total 135.00. Then click the order 1 grid row Item cell once, open its drop-down once and choose eggs once (never type); record the grid row and detail-view Item, Item Description, Cost, Count and Order Total with a screenshot. Expected: Cost 6.99 and Order Total 20.97 (3 x 6.99). Record whatever is shown, and any message or error verbatim (acknowledge an error once and continue to the discard).",
+      "Discard: close the runtime FX_Orders Form once; answer No once to the prompt to save changes and record its exact text; if any other prompt appears (for example about grid or splitter layout changes) answer No once and record its exact text; if no save prompt appears, record it and stop blocked for the coordinator without further action. Then reopen FX_Orders once through the recent-forms entry (blank criteria, F4 once; row-number cells only) and verify order 1: Customer ID FX001, Customer Name Factory test one, Address 1 Factory Street, Item dumbbell, Item Description 45 pound iron, Cost 45.00, Count 2, Order Total 90.00 and order 2: Customer ID FX002, Customer Name Factory test two, Address 2 Factory Street, Item eggs, Item Description cage free, Cost 6.99, Count 1, Order Total 6.99 unchanged; record whether the widened grid layout persisted. Close the runtime FX_Orders Form once at the end (clean).",
+      "Capture screenshots of the Designer gate (Event Handlers row and the four Data Change values), the runtime baselines, the splitter layout before and after each drag, the control result after the grid Count change, each Data Change readback, the Save response, the reopened Designer readbacks, the grid row after the Count change and after the Item change, each prompt before answering, and the reopened orders. Use a distinct filename for every capture; never overwrite an earlier screenshot.",
+      "Before every click, use references from the most recent snapshot taken in the current task; after any timeout or 'Ref not found', take one fresh untargeted snapshot and use only its references. Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "The tutorial's Edit Grid Columns dialog route (the Properties route proven in EXP-095 is used; a missing Data Change field is a blocker, not a reason to switch routes).",
+      "Any other component event or component; the event handler itself; Sections 5-8 (chart Form, image import, theme).",
+      "Any Designer change other than the two grid-column Data Change values and their one Save: no script edit, no handler edit, no property edit, no grid layout change.",
+      "Changing, fixing or recompiling the form script; opening the Script Editor.",
+      "Runtime Save, or any runtime change other than the order 1 grid Count and Item checks that are discarded.",
+      "The FX_Orders, FX_Items or other IDOs, SQL objects and stored data; any global object.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; FormSync, deployment or regeneration; any cache or metadata unload.",
+      "Direct SQL execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, the script file, recipes or files outside the EXP-096 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never open the Script Editor or edit the form script; never edit, add or remove an event handler.",
+    "Never set any event field other than Data Change on FX_ItemGridCol and FX_CountGridCol; never change FX_ItemCombobox, FX_CountEdit or any other component; at most one correction per field.",
+    "Never resize, reorder, hide or add grid columns in the Designer or at runtime; drag the runtime splitter at most once per runtime open (at most twice in all).",
+    "Never invoke the Designer Save more than once or retry an uncertain Save; never Save after an error.",
+    "Never answer Yes to any prompt; at most two Designer close/reopen pairs (persistence, then restore clean).",
+    "Never Save at runtime; discard the order 1 changes only by closing and answering No.",
+    "Never invoke any unload, in the Web Client or the Designer.",
+    "Never click the Designer top-toolbar Delete button (Delete Form Definition) or Regenerate Form.",
+    "Never perform check-in, undo checkout or other checkout-management actions, FormSync or deployment.",
+    "Never use direct SQL, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability, database-level durability or replay verification from same-session UI observations."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:extension|class|component|combobox)(?:es|s)?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b",
+    "\\b(?:create|insert|enter|save|delete)\\b[^.\\n]{0,30}\\b(?:order\\s+records?|test\\s+records?|FX_Orders\\s+rows?)\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,40}\\bevent\\s+handlers?\\b",
+    "\\b(?:click|press|invoke|perform|use)\\b[^.\\n]{0,30}\\b(?:runtime|Web Client)\\s+Save\\b",
+    "\\b(?:edit|change|modify|retype|replace)\\b[^.\\n]{0,30}\\b(?:form\\s+script|script\\s+text|CalcOrderTotal\\s+method)\\b",
+    "\\b(?:open|launch|click)\\b[^.\\n]{0,30}\\bScript Editor\\b",
+    "\\b(?:resize|reorder|hide)\\b[^.\\n]{0,30}\\b(?:grid\\s+)?columns?\\b"
+  ],
+  "related_experiments": [
+    "EXP-092",
+    "EXP-095"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_Orders",
+    "artifacts": [
+      "FX_ItemGridCol and FX_CountGridCol Events > Data Change = FX_CalcOrderTotal",
+      "FX_Orders (User-scoped Designer Form; one Designer Save)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; Designer FX_Orders in User scope and clean; the FX_CalcOrderTotal handler row present; Data Change FX_CalcOrderTotal on FX_ItemCombobox and FX_CountEdit and blank on FX_ItemGridCol and FX_CountGridCol before the change. Evidence: gate screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "Runtime control before any Designer change: baseline verified; the unsaved order 1 grid Count 3 entered once; grid-row and detail-view Count, Cost and Order Total recorded, with any message; discarded by close + No with the prompt text. Evidence: baseline, splitter, after-Count and prompt screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "Data Change = FX_CalcOrderTotal read back on FX_ItemGridCol and FX_CountGridCol; at most one correction per field; exactly one Designer Save with its native response recorded; no error; after one Designer close/reopen Save disabled and the four Data Change values and the handler row read back unchanged; the Designer clean at the end. Evidence: Data Change, Save and reopened readback screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "Runtime grid check: baseline verified after the control discard; on the order 1 grid row the unsaved Count 3 and then Item eggs are entered once each, and grid-row and detail-view values (Count, Cost, Order Total) recorded after each, with any message verbatim; discard by close + No with the prompt text; after the reopen both orders match the baseline. Evidence: baseline, after-Count, after-Item, prompt and reopened-order screenshots."
+    },
+    {
+      "id": "AC-5",
+      "description": "No other Designer change, no Script Editor, no handler edit, no change to FX_ItemCombobox or FX_CountEdit, no grid column layout change, at most one splitter drag per runtime open, no runtime Save, no unload, no checkout action, no Yes answer."
+    },
+    {
+      "id": "AC-6",
+      "description": "The final EXP-096 report gives decisive evidence for AC-1 to AC-5, a comparison of the control result with the post-change grid result, the complete action audit with exact counts (Data Change entries and corrections, Designer Saves 1, Designer close/reopen pairs, runtime opens/closes/F4 presses/splitter drags/cell entries/drop-down choices, prompts answered No with texts, errors, re-login count), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-096",
+  "replay_of": null,
+  "initial_instruction": "T1 - Gates and the runtime grid control for EXP-096. Read AGENTS.md, hello-world-pt6.md Section 4 with its transcript lines, recipes/components/apply-component-class.md, recipes/session/session-expiry-and-stale-designer.md, and only the Outcome (operator) sections of EXP-092 and EXP-095. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry or sign-in, follow the worker-preamble procedure (top-level portal navigation only) and end the task. In the Designer, read-only, confirm User scope, a clean FX_Orders Form, the FX_CalcOrderTotal handler row, Data Change FX_CalcOrderTotal on FX_ItemCombobox and FX_CountEdit and blank on FX_ItemGridCol and FX_CountGridCol. Then in the Web Client run the control as the brief describes: open FX_Orders through the recent-forms entry, F4 once, verify both orders, widen the grid once if needed, enter the unsaved grid Count 3 on order 1 once, record the grid-row and detail-view values, and discard with close and No (record the prompt text). Make no Designer change in T1. Create the EXP-096 record with the gate, the control result, the action audit and the file inventory, with screenshots under evidence/EXP-096/ (distinct filenames), and stop with no runtime Form dirty and no dialog open.",
+  "notes": "Proposed by the operator assistant after EXP-095; the operator said yes on 2026-10-15. EXP-095 wired FX_CalcOrderTotal to the detail-view FX_ItemCombobox and FX_CountEdit, and the unsaved detail-view changes recalculated Order Total (135.00, then 20.97). The tutorial says grid edits need their own Data Change wiring, and its caution says form-level wiring should not be presumed to reach the grid; the T1 control (a grid Count edit before the Designer change) tests that and gives the attribution EXP-095 lacked. Data Change is set through the Components grid and Properties panel (the route proven in EXP-095) instead of the tutorial's Edit Grid Columns dialog. The grid needs one splitter drag per runtime open to show the Count, Item and Order Total cells (EXP-092; the widened layout did not persist and no layout prompt appeared). All runtime changes are discarded with close + No. EXP-095 lessons applied: fresh snapshot before each click, distinct screenshot filenames. exact_values: FX_Orders, FX_CalcOrderTotal, FX_ItemGridCol, FX_CountGridCol, FX_ItemCombobox, FX_CountEdit, 135.00, 20.97, 90.00, FX001, FX002, dumbbell, eggs. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_Orders",
+    "FX_CalcOrderTotal",
+    "FX_ItemGridCol",
+    "FX_CountGridCol",
+    "FX_ItemCombobox",
+    "FX_CountEdit",
+    "135.00",
+    "20.97",
+    "90.00",
+    "FX001",
+    "FX002",
+    "dumbbell",
+    "eggs"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User (Data Change on FX_ItemGridCol and FX_CountGridCol, one Designer Save); at most two Designer close/reopen pairs answering No; runtime order 1 grid changes discarded with close + No (control and test); no runtime Save; no unload"
+}
