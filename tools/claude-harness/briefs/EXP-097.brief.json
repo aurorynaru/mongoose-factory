@@ -1,0 +1,138 @@
+{
+  "experiment_id": "EXP-097",
+  "title": "EXP-097 - Hello World Part 6 Section 5: Create FX_OrdersChart (Classic Grid Only Wizard on the FX_Orders IDO), Initial Command Refresh with One Designer Save, Runtime Open Check",
+  "record_path": "experiments/EXP-097-hello-world-part-6-section-5-fx-orderschart-grid-only-form.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt6.md Section 5 (04:25-05:33), adapted to FX_ names and User scope: in the Web Designer close FX_Orders, start New Form Definition once, choose Category Classic and Wizard Grid Only, name the Form FX_OrdersChart with the FX_Orders IDO as its data source, accept the wizard defaults (Save Template unchecked) and Finish once. Verify the new Form after one Designer close/reopen. Then set the Form's Behavior > Initial Command to Refresh, perform exactly one Designer Save and verify it after one more close/reopen. Finally open FX_OrdersChart once in the Web Client and record whether both orders appear without pressing F4. The grid is not resized or moved (that belongs with the chart in Section 6). Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Before browser interaction read AGENTS.md, docs/mongoose/transcripts/hello-world-pt6.md Section 5 and its transcript lines (04:25-05:33), recipes/forms/create-basic-form.md (wizard steps and pitfalls), recipes/session/session-expiry-and-stale-designer.md, and only the final Outcome (operator) sections of the EXP-082 and EXP-096 records. Do not read those records in full.",
+      "Create or update only experiments/EXP-097-hello-world-part-6-section-5-fx-orderschart-grid-only-form.md and evidence/EXP-097/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task; never sign in inside the portal's embedded app frame (refused, EXP-080-R2) but use the procedure's top-level portal navigation. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt, menu or unsaved runtime change open across tasks. After any pause, inspect the state read-only before acting and never replay an earlier action.",
+      "Designer gate (read-only): the Designer is in User scope; if FX_Orders is open it is clean (Save and Undo disabled). If it is dirty, or the session shows the server-event error, record it and stop blocked.",
+      "Close FX_Orders: close the clean FX_Orders Designer Form once through its Form-tab control (fresh snapshot immediately before the click); record any prompt; if a save prompt appears, answer No once and record its exact text. The Designer shows no Form open.",
+      "Wizard: click the Designer toolbar New (New Form Definition) once. In Form Wizard Selection choose New Form, Category Classic and Wizard Grid Only, recording every option and description shown, then OK. On each wizard page record every field with its exact label and default value before changing anything, with a screenshot. Enter Name FX_OrdersChart, choose the FX_Orders IDO as the data source (from its list; type the exact name only if no list is offered), leave every other field at its default, and use Next as each page requires. If any prompt says a Form named FX_OrdersChart already exists or offers to replace a Form, answer it with Cancel or No once (never OK or Yes), record its exact text, cancel the wizard once (answer No to any discard prompt) and stop blocked. On the final page uncheck Save Template if it is checked, then Finish once. Record the completion message verbatim and acknowledge it once. At most one correction per field.",
+      "After Finish (read-only): record the Designer state: the Form tab FX_OrdersChart, Properties Name, Form Type, Version and scope (status bar), Save and Undo state, the Details > Collections entry (IDO FX_Orders) and the Details > Components inventory (name, type, binding for every row), with screenshots. If Save is enabled after Finish, record it and stop blocked for the coordinator without saving.",
+      "Persistence 1: close the clean FX_OrdersChart Designer Form once through its Form-tab control (take a fresh snapshot immediately before the click and use only its references; record any prompt; if a save prompt appears, answer No once and record its text) and reopen it once through the Form menu recent-forms entry; verify User scope and Save disabled; read back Name, Form Type, the Collections entry, the component count and Behavior > Initial Command (expected blank).",
+      "Initial Command: with the Form selected in Properties, open Behavior > Initial Command once and choose Refresh from its drop-down (type it only if it is not listed; record the option list), commit it and read it back with a screenshot. Change no other property. At most one correction.",
+      "Perform exactly one Designer Save through the native toolbar Save and record its native response verbatim (toast, dialog or error) with a screenshot. If an error appears, record it and stop blocked; never retry the Save.",
+      "Persistence 2: close the clean FX_OrdersChart Designer Form once through its Form-tab control (take a fresh snapshot immediately before the click and use only its references; record any prompt; if a save prompt appears, answer No once and record its text) and reopen it once through the Form menu recent-forms entry; verify User scope and Save disabled; read back Initial Command (expected Refresh), the Collections entry and the component count. If Save is enabled after the readback, close once answering No and reopen once to restore clean; if it is still enabled, record it and stop blocked.",
+      "Runtime open check (read-only): in the Web Client open Form > Open > Select Form once. If its filter is prefilled, clear it and type FX_OrdersChart once; select the exact FX_OrdersChart row and open it by double-clicking that row (never OK with no row selected, never another row). Without pressing F4 or any query key, record the mode, the grid columns and every row shown, with a screenshot. Expected: order 1: Customer ID FX001, Customer Name Factory test one, Item dumbbell, Cost 45.00, Count 2, Order Total 90.00 and order 2: Customer ID FX002, Customer Name Factory test two, Item eggs, Cost 6.99, Count 1, Order Total 6.99 shown without F4 (Initial Command Refresh). Record whatever is shown as observed only. Change no value. Close the runtime FX_OrdersChart Form once (clean); if any prompt appears answer No once and record its exact text.",
+      "Capture screenshots of the Designer gate, Form Wizard Selection, every wizard page before and after filling, the completion message, the new Form in the Designer with the Components inventory, each persistence readback, the Initial Command option list and readback, the Save response, the Select Form dialog with the FX_OrdersChart row and the runtime Form. Use a distinct filename for every capture; never overwrite an earlier screenshot.",
+      "Before every click, use references from the most recent snapshot taken in the current task; after any timeout or 'Ref not found', take one fresh untargeted snapshot and use only its references. Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Resizing or moving the grid on FX_OrdersChart (tutorial step 7; it belongs with the chart in Section 6).",
+      "Section 6 (the Chart component, its binding and hiding the grid) and Sections 7-8 (image import, theme).",
+      "Any Form other than FX_OrdersChart and the close of FX_Orders: no change to FX_Orders or any other Form; no second wizard run; no template.",
+      "Any property change on FX_OrdersChart other than Initial Command = Refresh; any component change.",
+      "Runtime Save or any runtime value change; Filter in Place or F4 on FX_OrdersChart.",
+      "The FX_Orders, FX_Items or other IDOs, SQL objects and stored data; any global object.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; FormSync, deployment or regeneration; any cache or metadata unload.",
+      "Direct SQL execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes or files outside the EXP-097 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never replace an existing Form: answer any exists/replace prompt with Cancel or No, never OK or Yes.",
+    "Never open the Form wizard more than once or click Finish more than once; never save a template.",
+    "Never change FX_Orders or any Form other than FX_OrdersChart; never change any FX_OrdersChart property other than Initial Command, or any component.",
+    "Never add a Chart component or set Hidden on any component (Section 6 is a later experiment).",
+    "Never invoke the Designer Save more than once or retry an uncertain Save; never Save after an error.",
+    "Never answer Yes to any prompt; at most three Designer close/reopen pairs on FX_OrdersChart (persistence 1, persistence 2, restore clean).",
+    "Never Save at runtime, press F4 or change any runtime value on FX_OrdersChart.",
+    "Never invoke any unload, in the Web Client or the Designer.",
+    "Never click the Designer top-toolbar Delete button (Delete Form Definition) or Regenerate Form.",
+    "Never perform check-in, undo checkout or other checkout-management actions, FormSync or deployment.",
+    "Never use direct SQL, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability, database-level durability or replay verification from same-session UI observations."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:extension|class|component|combobox)(?:es|s)?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b",
+    "\\b(?:create|insert|enter|save|delete)\\b[^.\\n]{0,30}\\b(?:order\\s+records?|test\\s+records?|FX_Orders\\s+rows?)\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,40}\\bevent\\s+handlers?\\b",
+    "\\b(?:click|press|invoke|perform|use)\\b[^.\\n]{0,30}\\b(?:runtime|Web Client)\\s+Save\\b",
+    "\\b(?:edit|change|modify|retype|replace)\\b[^.\\n]{0,30}\\b(?:form\\s+script|script\\s+text|CalcOrderTotal\\s+method)\\b",
+    "\\b(?:open|launch|click)\\b[^.\\n]{0,30}\\bScript Editor\\b",
+    "\\b(?:drag|add|place|insert)\\b[^.\\n]{0,30}\\bChart\\s+component\\b",
+    "\\bset\\b[^.\\n]{0,30}\\bHidden\\b",
+    "\\b(?:resize|move|reposition)\\b[^.\\n]{0,30}\\bgrid\\b"
+  ],
+  "related_experiments": [
+    "EXP-082",
+    "EXP-096"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_OrdersChart",
+    "artifacts": [
+      "FX_OrdersChart (new User-scoped Classic Grid Only Form on the FX_Orders IDO; created by the wizard Finish)",
+      "FX_OrdersChart Behavior > Initial Command = Refresh (one Designer Save)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; Designer in User scope; FX_Orders closed clean (no prompt, or No answered with its text). Evidence: gate and closed-Designer screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "One wizard run: Form Wizard Selection with Classic / Grid Only recorded; every page recorded before filling; Name FX_OrdersChart and data source FX_Orders IDO entered; other defaults kept; Save Template unchecked; Finish once with the completion message verbatim; no replace prompt answered OK. After Finish the Designer shows FX_OrdersChart in User scope with its Collections entry and Components inventory recorded. Evidence: wizard, completion and new-Form screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "After one close/reopen, FX_OrdersChart reads back (Name, Form Type, Collections entry FX_Orders, component count; Initial Command blank) with Save disabled. Evidence: persistence-1 screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "Initial Command = Refresh set and read back (at most one correction); exactly one Designer Save with its native response recorded; after one more close/reopen Initial Command reads Refresh and Save is disabled; the Designer clean at the end. Evidence: Initial Command, Save and persistence-2 screenshots."
+    },
+    {
+      "id": "AC-5",
+      "description": "Runtime: FX_OrdersChart opened once from Select Form (exact row); without F4 the mode, grid columns and rows recorded (expected both orders); no value changed; closed clean. Evidence: Select Form and runtime screenshots."
+    },
+    {
+      "id": "AC-6",
+      "description": "No change to FX_Orders or another Form, no second wizard, no template, no other property or component change, no Chart component, no runtime Save or F4, no unload, no checkout action, no Yes answer. The final EXP-097 report gives decisive evidence for AC-1 to AC-5, the complete action audit with exact counts (wizard openings 1, Finish 1, field entries and corrections, Designer Saves 1, close/reopen pairs, runtime opens and closes, prompts with texts, errors, re-login count), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-097",
+  "replay_of": null,
+  "initial_instruction": "T1 - Gate, close FX_Orders and the Grid Only wizard for EXP-097. Read AGENTS.md, hello-world-pt6.md Section 5 with its transcript lines, recipes/forms/create-basic-form.md, recipes/session/session-expiry-and-stale-designer.md, and only the Outcome (operator) sections of EXP-082 and EXP-096. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry or sign-in, follow the worker-preamble procedure (top-level portal navigation only) and end the task. In the Designer confirm User scope and that FX_Orders, if open, is clean; close it once (fresh snapshot before the click). Then run the wizard once as the brief describes: New Form Definition, New Form / Classic / Grid Only, Name FX_OrdersChart, data source the FX_Orders IDO, other defaults kept, Save Template unchecked, Finish once; record every page before filling and the completion message verbatim. If any exists/replace prompt appears, answer Cancel or No, cancel the wizard and stop blocked. After Finish record the new Form's Properties, Collections entry, Components inventory and Save state. Make no property change and no Save in T1. Create the EXP-097 record with the gate, the wizard pages, the completion message, the new-Form readback, the action audit and the file inventory, with screenshots under evidence/EXP-097/ (distinct filenames), and stop with no dialog open.",
+  "notes": "Proposed by the operator assistant after EXP-096 (Part 6 sections 1-4 complete); the operator said yes on 2026-10-15. Tenant mapping: tutorial form Orders Chart -> FX_OrdersChart; Orders IDO -> FX_Orders. Section 5's two changes (wizard creation, Initial Command Refresh) get separate persistence readbacks as the tutorial caution advises. EXP-082 lessons: the Classic wizard checks the name on Next and can offer to replace an existing Form (here always Cancel/No, never replace); Save Template is checked on the final page and must be unchecked; Finish persists the Form and left the Designer clean. The FX_OrdersChart runtime open uses Select Form with the exact row, since a new Form is not in the recent-forms list; typing the name in its filter is authorized. The grid resize (step 7) is deferred to Section 6, where the chart needs the space. exact_values: FX_OrdersChart, FX_Orders, Classic, Grid Only, Refresh, FX001, FX002. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_OrdersChart",
+    "FX_Orders",
+    "Classic",
+    "Grid Only",
+    "Refresh",
+    "FX001",
+    "FX002"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User (new Form FX_OrdersChart via one wizard Finish; Initial Command Refresh with one Designer Save); FX_Orders closed unchanged; at most three FX_OrdersChart close/reopen pairs answering No; runtime open read-only; no unload"
+}
