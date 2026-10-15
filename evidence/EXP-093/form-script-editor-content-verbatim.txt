@@ -1,0 +1,30 @@
+EXP-093 T1 - Form script editor content, FX_Orders (User scope), read-only
+Dialog title: "Script Editor" (tab: "Script"). Opened once via the Properties toolbar pencil button. Left once with Cancel.
+Transcribed from evidence/EXP-093/t1-03-after-pencil-click.png (lines 1-20 visible, no scrolling) and checked against the accessibility excerpt of lines 11-19.
+No text was clicked, typed or pasted in the editor.
+
+Line  Content
+1     Option Explicit On
+2     Option Strict On
+3
+4     Imports System
+5     Imports Microsoft.VisualBasic
+6     Imports Mongoose.IDO.Protocol
+7     Imports Mongoose.Scripting
+8
+9
+10    Namespace Mongoose.FormScripts
+11    Public Class FX_Orders
+12    Inherits FormScript
+13
+14    '
+15    ' Methods go here
+16    '
+17
+18    End Class
+19    End Namespace
+20
+
+Language shown: Visual Basic syntax (Script Language property on the Form reads "Visual Basic").
+Placeholder present: line 15 "' Methods go here" (the tutorial's placeholder text).
+Not shown in the editor: a language label (only the title "Script Editor" and the Script tab).
