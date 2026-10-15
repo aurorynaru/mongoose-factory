@@ -1,0 +1,4 @@
+- dialog "Images" [ref=e340]:
+  - button "Close Window" [ref=e342] [cursor=pointer]
+  - form [ref=e343]:
+    - generic [ref=e344]
