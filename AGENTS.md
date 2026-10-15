@@ -32,9 +32,11 @@ Mongoose UI stacks unless explicitly instructed.
 
 In this demo tenant only, the factory may create and modify **FX_-prefixed** SQL
 tables, columns, IDOs, IDO projects, IDO properties and methods, property classes,
-validators, component classes, themes and string resources (operator decision,
-2026-10-10: FX_-prefixed string IDs such as FX_sUM) needed to follow the Infor Hello World
-tutorial (Parts 1–8, `docs/mongoose/transcripts/`), adapted to FX_ names.
+validators, component classes, themes, string resources (operator decision,
+2026-10-10: FX_-prefixed string IDs such as FX_sUM) and image-library images (operator
+decision, 2026-10-15: FX_-prefixed image names such as FX_Dumbbell, from the committed
+`assets/` files) needed to follow the Infor Hello World tutorial (Parts 1–8,
+`docs/mongoose/transcripts/`), adapted to FX_ names.
 
 - These objects are tenant-wide, not User-scoped. Forms stay in User editing scope.
 - Never create, alter or delete existing non-FX_ tables, IDOs, data or global objects.
