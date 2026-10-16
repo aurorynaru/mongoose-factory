@@ -1,0 +1,128 @@
+{
+  "experiment_id": "EXP-103-R2",
+  "title": "EXP-103-R2 - Replay of Hello World Part 7 Section 3 in a Fresh Designer: Selection Gate on flexlayoutPane_FX_CustomerPortal, then Type VerticalBox with Regions header (4 Form, Fill), main (1 Flex, Fill), footer (2 Form, Fill); One Designer Save; Readback After Reopen",
+  "record_path": "experiments/EXP-103-R2-hello-world-part-7-section-3-fx-customer-portal-root-regions-replay.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Replay EXP-103 (blocked) after EXP-104 showed that a fresh Flex > Basic Form's FlexLayout loads normally in a freshly reloaded Designer. First a decisive selection gate: reopen FX_CustomerPortal through the Form menu recent-forms entry and select flexlayoutPane_FX_CustomerPortal once; if the server-event error appears or the Properties grid stays empty, answer OK once and stop blocked (that attributes the fault to FX_CustomerPortal's collections or Regenerate). Otherwise open Edit FlexLayout Attributes read-only, record it, and then follow hello-world-pt7.md Section 3: Type VerticalBox; region index 0 ID header, Length 4, Unit Form, Orientation Fill; index 1 ID main, Length 1, Unit Flex, Orientation Fill; index 2 ID footer, Length 2, Unit Form, Orientation Fill; OK, one Designer Save, and readback after close/reopen. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Before browser interaction read AGENTS.md, docs/mongoose/transcripts/hello-world-pt7.md Section 3 (lines 133-143) and the 'Flex Layout concepts' table (lines 47-61), recipes/session/session-expiry-and-stale-designer.md, and only the final Outcome (operator) sections of the EXP-102, EXP-103 and EXP-104 records. Do not read those records in full and do not read Part 7 Section 4 or later.",
+      "Create or update only experiments/EXP-103-R2-hello-world-part-7-section-3-fx-customer-portal-root-regions-replay.md and evidence/EXP-103-R2/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task; never sign in inside the portal's embedded app frame (refused, EXP-080-R2) but use the procedure's top-level portal navigation. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt, dialog, menu or unsaved change open across tasks. After any pause, inspect the state read-only before acting and never replay an earlier action.",
+      "Task boundary: do only what the current task instruction lists and stop at its end, even when later steps of this brief remain; report the next step instead of performing it.",
+      "Designer gate (read-only except one close and one reopen): User scope; record which Form is open (EXP-104 left FX_FlexProbe01 open and clean), that nothing is dirty (Save disabled) and that no Error dialog is open. If FX_FlexProbe01 is open and clean, close it once through its Form-tab control (answer No to any save prompt, record its text). Open FX_CustomerPortal once through the Designer Form menu recent-forms entry (never Select Form OK). If a close or open raises the server-event error, answer OK once, record it and stop blocked.",
+      "Selection gate (decisive): select flexlayoutPane_FX_CustomerPortal once by a click on its row in Details > Components. Record immediately with a screenshot whether an Error dialog appears (verbatim) and whether the Properties grid shows the Design group (Name, Description, Type FlexLayout, From Device Master) as on FX_FlexProbe01 in EXP-104 (t2-11). If an Error dialog appears or the grid stays empty, answer OK once, record it and stop blocked; do not open the dialog and do not retry the selection. Never click a Region row's delete or the Components trash icon.",
+      "Dialog discovery (read-only, only after a clean selection gate): open Edit FlexLayout Attributes once through the canvas control (the first small FlexLayout icon at the top left of the canvas; tooltip 'Edit FlexLayout Attributes'). Record the Attributes Type value and options (open the Type list once to read it, then close it without choosing), the Regions grid rows, and for each region (select its row to view it) ID, Length, Unit, Orientation, Alignment, Pack, Minimum Length, Maximum Length and Default Margin; open the Unit and Orientation lists once each to read their options and close them without choosing. Change no value. Leave with Cancel once and verify Save is still disabled. If the dialog opens empty or an error appears, answer OK once, record it, Cancel and stop blocked.",
+      "Change: open the dialog once more and set, in this order: Type = VerticalBox (the tutorial's 'Vertical Box'; EXP-104 showed the value spelled HorizontalBox); region index 0: ID header, Length 4, Unit Form, Orientation Fill; region index 1: ID main, Length 1, Unit Flex, Orientation Fill; region index 2: ID footer, Length 2, Unit Form, Orientation Fill. Leave every other attribute (Alignment, Pack, Minimum Length, Maximum Length, Default Margin and the rest) at its current value. Use the existing three regions; never add, delete or reorder a region. Record each value as displayed after entry. At most one correction per field. If an option named in this brief does not exist (for example the Unit list has no 'Form', or Type has no VerticalBox), record the available options and stop blocked with Cancel before OK. Confirm with OK once and record any prompt or message verbatim; then perform exactly one Designer Save and record its response and the Save state afterwards. Never retry a Save; never Save after an error.",
+      "Readback: close the clean FX_CustomerPortal once through its Form-tab control (answer No to any save prompt, record its text), reopen it once through the Form menu recent-forms entry, select the FlexLayout, open Edit FlexLayout Attributes read-only and record Type and every region's ID, Length, Unit and Orientation (screenshot each region selected). Also record the Components tree region names and the canvas arrangement (rows instead of columns). Leave the dialog with Cancel and the Form open and clean (Save disabled).",
+      "Capture screenshots of the gate, any close and the reopen, the moment after the FlexLayout selection, the tooltip, the dialog before any change with each region and each option list read, the dialog after all entries and before OK, the OK and Save responses, the canvas after Save, and the readback. Use a distinct filename for every capture; never overwrite an earlier screenshot.",
+      "Before every click, use references from the most recent snapshot taken in the current task (not from find output); after any timeout or 'Ref not found', take one fresh untargeted snapshot and use only its references. Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. ExtJS comboboxes are not <select> elements (EXP-101): open their list and click the option. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Part 7 Section 4 and later: nested FlexLayouts, statics, images, theme classes, variables, bindings, string resources, captions, Align, Pack, Margin and Max Length changes.",
+      "Adding, deleting, moving or renaming any component; adding or deleting regions; any component other than flexlayoutPane_FX_CustomerPortal.",
+      "Form properties (Caption, Unit, Size, Synchronize FlexLayout attributes and others) and the collections.",
+      "Regenerate Form (not authorized in this run). Any change to FX_FlexProbe01 (only one clean close is allowed).",
+      "Any other Form; Site Default or Group scope.",
+      "Global objects (themes, images, classes, strings, variables), IDOs, SQL objects and stored data.",
+      "Any runtime action in the Web Client.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; FormSync, deployment; any cache or metadata unload.",
+      "Direct SQL execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes, assets or files outside the EXP-103 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never change any FlexLayout attribute other than Type and the three regions' ID, Length, Unit and Orientation.",
+    "Never add, delete, move or rename a component or a region (renaming a region means only setting its ID as listed).",
+    "Never click Regenerate Form or Delete Form Definition.",
+    "Never edit or save any other Form; never perform any runtime action.",
+    "Never click Select Form OK; open FX_CustomerPortal only through the recent-forms entry. Never retry a FlexLayout selection that raised the server-event error.",
+    "Never go beyond the current task instruction; stop at its end even when later brief steps remain.",
+    "Never invoke the Designer Save more than once or retry an uncertain Save; never Save after an error.",
+    "Never answer Yes to a prompt that would delete, discard or replace anything; record every prompt verbatim.",
+    "Never invoke any unload, in the Web Client or the Designer.",
+    "Never perform check-in, undo checkout or other checkout-management actions, FormSync or deployment.",
+    "Never use direct SQL, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability, database-level durability or replay verification from same-session UI observations."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:set|select|choose|change|switch)\\b[^.\\n]{0,30}\\b(?:Site Default|Group)\\s+scope\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:component|collection|region|FlexLayout|Flex Layout)s?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b",
+    "\\b(?:click|press|invoke|perform|use)\\b[^.\\n]{0,30}\\b(?:runtime|Web Client)\\s+Save\\b"
+  ],
+  "related_experiments": [
+    "EXP-103",
+    "EXP-104",
+    "EXP-102"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_CustomerPortal (User scope, EXP-102)",
+    "artifacts": [
+      "flexlayoutPane_FX_CustomerPortal FlexLayout attributes: Type VerticalBox; regions header (4 Form, Fill), main (1 Flex, Fill), footer (2 Form, Fill)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed; session usable; User scope; FX_FlexProbe01 closed clean (or recorded as not open); FX_CustomerPortal reopened through recent forms; selection gate recorded with a screenshot (error yes/no, Properties grid populated yes/no). If the gate fails, the run ends blocked with that evidence and AC-2/AC-3 are not attempted. If it passes, the dialog is recorded read-only (Type value and options, every region's values, Unit and Orientation options) and left with Cancel, Save still disabled."
+    },
+    {
+      "id": "AC-2",
+      "description": "Type VerticalBox and the three regions set exactly (header 4 Form Fill; main 1 Flex Fill; footer 2 Form Fill) with at most one correction per field and no region added or deleted; OK once with any response recorded; exactly one Designer Save with its response; Save disabled afterwards. Evidence: before-OK, OK, Save and canvas screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "After one ordinary close and reopen, the dialog shows Type VerticalBox and header 4 Form Fill, main 1 Flex Fill, footer 2 Form Fill; the Components tree and canvas reflect the regions; dialog left with Cancel; Form open and clean. Evidence: readback screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "No other attribute, component, region, Form property, collection or Form changed; no Regenerate; no runtime action; no unload; no checkout action; User scope only; no task-boundary overrun."
+    },
+    {
+      "id": "AC-5",
+      "description": "The final EXP-103-R2 report gives decisive evidence for AC-1 to AC-4, states the selection-gate result plainly (server-event error on FX_CustomerPortal's FlexLayout in a fresh Designer: yes/no), the complete action audit with exact counts (Form closes and reopens, FlexLayout selections, Error dialogs with texts, dialog opens and how each was left, list opens, Type changes, per-region field entries and corrections, OK clicks, Designer Saves, prompts with texts, errors, re-login count), the worker-written-file inventory and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-103-R2",
+  "replay_of": "EXP-103",
+  "initial_instruction": "T1 - Gate, decisive selection gate and read-only dialog discovery for EXP-103-R2. Read AGENTS.md, hello-world-pt7.md Section 3 (lines 133-143) and the Flex Layout concepts table (lines 47-61), recipes/session/session-expiry-and-stale-designer.md, and only the Outcome (operator) sections of EXP-102, EXP-103 and EXP-104. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry or sign-in, follow the worker-preamble procedure (top-level portal navigation only) and end the task. In the Designer confirm User scope, which Form is open, that nothing is dirty and that no Error dialog is open. If FX_FlexProbe01 is open and clean, close it once through its Form-tab control. Open FX_CustomerPortal once through the Form menu recent-forms entry. Select flexlayoutPane_FX_CustomerPortal once by its row in Details > Components and record with a screenshot whether an Error dialog appears and whether the Properties grid shows its Design group. If there is an error or the grid stays empty, answer OK once, record it and stop: that ends T1 blocked. Otherwise open Edit FlexLayout Attributes once through the canvas control (confirm the tooltip), record the Type value and options, every region's ID, Length, Unit, Orientation, Alignment, Pack, Minimum Length, Maximum Length and Default Margin, and the Unit and Orientation options (open each list once to read it; choose nothing), change nothing, leave with Cancel once and verify Save is still disabled. This is the end of T1 even though later brief steps remain. Create the EXP-103-R2 record with the gate, the selection result, the dialog inventory, the action audit and the file inventory, with screenshots under evidence/EXP-103-R2/ (distinct filenames), and stop with no dialog open.",
+  "notes": "Proposed by the operator assistant after EXP-104 (operator decision 2026-10-16: 'Accept + retry section 3'). EXP-103 was blocked: selecting flexlayoutPane_FX_CustomerPortal raised the server-event error 3 of 3 times and the attributes dialog opened empty; in EXP-104 T1 even closing FX_CustomerPortal raised the error, but after the operator reloaded both tabs it closed cleanly, and a fresh Flex > Basic Form FX_FlexProbe01 without collections loaded its FlexLayout normally (Type HorizontalBox; regions FLEX_PANE_REGION0-2 each Length 1, Unit Flex, Orientation Vertical, Alignment Left, Pack Start). This replay therefore starts with a decisive selection gate on FX_CustomerPortal in the fresh Designer: an error attributes the fault to its collections or Regenerate (EXP-102) and stops the run; a clean selection points to a Designer session state in EXP-103 and lets Section 3 proceed. Values from the transcript (04:31-05:16) as in EXP-103; the Type value is written VerticalBox to match the observed HorizontalBox spelling. Region IDs header, main and footer are Form-local names. Regenerate is not authorized. Planned tasks: T1 gate, selection gate and read-only dialog discovery; T2 the change, OK and one Save; T3 close/reopen readback; T4 documentation-only audit. exact_values: FX_CustomerPortal, flexlayoutPane_FX_CustomerPortal, VerticalBox, header, main, footer, Form, Flex, Fill. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_CustomerPortal",
+    "flexlayoutPane_FX_CustomerPortal",
+    "VerticalBox",
+    "header",
+    "main",
+    "footer",
+    "Form",
+    "Flex",
+    "Fill"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User scope; FX_CustomerPortal root FlexLayout attributes only (Type and three region definitions), only after a clean selection gate; one Designer Save; FX_FlexProbe01 closed clean; no Regenerate; no other Form; no global object; no runtime action; no unload"
+}
