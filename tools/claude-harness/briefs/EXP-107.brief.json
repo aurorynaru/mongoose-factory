@@ -1,0 +1,134 @@
+{
+  "experiment_id": "EXP-107",
+  "title": "EXP-107 - Hello World Part 7 Section 5: Statics StaticCustIcon (Bitmap File FX_CustomerIcon.png, Justification Right, Size 4; 1.5, No Colon True) and StaticCustID (Theme Class FX_WhiteHeader, Justification Left, Size 10; 1.5, No Colon True; Customer ID binding deferred to Part 8) in the user Region of FlexLayoutHeader on FX_CustomerPortal; Readback After Reopen",
+  "record_path": "experiments/EXP-107-hello-world-part-7-section-5-fx-customer-portal-user-statics.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt7.md Section 5 (07:31-08:51) on the User-scope Form FX_CustomerPortal, except the variable binding: place two Statics from the Toolbox into the user region of FlexLayoutHeader (EXP-105). First Static: Name StaticCustIcon, Appearance > Bitmap File Name FX_CustomerIcon.png (EXP-101 image), Justification Right, Layout Size Width 4 and Height 1.5, No Colon True; one Designer Save. Second Static: Name StaticCustID, Theme Class FX_WhiteHeader, Justification Left, Size Width 10 and Height 1.5, No Colon True; one Designer Save. The tutorial's Binding Type Variable / Customer ID is deferred to Part 8 (the variable is not defined in this lesson); Regenerate is not performed. Verify everything after an ordinary close and reopen. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Before browser interaction read AGENTS.md (the repository file, at the start of every task), docs/mongoose/transcripts/hello-world-pt7.md Section 5 (lines 165-182) and transcript lines 07:31-08:51, recipes/components/add-component-from-toolbox.md, recipes/components/configure-basic-component.md, recipes/session/session-expiry-and-stale-designer.md, and only the final Outcome (operator) sections of the EXP-106, EXP-105 and EXP-101 records. Do not read those records in full and do not read Part 7 Section 6 or later. Each task reads its own required sources before its first browser action.",
+      "Create or update only experiments/EXP-107-hello-world-part-7-section-5-fx-customer-portal-user-statics.md and evidence/EXP-107/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If it expires, follow the worker-preamble session-expiry procedure once and end the task; never sign in inside the portal's embedded app frame (refused, EXP-080-R2) but use the procedure's top-level portal navigation. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt, dialog, menu or unsaved change open across tasks. After any pause, inspect the state read-only before acting and never replay an earlier action.",
+      "Task boundary: do only what the current task instruction lists and stop at its end, even when later steps of this brief remain; report the next step instead of performing it.",
+      "Server-event rule (EXP-103-R2 lesson): if any action raises 'The server event processing returned an error', answer OK once, record it and stop blocked for an operator Designer reload; never try another route, retry, close or reopen after that error.",
+      "Designer gate (read-only except at most one reopen): User scope; FX_CustomerPortal open and clean (Save disabled), no dialog open; if it is not open, open it once through the Form menu recent-forms entry (never Select Form OK). Record the Components tree (Pane (00) > flexlayoutPane_FX_CustomerPortal > Region00: header > FlexLayoutHeader > Region00: header > StaticHeader, and Region01: user, which is empty; root Region01: main, Region02: footer), that no component named StaticCustIcon or StaticCustID exists, and where the user region lies on the canvas (the right part of the teal header strip, right of the dotted divider; StaticHeader with 'Customer Portal' is in the left part).",
+      "Property entry rules (EXP-106): Name and Width/Height are plain text editors (double-click the value cell, one plain fill, Tab). Lists (Theme Class, Justification, No Colon) are ExtJS comboboxes: open the list by its trigger and click the option, then Tab. Any combobox that offers a string or file list must not be filled and tabbed (a plain fill plus Tab committed the first list item in EXP-106 D3): choose from the list, or type key by key and check the list before Tab. Size is a 'W; H' summary row in Layout (double-click it to show Width, Height and Lock Size); No Colon is in Miscellaneous > Specific Attributes (double-click to expand); Justification is in Appearance. At most one correction per field. If a named option is missing or a field is read-only, record the options or state, leave that field unchanged and continue with the others. Record every value as displayed after entry.",
+      "Icon Static (T2): click the Static row in the Toolbox once, then click once inside the user region on the canvas (right part of the teal strip, away from the edges, the divider and other components' adorner icons). Immediately record the Components tree: the new Static must be a child of FlexLayoutHeader > Region01: user. If it was placed anywhere else, click the toolbar Undo once, record the state and stop blocked. Record the generated name and defaults from Properties. Never use mouse dragging. Then set: Name StaticCustIcon; Appearance > Bitmap File Name FX_CustomerIcon.png (first record how the row's editor works, a list, an ellipsis picker or a text field, and the image names it offers; choose FX_CustomerIcon.png; if it is a free-text field only, type FX_CustomerIcon.png key by key and Tab; never upload, rename or delete an image and never use Import or Export in a picker; leave any picker with its OK or Cancel); Justification Right (the placement default in EXP-106 was Right: verify it and do not re-select if already Right); Size Width 4 and Height 1.5; No Colon True. Then perform exactly one Designer Save and record its response, the Save state and what the canvas shows in the user region.",
+      "ID Static (T3): reselect nothing else; click the Static row in the Toolbox once, then click once inside the user region on the canvas, to the left of StaticCustIcon if there is room, otherwise in free space of the user region. Immediately record the Components tree: the new Static must be a child of FlexLayoutHeader > Region01: user, next to StaticCustIcon; record the order of the two Statics in the tree and on the canvas (the tutorial shows the icon first and then the customer-ID Static; record the order as observed and never reorder). If it was placed anywhere else, click the toolbar Undo once, record the state and stop blocked. Then set: Name StaticCustID; Appearance > Theme Class FX_WhiteHeader; Justification Left; Size Width 10 and Height 1.5; No Colon True. Record the Data Source Binding Type and Binding rows as displayed (read-only; never open their lists or ellipsis). Then perform exactly one Designer Save and record its response, the Save state and the canvas.",
+      "Readback (T4): close the clean FX_CustomerPortal once through its Form-tab control (answer No to any save prompt, record its text), reopen it once through the Form menu recent-forms entry, record the Components tree (StaticHeader under FlexLayoutHeader > Region00: header; StaticCustIcon and StaticCustID under Region01: user, with their order), select each new Static by its Components row and record Name, Bitmap File Name, Theme Class, Justification, Size and No Colon, and what the canvas shows (expected: the customer icon image in the user region and an empty Static next to it). Also record that StaticHeader and FlexLayoutHeader are unchanged (tree names and order; canvas text 'Customer Portal'). Leave the Form open and clean.",
+      "Capture screenshots of the gate, each Toolbox selection, the canvas and Components tree right after each placement, the Bitmap File Name editor and its choices, each value after entry, each Save response, and the readback. Use a distinct filename for every capture; never overwrite an earlier screenshot.",
+      "Before every click, use references from the most recent snapshot taken in the current task (not from find output); after any timeout or 'Ref not found', take one fresh untargeted snapshot and use only its references. Coordinates are allowed only for the canvas placement click and no other target; record each such click. Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. ExtJS comboboxes are not <select> elements (EXP-101): open their list and click the option. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "The Data Source binding of StaticCustID (Binding Type Variable, Customer ID; deferred to Part 8, where the variable's source is expected), Regenerate Form, and Part 7 Section 6 and later: the footer and main layouts.",
+      "Any change to the root FlexLayout, FlexLayoutHeader, StaticHeader or any region; any component other than the two new Statics; deleting or moving any component or region.",
+      "Form properties and collections.",
+      "Regenerate Form (not authorized in this run).",
+      "Any other Form, including FX_FlexProbe01; Site Default or Group scope.",
+      "Creating or changing any global object: strings, images (FX_CustomerIcon.png is only referenced), the theme FX_HelloWorld and its classes, variables; IDOs, SQL objects and stored data.",
+      "Any runtime action in the Web Client.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; FormSync, deployment; any cache or metadata unload.",
+      "Direct SQL execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes, assets or files outside the EXP-107 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never place more than two components (one per task); never use mouse dragging; Undo at most once per task and only to remove that task's misplaced new Static before any other change to it.",
+    "Never change the root FlexLayout, FlexLayoutHeader, StaticHeader, any region or any existing component; never delete, move or reorder a component or a region.",
+    "Never set any attribute other than the new Statics' Name, Bitmap File Name (StaticCustIcon only), Theme Class (StaticCustID only), Justification, Size (Width, Height) and No Colon; never set a Caption, Binding Type, Binding or other data-source property.",
+    "Never create, edit, upload, rename or delete any global object, including strings and images; never answer Yes to a 'does not exist. Create it?' prompt.",
+    "Never click Regenerate Form or Delete Form Definition.",
+    "Never edit or save any other Form; never perform any runtime action.",
+    "Never click Select Form OK; open FX_CustomerPortal only through the recent-forms entry.",
+    "Never go beyond the current task instruction; stop at its end even when later brief steps remain.",
+    "Never invoke the Designer Save more than once per task or retry an uncertain Save; never Save after an error.",
+    "Never answer Yes to a prompt that would delete, discard or replace anything; record every prompt verbatim.",
+    "Never invoke any unload, in the Web Client or the Designer.",
+    "Never perform check-in, undo checkout or other checkout-management actions, FormSync or deployment.",
+    "Never use direct SQL, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability, database-level durability or replay verification from same-session UI observations."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:browser_drag|browser_mouse_drag_xy|browser_mouse_down|browser_mouse_up)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:set|select|choose|change|switch)\\b[^.\\n]{0,30}\\b(?:Site Default|Group)\\s+scope\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:component|collection|region|FlexLayout|Flex Layout)s?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b",
+    "\\b(?:click|press|invoke|perform|use)\\b[^.\\n]{0,30}\\b(?:runtime|Web Client)\\s+Save\\b",
+    "\\b(?:set|select|choose|change)\\b[^.\\n]{0,30}\\bBinding Type\\b"
+  ],
+  "related_experiments": [
+    "EXP-106",
+    "EXP-105",
+    "EXP-101",
+    "EXP-062-R4"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_CustomerPortal (User scope, EXP-102/EXP-103-R3)",
+    "artifacts": [
+      "StaticCustIcon (new Static in FlexLayoutHeader's user region of FX_CustomerPortal; Bitmap File Name FX_CustomerIcon.png; Justification Right; Size 4; 1.5; No Colon True)",
+      "StaticCustID (new Static in the same region; Theme Class FX_WhiteHeader; Justification Left; Size 10; 1.5; No Colon True; no binding yet)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed at the start of each task; session usable; User scope; FX_CustomerPortal open and clean with FlexLayoutHeader (StaticHeader in its header region, user region empty); user region located on the canvas; no StaticCustIcon or StaticCustID. Evidence: gate and tree screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "Exactly one Static placed in T2 by Toolbox selection and one canvas click, shown as a child of FlexLayoutHeader > Region01: user; Name StaticCustIcon; Bitmap File Name FX_CustomerIcon.png with the editor type and offered images recorded; Justification Right; Size 4; 1.5; No Colon True; at most one correction per field; one Designer Save with its response. Evidence: placement, editor, per-field and Save screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "Exactly one Static placed in T3 the same way, a child of Region01: user next to StaticCustIcon, with the order recorded; Name StaticCustID; Theme Class FX_WhiteHeader; Justification Left; Size 10; 1.5; No Colon True; binding rows recorded read-only and unchanged; one Designer Save with its response. Evidence: placement, per-field and Save screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "After one ordinary close and reopen, both Statics are under FlexLayoutHeader > Region01: user with the values above; the canvas shows the customer icon and the empty Static; StaticHeader and FlexLayoutHeader unchanged; Form open and clean. Evidence: readback screenshots."
+    },
+    {
+      "id": "AC-5",
+      "description": "No other component, region or Form changed; no global object created or changed; no binding set; no Regenerate; no dragging; Undo used at most once per task and only as allowed; no runtime action; no unload; no checkout action; User scope only; no task-boundary overrun."
+    },
+    {
+      "id": "AC-6",
+      "description": "The final EXP-107 report gives decisive evidence for AC-1 to AC-5, the complete action audit with exact counts (Toolbox selections, canvas placement clicks, coordinate clicks, Undo clicks, per-field entries and corrections, list and picker opens and how each was left, prompts with texts, Designer Saves with responses, Form closes and reopens, errors, re-login count), the worker-written-file inventory, the cleanup inventory (StaticCustIcon, StaticCustID) and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-107",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only gate for EXP-107. First read the repository file AGENTS.md, then hello-world-pt7.md Section 5 (lines 165-182) and transcript lines 07:31-08:51, recipes/components/add-component-from-toolbox.md, recipes/components/configure-basic-component.md, recipes/session/session-expiry-and-stale-designer.md, and only the Outcome (operator) sections of EXP-106, EXP-105 and EXP-101, all before any browser action. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry or sign-in, follow the worker-preamble procedure (top-level portal navigation only) and end the task. In the Designer confirm User scope, that FX_CustomerPortal is open and clean and that no dialog is open; if it is not open, open it once through the Form menu recent-forms entry. If any action raises the server-event error, answer OK once, record it and stop. Record the Components tree (expand it if needed; view only) including FlexLayoutHeader with StaticHeader in its header region, the empty user region and the absence of StaticCustIcon and StaticCustID, the Toolbox Static row, and where the user region lies on the canvas, with screenshots. Make no change and select no component in T1. This is the end of T1 even though later brief steps remain. Create the EXP-107 record with the gate, the observations, the action audit and the file inventory, with screenshots under evidence/EXP-107/ (distinct filenames), and stop with no dialog open.",
+  "notes": "Proposed by the operator assistant after EXP-106; drafting requested by the operator 2026-10-16 ('yes continue', approving the plan to defer the binding). Values from the transcript (07:31-08:51): two Statics dropped into the user region of flex layout header; 'static cust icon': bitmap file customericon.png, justification right, width 4, height 1.5, no colon true; 'static cust id': theme class white header, justification left, binding type variable with binding customer id (ellipsis, OK), width 10, height 1.5, no colon true; regenerate; the icon and an empty Static that 'will be bound to our customer id variable later on'. Factory mapping: names StaticCustIcon and StaticCustID (Form-local, no FX_ prefix); image FX_CustomerIcon.png (EXP-101 upload of customericon.png); Theme Class FX_WhiteHeader (EXP-100). The binding is deferred to Part 8 by operator decision (the Customer ID variable is not defined in Part 7). Known routes (EXP-106): Toolbox Static plus one canvas click in a nested Flex region; Justification in Appearance (default Right); Size 'W; H' with Width/Height sub-rows; No Colon in Miscellaneous > Specific Attributes; string/file comboboxes must not be plain-filled and tabbed. New here: the Bitmap File Name editor and a second component in the same Flex region (order). No global object is created. Server-event rule from EXP-103-R2. Regenerate is not authorized. Planned tasks: T1 read-only gate; T2 icon Static and Save; T3 ID Static and Save; T4 close/reopen readback; T5 documentation-only audit. exact_values: StaticCustIcon, StaticCustID, FX_CustomerIcon.png, FX_WhiteHeader (typed or chosen names only; list choices and numbers are verified by readback). deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "StaticCustIcon",
+    "StaticCustID",
+    "FX_CustomerIcon.png",
+    "FX_WhiteHeader"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User scope; FX_CustomerPortal only: two new Statics StaticCustIcon (Bitmap File Name FX_CustomerIcon.png, Justification Right, Size 4; 1.5, No Colon True) and StaticCustID (Theme Class FX_WhiteHeader, Justification Left, Size 10; 1.5, No Colon True) in FlexLayoutHeader's user region; two Designer Saves; no binding; no Regenerate; no other component, Form or global object; no runtime action; no unload"
+}
