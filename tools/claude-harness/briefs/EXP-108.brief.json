@@ -1,0 +1,132 @@
+{
+  "experiment_id": "EXP-108",
+  "title": "EXP-108 - Hello World Part 7 Section 6a: FlexLayout FlexLayoutFooter (Theme Class FX_BlueBackground) in the root footer Region and FlexLayout FlexLayoutMain in the root main Region of FX_CustomerPortal; Default Attributes of FlexLayoutMain Read; Readback After Reopen",
+  "record_path": "experiments/EXP-108-hello-world-part-7-section-6a-fx-customer-portal-footer-main-flexlayouts.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Follow hello-world-pt7.md Section 6 steps 1-3 (08:51-09:11) on the User-scope Form FX_CustomerPortal: place one FlexLayout from the Toolbox into the root FlexLayout's footer region, name it FlexLayoutFooter and set Theme Class FX_BlueBackground, one Designer Save; then place one FlexLayout into the root main region, name it FlexLayoutMain, one Designer Save, and record its default attributes read-only (input for EXP-109, which configures its six regions). Verify both after an ordinary close and reopen. Regenerate is not performed. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Before browser interaction read AGENTS.md (the repository file, at the start of every task), docs/mongoose/transcripts/hello-world-pt7.md Section 6 steps 1-3 (lines 184-189) and transcript lines 08:51-09:16, recipes/components/add-component-from-toolbox.md, recipes/session/session-expiry-and-stale-designer.md, and only the final Outcome (operator) sections of the EXP-105 and EXP-107 records. Read nothing else: no other records and no Part 7 Section 6 step 4 or later.",
+      "Create or update only experiments/EXP-108-hello-world-part-7-section-6a-fx-customer-portal-footer-main-flexlayouts.md and evidence/EXP-108/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If a session expiry, logout card or sign-in page appears, record it and stop for the operator (EXP-107: the operator signs in manually); do not navigate, type credentials or screenshot a filled sign-in form. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt, dialog, menu or unsaved change open across tasks. After any pause, inspect the state read-only before acting and never replay an earlier action.",
+      "Task boundary: do only what the current task instruction lists and stop at its end, even when later steps of this brief remain; report the next step instead of performing it.",
+      "Server-event rule (EXP-103-R2 lesson): if any action raises 'The server event processing returned an error', answer OK once, record it and stop blocked for an operator Designer reload; never try another route, retry, close or reopen after that error.",
+      "Designer gate (read-only except at most one reopen): User scope; FX_CustomerPortal open and clean (Save disabled), no dialog open; if it is not open, open it once through the Form menu recent-forms entry (never Select Form OK). Record the Components tree (Pane (00) > flexlayoutPane_FX_CustomerPortal > Region00: header > FlexLayoutHeader with StaticHeader, StaticCustIcon and StaticCustID; Region01: main and Region02: footer, both empty) and where the main region (the large middle area between the dotted dividers) and the footer region (the narrow strip below the lower dotted divider; scroll the canvas if needed, view only) lie on the canvas.",
+      "Efficiency rules (operator, 2026-10-16): screenshots only for the decisive states named in this brief; do not re-open saved images unless a decision needs it; one untargeted snapshot per step; read only the named sources; never search or read the worker's own session transcript.",
+      "Placement rule (EXP-105): click the FlexLayout row in the Toolbox once, then click once inside the target region on the canvas, away from edges, dividers and other components' adorner icons. Immediately record the Components tree: the new FlexLayout must be a direct child of the named root region. If it was placed anywhere else, click the toolbar Undo once, record the state and stop blocked. Never use mouse dragging. Name is a plain text editor (double-click the value cell, one plain fill, Tab; at most one correction); Theme Class is an ExtJS combobox (open the list, click the option, Tab). The Properties header may lag after a rename (EXP-105); reselect once by the Components row if needed.",
+      "Footer (T2): place one FlexLayout into the root footer region (Region02: footer) by the placement rule, set Name FlexLayoutFooter and Appearance > Theme Class FX_BlueBackground (record the classes listed). If FX_BlueBackground is not listed, record the list, Undo the placement once and stop blocked before Save. Then exactly one Designer Save with its response, the Save state and the canvas (expected: a blue footer strip). Screenshots: placement with the tree, Save response.",
+      "Main (T3): place one FlexLayout into the root main region (Region01: main) by the placement rule and set Name FlexLayoutMain (no Theme Class; the tutorial sets none). Then exactly one Designer Save with its response and the Save state. Then, read-only: with FlexLayoutMain selected (reselect by its Components row if needed), open Edit FlexLayout Attributes once through its canvas adorner (hover first; identify it by the tooltip 'Edit FlexLayout Attributes' or its flexlayouteditadorner DOM id, not by position) and record Type, Auto Size, Region Index, Margin, the region count and each region's ID, Length, Unit, Orientation, Alignment, Pack, Minimum and Maximum Length and Default Margin. Open no list; change nothing; Cancel once; verify Save is still disabled. Screenshots: placement with the tree, Save response, the dialog.",
+      "Readback and audit (T4, one task): close the clean FX_CustomerPortal once through its Form-tab control (answer No to any save prompt, record its text), reopen it once through the Form menu recent-forms entry, record the Components tree (FlexLayoutFooter under Region02: footer, FlexLayoutMain under Region01: main, the header components unchanged), select FlexLayoutFooter and FlexLayoutMain by their Components rows and record Name, Type and Theme Class, and record the canvas. Leave the Form open and clean. Then, in the same task, write the documentation-only final audit into the record: decisive evidence for each acceptance check, the cumulative action audit with exact counts, the worker-written-file inventory, the cleanup inventory and the final state. Screenshots: the reopened tree and canvas.",
+      "Before every click, use references from the most recent snapshot taken in the current task (not from find output); after any timeout or 'Ref not found', take one fresh untargeted snapshot and use only its references. Coordinates are allowed only for the two canvas placement clicks and FlexLayoutMain's canvas adorner when no reference exists; record each such click. Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Part 7 Section 6 step 4 and later: FlexLayoutMain's regions and attributes (EXP-109), the menu buttons, pages and everything after; Regenerate Form; the deferred StaticCustID binding.",
+      "Any change to the root FlexLayout, FlexLayoutHeader, StaticHeader, StaticCustIcon, StaticCustID or any region; any component other than the two new FlexLayouts; deleting or moving any component or region.",
+      "Form properties and collections.",
+      "Regenerate Form (not authorized in this run).",
+      "Any other Form, including FX_FlexProbe01; Site Default or Group scope.",
+      "Creating or changing global objects: the theme FX_HelloWorld and its classes, strings, images, variables; IDOs, SQL objects and stored data.",
+      "Any runtime action in the Web Client.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; FormSync, deployment; any cache or metadata unload.",
+      "Direct SQL execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes, assets or files outside the EXP-108 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never place more than two components (one per task, T2 and T3); never use mouse dragging; Undo at most once per task and only to remove that task's misplaced new FlexLayout or before stopping when FX_BlueBackground is missing.",
+    "Never change the root FlexLayout, FlexLayoutHeader or its Statics, or any region; never delete, move or reorder a component or a region; never add a region.",
+    "Never set any attribute other than FlexLayoutFooter's Name and Theme Class and FlexLayoutMain's Name; FlexLayoutMain's attributes dialog is read-only and left with Cancel.",
+    "Never create or edit a theme, class, string or other global object.",
+    "Never click Regenerate Form or Delete Form Definition.",
+    "Never edit or save any other Form; never perform any runtime action.",
+    "Never click Select Form OK; open FX_CustomerPortal only through the recent-forms entry.",
+    "Never go beyond the current task instruction; stop at its end even when later brief steps remain.",
+    "Never invoke the Designer Save more than once per task or retry an uncertain Save; never Save after an error.",
+    "Never answer Yes to a prompt that would delete, discard or replace anything; record every prompt verbatim.",
+    "Never invoke any unload, in the Web Client or the Designer.",
+    "Never perform check-in, undo checkout or other checkout-management actions, FormSync or deployment.",
+    "Never use direct SQL, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability, database-level durability or replay verification from same-session UI observations."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:browser_drag|browser_mouse_drag_xy|browser_mouse_down|browser_mouse_up)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:set|select|choose|change|switch)\\b[^.\\n]{0,30}\\b(?:Site Default|Group)\\s+scope\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:component|collection|region|FlexLayout|Flex Layout)s?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b",
+    "\\b(?:click|press|invoke|perform|use)\\b[^.\\n]{0,30}\\b(?:runtime|Web Client)\\s+Save\\b"
+  ],
+  "related_experiments": [
+    "EXP-105",
+    "EXP-107",
+    "EXP-103-R3",
+    "EXP-100"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_CustomerPortal (User scope, EXP-102/EXP-103-R3)",
+    "artifacts": [
+      "FlexLayoutFooter (new FlexLayout in the root footer region of FX_CustomerPortal; Theme Class FX_BlueBackground)",
+      "FlexLayoutMain (new FlexLayout in the root main region; defaults recorded for EXP-109)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed at the start of each task; session usable; User scope; FX_CustomerPortal open and clean with the header components and empty main and footer regions; main and footer regions located on the canvas. Evidence: gate screenshot and tree."
+    },
+    {
+      "id": "AC-2",
+      "description": "Exactly one FlexLayout placed in T2 by Toolbox selection and one canvas click, a direct child of Region02: footer; Name FlexLayoutFooter; Theme Class FX_BlueBackground; at most one correction per field; one Designer Save with its response. Evidence: placement and Save screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "Exactly one FlexLayout placed in T3 the same way, a direct child of Region01: main; Name FlexLayoutMain; one Designer Save with its response; FlexLayoutMain's default attributes recorded read-only and the dialog left with Cancel, Save still disabled. Evidence: placement, Save and dialog screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "After one ordinary close and reopen, FlexLayoutFooter (FX_BlueBackground) and FlexLayoutMain are in their regions with their names; the header components unchanged; Form open and clean. Evidence: readback screenshot and tree."
+    },
+    {
+      "id": "AC-5",
+      "description": "No other component, region or Form changed; no global object created or changed; no Regenerate; no dragging; Undo used at most once per task and only as allowed; no runtime action; no unload; no checkout action; User scope only; no task-boundary overrun."
+    },
+    {
+      "id": "AC-6",
+      "description": "The final audit (written in T4) gives decisive evidence for AC-1 to AC-5, the action audit with exact counts (Toolbox selections, placement and coordinate clicks, Undo clicks, Name and Theme Class entries and corrections, list opens, dialog opens and how each was left, Designer Saves with responses, Form closes and reopens, prompts, errors, re-logins), the worker-written-file inventory, the cleanup inventory (FlexLayoutFooter, FlexLayoutMain) and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-108",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only gate for EXP-108. First read the repository file AGENTS.md, then hello-world-pt7.md lines 184-189 and transcript lines 08:51-09:16, recipes/components/add-component-from-toolbox.md, recipes/session/session-expiry-and-stale-designer.md, and only the Outcome (operator) sections of EXP-105 and EXP-107, all before any browser action; read nothing else. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry or sign-in, record it and stop for the operator (do not sign in; never screenshot a filled sign-in form). In the Designer confirm User scope, that FX_CustomerPortal is open and clean and that no dialog is open; if it is not open, open it once through the Form menu recent-forms entry. If any action raises the server-event error, answer OK once, record it and stop. Record the Components tree (expand it if needed; view only) and where the main and footer regions lie on the canvas (scroll the canvas if needed, view only), with at most two screenshots. Make no change and select no component in T1. This is the end of T1 even though later brief steps remain. Create the EXP-108 record with the gate, the observations, the action audit and the file inventory, with screenshots under evidence/EXP-108/ (distinct filenames), and stop with no dialog open.",
+  "notes": "Proposed by the operator assistant after EXP-107; drafting requested by the operator 2026-10-16 ('yes go ahead', for the plan to split Part 7 Section 6 into EXP-108 footer plus FlexLayoutMain placement and EXP-109 the six regions). Values from the transcript (08:51-09:16): a FlexLayout dropped into the footer region, renamed 'flex layout footer', blue background theme class, regenerate; another FlexLayout dropped into the main region, renamed 'flex layout main'. Factory mapping: names FlexLayoutFooter and FlexLayoutMain (Form-local, no FX_ prefix, like FlexLayoutHeader); Theme Class FX_BlueBackground (EXP-100). Placement and naming follow EXP-105 (Toolbox row click plus one canvas click; Name plain fill plus Tab; Theme Class list). FlexLayoutMain's Type is not narrated (hello-world-pt7.md source fidelity note), so T3 records the defaults read-only for EXP-109. The session-expiry rule is changed for this brief: a sign-in page stops the task for the operator (EXP-107: the Sign in button refused Playwright clicks; the operator signs in manually). Efficiency rules (operator, 2026-10-16): decisive screenshots only, readback and audit in one task, named sources only. Server-event rule from EXP-103-R2. Regenerate is not authorized. Planned tasks: T1 read-only gate; T2 footer FlexLayout, Save; T3 main FlexLayout, Save, read-only default attributes; T4 close/reopen readback and final audit. exact_values: FlexLayoutFooter, FlexLayoutMain, FX_BlueBackground. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FlexLayoutFooter",
+    "FlexLayoutMain",
+    "FX_BlueBackground"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User scope; FX_CustomerPortal only: two new FlexLayouts, FlexLayoutFooter (Theme Class FX_BlueBackground) in the root footer region and FlexLayoutMain in the root main region; two Designer Saves; FlexLayoutMain attributes read only; no Regenerate; no other component, Form or global object; no runtime action; no unload"
+}
