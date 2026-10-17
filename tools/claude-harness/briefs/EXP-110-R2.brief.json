@@ -1,0 +1,137 @@
+{
+  "experiment_id": "EXP-110-R2",
+  "title": "EXP-110-R2 - Replay of Hello World Part 7 Section 7 in Steps: Buttons ButtonSignIn, ButtonHome and ButtonCart in the menu Region of FlexLayoutMain on FX_CustomerPortal with a Designer Save After Each Step (Placement and Name; Caption and String; Theme Class FX_BlueButton; Size 15; 2) to Isolate the EXP-110 Save Error",
+  "record_path": "experiments/EXP-110-R2-hello-world-part-7-section-7-menu-buttons-stepwise.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Replay EXP-110 after its server-event error on the first Button's Save, with a Designer Save after each step so a failure points to one edit. For each Button, one per task, in the menu region of FlexLayoutMain on the User-scope Form FX_CustomerPortal, top to bottom: step A placement and Name, Save; step B Caption string ID (and the string created through the Caption ellipsis if it does not exist), Save; step C Theme Class FX_BlueButton, Save; step D Layout Width 15 and Height 2, Save. Buttons: ButtonSignIn (FX_sSignIn = Sign In), ButtonHome (FX_sHome = Home), ButtonCart (FX_sCart = Cart). Verify all three after an ordinary close and reopen. A server-event error stops the run at the step that raised it. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Before browser interaction read AGENTS.md (the repository file, at the start of every task), docs/mongoose/transcripts/hello-world-pt7.md Section 7 (lines 205-217) and transcript lines 10:54-12:08, recipes/components/add-component-from-toolbox.md, recipes/session/session-expiry-and-stale-designer.md, and only the final Outcome (operator) sections of the EXP-110, EXP-109 and EXP-106 records. Read nothing else: no other records and no Part 7 Section 8 or later.",
+      "Create or update only experiments/EXP-110-R2-hello-world-part-7-section-7-menu-buttons-stepwise.md and evidence/EXP-110-R2/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If a session expiry, logout card or sign-in page appears, record it and stop for the operator (EXP-107: the operator signs in manually); do not navigate, type credentials or screenshot a filled sign-in form. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt, dialog, menu or unsaved change open across tasks. After any pause, inspect the state read-only before acting and never replay an earlier action.",
+      "Task boundary: do only what the current task instruction lists and stop at its end, even when later steps of this brief remain; report the next step instead of performing it.",
+      "Server-event rule (EXP-103-R2 lesson): if any action raises 'The server event processing returned an error', answer OK once, record it and stop blocked for an operator Designer reload; never try another route, retry, close or reopen after that error.",
+      "Designer gate (read-only except at most one reopen): User scope; FX_CustomerPortal open and clean (Save disabled), no dialog open; if it is not open, open it once through the Form menu recent-forms entry (never Select Form OK). Record the Components tree (FlexLayoutMain > Region00: menu empty, then spacer1, signinpage, homepage, cartpage, spacer2; header and footer components unchanged), the Buttons placed so far (none expected after the operator's Designer reload; if a Button exists in the menu region, record its properties and stop blocked) and where the menu region lies on the canvas (the left column of the main area, left of the first vertical dotted divider).",
+      "String check (T1, read-only): open Designer Edit menu > String once (Global Objects, Strings filter). Filter FX_sCustomerPortal as a positive control (expected one row), then FX_sSignIn, FX_sHome and FX_sCart. EXP-110 created FX_sSignIn with the String editor OK before its failed Save, so it may exist: record each result and value with one screenshot and leave with Cancel; verify Save is still disabled. A string that exists with exactly its planned value (Sign In, Home, Cart) is reused in step B without the ellipsis; one that exists with any other value stops the run blocked.",
+      "Efficiency rules (operator, 2026-10-16): screenshots only for the decisive states named in this brief; do not re-open saved images unless a decision needs it; one untargeted snapshot per step; read only the named sources; never search or read the worker's own session transcript. Use inline untargeted snapshots; never save snapshots to files and Grep them (EXP-109 ran out of turns that way).",
+      "Button rules (EXP-105 to EXP-110): placement: click the Button row in the Toolbox once, then click once inside the menu region on the canvas (below any Button already there, away from edges, dividers and adorner icons); record the Components tree (the new Button must be a child of FlexLayoutMain > Region00: menu, below the Buttons placed earlier); a misplacement gets the toolbar Undo once and stops blocked. Never drag or reorder. Name: plain fill and Tab. Caption (EXP-110 finding): click the Caption value cell to open its list, type the string ID key by key, then leave the field by clicking the Description row, never by Tab (Tab commits the highlighted first list item); never take an accessibility snapshot while the Caption list is open (it exceeds the tool limit, EXP-110): use a screenshot there, and snapshot after leaving the field; verify the committed Caption. String: if T1 found the string with its planned value, do not click the ellipsis; otherwise click the Caption ellipsis once, expect the prompt 'String <ID> does not exist. Create it?' (record verbatim), Yes once, in the String editor replace the pre-filled value with the planned value by one plain fill and Tab, verify, OK once; if the prompt names another ID or an editor shows an existing value, leave it with OK unchanged and stop blocked. Theme Class: open the list, click FX_BlueButton, Tab. Size: double-click the Layout Size row, then Width 15 and Height 2 by plain fill and Tab each; record the Size summary after each entry (EXP-110: it stayed 14.25; 1.89) and after the Save. At most one correction per field. Steps and Saves: A placement and Name; B Caption and string; C Theme Class; D Size; after each step exactly one Designer Save, recording its response and the Save state. If a Save raises 'The server event processing returned an error', answer OK once, record the step and stop blocked (no retry, no further step, no close). Screenshots: placement with the tree, the prompt and String editor (if created), each Save response, the Size rows before Save D.",
+      "Button 1 (T2): by the Button rules, steps A to D with a Save after each: Name ButtonSignIn; Caption FX_sSignIn (string FX_sSignIn = Sign In, created only if T1 found it absent); Theme Class FX_BlueButton; Width 15, Height 2. Stop at the end of the task.",
+      "Button 2 (T3): by the Button rules, steps A to D with a Save after each: Name ButtonHome; Caption FX_sHome (string FX_sHome = Home, created only if T1 found it absent); Theme Class FX_BlueButton; Width 15, Height 2. Stop at the end of the task.",
+      "Button 3 (T4): by the Button rules, steps A to D with a Save after each: Name ButtonCart; Caption FX_sCart (string FX_sCart = Cart, created only if T1 found it absent); Theme Class FX_BlueButton; Width 15, Height 2. Stop at the end of the task.",
+      "Readback and audit (T5, one task): close the clean FX_CustomerPortal once through its Form-tab control (answer No to any save prompt, record its text), reopen it once through the Form menu recent-forms entry, record the Components tree (the three Buttons under Region00: menu in order), select each Button by its Components row and record Name, Caption, Theme Class and Size, record what the canvas shows (expected: three blue buttons labelled Sign In, Home and Cart stacked in the menu column), and check the three strings read-only through Edit menu > String (filter each ID; Cancel). Leave the Form open and clean. Then, in the same task, write the documentation-only final audit into the record: decisive evidence for each acceptance check, the cumulative action audit with exact counts, the worker-written-file inventory, the cleanup inventory and the final state. Screenshots: the reopened canvas with the tree, and one Strings check.",
+      "Before every click, use references from the most recent snapshot taken in the current task (not from find output); after any timeout or 'Ref not found', take one fresh untargeted snapshot and use only its references. Coordinates are allowed only for the three canvas placement clicks; record each such click. Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection; never leave a prompt, editor or dialog open across tasks. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Part 7 Section 8 and later (the sign-in, home and cart page contents); click events, navigation, visibility conditions or page switching for the Buttons; Regenerate Form; the deferred StaticCustID binding.",
+      "Any change to existing components or regions (root FlexLayout, FlexLayoutHeader and its Statics, FlexLayoutMain and its regions, FlexLayoutFooter); any component other than the three new Buttons; deleting or moving any component or region.",
+      "Form properties and collections.",
+      "Regenerate Form (not authorized in this run).",
+      "Any other Form, including FX_FlexProbe01; Site Default or Group scope.",
+      "Creating or changing global objects other than the three new strings FX_sSignIn, FX_sHome and FX_sCart: other strings, images, the theme FX_HelloWorld and its classes, variables; IDOs, SQL objects and stored data.",
+      "Any runtime action in the Web Client.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; FormSync, deployment; any cache or metadata unload.",
+      "Direct SQL execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes, assets or files outside the EXP-110 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never place more than three components (one per task, T2 to T4); never use mouse dragging; Undo at most once per task and only to remove that task's misplaced new Button before any other change to it.",
+    "Never change any existing component or region; never delete, move or reorder a component or a region.",
+    "Never set any attribute other than the new Buttons' Name, Caption, Theme Class and Size (Width, Height); never add an event handler or response.",
+    "Never create or edit any global object other than the strings FX_sSignIn, FX_sHome and FX_sCart, each created at most once through its Caption ellipsis prompt and only if T1 found it absent; never edit an existing string.",
+    "Never click Regenerate Form or Delete Form Definition.",
+    "Never edit or save any other Form; never perform any runtime action.",
+    "Never click Select Form OK; open FX_CustomerPortal only through the recent-forms entry.",
+    "Never go beyond the current task instruction; stop at its end even when later brief steps remain.",
+    "Never invoke the Designer Save more than four times per task (once after each of steps A to D) or retry an uncertain Save; never Save after an error.",
+    "Never answer Yes to a prompt that would delete, discard or replace anything; record every prompt verbatim.",
+    "Never invoke any unload, in the Web Client or the Designer.",
+    "Never perform check-in, undo checkout or other checkout-management actions, FormSync or deployment.",
+    "Never use direct SQL, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability, database-level durability or replay verification from same-session UI observations."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:browser_drag|browser_mouse_drag_xy|browser_mouse_down|browser_mouse_up)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:set|select|choose|change|switch)\\b[^.\\n]{0,30}\\b(?:Site Default|Group)\\s+scope\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:component|collection|region|FlexLayout|Flex Layout)s?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b",
+    "\\b(?:click|press|invoke|perform|use)\\b[^.\\n]{0,30}\\b(?:runtime|Web Client)\\s+Save\\b"
+  ],
+  "related_experiments": [
+    "EXP-110",
+    "EXP-109",
+    "EXP-106",
+    "EXP-064"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_CustomerPortal (User scope, EXP-102/EXP-103-R3)",
+    "artifacts": [
+      "ButtonSignIn, ButtonHome, ButtonCart (new Buttons in FlexLayoutMain's menu region of FX_CustomerPortal; Theme Class FX_BlueButton; Size 15; 2)",
+      "Strings FX_sSignIn = Sign In, FX_sHome = Home, FX_sCart = Cart (new, tenant-wide, created through the Caption ellipsis)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed at the start of each task; session usable; User scope; FX_CustomerPortal open and clean with FlexLayoutMain's six regions and an empty menu region located on the canvas; string check recorded for FX_sCustomerPortal (found) and FX_sSignIn, FX_sHome, FX_sCart (each absent or present with its planned value). Evidence: gate and string screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "In T2 to T4, exactly one Button each placed as a child of FlexLayoutMain > Region00: menu in the order ButtonSignIn, ButtonHome, ButtonCart; steps A to D each followed by one Designer Save with its response (or, at a server-event error, the failing step recorded and the run stopped); Name, Caption string ID, string created only when absent, Theme Class FX_BlueButton and Size 15; 2 with the Size summary recorded; at most one correction per field. Evidence: placement, prompt, String editor, Size and Save screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "After one ordinary close and reopen, the three Buttons are under Region00: menu in order with Name, Caption, Theme Class FX_BlueButton and Size 15; 2; the canvas shows them labelled Sign In, Home and Cart; the strings read back with their values; other components unchanged; Form open and clean. Evidence: readback screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "No other component, region or Form changed; no global object created or changed except the three strings; no event handler; no Regenerate; no dragging; Undo used at most once per task and only as allowed; no runtime action; no unload; no checkout action; User scope only; no task-boundary overrun."
+    },
+    {
+      "id": "AC-5",
+      "description": "The final audit (written in T5) gives decisive evidence for AC-1 to AC-4, the action audit with exact counts (Toolbox selections, placement clicks, Undo clicks, per-field entries and corrections, prompts with texts and answers, String editor OKs, list opens, Designer Saves with responses, Form closes and reopens, errors, re-logins), the worker-written-file inventory, the cleanup inventory (three Buttons, three strings) and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-110-R2",
+  "replay_of": "EXP-110",
+  "initial_instruction": "T1 - Read-only gate and string collision check for EXP-110-R2. First read the repository file AGENTS.md, then hello-world-pt7.md lines 205-217 and transcript lines 10:54-12:08, recipes/components/add-component-from-toolbox.md, recipes/session/session-expiry-and-stale-designer.md, and only the Outcome (operator) sections of EXP-110, EXP-109 and EXP-106, all before any browser action; read nothing else. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry, logout card or sign-in, record it and stop for the operator (do not sign in; never screenshot a filled sign-in form). In the Designer confirm User scope, that FX_CustomerPortal is open and clean and that no dialog is open; if it is not open, open it once through the Form menu recent-forms entry. If any action raises the server-event error, answer OK once, record it and stop. Record the Components tree (expand it if needed; view only) and where the menu region lies on the canvas, with one screenshot. Then open Edit menu > String once, filter FX_sCustomerPortal (positive control) and FX_sSignIn, FX_sHome and FX_sCart, record each result and value with one screenshot and leave with Cancel; verify Save is still disabled. Use inline snapshots only. Make no change and select no component in T1. This is the end of T1 even though later brief steps remain. Create the EXP-110-R2 record with the gate, the string results, the action audit and the file inventory, with screenshots under evidence/EXP-110-R2/ (distinct filenames), and stop with no dialog open.",
+  "notes": "Replay of EXP-110, drafted by the operator assistant after the operator chose 'Reload + retry in steps' (2026-10-18). EXP-110 T2: ButtonSignIn placed, named, captioned FX_sSignIn (after a first commit of ApplyFullTextIndexScriptQuestion), string FX_sSignIn created (OK), FX_BlueButton, Width 15 and Height 2 with the Size summary stuck at 14.25; 1.89; the single Save raised the server-event error; the operator reloaded the Designer. This replay saves after each step (A placement and Name, B Caption and string, C Theme Class, D Size) so a failure isolates the edit; hypothesis to test: the Width/Height edits. Caption is left by clicking the Description row, not Tab; no snapshot while the Caption list is open. FX_sSignIn may already exist from EXP-110; T1 checks it and step B reuses a string whose value is exactly as planned. Size 15; 2 for all three Buttons as approved for EXP-110. Efficiency rules, stop-for-operator on sign-in pages and the server-event rule as in EXP-110. Regenerate is not authorized. Planned tasks: T1 gate and string check; T2 ButtonSignIn; T3 ButtonHome; T4 ButtonCart; T5 close/reopen readback and final audit. exact_values as EXP-110. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "ButtonSignIn",
+    "ButtonHome",
+    "ButtonCart",
+    "FX_sSignIn",
+    "FX_sHome",
+    "FX_sCart",
+    "Sign In",
+    "Home",
+    "Cart",
+    "FX_BlueButton"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User scope; FX_CustomerPortal only: three new Buttons ButtonSignIn, ButtonHome and ButtonCart in FlexLayoutMain's menu region (Caption string IDs, Theme Class FX_BlueButton, Size 15; 2); three new tenant-wide strings FX_sSignIn, FX_sHome and FX_sCart; up to four Designer Saves per Button task; no events; no Regenerate; no other component, Form or global object; no runtime action; no unload"
+}
