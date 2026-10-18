@@ -1,0 +1,128 @@
+{
+  "experiment_id": "EXP-115",
+  "title": "EXP-115 - Hello World Part 8 Phase 1a: Create the User-Scope Tile Form FX_ItemsTile on the FX_Items IDO (Picture Property Only) and Set Its Size to 40; 4, with a Close/Reopen Readback",
+  "record_path": "experiments/EXP-115-hello-world-part-8-phase-1a-fx-itemstile-form.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Start Hello World Part 8 Phase 1 (00:48-01:25) in User scope: create the Tile Form FX_ItemsTile (tutorial 'Items Tile') through New Form Definition > New Form > Category Classic > Wizard Tile, Data Source the IDO FX_Items, with only its picture property FX_Picture selected, then set the Form's Layout Size to Width 40 and Height 4 with one Designer Save. T1 is a read-only gate, absence check and Tile wizard discovery. T2 closes the clean FX_CustomerPortal and runs the wizard once to Finish, recording every page before any change. T3 sets the Size. T4 verifies FX_ItemsTile after an ordinary close and reopen and writes the final audit. The component edits of Phase 1 (Picture Static/Edit and the three new Statics) are a later experiment. The narrated 'unload all the global form objects' is not authorized. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Before browser interaction read AGENTS.md (the repository file, at the start of every task), docs/mongoose/transcripts/hello-world-pt8.md 'Instructions for AI agents' (lines 12-22), Phase 1 (lines 87-112) and transcript lines 328-351 (00:48-03:18), recipes/forms/create-basic-form.md, recipes/session/session-expiry-and-stale-designer.md, and only the final Outcome (operator) sections of the EXP-102, EXP-114 and EXP-061 records. Read nothing else: no other records and no later Part 8 phases. In a continuation task, AGENTS.md and the current task's part of this record are enough.",
+      "Create or update only experiments/EXP-115-hello-world-part-8-phase-1a-fx-itemstile-form.md and evidence/EXP-115/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If a session expiry, logout card or sign-in page appears, record it and stop for the operator (EXP-107: the operator signs in manually); do not navigate, type credentials or screenshot a filled sign-in form. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt, dialog, menu or unsaved change open across tasks. After any pause, inspect the state read-only before acting and never replay an earlier action.",
+      "Task boundary: do only what the current task instruction lists and stop at its end, even when later steps of this brief remain; report the next step instead of performing it. Turn budget (EXP-109, EXP-111): if a task cannot finish, stop only at a step boundary right after a Save or the wizard Finish (never with an unsaved change, open list, editor, wizard or dialog) and report the next step.",
+      "Server-event rule (EXP-103-R2 lesson): if any action raises 'The server event processing returned an error', answer OK once, record it and stop blocked for an operator Designer reload; never try another route, retry, close or reopen after that error. Console-error stop (EXP-110-R2 lesson: a Caption commit can fail silently with HTTP 400 and surface only at the next server event): record the page console error count shown in the browser tool output at the start of each task and after every action in T1 to T4; if it rises after any action, record the action and the counts and stop blocked before any further click (no ellipsis, no Save, no close), leaving the state for the operator. Never read or inspect the console messages themselves. A rise can also come from a client-side Designer script error (EXP-111 T5: an uncaught TypeError at a component selection); the stop rule is the same, and the operator diagnoses the cause from the tool-written console log.",
+      "Editing scope: stay in User scope throughout. If an 'Identify Your Editing Scope' dialog appears, confirm it shows User for the signed-in user and accept it unchanged; if it shows any other scope, Cancel it and stop blocked.",
+      "Designer gate (T1, read-only): User scope; FX_CustomerPortal open and clean (Save disabled), no dialog open; record which Form is open. Absence check: open the Designer's Open (Select Form) dialog once and look for FX_ItemsTile, with FX_Orders as positive control, by filtering or scrolling only; never click OK and never double-click a row; leave with Cancel or its close control. A zero-row result is not proof of absence (EXP-102 finding 5), so also check the Form menu's recent-forms list (view only). If FX_ItemsTile exists, record it and stop blocked. Wizard discovery: click New Form Definition once; in 'Form Wizard Selection' record every control, the Category options and, after selecting Category Classic, the Wizard options with their descriptions (Tile expected). Selecting a Category or Wizard value is allowed; never click OK in T1. Leave with Cancel once. Record the baseline console error count and screenshots of the Select Form check and of the Classic wizard list.",
+      "Efficiency rules (operator, 2026-10-16): screenshots only for the decisive states named in this brief; do not re-open saved images unless a decision needs it; one untargeted snapshot per step; read only the named sources; never search or read the worker's own session transcript. Use inline untargeted snapshots; never save snapshots to files and Grep them (EXP-109 ran out of turns that way). Lists (EXP-111 lesson): choose a list option by clicking it; never pick options with arrow keys, Enter or Tab while a list is open, because Tab commits the highlighted item. Stale references (operator ruling, EXP-111): the allowance is one fresh untargeted snapshot per 'Ref not found' error, not one per task. Snapshot size (EXP-114): if an untargeted snapshot is too large to return inline, take targeted snapshots of the needed panel instead (record that); never save snapshots to files.",
+      "Create (T2): close the clean FX_CustomerPortal once through its Form-tab control (answer No to any save prompt, record its text). Then New Form Definition once, New Form, Category Classic, Wizard Tile, OK once. On every wizard page record every field with its exact label and default and take one screenshot before changing anything. Name: FX_ItemsTile (one plain fill, at most one correction). Data Source: the IDO FX_Items (open the list or picker and click the entry, or one plain fill if it is a text box; at most one correction). Property selection page: record the full list of available and selected properties, then use only that page's own controls so that exactly one property stays selected: FX_Picture; record each control used. Leave every other field at its default, except that a checked 'Save Template' checkbox is unchecked (recipe create-basic-form.md: it creates a template artifact). Use Next and Finish as the wizard requires, each at most once per page; record every message verbatim and answer an informational completion message with OK. If a page asks for anything not covered here, if FX_Items or FX_Picture is not offered, or if the property selection cannot be set as planned, use the wizard's Cancel once before Finish (nothing is created) and stop blocked. After Finish, verify that the Designer shows FX_ItemsTile open in User scope and clean, and record the Form Properties (Name, Version, Form Type, Device Type, Layout Size and Unit if shown), the Components tree with every generated component (name, type, binding) and the Collections tab entries (view only). Screenshots: each wizard page before the change and after filling, the completion message, the new Form with its tree and Properties.",
+      "Size (T3): with FX_ItemsTile active and clean, select the Form in Properties (the Form tab of the Properties panel), record the Layout group, double-click the Size row and set Width 40 and Height 4 by plain fill and Tab (skip a field that already holds its value and record that); record the Size summary and the canvas; then exactly one Designer Save, recording its response and the Save state. If the Size row does not expand, or the Size is in another unit or place, record it and stop blocked before the Save. At most one correction per field. Screenshots: the Size values before the Save and the Save response state.",
+      "Readback and audit (T4, one task): close the clean FX_ItemsTile once through its Form-tab control (answer No to any save prompt, record its text), reopen it once through the Form menu recent-forms entry, record the Properties (Name, Version, Form Type, Layout Size), the Components tree and the Collections entries, and what the canvas shows. Open no dialog, list or editor. Leave FX_ItemsTile open and clean. Then, in the same task, write the documentation-only final audit into the record: decisive evidence for each acceptance check, the cumulative action audit with exact counts, the worker-written-file inventory, the cleanup inventory and the final state. Screenshots: the reopened Form with its tree and Properties showing the Size.",
+      "Before every click, use references from the most recent snapshot taken in the current task (not from find output); after any timeout or 'Ref not found', take one fresh untargeted snapshot and use only its references (one per error). ExtJS comboboxes are not <select> elements (EXP-101): open their list and click the option. No coordinate clicks in this experiment; if a control has no reference, record it and stop blocked. Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection; never leave a prompt, wizard, editor or dialog open across tasks. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "The rest of Part 8 Phase 1 (deleting the Picture Static, converting the Picture Edit, the three new Statics, their bindings and sizes) and Phases 2-9 (Grid Tile Form setting, events, Count and cart controls, page variables, drag/drop, checkout, runtime walkthrough); the narrated unload of global form objects (operator default, 2026-10-18).",
+      "Any change to FX_CustomerPortal (only closed, clean, in T2) or to any component of FX_ItemsTile; any Form other than FX_ItemsTile; templates.",
+      "Changing the FX_Items IDO, its properties or any other global object.",
+      "Regenerate Form (not authorized in this run).",
+      "Any other Form, including FX_FlexProbe01; Site Default or Group scope.",
+      "Creating or changing any global object (strings, images, the theme FX_HelloWorld and its classes, variables); IDOs, SQL objects and stored data.",
+      "Any runtime action in the Web Client.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; FormSync, deployment; any cache or metadata unload.",
+      "Direct SQL execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes, assets or files outside the EXP-115 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never choose Site Default or Group scope; stay in User scope.",
+    "Never create any Form other than FX_ItemsTile, or a template; never run the wizard to Finish more than once; never Finish with more than the one property FX_Picture selected.",
+    "Never place, rename, delete, move or edit any component of FX_ItemsTile or FX_CustomerPortal; on FX_ItemsTile only the wizard fields and the Form's Layout Size are set; never change any Form's collections.",
+    "Never create or edit any global object.",
+    "Never click Regenerate Form or Delete Form Definition.",
+    "Never edit or save FX_CustomerPortal or any Form other than FX_ItemsTile; never perform any runtime action.",
+    "Never click Select Form OK; never double-click a Select Form row; reopen FX_ItemsTile only through the recent-forms entry.",
+    "Never go beyond the current task instruction; stop at its end even when later brief steps remain.",
+    "Never invoke the Designer Save except once in T3 (none in T1, T2 or T4); never retry an uncertain Save; never Save after an error or after the console error count rose.",
+    "Never answer Yes to a prompt that would delete, discard or replace anything; record every prompt verbatim.",
+    "Never invoke any unload, in the Web Client or the Designer.",
+    "Never perform check-in, undo checkout or other checkout-management actions, FormSync or deployment.",
+    "Never use direct SQL, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability, database-level durability or replay verification from same-session UI observations."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:browser_drag|browser_mouse_drag_xy|browser_mouse_down|browser_mouse_up)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:set|select|choose|change|switch)\\b[^.\\n]{0,30}\\b(?:Site Default|Group)\\s+scope\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:component|collection|region|FlexLayout|Flex Layout)s?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b",
+    "\\b(?:click|press|invoke|perform|use)\\b[^.\\n]{0,30}\\b(?:runtime|Web Client)\\s+Save\\b"
+  ],
+  "related_experiments": [
+    "EXP-114",
+    "EXP-102",
+    "EXP-061",
+    "EXP-002-R2"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_ItemsTile (new User-scope Tile Form; tutorial 'Items Tile')",
+    "artifacts": [
+      "Form FX_ItemsTile created by New Form Definition > New Form > Classic > Tile: Data Source IDO FX_Items, only the property FX_Picture selected, no template",
+      "FX_ItemsTile Layout Size Width 40, Height 4 (one Designer Save)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed at the start of each task; session usable; User scope; FX_CustomerPortal open and clean at the gate; FX_ItemsTile absent (Select Form and recent forms, with the FX_Orders positive control); Form Wizard Selection recorded with the Classic wizard list and descriptions; baseline console error count recorded. Evidence: Select Form and wizard-list screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "In T2, FX_CustomerPortal closed clean once; the Tile wizard run once with every page recorded before any change; Name FX_ItemsTile, Data Source FX_Items, only FX_Picture selected, no template; completion message recorded; FX_ItemsTile open in User scope and clean, with its Properties, generated components and Collections recorded. In T3, Layout Size 40; 4 set and one Designer Save with its response. Console error count recorded after every action; at most one correction per field. Evidence: wizard page, completion, new-Form, Size and Save screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "After one ordinary close and reopen, FX_ItemsTile opens in User scope with Size 40; 4, the generated components and the FX_Items collection as recorded in T2; Form open and clean. Evidence: readback screenshot."
+    },
+    {
+      "id": "AC-4",
+      "description": "No other Form created or changed (FX_CustomerPortal only closed); no template; no component edited; no global object created or changed; no Regenerate, no unload, no Delete Form Definition, no Select Form OK; Save used once (T3); no runtime action; no checkout action; User scope only; no task-boundary overrun."
+    },
+    {
+      "id": "AC-5",
+      "description": "The final audit (written in T4) gives decisive evidence for AC-1 to AC-4, the action audit with exact counts (dialog opens with OK and Cancel, wizard pages with Next and Finish, list opens, per-field entries and corrections, prompts with texts and answers, Designer Saves with responses, Form closes and reopens, errors, re-logins), the worker-written-file inventory, the cleanup inventory (Form FX_ItemsTile) and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-115",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only gate, absence check and Tile wizard discovery for EXP-115. First read the repository file AGENTS.md, then hello-world-pt8.md lines 12-22 and 87-112 and transcript lines 328-351, recipes/forms/create-basic-form.md, recipes/session/session-expiry-and-stale-designer.md, and only the Outcome (operator) sections of EXP-102, EXP-114 and EXP-061, all before any browser action; read nothing else. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry, logout card or sign-in, record it and stop for the operator (do not sign in; never screenshot a filled sign-in form). Record the page console error count shown in the tool output (do not read the messages); if it rises after any action, record the action and stop. In the Designer confirm User scope, which Form is open (FX_CustomerPortal expected) and that it is clean with no dialog open. If any action raises the server-event error, answer OK once, record it and stop. Open the Open (Select Form) dialog once and check by filtering or scrolling only whether FX_ItemsTile exists, with FX_Orders as positive control; never click OK or double-click a row; leave with Cancel or its close control; then view the Form menu's recent-forms list and close the menu without choosing. Then click New Form Definition once and record the Form Wizard Selection dialog: every control, the Category options, and after selecting Category Classic the Wizard options with descriptions. Do not click OK; leave with Cancel once. Screenshots: the Select Form check and the Classic wizard list. Use inline snapshots only. Make no change in T1. This is the end of T1 even though later brief steps remain. Create the EXP-115 record with the gate, the absence check, the wizard-selection inventory, the action audit and the file inventory, with screenshots under evidence/EXP-115/ (distinct filenames), and stop with no dialog or menu open.",
+  "notes": "First Part 8 step after EXP-114 (Part 7 complete, accepted 2026-10-18), drafted by the operator assistant from the EXP-114 brief with the wizard rules of EXP-102. Tutorial mapping: Items Tile -> FX_ItemsTile; the Items IDO -> FX_Items (EXP-049); the picture property -> FX_Picture (EXP-061). Phase 1 is split: this experiment creates the Form and sets its Size; the Picture Static/Edit changes and the three Statics (Item, Description, Cost) follow. Forms stay in User scope (AGENTS.md); the tutorial's Site Default scope is not used. The narrated unload of global form objects after Phase 1 is left out by default (as in EXP-060/EXP-049, new objects were visible without it); Regenerate is not needed here. Planned tasks: T1 gate, absence check and wizard discovery; T2 create (no Save, Finish persists); T3 Size and one Save; T4 close/reopen readback and final audit. exact_values: FX_ItemsTile, FX_Items, FX_Picture. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FX_ItemsTile",
+    "FX_Items",
+    "FX_Picture"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User scope; create the Tile Form FX_ItemsTile through the Classic Tile wizard (Data Source FX_Items, only FX_Picture selected, no template) and set its Layout Size to 40; 4 with one Designer Save; FX_CustomerPortal only closed (clean); no component edits; no global object; no Regenerate; no unload; no other Form; no runtime action"
+}
