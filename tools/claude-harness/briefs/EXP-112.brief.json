@@ -1,0 +1,134 @@
+{
+  "experiment_id": "EXP-112",
+  "title": "EXP-112 - Hello World Part 7 Section 9: FlexLayoutHome in FlexLayoutMain's homepage Region of FX_CustomerPortal (Type VerticalBox; Regions header, spacer, grid, spacer2, buttons), with the EXP-111 Carried Readbacks in the Gate and a Close/Reopen Readback",
+  "record_path": "experiments/EXP-112-hello-world-part-7-section-9-flexlayouthome.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Build Hello World Part 7 Section 9 (15:24-16:54) on FX_CustomerPortal (User scope): a nested FlexLayout FlexLayoutHome in FlexLayoutMain > Region03: homepage with Type VerticalBox and five regions: header (4 FormUnit, Horizontal, Middle, Center), spacer (1 FormUnit), grid (2 Flex, Fill), spacer2 (1 FormUnit) and buttons (1 Flex, Fill). T1 is a read-only gate that also reads back the four EXP-111 values not confirmed as text. T2 places and names FlexLayoutHome (one Save). T3 sets Type VerticalBox and the header and spacer regions (dialog OK, one Save). T4 adds grid, spacer2 and buttons (dialog OK, one Save). T5 verifies everything after an ordinary close and reopen and writes the final audit. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Before browser interaction read AGENTS.md (the repository file, at the start of every task), docs/mongoose/transcripts/hello-world-pt7.md Section 9 (lines 241-255) and transcript lines 492-504 (15:24-16:54), recipes/components/add-component-from-toolbox.md, recipes/session/session-expiry-and-stale-designer.md, and only the final Outcome (operator) sections of the EXP-111, EXP-109 and EXP-105 records. Read nothing else: no other records and no Part 7 Section 10 or later. In a continuation task, AGENTS.md and the current task's part of this record are enough.",
+      "Create or update only experiments/EXP-112-hello-world-part-7-section-9-flexlayouthome.md and evidence/EXP-112/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If a session expiry, logout card or sign-in page appears, record it and stop for the operator (EXP-107: the operator signs in manually); do not navigate, type credentials or screenshot a filled sign-in form. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt, dialog, menu or unsaved change open across tasks. After any pause, inspect the state read-only before acting and never replay an earlier action.",
+      "Task boundary: do only what the current task instruction lists and stop at its end, even when later steps of this brief remain; report the next step instead of performing it. Turn budget (EXP-109 lesson): if a task cannot finish all its components, stop only at a step boundary right after a Save (never with an unsaved change, open list, editor or dialog) and report the next step.",
+      "Server-event rule (EXP-103-R2 lesson): if any action raises 'The server event processing returned an error', answer OK once, record it and stop blocked for an operator Designer reload; never try another route, retry, close or reopen after that error. Console-error stop (EXP-110-R2 lesson: a Caption commit can fail silently with HTTP 400 and surface only at the next server event): record the page console error count shown in the browser tool output at the start of each task and after every action in T1 to T5; if it rises after any action, record the action and the counts and stop blocked before any further click (no ellipsis, no Save, no close), leaving the state for the operator. Never read or inspect the console messages themselves. A rise can also come from a client-side Designer script error (EXP-111 T5: an uncaught TypeError at a component selection); the stop rule is the same, and the operator diagnoses the cause from the tool-written console log.",
+      "Designer gate (T1, read-only except at most one reopen): User scope; FX_CustomerPortal open and clean (Save disabled), no dialog open; if it is not open, open it once through the Form menu recent-forms entry (never Select Form OK). Record the Components tree under FlexLayoutMain: Region00: menu (ButtonSignIn, ButtonHome, ButtonCart), Region01: spacer1, Region02: signinpage (StaticSignIn, StaticImage1, StaticCustID2, EditCustID, ButtonSignIn2, in this order), Region03: homepage, Region04: cartpage, Region05: spacer2 (header and footer components unchanged; the footer's Region00: UNKNOWN0 noted as already present). Expected: no component under Region03: homepage. If any component is already there, or the other regions differ, record it and stop blocked. Record the baseline console error count and one screenshot of the tree and canvas.",
+      "Carried readback (T1, read-only, from EXP-111): select each component by its Components row (selection only) and read the values below from a screenshot of the Properties panel, because these combobox values are not exposed as accessibility text (EXP-111 T12); expand a collapsed group by a view-only double-click on its label if needed. ButtonSignIn2: Caption FX_sSignIn and Theme Class FX_BlueButton. EditCustID: Justification Center and Binding Type None (Data Source group). StaticCustID2: No Colon True (Miscellaneous > Specific Attributes). StaticImage1: Bitmap File Name; record the text as displayed (EXP-111 saw 'FX_CustomerSignI...', truncated by the column width); a truncated value starting FX_CustomerSignI is sufficient, because FX_CustomerSignIn.png is the only library image with that prefix (EXP-101); do not resize, hover or open the list to read more. Record each value; a value that differs from the expected one is recorded as a finding and does not stop the run (no repair in this run). Screenshots: at most one per component.",
+      "Efficiency rules (operator, 2026-10-16): screenshots only for the decisive states named in this brief; do not re-open saved images unless a decision needs it; one untargeted snapshot per step; read only the named sources; never search or read the worker's own session transcript. Use inline untargeted snapshots; never save snapshots to files and Grep them (EXP-109 ran out of turns that way). Lists (EXP-111 lesson): choose a list option by clicking it; never pick options with arrow keys, Enter or Tab while a list is open, because Tab commits the highlighted item. Stale references (operator ruling, EXP-111): the allowance is one fresh untargeted snapshot per 'Ref not found' error, not one per task.",
+      "Placement (T2, EXP-105 and EXP-108 method): click the FlexLayout row in the Toolbox once, then click once inside the homepage column on the canvas (Region03: homepage, between the signinpage and cartpage columns; away from dividers and adorner icons); record the Components tree: the new FlexLayout (expected flexLayout1_USER or similar) must be the only child of FlexLayoutMain > Region03: homepage, with one auto region Region00: UNKNOWN0. A FlexLayout in any other region gets the toolbar Undo once and the run stops blocked. Never drag. Record its defaults (Name, Size, Flex Attributes; expected Index 3 Target homepage) and whether it fills the region (the homepage region is Orientation Fill). Name: plain fill FlexLayoutHome and Tab; verify the Name in the Components tree (the Properties header label lags after a rename, EXP-105). Record the console error count after each action. Then exactly one Designer Save, recording its response and the Save state. Screenshots: placement with the tree; the Save response.",
+      "Dialog rules (EXP-103-R3, EXP-105, EXP-109): select FlexLayoutHome by its Components row, then open its Edit FlexLayout Attributes through its canvas adorner (identify the control by the tooltip 'Edit FlexLayout Attributes' or its flexlayouteditadorner DOM id, not by position; a coordinate click is allowed only when no reference exists). The dialog must show Type, Auto Size and a Regions grid; if it shows only Region Index and Margin, it is a component's dialog: Cancel and stop blocked. Select a region row before editing it. ID, Length, Minimum/Maximum Length and Default Margin are text editors (plain fill, Tab); Type, Unit, Orientation, Alignment and Pack are lists (open the list, click the option; record the value). Set Unit and Orientation before Alignment and Pack, because rows appear and disappear with them (Fill hides Alignment and Pack; FormUnit hides Minimum and Maximum Length; for Horizontal, Alignment offers Top, Middle, Stretch and Pack offers Start, Center, End). New regions from the Regions add (+) button get defaults (UNKNOWN<n>_USER, 1 Flex, Horizontal, Top, Start). Click the add button once at a time and check the grid after each click; a click that adds no row or more than one ends the task: Cancel and stop blocked. If a planned option does not exist, record the available options, Cancel once (discarding the dialog's changes) and stop blocked; never pick a substitute. At most one correction per field. Keep every existing region in place (no region deletions, no reordering) and never change Auto Size, Region Index or the dialog's own Margin. Record every edited region's values as displayed and the Regions grid before OK; OK once (record any message), then exactly one Designer Save with its response and the Save state. A blocker inside the open dialog ends with Cancel, never with an open dialog across tasks.",
+      "Type, header and spacer (T3): open the dialog once and record its starting state (expected Type HorizontalBox, Auto Size False, one region index 0 UNKNOWN0, 1 Flex, Horizontal, Top, Start; if it differs, record it, Cancel and stop blocked). Set Type VerticalBox. Index 0: ID header, Length 4, Unit FormUnit, Orientation Horizontal, Alignment Middle, Pack Center. Click the add button once (two rows); index 1: ID spacer, Length 1, Unit FormUnit, other values left at their defaults. OK, one Designer Save. Screenshots: the dialog at open; the Regions grid and the header region before OK; the Save response.",
+      "grid, spacer2 and buttons (T4): open the dialog once and record its state (expected Type VerticalBox, header and spacer as set in T3; if it differs, record it, Cancel and stop blocked). Click the add button three times, one at a time (five rows). Index 2: ID grid, Length 2, Unit Flex, Orientation Fill. Index 3: ID spacer2, Length 1, Unit FormUnit, other values left at their defaults. Index 4: ID buttons, Length 1, Unit Flex, Orientation Fill. OK, one Designer Save. Screenshots: the Regions grid with five rows before OK; the Save response.",
+      "Readback and audit (T5, one task): close the clean FX_CustomerPortal once through its Form-tab control (answer No to any save prompt, record its text), reopen it once through the Form menu recent-forms entry, record the Components tree (FlexLayoutHome under Region03: homepage with Region00: header, Region01: spacer, Region02: grid, Region03: spacer2, Region04: buttons; everything else unchanged), select FlexLayoutHome by its Components row, open its Edit FlexLayout Attributes read-only and record Type and every region's ID, Length, Unit, Orientation, Alignment and Pack (open no list; Cancel once). Record what the canvas shows in the homepage column (region dividers). Leave the Form open and clean. Then, in the same task, write the documentation-only final audit into the record: decisive evidence for each acceptance check, the cumulative action audit with exact counts, the worker-written-file inventory, the cleanup inventory and the final state. Screenshots: the reopened canvas with the tree, and the Regions grid.",
+      "Before every click, use references from the most recent snapshot taken in the current task (not from find output); after any timeout or 'Ref not found', take one fresh untargeted snapshot and use only its references. Coordinates are allowed only for the one FlexLayoutHome canvas placement click (T2) and for FlexLayoutHome's Edit FlexLayout Attributes adorner when no reference exists (T3, T4, T5); record each such click. Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection; never leave a prompt, editor or dialog open across tasks. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Part 7 Section 10 and later (Flex Layout Buttons in the buttons region, its count, spacer and cart regions, Static Home, Grid Items and its binding); Regenerate Form; any repair of an EXP-111 value found different in the T1 readback.",
+      "Any change to existing components or regions (root FlexLayout, FlexLayoutHeader and its Statics, FlexLayoutMain and its six regions, the menu Buttons, the five sign-in page components, FlexLayoutFooter); any component other than FlexLayoutHome; deleting or moving any component or region.",
+      "Form properties and collections.",
+      "Regenerate Form (not authorized in this run).",
+      "Any other Form, including FX_FlexProbe01; Site Default or Group scope.",
+      "Creating or changing any global object (strings, images, the theme FX_HelloWorld and its classes, variables); IDOs, SQL objects and stored data.",
+      "Any runtime action in the Web Client.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; FormSync, deployment; any cache or metadata unload.",
+      "Direct SQL execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes, assets or files outside the EXP-112 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never place more than one component (FlexLayoutHome, in T2); never use mouse dragging; Undo at most once and only to remove a misplaced new FlexLayoutHome before any other change to it.",
+    "Never change any existing component or region; never delete, move or reorder a component or a region.",
+    "Never set any attribute other than FlexLayoutHome's Name, its Type (VerticalBox) and its five regions' ID, Length, Unit, Orientation, Alignment and Pack as planned; never change Auto Size, Region Index or the dialog's own Margin; never set a Theme Class, binding or event; never delete or reorder a region.",
+    "Never create or edit any global object.",
+    "Never click Regenerate Form or Delete Form Definition.",
+    "Never edit or save any other Form; never perform any runtime action.",
+    "Never click Select Form OK; open FX_CustomerPortal only through the recent-forms entry.",
+    "Never go beyond the current task instruction; stop at its end even when later brief steps remain.",
+    "Never invoke the Designer Save more than once in each of T2, T3 and T4 or at all in T1 and T5; never retry an uncertain Save; never Save after an error or after the console error count rose.",
+    "Never answer Yes to a prompt that would delete, discard or replace anything; record every prompt verbatim.",
+    "Never invoke any unload, in the Web Client or the Designer.",
+    "Never perform check-in, undo checkout or other checkout-management actions, FormSync or deployment.",
+    "Never use direct SQL, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability, database-level durability or replay verification from same-session UI observations."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:browser_drag|browser_mouse_drag_xy|browser_mouse_down|browser_mouse_up)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:set|select|choose|change|switch)\\b[^.\\n]{0,30}\\b(?:Site Default|Group)\\s+scope\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:component|collection|region|FlexLayout|Flex Layout)s?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b",
+    "\\b(?:click|press|invoke|perform|use)\\b[^.\\n]{0,30}\\b(?:runtime|Web Client)\\s+Save\\b"
+  ],
+  "related_experiments": [
+    "EXP-111",
+    "EXP-109",
+    "EXP-108",
+    "EXP-105",
+    "EXP-103-R3"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_CustomerPortal (User scope, EXP-102/EXP-103-R3)",
+    "artifacts": [
+      "FlexLayoutHome (new FlexLayout) in FlexLayoutMain's homepage region (Region03) of FX_CustomerPortal; Type VerticalBox; regions header (4 FormUnit, Horizontal, Middle, Center), spacer (1 FormUnit), grid (2 Flex, Fill), spacer2 (1 FormUnit), buttons (1 Flex, Fill)",
+      "Read only: the EXP-111 components ButtonSignIn2, EditCustID, StaticCustID2 and StaticImage1 (carried readback)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed at the start of each task; session usable; User scope; FX_CustomerPortal open and clean; tree recorded with Region03: homepage empty and the other regions and components unchanged; baseline console error count recorded; carried EXP-111 readback recorded with values as displayed (ButtonSignIn2 Caption and Theme Class, EditCustID Justification and Binding Type, StaticCustID2 No Colon, StaticImage1 Bitmap File Name). Evidence: gate and readback screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "In T2, FlexLayoutHome placed as the only child of FlexLayoutMain > Region03: homepage, named, one Designer Save with its response. In T3 and T4, the dialog's starting state recorded; Type VerticalBox; regions header (4 FormUnit, Horizontal, Middle, Center), spacer (1 FormUnit), grid (2 Flex, Fill), spacer2 (1 FormUnit), buttons (1 Flex, Fill) each displayed after entry; region adds one at a time; OK once and one Designer Save per task with its response; console error count recorded after every action (or, at a rise or a server-event error, the action recorded and the run stopped); at most one correction per field. Evidence: placement, dialog, Regions grid and Save screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "After one ordinary close and reopen, FlexLayoutHome is under Region03: homepage with its five regions in order and the attributes dialog shows Type VerticalBox and every region's planned values; other components unchanged; Form open and clean. Evidence: readback screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "No other component, region or Form changed; no global object created or changed; no Theme Class, binding or event; no Regenerate; no dragging; Undo used at most once and only as allowed; no runtime action; no unload; no checkout action; User scope only; no task-boundary overrun."
+    },
+    {
+      "id": "AC-5",
+      "description": "The final audit (written in T5) gives decisive evidence for AC-1 to AC-4, the action audit with exact counts (Toolbox selections, placement and adorner coordinate clicks, Undo clicks, dialog opens with OK and Cancel, region adds, per-field entries and corrections, list opens, Designer Saves with responses, Form closes and reopens, errors, re-logins), the worker-written-file inventory, the cleanup inventory (FlexLayoutHome and its five regions) and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-112",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only gate and carried EXP-111 readback for EXP-112. First read the repository file AGENTS.md, then hello-world-pt7.md lines 241-255 and transcript lines 492-504, recipes/components/add-component-from-toolbox.md, recipes/session/session-expiry-and-stale-designer.md, and only the Outcome (operator) sections of EXP-111, EXP-109 and EXP-105, all before any browser action; read nothing else. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry, logout card or sign-in, record it and stop for the operator (do not sign in; never screenshot a filled sign-in form). Record the page console error count shown in the tool output (do not read the messages); if it rises after any action, record the action and stop. In the Designer confirm User scope, that FX_CustomerPortal is open and clean and that no dialog is open; if it is not open, open it once through the Form menu recent-forms entry. If any action raises the server-event error, answer OK once, record it and stop. Record the Components tree under FlexLayoutMain (expand it if needed; view only) and whether any component is under Region03: homepage (expected none); one screenshot of the tree and canvas. Then the carried readback: select ButtonSignIn2, EditCustID, StaticCustID2 and StaticImage1 by their Components rows and read the brief's values from at most one Properties screenshot each. Use inline snapshots only. Make no change in T1. This is the end of T1 even though later brief steps remain. Create the EXP-112 record with the gate, the tree, the carried readback values, the action audit and the file inventory, with screenshots under evidence/EXP-112/ (distinct filenames), and stop with no dialog open.",
+  "notes": "Next Hello World step after EXP-111 (Part 7 Section 8 accepted 2026-10-18), drafted by the operator assistant from the EXP-111 brief, with the region-dialog rules of EXP-109. Tutorial mapping: Flex Layout Home -> FlexLayoutHome; regions header, spacer, grid, spacer2, buttons as narrated; '4 form units' -> 4 FormUnit (EXP-103-R3). The T1 gate carries the four EXP-111 values not confirmed as text (EXP-111 Outcome); the StaticImage1 Bitmap File Name is accepted from a truncated FX_CustomerSignI prefix (unique in the library, EXP-101). EXP-111 lessons applied: one item per mutation task (T2 placement, T3 Type and two regions, T4 three regions), lists set by clicking the option, a stale-reference allowance per error, and a console rise from a client-side script error stops like any other. Regenerate is not authorized. Efficiency rules, stop-for-operator on sign-in pages and the server-event rule as in EXP-111. Planned tasks: T1 gate and carried readback; T2 FlexLayoutHome placement and Name (1 Save); T3 Type VerticalBox, header and spacer (1 Save); T4 grid, spacer2 and buttons (1 Save); T5 close/reopen readback and final audit. exact_values: FlexLayoutHome, header, spacer, grid, spacer2, buttons. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "FlexLayoutHome",
+    "header",
+    "spacer",
+    "grid",
+    "spacer2",
+    "buttons"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User scope; FX_CustomerPortal only: place the FlexLayout FlexLayoutHome in FlexLayoutMain's homepage region, set its Type VerticalBox and its five regions (header, spacer, grid, spacer2, buttons) as planned; one Designer Save in each of T2, T3 and T4; existing components read only; no global object; no Theme Class, binding or event; no Regenerate; no other component or Form; no runtime action; no unload"
+}
