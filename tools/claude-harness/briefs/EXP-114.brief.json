@@ -1,0 +1,128 @@
+{
+  "experiment_id": "EXP-114",
+  "title": "EXP-114 - Hello World Part 7 Section 11: StaticHome in FlexLayoutHome's header Region and GridItems Bound to the FX_Items Secondary Collection in its grid Region of FX_CustomerPortal, Without Regenerate, with a Close/Reopen Readback",
+  "record_path": "experiments/EXP-114-hello-world-part-7-section-11-statichome-griditems.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Build Hello World Part 7 Section 11 (17:59-18:55) on FX_CustomerPortal (User scope): a Static StaticHome in FlexLayoutHome > Region00: header (Caption FX_sHome, Theme Class FX_Header, Justification Center, No Colon True, Size 20; 1.5) and a Grid GridItems in FlexLayoutHome > Region02: grid (Binding Type Secondary Collection, Binding the Form's secondary collection FX_Items through the Binding ellipsis). The narrated Regenerate Form is not authorized (operator decision, 2026-10-18). T1 is a read-only gate that also records the Form's collections. T2 builds StaticHome with a Save after each step. T3 builds GridItems with a Save after each step; the Binding ellipsis dialog is new and is recorded before any choice. T4 verifies both after an ordinary close and reopen and writes the final audit. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Before browser interaction read AGENTS.md (the repository file, at the start of every task), docs/mongoose/transcripts/hello-world-pt7.md Section 11 (lines 272-281) and transcript lines 513-519 (17:59-18:47), recipes/components/add-component-from-toolbox.md, recipes/session/session-expiry-and-stale-designer.md, and only the final Outcome (operator) sections of the EXP-113, EXP-111 and EXP-102 records. Read nothing else: no other records and no Part 8. In a continuation task, AGENTS.md and the current task's part of this record are enough.",
+      "Create or update only experiments/EXP-114-hello-world-part-7-section-11-statichome-griditems.md and evidence/EXP-114/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If a session expiry, logout card or sign-in page appears, record it and stop for the operator (EXP-107: the operator signs in manually); do not navigate, type credentials or screenshot a filled sign-in form. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt, dialog, menu or unsaved change open across tasks. After any pause, inspect the state read-only before acting and never replay an earlier action.",
+      "Task boundary: do only what the current task instruction lists and stop at its end, even when later steps of this brief remain; report the next step instead of performing it. Turn budget (EXP-109 lesson): if a task cannot finish all its components, stop only at a step boundary right after a Save (never with an unsaved change, open list, editor or dialog) and report the next step. Turn budget (EXP-109, EXP-111): if a task cannot finish, stop only at a step boundary right after a Save (never with an unsaved change, open list, editor or dialog) and report the next step.",
+      "Server-event rule (EXP-103-R2 lesson): if any action raises 'The server event processing returned an error', answer OK once, record it and stop blocked for an operator Designer reload; never try another route, retry, close or reopen after that error. Console-error stop (EXP-110-R2 lesson: a Caption commit can fail silently with HTTP 400 and surface only at the next server event): record the page console error count shown in the browser tool output at the start of each task and after every action in T1 to T4; if it rises after any action, record the action and the counts and stop blocked before any further click (no ellipsis, no Save, no close), leaving the state for the operator. Never read or inspect the console messages themselves. A rise can also come from a client-side Designer script error (EXP-111 T5: an uncaught TypeError at a component selection); the stop rule is the same, and the operator diagnoses the cause from the tool-written console log. A Caption commit that leaves Save disabled is also a stop signal (EXP-110-R2): record it and stop blocked before any further click.",
+      "Designer gate (T1, read-only except at most one reopen): User scope; FX_CustomerPortal open and clean (Save disabled), no dialog open; if it is not open, open it once through the Form menu recent-forms entry (never Select Form OK). Record the Components tree: FlexLayoutMain's six regions with their components as accepted in EXP-113 (menu Buttons, the five sign-in page components, FlexLayoutHome in homepage), and under FlexLayoutHome: Region00: header, Region01: spacer, Region02: grid, Region03: spacer2, Region04: buttons > FlexLayoutButtons (count, spacer, cart). Expected: no component in FlexLayoutHome's header and grid regions. If a component is already there, or the tree differs, record it and stop blocked. Open the Details panel's Collections tab (view only) and record the Primary and Secondary collection entries (EXP-102: Primary FX_Orders, Secondary FX_Items); open no editor. Locate the header band (top of the homepage column) and the grid band (below the spacer divider) on the canvas. Record the baseline console error count and one screenshot of the tree and canvas.",
+      "Efficiency rules (operator, 2026-10-16): screenshots only for the decisive states named in this brief; do not re-open saved images unless a decision needs it; one untargeted snapshot per step; read only the named sources; never search or read the worker's own session transcript. Use inline untargeted snapshots; never save snapshots to files and Grep them (EXP-109 ran out of turns that way). Lists (EXP-111 lesson): choose a list option by clicking it; never pick options with arrow keys, Enter or Tab while a list is open, because Tab commits the highlighted item. Stale references (operator ruling, EXP-111): the allowance is one fresh untargeted snapshot per 'Ref not found' error, not one per task.",
+      "Component rules (EXP-106, EXP-111): Placement: click the component's row in the Toolbox once (Static or Grid), then click once inside the target band of the homepage column (away from dividers and adorner icons; a view-only canvas scroll is allowed first); record the Components tree: the new component must be the only child of the target FlexLayoutHome region (StaticHome in Region00: header, GridItems in Region02: grid). A component anywhere else gets the toolbar Undo once and the run stops blocked. Never drag. Record its defaults (Name, Size, Flex Attributes, and for the Grid its Binding Type and Binding). Name: plain fill and Tab; verify it in the Components tree (the Properties header label lags). Record the console error count after each action. Caption (EXP-110, EXP-111): click the Caption value cell, type FX_sHome key by key, leave the field by clicking the Description row (never Tab); no accessibility snapshot while the Caption list is open (use a screenshot); verify the committed Caption and that Save became enabled. Never click the Caption ellipsis (FX_sHome exists, EXP-110-R2). Lists (Theme Class, Justification, No Colon, Binding Type): open the list and click the option; if its arrow is not exposed, a value-cell double-click may show it (EXP-111); the arrow may then be clicked by coordinates once per field; if the planned option is absent, close the list without choosing and stop blocked before the Save. Size: double-click the Layout Size row, then Width and Height by plain fill and Tab; record the Size summary. At most one correction per field. After each performed step exactly one Designer Save, recording its response and the Save state. If a Save raises 'The server event processing returned an error', answer OK once, record the step and stop blocked. Leave every other property unchanged.",
+      "StaticHome (T2): A Static, Name StaticHome, Save; B Caption FX_sHome, Save; C Theme Class FX_Header, Justification Center, No Colon True (Miscellaneous > Specific Attributes), Width 20, Height 1.5, Save. Three Designer Saves. Screenshots: placement with the tree; the committed Caption; the step C values before the Save; each Save response.",
+      "GridItems (T3): A Grid, Name GridItems, Save. B Binding Type: open its list (Data Source group), record the options, click Secondary Collection. Then click the Binding ellipsis once and record the dialog that opens (title, fields, options) with a screenshot before any choice. If it offers the Form's secondary collection FX_Items (or an entry that names it unambiguously), select it and confirm with OK; if it offers no such entry, offers several that could match, or asks for anything else (columns, properties, a new collection), record it, Cancel and stop blocked before the Save. Answer an OK-only informational prompt (for example EXP-102's 'You must regen this form ... to see the list of properties') with OK and record it verbatim; any prompt with Yes/No or that would create, delete or replace something: record it verbatim, choose the non-changing answer (No or Cancel) and stop blocked. Record Binding Type and Binding as displayed after the dialog, then one Designer Save. Two Designer Saves. Screenshots: placement with the tree; the Binding dialog before the choice; Binding Type and Binding before the Save; each Save response. Regenerating the Form is not authorized: if the Designer suggests it, record that and continue without it.",
+      "Readback and audit (T4, one task): close the clean FX_CustomerPortal once through its Form-tab control (answer No to any save prompt, record its text), reopen it once through the Form menu recent-forms entry, record the Components tree (StaticHome under FlexLayoutHome > Region00: header; GridItems under Region02: grid; everything else unchanged), select each by its Components row and read StaticHome's Caption, Theme Class, Justification, No Colon and Size and GridItems' Binding Type, Binding and Size, from screenshots where the values are not exposed as text. Open no dialog or list (the Binding ellipsis stays closed). Record what the canvas shows in the header and grid bands. Leave the Form open and clean. Then, in the same task, write the documentation-only final audit into the record: decisive evidence for each acceptance check, the cumulative action audit with exact counts, the worker-written-file inventory, the cleanup inventory and the final state. Screenshots: the reopened canvas with the tree showing both new rows (a fresh screenshot under a new filename if one does not show them; never reuse a filename), and one per component's Properties.",
+      "Before every click, use references from the most recent snapshot taken in the current task (not from find output); after any timeout or 'Ref not found', take one fresh untargeted snapshot and use only its references (one per error). Coordinates are allowed only for the two canvas placement clicks (T2, T3) and, once per field, for a list arrow that has no reference; record each such click. Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection; never leave a prompt, editor or dialog open across tasks. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Part 8 (Tile Forms, grid columns, count editor, add-to-cart, drag/drop, cart logic, the Variable Customer ID bindings); grid column definitions or any change to the FX_Items collection entry; Regenerate Form (operator decision, 2026-10-18).",
+      "Any change to existing components or regions (root FlexLayout, FlexLayoutHeader and its Statics, FlexLayoutMain and its six regions, the menu Buttons, the five sign-in page components, FlexLayoutHome and its regions, FlexLayoutButtons and its regions, FlexLayoutFooter); any component other than StaticHome and GridItems; deleting or moving any component or region.",
+      "Form properties and the Form's collections (read only in the T1 gate).",
+      "Regenerate Form (not authorized in this run).",
+      "Any other Form, including FX_FlexProbe01; Site Default or Group scope.",
+      "Creating or changing any global object (strings, images, the theme FX_HelloWorld and its classes, variables); IDOs, SQL objects and stored data.",
+      "Any runtime action in the Web Client.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; FormSync, deployment; any cache or metadata unload.",
+      "Direct SQL execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes, assets or files outside the EXP-114 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never place more than two components (StaticHome in T2, GridItems in T3); never use mouse dragging; Undo at most once per task and only to remove a misplaced new component before any other change to it.",
+    "Never change any existing component or region; never delete, move or reorder a component or a region.",
+    "Never set any attribute other than StaticHome's Name, Caption, Theme Class, Justification, No Colon and Size and GridItems' Name, Binding Type and Binding as planned; never click the Caption ellipsis; never define grid columns; never add an event handler; never change the Form's collections.",
+    "Never create or edit any global object.",
+    "Never click Regenerate Form or Delete Form Definition.",
+    "Never edit or save any other Form; never perform any runtime action.",
+    "Never click Select Form OK; open FX_CustomerPortal only through the recent-forms entry.",
+    "Never go beyond the current task instruction; stop at its end even when later brief steps remain.",
+    "Never invoke the Designer Save more than three times in T2 or twice in T3 (once after each performed step) or at all in T1 and T4; never retry an uncertain Save; never Save after an error, after the console error count rose or after a Caption commit left Save disabled; never Save with the Binding dialog open or after it was cancelled.",
+    "Never answer Yes to a prompt that would delete, discard or replace anything; record every prompt verbatim.",
+    "Never invoke any unload, in the Web Client or the Designer.",
+    "Never perform check-in, undo checkout or other checkout-management actions, FormSync or deployment.",
+    "Never use direct SQL, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability, database-level durability or replay verification from same-session UI observations."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:browser_drag|browser_mouse_drag_xy|browser_mouse_down|browser_mouse_up)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:set|select|choose|change|switch)\\b[^.\\n]{0,30}\\b(?:Site Default|Group)\\s+scope\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:component|collection|region|FlexLayout|Flex Layout)s?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b",
+    "\\b(?:click|press|invoke|perform|use)\\b[^.\\n]{0,30}\\b(?:runtime|Web Client)\\s+Save\\b"
+  ],
+  "related_experiments": [
+    "EXP-113",
+    "EXP-112",
+    "EXP-111",
+    "EXP-102"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_CustomerPortal (User scope, EXP-102/EXP-103-R3)",
+    "artifacts": [
+      "StaticHome (new Static) in FlexLayoutHome's header region: Caption FX_sHome (existing string, Home), Theme Class FX_Header, Justification Center, No Colon True, Size 20; 1.5",
+      "GridItems (new Grid) in FlexLayoutHome's grid region: Binding Type Secondary Collection, Binding FX_Items (the Form's secondary collection, EXP-102)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed at the start of each task; session usable; User scope; FX_CustomerPortal open and clean; tree recorded with FlexLayoutHome's header and grid regions empty and the rest as accepted in EXP-113; Collections tab recorded (Primary and Secondary entries); header and grid bands located; baseline console error count recorded. Evidence: gate screenshot."
+    },
+    {
+      "id": "AC-2",
+      "description": "In T2, StaticHome placed as the only child of FlexLayoutHome > Region00: header with Name, Caption FX_sHome (Save enabled after the commit), Theme Class FX_Header, Justification Center, No Colon True and Size 20; 1.5, one Designer Save after each step with its response. In T3, GridItems placed as the only child of Region02: grid, named, Binding Type Secondary Collection, the Binding dialog recorded before the choice and FX_Items bound (or a recorded stop), one Designer Save after each step with its response. Console error count recorded after every action; at most one correction per field. Evidence: placement, Caption, Binding dialog, property and Save screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "After one ordinary close and reopen, StaticHome and GridItems are in their regions with their planned values; the canvas shows them in the header and grid bands; other components unchanged; Form open and clean. Evidence: readback screenshots, one showing both new tree rows."
+    },
+    {
+      "id": "AC-4",
+      "description": "No other component, region or Form changed; no global object created or changed; the Form's collections unchanged; no grid columns, event or Caption ellipsis; no Regenerate; no dragging; Undo used at most once per task and only as allowed; no runtime action; no unload; no checkout action; User scope only; no task-boundary overrun."
+    },
+    {
+      "id": "AC-5",
+      "description": "The final audit (written in T4) gives decisive evidence for AC-1 to AC-4, the action audit with exact counts (Toolbox selections, placement and arrow coordinate clicks, view-only scrolls, Undo clicks, list opens, dialog opens with OK and Cancel, prompts with texts and answers, per-field entries and corrections, Designer Saves with responses, Form closes and reopens, errors, re-logins), the worker-written-file inventory, the cleanup inventory (StaticHome, GridItems) and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-114",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only gate for EXP-114. First read the repository file AGENTS.md, then hello-world-pt7.md lines 272-281 and transcript lines 513-519, recipes/components/add-component-from-toolbox.md, recipes/session/session-expiry-and-stale-designer.md, and only the Outcome (operator) sections of EXP-113, EXP-111 and EXP-102, all before any browser action; read nothing else. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry, logout card or sign-in, record it and stop for the operator (do not sign in; never screenshot a filled sign-in form). Record the page console error count shown in the tool output (do not read the messages); if it rises after any action, record the action and stop. In the Designer confirm User scope, that FX_CustomerPortal is open and clean and that no dialog is open; if it is not open, open it once through the Form menu recent-forms entry. If any action raises the server-event error, answer OK once, record it and stop. Record the Components tree (expand it if needed; view only), including FlexLayoutHome's regions and whether any component is in its header or grid region (expected none). Open the Details panel's Collections tab (view only) and record the Primary and Secondary entries; open no editor. Locate the header and grid bands of the homepage column on the canvas; one screenshot of the tree and canvas. Use inline snapshots only. Make no change in T1. This is the end of T1 even though later brief steps remain. Create the EXP-114 record with the gate, the tree, the collections, the band locations, the action audit and the file inventory, with screenshots under evidence/EXP-114/ (distinct filenames), and stop with no dialog open.",
+  "notes": "Final Part 7 step after EXP-113 (Part 7 Section 10 accepted 2026-10-18), drafted by the operator assistant from the EXP-113 brief with the component and Caption rules of EXP-111. Tutorial mapping: Static Home -> StaticHome; s home -> FX_sHome (EXP-110-R2, Home; reused, no ellipsis); Theme Class Header -> FX_Header (EXP-100); Grid Items -> GridItems; the Items secondary collection -> FX_Items (EXP-102). Regenerate Form is not authorized (operator decision, 2026-10-18, before drafting), although the tutorial narrates it after the binding. The Grid's Binding ellipsis dialog has not been seen before, so T3 records it before any choice and stops on anything unexpected. Planned tasks: T1 gate with Collections tab; T2 StaticHome (3 Saves); T3 GridItems (2 Saves); T4 close/reopen readback and final audit. exact_values: StaticHome, GridItems, FX_sHome. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "StaticHome",
+    "GridItems",
+    "FX_sHome"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User scope; FX_CustomerPortal only: place the Static StaticHome in FlexLayoutHome's header region (Caption FX_sHome, Theme Class FX_Header, Justification Center, No Colon True, Size 20; 1.5) and the Grid GridItems in its grid region (Binding Type Secondary Collection, Binding FX_Items); up to three Designer Saves in T2 and two in T3; existing components and the Form's collections read only; no global object; no grid columns, event or Caption ellipsis; no Regenerate; no other component or Form; no runtime action; no unload"
+}
