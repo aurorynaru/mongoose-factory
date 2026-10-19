@@ -1,0 +1,133 @@
+{
+  "experiment_id": "EXP-121",
+  "title": "EXP-121 - Hello World Part 8 Phase 4a: StaticCart, GridOrders (Primary Collection Grid) and ButtonCheckout in FlexLayoutMain's cartpage Region of FX_CustomerPortal, with a Close/Reopen Readback",
+  "record_path": "experiments/EXP-121-hello-world-part-8-phase-4a-cart-page-components.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Build the components of Hello World Part 8 Phase 4 (06:39-08:26) on FX_CustomerPortal (User scope) in FlexLayoutMain > Region04: cartpage: a Static StaticCart (Caption FX_sCart = Cart, existing since EXP-110-R3; Theme Class FX_Header, Justification Center, Size 20; 1.5), a Grid GridOrders (Binding Type Primary Collection Grid, Binding left at its default, Size 35; 15) and a Button ButtonCheckout (Caption FX_sCheckout = Checkout, created through the Caption ellipsis if absent; Theme Class FX_BlueButton, Size 20; 1.5; Margin 10,0,10,0 in its own Edit FlexLayout Attributes dialog). GridOrders' columns and its read-only setting (08:26-09:47) are a separate later experiment; the narrated Regenerate is not needed (EXP-118). T1 gate and string check; T2 StaticCart; T3 GridOrders; T4 ButtonCheckout; T5 close/reopen readback and final audit. Findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Before browser interaction read AGENTS.md (the repository file, at the start of every task), docs/mongoose/transcripts/hello-world-pt8.md Phase 4 (lines 135-153) and transcript lines 381-401 (06:39-08:32), recipes/components/add-component-from-toolbox.md, recipes/session/session-expiry-and-stale-designer.md, and only the final Outcome (operator) sections of the EXP-120, EXP-114, EXP-111 and EXP-110-R3 records. Read nothing else: no other records and no later Part 8 phases. In a continuation task, AGENTS.md and the current task's part of this record are enough.",
+      "Create or update only experiments/EXP-121-hello-world-part-8-phase-4a-cart-page-components.md and evidence/EXP-121/ documentation and evidence files.",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If a session expiry, logout card or sign-in page appears, record it and stop for the operator (EXP-107: the operator signs in manually); do not navigate, type credentials or screenshot a filled sign-in form. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt, dialog, menu or unsaved change open across tasks. After any pause, inspect the state read-only before acting and never replay an earlier action. Signed-out session (EXP-116): a server-event error together with a portal tab reading 'Logout Successful' means the session ended; record it and stop for the operator.",
+      "Task boundary: do only what the current task instruction lists and stop at its end, even when later steps of this brief remain; report the next step instead of performing it. Turn budget (EXP-109, EXP-111): if a task cannot finish, stop only at a step boundary right after a Save (never with an unsaved change, open list, editor or dialog) and report the next step.",
+      "Server-event rule (EXP-103-R2 lesson): if any action raises 'The server event processing returned an error', answer OK once, record it and stop blocked for an operator Designer reload; never try another route, retry, close or reopen after that error. Console-error stop (EXP-110-R2 lesson: a Caption commit can fail silently with HTTP 400 and surface only at the next server event): record the page console error count shown in the browser tool output at the start of each task and after every action in T1 to T5; if it rises after any action, record the action and the counts and stop blocked before any further click (no ellipsis, no Save, no close), leaving the state for the operator. Never read or inspect the console messages themselves. A rise can also come from a client-side Designer script error (EXP-111 T5: an uncaught TypeError at a component selection); the stop rule is the same, and the operator diagnoses the cause from the tool-written console log. A Caption commit that leaves Save disabled is also a stop signal (EXP-110-R2): record it and stop blocked before any further click.",
+      "Editing scope: stay in User scope throughout. If an 'Identify Your Editing Scope' dialog appears, confirm it shows User for the signed-in user and accept it unchanged; if it shows any other scope, Cancel it and stop blocked.",
+      "Designer gate (T1, read-only except at most one Form open): User scope; FX_CustomerPortal open and clean (Save disabled), no dialog open; if another Form tab is active, select FX_CustomerPortal's tab; if it is not open, open it once through the Form menu recent-forms entry (never Select Form OK). Record the Components tree under FlexLayoutMain: Region00: menu (three Buttons), Region01: spacer1, Region02: signinpage (five components), Region03: homepage (FlexLayoutHome with its components), Region04: cartpage (expected empty) and Region05: spacer2; if cartpage holds a component or the tree differs, record it and stop blocked. String check: open Designer Edit menu > String once (Global Objects, Strings filter; the filter applies after clicking its search icon); filter FX_sHome as a positive control (expected Home), then FX_sCart (expected Cart) and FX_sCheckout; record each result and value with one screenshot and leave with Cancel; verify Save is still disabled. If FX_sCart is absent or not Cart, record it and stop blocked. FX_sCheckout may be absent or present: present with exactly Checkout is reused without the ellipsis; present with any other value stops the run blocked. Locate the cartpage column on the canvas (right of the homepage column, left of the narrow spacer2 column). Record the baseline console error count and one screenshot of the tree with the cartpage column.",
+      "Efficiency rules (operator, 2026-10-16): screenshots only for the decisive states named in this brief; do not re-open saved images unless a decision needs it; one untargeted snapshot per step; read only the named sources; never search or read the worker's own session transcript. Use inline untargeted snapshots; never save snapshots to files and Grep them (EXP-109 ran out of turns that way). Lists (EXP-111 lesson): choose a list option by clicking it; never pick options with arrow keys, Enter or Tab while a list is open, because Tab commits the highlighted item. Stale references (operator ruling, EXP-111): the allowance is one fresh untargeted snapshot per 'Ref not found' error, not one per task. Snapshot size (EXP-114): if an untargeted snapshot is too large to return inline, take targeted snapshots of the needed panel instead (record that); never save snapshots to files.",
+      "Component rules (EXP-106, EXP-111, EXP-114, EXP-120): Placement: click the component's row in the Toolbox once (Static, Grid or Button), then click once inside the cartpage column of FlexLayoutMain (the column right of the homepage column; StaticCart near its top, GridOrders just below StaticCart's box, ButtonCheckout just below GridOrders' box; away from edges, dividers and adorner icons; a view-only canvas scroll is allowed first); record the Components tree: the new component must be the last child of FlexLayoutMain > Region04: cartpage, after the ones placed before it in the order StaticCart, GridOrders, ButtonCheckout. A component anywhere else gets the toolbar Undo once and the run stops blocked. Never drag. Record its defaults (Name, Size, Flex Attributes, Justification, Binding Type; for the Grid also Binding and any child GridColumn rows). Name: plain fill and Tab; verify it in the Components tree (labels lag). Record the console error count after each action. Caption (EXP-110, EXP-111): click the Caption value cell, type the string ID key by key, leave the field by clicking the Description row (never Tab); no accessibility snapshot while the Caption list is open (use a screenshot); verify the committed Caption and that Save became enabled. String (EXP-110-R3): if T1 found the string with its planned value, do not click the ellipsis; otherwise click the Caption ellipsis once, expect the prompt 'String <ID> does not exist. Create it?' (record verbatim), Yes once, in the String editor replace the pre-filled value with the planned value by one plain fill and Tab, verify, OK once; if the prompt names another ID or an editor shows an existing value, leave it with OK unchanged and stop blocked. Lists (Justification, Binding Type, Theme Class): open the list and click the option, then leave the field by clicking the Description row; if the arrow is not exposed, a value-cell double-click may show it; if the planned option is absent, close the list without choosing and stop blocked before the Save. Size: double-click the Layout Size row, then Width and Height by plain fill and Tab (skip a field that already holds its value and record that); record the Size summary. At most one correction per field. After each performed step exactly one Designer Save, recording its response and the Save state. Margin (EXP-106 finding 4, EXP-111): with Properties showing the component, click its canvas adorner (top left inside its box, tooltip 'Edit FlexLayout Attributes'; coordinate click) once; the dialog must show only Region Index and Margin (if it shows Type, Auto Size or a Regions grid it belongs to a FlexLayout: Cancel and stop blocked); fill Margin 10,0,10,0 by plain fill and Tab, verify, OK once. Answer an OK-only informational prompt (for example EXP-114's 'You will need to regen this form ...') with OK and record it verbatim; any other prompt not covered here: record it, choose the non-changing answer (No or Cancel) and stop blocked. Leave every other property unchanged (GridOrders' Binding stays at the default it shows after the Binding Type change; its GridColumns are not edited).",
+      "StaticCart (T2): A Static, Name StaticCart, Save; B Caption FX_sCart (existing string, no ellipsis), Save; C Theme Class FX_Header, Justification Center, Width 20, Height 1.5, Save. Three Designer Saves. Screenshots: placement with the tree; the committed Caption; the C values before the Save; each Save response state.",
+      "GridOrders (T3): A Grid placed below StaticCart, Name GridOrders, Save; B Binding Type: open its list, click Primary Collection Grid; record any prompt verbatim (OK-only: OK) and the Binding value it then shows (leave it unchanged; never click the Binding ellipsis or list); Save; C Width 35, Height 15, Save. Three Designer Saves. Screenshots: placement with the tree (including any GridColumn rows); Binding Type and Binding before the Save; the Size before the Save; each Save response state.",
+      "ButtonCheckout (T4): A Button placed below GridOrders, Name ButtonCheckout, Save; B Caption FX_sCheckout (string FX_sCheckout = Checkout created through the ellipsis only if T1 found it absent), Save; C Theme Class FX_BlueButton, Width 20, Height 1.5, Save; D Margin 10,0,10,0 through the adorner dialog, Save. Four Designer Saves. Screenshots: placement with the tree; the committed Caption (and prompt and String editor if created); the C values before the Save; the Margin dialog before OK; each Save response state.",
+      "Readback and audit (T5, one task): close the clean FX_CustomerPortal once through its Form-tab control (answer No to any save prompt, record its text), reopen it once through the Form menu recent-forms entry, record the Components tree (StaticCart, GridOrders with its GridColumn rows, ButtonCheckout under Region04: cartpage in that order; everything else unchanged), select each by its Components row (or Type cell) and read its planned values; open ButtonCheckout's Margin dialog through its adorner, record Margin and leave with Cancel; record what the canvas shows in the cartpage column; check FX_sCart and FX_sCheckout read-only through Edit menu > String (filter each; Cancel). Open no other dialog or list. Leave FX_CustomerPortal open and clean. Then, in the same task, write the documentation-only final audit into the record: decisive evidence for each acceptance check, the cumulative action audit with exact counts, the worker-written-file inventory, the cleanup inventory and the final state. Screenshots: the reopened canvas with the tree; one per component's Properties; the Margin dialog; one Strings check.",
+      "Before every click, use references from the most recent snapshot taken in the current task (not from find output); after any timeout or 'Ref not found', take one fresh untargeted snapshot and use only its references (one per error). ExtJS comboboxes are not <select> elements (EXP-101): open their list and click the option. Coordinates are allowed only for the three canvas placement clicks (T2, T3, T4), the Margin adorner clicks (T4 one, T5 one) and, once per field, for a list arrow that has no reference; record each such click. Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection; never leave a prompt, list, editor or dialog open across tasks. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "GridOrders' columns (adding, renaming or binding GridColumns), its read-only setting and Part 8 Phases 5-9 (Page variable, Visible When, menu events, the Add To Cart event pipeline, drag/drop, checkout behavior); Regenerate; any unload; any runtime action.",
+      "Any change to FX_CustomerPortal other than the three new components and their planned properties; any change to FX_ItemsTile or any other Form; templates.",
+      "Creating or changing any global object other than the string FX_sCheckout (Checkout), created only if absent; changing FX_Header, FX_BlueButton or any IDO.",
+      "Any other Form, including FX_FlexProbe01; Site Default or Group scope.",
+      "Creating or changing any global object (strings, images, the theme FX_HelloWorld and its classes, variables); IDOs, SQL objects and stored data.",
+      "Any runtime action in the Web Client.",
+      "Check Out, Check In, Undo Check Out or other checkout-management actions; FormSync, deployment; any cache or metadata unload.",
+      "Direct SQL execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes, assets or files outside the EXP-121 paths.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never choose Site Default or Group scope; stay in User scope.",
+    "Never create a Form or a template; never run any Form wizard.",
+    "Never place more than three components (StaticCart in T2, GridOrders in T3, ButtonCheckout in T4); never use mouse dragging; Undo at most once per task and only to remove a misplaced new component before any other change to it; never change an existing component, region or Form property.",
+    "Never set any attribute other than those planned: StaticCart's Name, Caption, Theme Class, Justification and Size; GridOrders' Name, Binding Type and Size; ButtonCheckout's Name, Caption, Theme Class, Size and Margin; never edit GridOrders' Binding or GridColumns; never set a read-only, Bitmap or event property; never change the Form's collections or variables.",
+    "Never create or edit any global object except the string FX_sCheckout = Checkout, created at most once through the Caption ellipsis and only if T1 found it absent.",
+    "Never click Regenerate Form or Delete Form Definition.",
+    "Never edit or save any Form other than FX_CustomerPortal; never perform any runtime action.",
+    "Never click Select Form OK; never double-click a Select Form row; open FX_CustomerPortal only through its Form tab or the recent-forms entry.",
+    "Never go beyond the current task instruction; stop at its end even when later brief steps remain.",
+    "Never invoke the Designer Save more than three times in each of T2 and T3 or four times in T4 (once after each performed step) or at all in T1 and T5; never retry an uncertain Save; never Save after an error, after the console error count rose or after a Caption commit left Save disabled; never Save with a dialog open.",
+    "Never answer Yes to a prompt that would delete, discard or replace anything; record every prompt verbatim.",
+    "Never invoke any unload, in the Web Client or the Designer.",
+    "Never perform check-in, undo checkout or other checkout-management actions, FormSync or deployment.",
+    "Never use direct SQL, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim cross-session durability, database-level durability or replay verification from same-session UI observations."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:browser_drag|browser_mouse_drag_xy|browser_mouse_down|browser_mouse_up)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:set|select|choose|change|switch)\\b[^.\\n]{0,30}\\b(?:Site Default|Group)\\s+scope\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:component|collection|region|FlexLayout|Flex Layout)s?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b",
+    "\\b(?:click|press|invoke|perform|use)\\b[^.\\n]{0,30}\\b(?:runtime|Web Client)\\s+Save\\b"
+  ],
+  "related_experiments": [
+    "EXP-120",
+    "EXP-114",
+    "EXP-111",
+    "EXP-110-R3"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_CustomerPortal (User scope), FlexLayoutMain > Region04: cartpage",
+    "artifacts": [
+      "Static StaticCart: Caption FX_sCart, Theme Class FX_Header, Justification Center, Size 20; 1.5",
+      "Grid GridOrders: Binding Type Primary Collection Grid, default Binding, Size 35; 15",
+      "Button ButtonCheckout: Caption FX_sCheckout, Theme Class FX_BlueButton, Size 20; 1.5, Margin 10,0,10,0",
+      "String FX_sCheckout = Checkout (tenant-wide, created only if absent)"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed at the start of each task; session usable; User scope; FX_CustomerPortal open and clean; FlexLayoutMain's regions as accepted with cartpage empty; strings FX_sHome, FX_sCart and FX_sCheckout checked; cartpage column located; baseline console error count recorded. Evidence: gate and Strings screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "StaticCart (T2), GridOrders (T3) and ButtonCheckout (T4) placed in order in the cartpage region, named and set as planned (GridOrders' default Binding and any GridColumn rows recorded, FX_sCheckout created through the ellipsis only if absent, ButtonCheckout's Margin dialog showing only Region Index and Margin); one Designer Save after each step with its response. Console error count recorded after every action; at most one correction per field. Evidence: placement, Caption, Binding, Margin, value and Save screenshots."
+    },
+    {
+      "id": "AC-3",
+      "description": "After one ordinary close and reopen, the three components are under Region04: cartpage in order with their planned values, ButtonCheckout's Margin reads 10,0,10,0, the canvas shows them in the cartpage column, FX_sCart and FX_sCheckout read Cart and Checkout, and everything else is unchanged; Form open and clean. Evidence: readback screenshots."
+    },
+    {
+      "id": "AC-4",
+      "description": "No other component, region, event or Form changed; no GridColumn or read-only change; no global object other than FX_sCheckout; no Regenerate, unload, Delete Form Definition or Select Form OK; no dragging; Undo used at most once per task and only as allowed; no runtime action; no checkout action; User scope only; no task-boundary overrun."
+    },
+    {
+      "id": "AC-5",
+      "description": "The final audit (written in T5) gives decisive evidence for AC-1 to AC-4, the action audit with exact counts (Toolbox selections, placement, adorner and arrow coordinate clicks, view-only scrolls, Undo clicks, list opens, dialog opens with OK and Cancel, prompts with texts and answers, per-field entries and corrections, strings created, Designer Saves with responses, Form closes and reopens, errors, re-logins), the worker-written-file inventory, the cleanup inventory (three components, the string if created) and the final state. Repository confinement is supported by worker/harness inventories, with operator git review authoritative. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-121",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only gate for EXP-121. First read the repository file AGENTS.md, then hello-world-pt8.md lines 135-153 and transcript lines 381-401, recipes/components/add-component-from-toolbox.md, recipes/session/session-expiry-and-stale-designer.md, and only the Outcome (operator) sections of EXP-120, EXP-114, EXP-111 and EXP-110-R3, all before any browser action; read nothing else. Without shell/git access, record the starting state concisely. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry, logout card, 'Logout Successful' or sign-in, record it and stop for the operator (do not sign in; never screenshot a filled sign-in form). Record the page console error count shown in the tool output (do not read the messages); if it rises after any action, record the action and stop. In the Designer confirm User scope, that FX_CustomerPortal is open and clean (select its Form tab if another is active; open it once through the Form menu recent-forms entry only if it is not open) and that no dialog is open. If any action raises the server-event error, answer OK once, record it and stop. Record the Components tree under FlexLayoutMain (Region04: cartpage expected empty). Open Edit menu > String once and check FX_sHome (positive control), FX_sCart and FX_sCheckout (filter each, click the search icon, record the value or absence), one screenshot, Cancel. Locate the cartpage column; one screenshot of the tree with the column. Use inline snapshots only. Make no change in T1. This is the end of T1 even though later brief steps remain. Create the EXP-121 record with the gate, the tree, the string check, the column location, the action audit and the file inventory, with screenshots under evidence/EXP-121/ (distinct filenames), and stop with no dialog open.",
+  "notes": "Part 8 Phase 4a after EXP-120 (Phase 3 accepted 2026-10-20), drafted by the operator assistant from the EXP-120 brief with the Margin route of EXP-111. Phase 4 is split: this experiment places the three cart-page components; GridOrders' four columns and the 'read only disable' setting follow as EXP-122. Tutorial mapping: Static Cart -> StaticCart; s cart -> FX_sCart (Cart, EXP-110-R3); Header -> FX_Header; Grid Orders -> GridOrders; Primary Collection -> Primary Collection Grid (EXP-120 finding 3); Button Checkout -> ButtonCheckout; s checkout -> FX_sCheckout (Checkout); Blue Button -> FX_BlueButton; margin 10,0,10,0. The narrated Regenerate is not needed (EXP-118). Planned tasks: T1 gate and string check; T2 StaticCart (3 Saves); T3 GridOrders (3 Saves); T4 ButtonCheckout (4 Saves); T5 close/reopen readback and final audit. exact_values: StaticCart, GridOrders, ButtonCheckout, FX_sCheckout. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "StaticCart",
+    "GridOrders",
+    "ButtonCheckout",
+    "FX_sCheckout"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "User scope; FX_CustomerPortal only: StaticCart (FX_sCart, FX_Header, Center, 20; 1.5), GridOrders (Primary Collection Grid, default Binding, 35; 15) and ButtonCheckout (FX_sCheckout, FX_BlueButton, 20; 1.5, Margin 10,0,10,0) in FlexLayoutMain's cartpage region; string FX_sCheckout = Checkout only if absent; up to three Designer Saves in each of T2 and T3 and four in T4; no GridColumn or read-only change; no event; no Regenerate; no unload; no other Form; no runtime action"
+}
