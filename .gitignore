@@ -20,3 +20,5 @@ Thumbs.db
 .DS_Store
 .vscode/
 .idea/
+
+.claude/settings.local.json
