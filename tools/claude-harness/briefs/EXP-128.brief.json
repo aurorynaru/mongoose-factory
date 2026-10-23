@@ -1,0 +1,127 @@
+{
+  "experiment_id": "EXP-128",
+  "title": "EXP-128 - Read-Only Study of the Mock Inventory Portal (MockLoginPortal, MockInventory, Inventory Dashboard, MockLoginIDO): Web User Controls, JavaScript-to-C# Form Script Calls and Global Variables",
+  "record_path": "experiments/EXP-128-mock-inventory-portal-read-only-study.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Learn, read-only, how an existing demo application in this tenant is built: the Forms MockLoginPortal, MockInventory and the inventory dashboard Form, the IDO MockLoginIDO, their Web User Control assets (HTML, JavaScript, CSS), their C# Form scripts and the global variables they use. In particular, document how the JavaScript in the user controls calls C# Form script methods (expected WSForm.invoke) and other Form features (WSForm.generate, getVarValue/setVarValue, getCompValue/setCompValue), so that the techniques can later be reproduced on FX_ objects. T1 gate and inventory; T2-T6 Form structures and scripts; T7-T8 assets; T9 global variables; T10 MockLoginIDO; T11 runtime look without interaction; T12 synthesis and audit. Nothing is changed or saved; findings are observed only.",
+  "scope": {
+    "in_scope": [
+      "Before browser interaction read AGENTS.md (the repository file, at the start of every task), docs/mongoose/guides/user-control.md (Web User Controls, assets and the WSForm JavaScript API), docs/mongoose/guides/scripts.md lines 1-130 (Form scripts and global variables), docs/mongoose/guides/variables.md and recipes/session/session-expiry-and-stale-designer.md. Read nothing else. In a continuation task, AGENTS.md and the current task's part of this record are enough.",
+      "Create or update only experiments/EXP-128-mock-inventory-portal-read-only-study.md and evidence/EXP-128/ documentation and evidence files (screenshots, and the verbatim .txt copies of scripts and assets described below).",
+      "Record the worker-written-file inventory and a cumulative browser action audit with exact counts.",
+      "Use the existing authenticated session without refresh, restart or configuration change. If a session expiry, logout card or sign-in page appears, record it and stop for the operator (EXP-107: the operator signs in manually); do not navigate, type credentials or screenshot a filled sign-in form. List the browser tabs before the first tab selection. Answer any prompt within the same task; never leave a prompt, dialog, menu or unsaved change open across tasks. After any pause, inspect the state read-only before acting and never replay an earlier action. Signed-out session (EXP-116): a server-event error together with a portal tab reading 'Logout Successful' means the session ended; record it and stop for the operator.",
+      "Task boundary: do only what the current task instruction lists and stop at its end, even when later steps of this brief remain; report the next step instead of performing it. Turn budget (EXP-109, EXP-111): if a task cannot finish, stop only at a step boundary right after a Save (never with an unsaved change, open list, editor or dialog) and report the next step.",
+      "Server-event rule (EXP-103-R2 lesson): if any action raises 'The server event processing returned an error', answer OK once, record it and stop blocked for an operator Designer reload; never try another route, retry, close or reopen after that error. Console-error stop (EXP-110-R2 lesson: a Caption commit can fail silently with HTTP 400 and surface only at the next server event): record the page console error count shown in the browser tool output at the start of each task and after every action in T1 to T11, for the tab in use (Web Client or Designer; record each tab's own baseline); if it rises after any action, record the action and the counts and stop blocked before any further click (no ellipsis, no Save, no close), leaving the state for the operator. Never read or inspect the console messages themselves. A rise can also come from a client-side Designer script error (EXP-111 T5: an uncaught TypeError at a component selection); the stop rule is the same, and the operator diagnoses the cause from the tool-written console log. A Caption commit that leaves Save disabled is also a stop signal (EXP-110-R2): record it and stop blocked before any further click.",
+      "Editing scope: stay in User scope throughout. If an 'Identify Your Editing Scope' dialog appears, confirm it shows User for the signed-in user and accept it unchanged; if it shows any other scope, Cancel it and stop blocked.",
+      "READ-ONLY STUDY (operator, 2026-10-23): the targets are existing non-FX_ demo objects built by someone else: the Forms MockLoginPortal, MockInventory and the inventory dashboard Form (the operator wrote 'MockIventoryDashboard'; record its exact name from the Select Form list), the IDO MockLoginIDO, their Web User Control assets (HTML, JavaScript, CSS) and global variables. Change nothing: never click Save in the Designer or at runtime; close every dialog, editor and list you open with Cancel, Close or its close control (never OK, Apply or Save, except OK on an OK-only informational message); answer No to every save prompt. If Save becomes enabled or the Form shows unsaved changes after a read (an accidental change), record the action that caused it, do not save, and continue reading; close that Form with No at the end of the task. The operator accepts that an accidental unsaved change in this demo is not a stop condition; a console error rise or a server-event error still is.",
+      "Credential rule (AGENTS.md): code, assets and variables may contain passwords, tokens, API keys, connection strings or user names. When copying any text into the repository, replace each such value with <redacted> and record that a value was redacted; never copy a credential value, never type one anywhere, and never screenshot a filled sign-in form. The signed-in account name shown in the status bar is written as <signed-in user>.",
+      "Gate and inventory (T1, read-only): list the tabs; identify the Web Client and Web Designer tabs and record each tab's console error count. Designer: User scope; record which Form is open and whether it is clean (if a Form has unsaved changes, record it and stop for the operator); no dialog open. Open the Designer's Edit menu once and record every entry (expected entries such as Form Script, Global Script or Variables, and Web User Control Assets); close the menu by clicking its menu-bar button again. Open the Form menu's Open (Select Form) dialog once, clear any leftover filter text, type Mock key by key in the filter, record every listed Form name with its description, then close the dialog with Cancel. Screenshots: the Edit menu open; the Select Form list filtered on Mock.",
+      "Form structure (T2 MockLoginPortal; T4 MockInventory; T6 the dashboard Form, structure first): open it once in the Designer through the Form menu's Open (Select Form) dialog: clear any leftover filter text (one Control+A, then Backspace), type the exact Form name key by key in the filter and double-click its exact row (never OK); record: the Form's type and template if shown (Classic, Flex, portal shell; if it opens in a different designer such as IDS or Responsive Form Builder, record that and read only what is shown), its Form-level properties (caption, collections: primary and secondary IDOs and their filters, from Details > Collections), the full Components tree (every component: name, type, parent region), and for each UserControl component and each component with a binding, an event or a Visible When / Enabled When: its Properties rows (Binding Type and Binding, Events rows, Visible When, Enabled When, Control URL or user-control reference rows). For a UserControl, open its user-control reference ellipsis once read-only (expected 'Edit User Control References': Use Web Control, Control URL, Web User Control Asset), record every field, then close it with Cancel. Then Details > Event Handlers (every group and row with Response Type and Response Parameters), Details > Variables (every category and variable). Screenshots: the Components tree; each UserControl's Properties; Event Handlers; Variables. Close the Form at the end of the task through its Form-tab control (answer No to any save prompt).",
+      "Form scripts (T3 MockLoginPortal; T5 MockInventory; T6 the dashboard Form after its structure): with the Form open (open it again as in T2 if needed), open the Form's script through the Designer's Edit menu (record the menu entry used, e.g. Form Script; if no script exists, record it and stop the step) and copy the full C# source as shown into evidence/EXP-128/<FormName>-form-script.cs.txt (verbatim; if the editor shows only part of the text, scroll the editor with the mouse wheel (view only) and append each newly visible part, recording that the copy is assembled; if the text is not exposed in the snapshot, take screenshots of each screenful instead and say so). Record every method name with its parameters, every method a JavaScript WSForm.invoke could call, every IDO, method or property name the script uses (for example LoadCollection, InvokeIDOMethod, CallIDOMethod or IDO request calls), every variable it reads or sets, and every event it generates. Close the editor without saving (Cancel or close; answer No to any save prompt). Also open the global script entry if the Edit menu offers one, in T3 only, and copy it the same way to evidence/EXP-128/global-script.cs.txt.",
+      "Web User Control assets (T7 the HTML pages; T8 the JavaScript and CSS files): in the Designer open Edit > Web User Control Assets once; record the asset tree (Page Elements tab: every folder and file); for each file referenced by a Control URL recorded in T2 to T6, and every file those pages load, select it and click Edit once to open the 'Edit Browser File' dialog, copy its full text verbatim into evidence/EXP-128/assets/<path with / replaced by _>.txt (same scrolling and credential rules as for scripts), then close that dialog with Cancel. In the HTML and JavaScript, record every WSForm.*, MG.* or other Mongoose API call with its arguments (component, variable, event and method names). The asset dialog's New, Import, Delete and Copy buttons are never used. Close the Web User Control Assets dialog with Cancel. Screenshots: the asset tree; one Edit Browser File dialog.",
+      "Global variables (T9): open the Designer's global variables entry (from the Edit menu as recorded in T1) once; record every global variable whose name or value relates to the Mock Forms (and the total count), with name, value and persistence where shown (credential rule applies); close with Cancel. Screenshot: the variables list.",
+      "IDO (T10): in the Web Client open the runtime IDOs Form once (Form menu recent entry, otherwise Select Form by name with a row double-click); one Filter in Place click, type MockLoginIDO key by key in the IDO name criteria, one F4; record the IDO's project, tables, extension class or custom assembly name, and its Properties and Methods tabs (every property with its class and binding; every method with its parameters and type), selecting tabs only (view only). Change nothing; close the Form (answer No to any save prompt). Screenshots: the IDO header; the Methods tab.",
+      "Runtime look (T11): in the Web Client open MockLoginPortal, then MockInventory, then the dashboard Form, once each (recent entry or Select Form with a row double-click); for each, wait for it to settle (at most 10 seconds), record what is shown (title, visible controls, any rendered HTML content inside a user control, status bar, any prompt verbatim) and take one screenshot, then close it (answer No to any save prompt). Do not type, sign in, click any control inside the Form or press any key. If a Form shows a sign-in screen of its own, record that only.",
+      "Synthesis and audit (T12, documentation only, no browser action): write into the record an architecture description of the three Forms and MockLoginIDO: how the HTML/JavaScript user controls call the Form (each WSForm.* call mapped to the Form script method, event handler or variable it reaches), what each C# Form script method does and which IDO calls it makes, how global variables are used, and the data flow from login to inventory and dashboard; then a list of techniques not seen in the Hello World experiments (candidate recipes, each marked unverified), the open questions, the cumulative action audit with exact counts, the worker-written-file inventory (every .txt copy, with which values were redacted), any accidental change observed, and the final browser state.",
+      "Before every click, use references from the most recent snapshot taken in the current task (not from find output); after any timeout or 'Ref not found', take one fresh untargeted snapshot and use only its references (one per error). ExtJS comboboxes are not <select> elements (EXP-101): open their list and click the option. Coordinates are allowed only once per field for a list arrow that has no reference (EXP-111: a value-cell double-click may expose it first); record each such click. Record any blocker after at most one fresh untargeted snapshot and one corrected visible inspection; never leave a prompt, list, editor or dialog open across tasks. Classify findings as observed only."
+    ],
+    "out_of_scope": [
+      "Any change to any object: Forms, components, scripts, assets, global variables, IDOs, strings, images, themes; any Designer or runtime save; creating anything (no FX_ object is created in this experiment).",
+      "Typing anywhere except the Select Form filter text (Mock, or an exact Form name), the IDOs Filter in Place criteria (MockLoginIDO) and the copied text written to evidence files; signing in to any Form; clicking controls inside the Mock Forms at runtime.",
+      "Running or debugging scripts; compiling; the script editor's save or compile buttons.",
+      "Check Out, Check In, Undo Check Out; FormSync, deployment; any cache or metadata unload.",
+      "Direct SQL execution, browser JavaScript, console or network inspection, direct URL navigation (except the portal step of the session-expiry procedure), refresh or restart.",
+      "Modifying earlier experiment records, AGENTS.md, tutorial sources, recipes, assets in the repository or files outside experiments/EXP-128-mock-inventory-portal-read-only-study.md and evidence/EXP-128/.",
+      "Starting another experiment or replay."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any artifact, FX_ or not",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values; copying a credential value into any file; typing one anywhere",
+    "Never choose Site Default or Group scope; stay in User scope.",
+    "Never click Save in the Designer or at runtime, never press Ctrl+S, never answer Yes to a save prompt, never click OK, Apply or Save in any dialog or editor except OK on an OK-only informational message.",
+    "Never use the asset dialog's New, Import, Delete or Copy buttons; never edit text in any editor or field other than the Select Form filter and the IDOs Filter in Place criteria.",
+    "Never place, move, resize or rename a component; never use mouse dragging; never use Undo; never copy or paste inside the application.",
+    "Never click Regenerate Form or Delete Form Definition; never compile or run a script.",
+    "Never click Select Form OK; open Forms only by a row double-click or a recent-forms entry.",
+    "Never go beyond the current task instruction; stop at its end even when later brief steps remain.",
+    "Never sign in to a Mock Form, type at runtime or click a control inside a Mock Form at runtime.",
+    "Never invoke any unload, in the Web Client or the Designer.",
+    "Never perform check-in, undo checkout or other checkout-management actions, FormSync or deployment.",
+    "Never use direct SQL, application internals or browser JavaScript; never refresh, restart or replace the browser session; re-login only through the worker-preamble session-expiry procedure, at most once per task.",
+    "Never claim that a technique works from reading its code; findings are observed descriptions only."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|browser_run_code|page\\.evaluate|executeScript)\\b",
+    "\\b(?:browser_console_messages|browser_network_requests|browser_start_tracing)\\b",
+    "\\b(?:browser_mouse_drag_xy|browser_mouse_down|browser_mouse_up)\\b",
+    "\\b(?:DROP|TRUNCATE|ALTER)\\s+TABLE\\b",
+    "\\b(?:DELETE\\s+FROM|INSERT\\s+INTO|UPDATE\\s+\\S+\\s+SET)\\b",
+    "\\b(?:FormSync|Deployment|Deploy|ClearCache|Regenerate\\s+Form)\\b",
+    "\\bUnload IDO Metadata\\b(?!\\s+With\\s+Forms)",
+    "\\b(?:uncheck|enable|disable|toggle|change|set)\\b[^.\\n]{0,40}\\bUnload IDO Metadata With Forms\\b",
+    "\\b(?:click|press|invoke|perform|use|select)\\b[^.\\n]{0,35}\\b(?:Check[- ]?In|Undo\\s+Check[- ]?Out)\\b",
+    "\\b(?:browser refresh|browser restart|JavaScript evaluation)\\b",
+    "\\b(?:click|press|use|select|choose)\\b[^.\\n]{0,30}\\bDelete Form Definition\\b",
+    "\\b(?:set|select|choose|change|switch)\\b[^.\\n]{0,30}\\b(?:Site Default|Group)\\s+scope\\b",
+    "\\b(?:delete|remove)\\b[^.\\n]{0,30}\\b(?:component|collection|region|FlexLayout|Flex Layout)s?\\b",
+    "\\b(?:click|press|activate)\\b[^.\\n]{0,30}\\b(?:Import|Export)\\b",
+    "\\b(?:click|press|invoke|perform|use)\\b[^.\\n]{0,30}\\b(?:runtime|Web Client)\\s+Save\\b",
+    "\\b(?:browser_drag)\\b"
+  ],
+  "related_experiments": [
+    "EXP-127",
+    "EXP-118"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "MockLoginPortal, MockInventory and the inventory dashboard Form (read-only); IDO MockLoginIDO; their Web User Control assets and global variables",
+    "artifacts": [
+      "Architecture description: user controls -> WSForm calls -> Form script methods / events / variables -> IDO",
+      "Verbatim copies (credentials redacted) of Form scripts and assets under evidence/EXP-128/",
+      "List of techniques new to the factory, as unverified candidate recipes"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Sources reviewed at the start of each task; session usable; User scope; the starting Designer Form recorded clean; the Edit menu entries and the Mock Form names recorded. Evidence: gate screenshots."
+    },
+    {
+      "id": "AC-2",
+      "description": "For each of the three Forms: type, collections, Components tree, UserControl references, event handlers and variables recorded; the Form script copied verbatim (or the reason it could not be). Evidence: screenshots and .txt copies."
+    },
+    {
+      "id": "AC-3",
+      "description": "The Web User Control assets referenced by the Forms are listed and copied verbatim with every WSForm/MG call recorded; the related global variables and MockLoginIDO's properties and methods are recorded. Evidence: screenshots and .txt copies."
+    },
+    {
+      "id": "AC-4",
+      "description": "Runtime look at the three Forms with no interaction; T12 synthesis maps each JavaScript call to the Form feature it reaches and lists candidate techniques as unverified."
+    },
+    {
+      "id": "AC-5",
+      "description": "Nothing saved or created; every dialog and editor closed with Cancel or close; any accidental unsaved change recorded and discarded with No; no credential value copied; no runtime interaction beyond opening and closing; User scope only; no task-boundary overrun. The final audit gives the action audit with exact counts, the worker-written-file inventory and the final state. Findings are observed only."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-128",
+  "replay_of": null,
+  "initial_instruction": "T1 - Read-only gate and inventory for EXP-128. First read the repository file AGENTS.md, then docs/mongoose/guides/user-control.md, docs/mongoose/guides/scripts.md lines 1-130, docs/mongoose/guides/variables.md and recipes/session/session-expiry-and-stale-designer.md, all before any browser action; read nothing else. This experiment is READ-ONLY: never save anything; close every dialog, menu and editor with Cancel, Close or its close control; answer No to every save prompt. List the browser tabs before selecting one; identify the Web Client and Web Designer tabs. If either shows a session expiry, logout card, 'Logout Successful' or sign-in, record it and stop for the operator (do not sign in; never screenshot a filled sign-in form). Record each tab's console error count shown in the tool output (do not read the messages); if it rises after any action, record the action and stop. In the Designer confirm User scope, record which Form is open and that it is clean (if it has unsaved changes, stop for the operator) and that no dialog is open. Open the Edit menu once and record every entry, then close it by clicking its menu-bar button again. Open the Form menu's Open (Select Form) dialog once, clear any leftover filter text (Control+A, Backspace), type Mock key by key in the filter, record every listed Form name and description, then Cancel. If any action raises the server-event error, answer OK once, record it and stop. Screenshots: the Edit menu open; the Select Form list filtered on Mock. Use inline snapshots only (targeted panel snapshots if an untargeted one is too large). This is the end of T1 even though later brief steps remain. Create the EXP-128 record with the gate, the readings, the action audit and the file inventory, with screenshots under evidence/EXP-128/ (distinct filenames), and stop with no menu, dialog or list open.",
+  "notes": "Read-only study requested by the operator on 2026-10-23 before the structured-recipe work: an existing demo app (MockLoginPortal, MockInventory, the inventory dashboard Form, MockLoginIDO) whose UI is HTML/JS/CSS in Web User Controls and whose JavaScript invokes C# (expected: WSForm.invoke calling Form script methods), with global variables reached from the Designer's Edit menu. The operator said an accidental change is acceptable in this demo; the brief still forbids every save and treats an accidental unsaved change as record-and-continue (discarded with No). The dashboard Form's exact name is read from the Select Form list (the operator typed 'MockIventoryDashboard'). Credentials found in code or variables are redacted in every copy. Planned tasks: T1 gate and inventory; T2 MockLoginPortal structure; T3 its script (and the global script); T4 MockInventory structure; T5 its script; T6 dashboard structure and script; T7 HTML assets; T8 JS/CSS assets; T9 global variables; T10 MockLoginIDO; T11 runtime look; T12 synthesis and audit. Twelve tasks use the whole default worker-task limit; the operator assistant may raise it at a pause if a task needs a continuation. exact_values: MockLoginPortal, MockInventory, MockLoginIDO. deny_browser_javascript. Approval pending from the operator.",
+  "exact_values": [
+    "MockLoginPortal",
+    "MockInventory",
+    "MockLoginIDO"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "editing_scope": "Read-only: no object is created, changed or saved. Typing only in the Select Form filter (Mock or an exact Form name) and the IDOs Filter in Place criteria (MockLoginIDO); dialogs and editors opened read-only and closed with Cancel; save prompts answered No; runtime: open and close the three Mock Forms with no interaction"
+}
