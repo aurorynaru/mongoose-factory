@@ -1,0 +1,77 @@
+# controller-generated audit (not worker prose)
+
+15 actions, 31 reads; prohibited-tool hits=1; errors=1; turns=53; key string (none); exact mismatches=0
+
+This records attempted tool calls and native results, not rendered-state proof or acceptance. Flagged tools may be allowed by other briefs. Strings are attempted printable runs, not inferred textbox contents.
+
+Exact values: ["FX_CustomerPortal","FX_SetNewCartEntry","FX_AddToCart","FX_CustomerID","FX_Count"]
+
+Key sequence: [{"order":11,"key":"Control+a","result":"ok"}]
+
+Spelled strings: []
+
+Flagged tool usage: {"browser_type":1}
+
+Errors: ["#56 Edit: <tool_use_error>No changes to make: old_string and new_string are exactly the same.</tool_use_error>"]
+
+Audit limitations: []
+
+| Order | Tool | Key argument | Result |
+| --- | --- | --- | --- |
+| 1 | Read | file_path=C:\AI\mongoose-factory\AGENTS.md | ok |
+| 2 | Read | file_path=C:\AI\mongoose-factory\experiments\EXP-126-hello-world-part-8-phase-7-add-to-cart-handlers-drag-drop.md | ok |
+| 3 | mcp__playwright__browser_tabs | action=list | ok |
+| 4 | mcp__playwright__browser_find | (no key/element/filename argument) | ok |
+| 5 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 6 | mcp__playwright__browser_find | (no key/element/filename argument) | ok |
+| 7 | mcp__playwright__browser_click | element=Event Handlers grid toolbar New (+) button | ok |
+| 8 | mcp__playwright__browser_find | (no key/element/filename argument) | ok |
+| 9 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 10 | mcp__playwright__browser_click | element=Event Handler Name combobox text field | ok |
+| 11 | mcp__playwright__browser_press_key | key=Control+a | ok |
+| 12 | mcp__playwright__browser_type | element=Event Handler Name combobox text field | ok |
+| 13 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 14 | mcp__playwright__browser_take_screenshot | element=Event Handler dialog with Name FX_AddToCart before OK; filename=evidence/EXP-126/t4-01-event-handler-name-before-ok.png | ok |
+| 15 | mcp__playwright__browser_click | element=Event Handler dialog OK | ok |
+| 16 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 17 | mcp__playwright__browser_click | element=FX_AddToCart row 0 Response Type cell (select row) | ok |
+| 18 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 19 | mcp__playwright__browser_click | element=Properties grid Expand (expand all) | ok |
+| 20 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 21 | mcp__playwright__browser_click | element=Response > Type sub-row list arrow | ok |
+| 22 | mcp__playwright__browser_find | (no key/element/filename argument) | ok |
+| 23 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 24 | mcp__playwright__browser_click | element=Response Type list option Collection Make Current | ok |
+| 25 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 26 | mcp__playwright__browser_click | element=Properties grid neutral row (Description label) | ok |
+| 27 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 28 | mcp__playwright__browser_click | element=Parameters Open Edit Property Dialog ellipsis | ok |
+| 29 | mcp__playwright__browser_find | (no key/element/filename argument) | ok |
+| 30 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 31 | mcp__playwright__browser_click | element=Collection list Open arrow | ok |
+| 32 | mcp__playwright__browser_find | (no key/element/filename argument) | ok |
+| 33 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 34 | mcp__playwright__browser_click | element=Collection list option primary collection | ok |
+| 35 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 36 | mcp__playwright__browser_take_screenshot | element=Event Handler Parameters dialog (Collection primary collection) before OK; filename=evidence/EXP-126/t4-02-parameters-dialog-before-ok.png | ok |
+| 37 | Read | file_path=C:\AI\mongoose-factory\evidence\EXP-126\t4-02-parameters-dialog-before-ok.png | ok |
+| 38 | mcp__playwright__browser_click | element=Event Handler Parameters OK | ok |
+| 39 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 40 | mcp__playwright__browser_take_screenshot | element=Event Handlers panel with FX_AddToCart row 0 (Collection Make Current, object) before Save; filename=evidence/EXP-126/t4-03-addtocart-group-before-save.png | ok |
+| 41 | Read | file_path=C:\AI\mongoose-factory\evidence\EXP-126\t4-03-addtocart-group-before-save.png | ok |
+| 42 | mcp__playwright__browser_find | (no key/element/filename argument) | ok |
+| 43 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 44 | mcp__playwright__browser_click | element=Designer toolbar Save (one save for T4) | ok |
+| 45 | mcp__playwright__browser_find | (no key/element/filename argument) | ok |
+| 46 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 47 | mcp__playwright__browser_take_screenshot | element=Save confirmation toast (Form FX_CustomerPortal saved) T4; filename=evidence/EXP-126/t4-04-save-toast.png | ok |
+| 48 | mcp__playwright__browser_find | (no key/element/filename argument) | ok |
+| 49 | mcp__playwright__browser_take_screenshot | element=Designer toolbar after Save (Save disabled) T4; filename=evidence/EXP-126/t4-05-save-state-after.png | ok |
+| 50 | Read | file_path=C:\AI\mongoose-factory\evidence\EXP-126\t4-05-save-state-after.png | ok |
+| 51 | mcp__playwright__browser_snapshot | (no key/element/filename argument) | ok |
+| 52 | Read | file_path=C:\AI\mongoose-factory\evidence\EXP-126\t4-01-event-handler-name-before-ok.png | ok |
+| 53 | Read | file_path=C:\AI\mongoose-factory\evidence\EXP-126\t4-04-save-toast.png | ok |
+| 54 | Edit | file_path=C:\AI\mongoose-factory\experiments\EXP-126-hello-world-part-8-phase-7-add-to-cart-handlers-drag-drop.md | ok |
+| 55 | Edit | file_path=C:\AI\mongoose-factory\experiments\EXP-126-hello-world-part-8-phase-7-add-to-cart-handlers-drag-drop.md | ok |
+| 56 | Edit | file_path=C:\AI\mongoose-factory\experiments\EXP-126-hello-world-part-8-phase-7-add-to-cart-handlers-drag-drop.md | error: <tool_use_error>No changes to make: old_string and new_string are exactly the same.</tool_use_error> |
+| 57 | Edit | file_path=C:\AI\mongoose-factory\experiments\EXP-126-hello-world-part-8-phase-7-add-to-cart-handlers-drag-drop.md | ok |
