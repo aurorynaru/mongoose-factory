@@ -1,0 +1,51 @@
+- grid [ref=e276]:
+  - toolbar [ref=e277]:
+    - generic [ref=e278]:
+      - generic [ref=e279]: "Search Properties:"
+      - generic [ref=e282]:
+        - textbox "Search Properties:" [active] [ref=e284]: vEcho
+        - generic [ref=e285] [cursor=pointer]
+    - button "Expand" [ref=e286] [cursor=pointer]: 
+    - button "Collapse" [ref=e287] [cursor=pointer]: 
+  - row [ref=e288]:
+    - columnheader "Name" [ref=e289]
+  - grid [ref=e294]:
+    - generic [ref=e295]:
+      - table [ref=e296]:
+        - rowgroup [ref=e297]:
+          - row [ref=e298]:
+            - cell "Form - Persistent" [ref=e299]
+          - row [ref=e302]:
+            - gridcell "UserCtrl_FX_BridgeControl" [ref=e303]
+      - table [ref=e305]:
+        - rowgroup [ref=e306]:
+          - row [ref=e307]:
+            - gridcell "UserCtrl_userControl1_USER" [ref=e308]
+      - table [ref=e310]:
+        - rowgroup [ref=e311]:
+          - row [ref=e312]:
+            - gridcell "UserCtrlAsm_FX_BridgeControl" [ref=e313]
+      - table [ref=e315]:
+        - rowgroup [ref=e316]:
+          - row [ref=e317]:
+            - gridcell "UserCtrlAsm_userControl1_USER" [ref=e318]
+      - table [ref=e320]:
+        - rowgroup [ref=e321]:
+          - row [ref=e322]:
+            - gridcell "UserCtrlUrl_FX_BridgeControl" [ref=e323]
+      - table [ref=e325]:
+        - rowgroup [ref=e326]:
+          - row [ref=e327]:
+            - gridcell "UserCtrlUrl_userControl1_USER" [ref=e328]
+      - table [ref=e330]:
+        - rowgroup [ref=e331]:
+          - row [ref=e332]:
+            - cell "Global - Persistent" [ref=e333]
+      - table [ref=e336]:
+        - rowgroup [ref=e337]:
+          - row [ref=e338]:
+            - cell "Global - Temporary" [ref=e339]
+  - toolbar [ref=e342]:
+    - button "" [ref=e343] [cursor=pointer]
+    - button "" [ref=e344] [cursor=pointer]
+    - button "" [ref=e345] [cursor=pointer]
