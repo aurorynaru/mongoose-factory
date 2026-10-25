@@ -3,7 +3,7 @@
   "title": "EXP-129 — Create and Recover an Isolated FX_ Inventory Prototype Form",
   "record_path": "experiments/EXP-129-create-and-recover-an-isolated-fx-inventory-protot.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Create exactly one new User-scoped Classic BuildFromScratch Form named FX_InventoryPrototype01, using the existing verified basic-Form recipe. Set only its Form-level literal Caption to Inventory Prototype, perform one ordinary Designer Save, close the Form normally, reopen it through the supported recent-forms route, and verify that its identity, Caption and untouched baseline properties are recovered. Capture decisive before, after-Save and post-reopen evidence. The result is an isolated Form shell for subsequent separately authorized experiments, not a functional inventory dashboard.",
   "scope": {
     "in_scope": [
