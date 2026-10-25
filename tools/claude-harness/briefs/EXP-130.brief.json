@@ -3,7 +3,7 @@
   "title": "EXP-130 — Final Read-Only Mock Application Study and Rebuild Specification",
   "record_path": "experiments/EXP-130-final-read-only-mock-application-study-and-rebuild.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Conduct one final, strictly read-only investigation of the existing Mock application using the current authenticated account. First inspect MockInventory's IDO metadata through the EXP-128 T27-supported exact-name runtime IDOs query. Then inspect the outstanding collection, Form-variable, and global Script inventory details through supported Designer interfaces. Perform one operator-assisted MockLoginPortal runtime observation, stopping before credentials are entered and resuming only after the operator independently completes the test login. Finally synthesize EXP-128 and EXP-130 evidence into a rebuild specification covering Forms, components, collections, scripts, variables, event handlers, IDOs, tables, assets, navigation, and runtime behavior, with proposed FX_-prefixed names for later creation in the operator's own account. No Mongoose artifact of any prefix may be created, modified, saved, or deleted in the current account.",
   "scope": {
     "in_scope": [
