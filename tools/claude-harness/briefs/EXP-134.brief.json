@@ -3,7 +3,7 @@
   "title": "EXP-134 — Mock Inventory Data Layer: FX_InventoryItems SQL Table and IDO",
   "record_path": "experiments/EXP-134-mock-inventory-data-layer-fx-inventoryitems-sql-ta.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Create exactly one tenant-wide SQL table dbo.FX_InventoryItems and one corresponding IDO FX_InventoryItems using the supported Data Maintenance Wizard, under existing IDO project FX_HelloWorldProject01, with table alias fxinv. Configure six business properties matching the operator-specified MockInventory reference: FX_Item String(50), primary key and required; FX_Description String(255); FX_Warehouse String(100); FX_QuantityOnHand Decimal(12,2); FX_ReorderLevel Decimal(12,2); and FX_Location String(100). Choose Data Type and Length directly in the wizard without Property Classes, leave Label String IDs blank unless required, and leave Create Scripts unchecked. Execute Finish once, decline the optional Form creation, inspect the resulting IDO and physical SQL table, check in the IDO once if required, then close and reopen the IDOs and Sql Tables Forms to verify recovery. Record decisive evidence and stop without creating records or Forms.",
   "scope": {
     "in_scope": [
