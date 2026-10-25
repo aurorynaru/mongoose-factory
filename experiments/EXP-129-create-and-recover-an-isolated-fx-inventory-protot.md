@@ -182,3 +182,12 @@ Accessibility-tree readbacks (text, not files): Name, Caption, Version, Device T
 - `experiments/EXP-129-create-and-recover-an-isolated-fx-inventory-protot.md` (this record, created).
 - `evidence/EXP-129/` (screenshots `01` to `18`, listed above).
 - No recipe, AGENTS.md, environment file, IDO, script, or other experiment record was changed.
+
+---
+
+## Operator disposition (2026-10-25, after acceptance)
+
+- **Wrong account.** The operator's plan is to learn from the current (second) account **read-only** and to reproduce in the operator's own account. EXP-129 was approved and run before that plan was stated, so `FX_InventoryPrototype01` was created in the second account's User scope by mistake.
+- **Decision: leave it.** The Form is empty, FX_-prefixed, has only a literal Caption and touches no other object. It is not deleted: deleting a Form is the riskiest Designer operation, which is not justified for an empty shell. No browser action was taken for this disposition.
+- **Effect on the knowledge.** The procedure result (create, Caption, Save, close/reopen; observed UI-level recovery) stands. The reproduction in the operator's own account will be a replay of this procedure there.
+- **Rule from now on.** No create, Save or other mutation in the second account; creation briefs run only after the operator has signed into their own account.
