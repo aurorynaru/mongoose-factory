@@ -46,6 +46,24 @@ decision, 2026-10-15: FX_-prefixed image names such as FX_Dumbbell, from the com
   still need explicit authorization in the experiment brief.
 - Every created object is recorded in its experiment record so it can be cleaned up.
 
+## Scope extension: Mock app reproduction (operator decision, 2026-10-25)
+
+The Mock inventory demo app (MockLoginPortal, MockInventory, MockInventoryDashboard,
+MockLoginIDO; studied read-only in EXP-128) may be reproduced on FX_ objects.
+
+- The factory may create and modify **Web User Control Assets** (HTML, JavaScript,
+  CSS) whose top-level folder or file name begins with `FX_` (e.g.
+  `FX_Login/index.html`), plus the FX_ Forms, Form scripts, Form and global
+  variables and FX_ IDOs that the reproduction needs. Assemblies are excluded.
+- Never create, alter or delete the Mock objects or any other existing non-FX_
+  asset, including the built-in `$app` assets.
+- **Accounts.** The account that owns the Mock app's User versions is
+  **read-only**: use it only to inspect, and never create, Save or modify anything in
+  it. All reproduction runs in the operator's own account, after the operator has
+  signed into it. Check the signed-in account (Web Client header or Designer
+  status bar) at the start of every task. If it is the read-only account and the
+  task would mutate anything, stop before acting.
+
 ## Safety
 
 Only create or modify factory-owned test artifacts.

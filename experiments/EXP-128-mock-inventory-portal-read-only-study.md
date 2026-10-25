@@ -3480,3 +3480,11 @@ Harness header: `task=T29`. Bounded instruction: inspect only the already-loaded
 ### Status
 - EXP-128 is **not accepted**. EXPERIMENT_COMPLETE is **not declared**. T29 stopped at its boundary: the IDO Properties and Methods were inspected view-only, both Forms were closed, and the worker has returned to the coordinator for the operator's deferred acceptance disposition. No query was run and no further task was started.
 
+
+---
+
+## Operator disposition after acceptance (2026-10-25)
+
+- **D-13 (`$app/scripts/UserControl.js`): accepted as a gap.** The operator confirmed the asset-reading route (select a file in Edit > Web User Control Assets, then the ellipsis on the Content row opens Edit Browser File; shown for `mocklogin/script/app.js`, which T8 had already copied). `UserControl.js` sits in the built-in `$app` folder and was not read. The WSForm API is taken from the documentation (`docs/mongoose/guides/user-control.md`) and will be verified by running the pattern during the reproduction, not by reading the library source.
+- **Mock assets are User versions** of the read-only account (Properties: "Version: User version for user ..." on `mocklogin/script/app.js`, operator screenshot). The reproduction will recreate the HTML/JS/CSS as FX_ assets in the operator's own account (AGENTS.md scope extension, 2026-10-25).
+- A read-only follow-up (draft EXP-130: UserControl.js and the global Script) was proposed and discarded: both targets had already been tried in T8, T20 and T21.
