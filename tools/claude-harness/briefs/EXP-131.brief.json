@@ -1,0 +1,144 @@
+{
+  "experiment_id": "EXP-131",
+  "title": "EXP-131 — First FX_ Web User Control to Form Script Bridge",
+  "record_path": "experiments/EXP-131-first-fx-web-user-control-to-form-script-bridge.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "In the operator's own account, first verify account separation using the live Designer Form inventory and the current account identity. If all gates pass, create exactly one User-scoped Form named FX_BridgeTest and one Web User Control Asset named FX_Bridge/index.html. The asset loads ../$app/scripts/UserControl.js and contains a single test button and output element. The button attempts one WSForm.invoke call to the Form-local C# method FX_Echo using one fixed, nonsensitive string argument and a callback that displays the returned value. Bind one UserControl component to the asset, save the definition, close and reopen the Form, verify retained configuration, and perform one runtime round-trip test. If the bridge contract fails, record the observed result without improvising another invocation mechanism. All activity is limited to this single architectural bridge capability.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md in full, recipes/forms/create-basic-form.md, relevant EXP-093 through EXP-096 Form Script procedures, EXP-128 Web User Control evidence, and the EXP-130 T5 rebuild specification before browser interaction.",
+      "Capture a repository baseline and verify the inherited browser, usable Web Client, clean Designer, console baseline and editing scope User.",
+      "Mandatory account gate: the live Designer Select Form list must show a previously created Hello World FX_ Form such as FX_CustomerPortal and must not show MockLoginPortal or FX_InventoryPrototype01. Record the account identity displayed in the Web Client header or Designer status bar. If either presence or absence cannot be established reliably, stop before mutation.",
+      "Verify that FX_BridgeTest is absent from the relevant Form inventory and FX_Bridge/index.html is absent from the permitted Web User Control Asset inventory. Do not overwrite an existing artifact.",
+      "Create exactly one User-scoped classic BuildFromScratch Form named FX_BridgeTest using the verified basic-Form recipe. Leave Save Template unchecked.",
+      "Create exactly one Web User Control Asset named FX_Bridge/index.html through Edit > Web User Control Assets, provided the supported editor accepts this identity.",
+      "Author the asset with a reference to ../$app/scripts/UserControl.js, one HTML button identified as FX_BridgeButton, one output element identified as FX_BridgeOutput, and minimal JavaScript needed for the intended bridge.",
+      "Use one constant test argument, bridge-probe, and configure the button to attempt WSForm.invoke with method name FX_Echo, that single string argument and a callback writing the result to FX_BridgeOutput. Treat the invocation argument and callback contract as candidate behavior, not a verified API.",
+      "Place exactly one UserControl component on FX_BridgeTest, name it FX_BridgeControl, and configure Edit User Control References with Use Web Control and Web User Control Asset pointing to FX_Bridge/index.html.",
+      "Configure the FX_BridgeTest Form Script language as C# and add one Form-local method with signature public string FX_Echo(string s), returning the literal prefix FX_ECHO: concatenated with s. Preserve required existing script scaffolding.",
+      "Use supported asset-editor commit controls and one ordinary Designer Form Save after the Form configuration. Verify a clean Designer state and record the exact successful save or commit responses.",
+      "Close FX_BridgeTest once through its ordinary Form-tab close control, then reopen through the supported Designer Form selection workflow. Verify its identity, User version, UserControl reference and C# method. Independently reopen the asset editor read-only and verify the relevant stored asset content.",
+      "Open FX_BridgeTest once at runtime through the supported Web Client workflow. If the test button renders safely, activate it exactly once and inspect whether FX_ECHO:bridge-probe appears in the output element.",
+      "Capture a credential-free runtime screenshot showing the FX_BridgeTest Form identity, the test button and the resulting output or visible failure state.",
+      "Close only experiment-opened runtime Forms without saving runtime changes, preserve inherited Forms, and record every newly created object for possible later operator-authorized cleanup.",
+      "Write the experiment record and bounded evidence only under experiments/EXP-131-*.md and evidence/EXP-131/. Reconcile action counts, console changes, evidence paths and repository writes.",
+      "Use at most one fresh untargeted recovery snapshot and one corrected visible inspection. If that allowance fails, stop with a documented blocker."
+    ],
+    "out_of_scope": [
+      "Rebuilding the Mock inventory application beyond this single bridge test.",
+      "Opening or changing Mock application Forms, IDOs, scripts, records, assets or configuration.",
+      "Interacting with FX_InventoryPrototype01.",
+      "Inspecting or modifying the existing $app/scripts/UserControl.js source.",
+      "Creating SQL tables, IDOs, IDO projects, global variables, property classes, validators, global scripts or other global objects beyond the explicitly authorized FX_ Web User Control Asset.",
+      "Creating authentication, authorization, login, password or session-management features.",
+      "Creating inventory, warehouse, item, chart or dashboard functionality.",
+      "Adding automatic Form navigation, passing multiple arguments, invoking additional Form methods or making data-record changes.",
+      "Executing FormSync, metadata unloading, cache clearing, regeneration, deployment or configuration changes.",
+      "Using browser JavaScript evaluation, injected scripts, hidden application state or unsupported application APIs to perform browser automation.",
+      "Trying alternative WSForm.invoke signatures or alternate bridge APIs after an unsuccessful bounded test.",
+      "Deleting or cleaning up the newly created FX_ artifacts within this experiment.",
+      "Assuming that successful close/reopen proves database-level durability or that one successful bridge test proves cross-account equivalence."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Perform any mutation before the account-isolation, User-scope, clean-state and artifact-absence gates pass.",
+    "Create, change or delete any non-FX_ Mongoose artifact.",
+    "Open, alter or remove any Mock application object or FX_InventoryPrototype01.",
+    "Modify or inspect the shared UserControl.js asset; loading the specified existing script reference from FX_Bridge/index.html is the only permitted dependency on it.",
+    "Overwrite an existing FX_BridgeTest Form or FX_Bridge/index.html asset.",
+    "Create more than one Form, one Web User Control Asset, one UserControl component or one Form Script method.",
+    "Save or regenerate unrelated Forms.",
+    "Use the Designer top-toolbar Delete Form Definition command.",
+    "Perform Check In, Check Out, database operations or tenant-wide configuration changes.",
+    "Attempt login, logout or reauthentication without a separate operator decision.",
+    "Execute browser evaluate or run-code tools; set worker_tool_policy deny_browser_javascript to true. JavaScript authored within the explicitly permitted HTML asset is not browser automation.",
+    "Invent an unverified WSForm.invoke invocation contract or use undocumented internal APIs when the supported evidence is insufficient.",
+    "Activate the runtime test button more than once.",
+    "Continue testing after an unexplained console error increase under the established stop rule.",
+    "Capture credentials, authentication values or sensitive application data in screenshots, snapshots or repository evidence.",
+    "Modify AGENTS.md, existing recipes, previous experiment records or unrelated repository files.",
+    "Exceed the authorized browser-recovery allowance."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:browser_evaluate|page\\.evaluate|executeScript|javascript:)\\b",
+    "\\b(?:Unload All Global Form Objects|ClearCache|FormSync|Regenerate Form)\\b",
+    "\\b(?:Check In|Check Out|Undo Check Out)\\b",
+    "\\b(?:Delete Form Definition)\\b",
+    "\\b(?:create|modify|delete|alter|drop)\\b[^.\\n]{0,60}\\b(?:SQL table|IDO|IDO project|database|validator|property class)\\b",
+    "\\b(?:login|logout|reauthenticate|sign in)\\b[^.\\n]{0,60}\\b(?:account|session|credentials)\\b",
+    "\\b(?:invoke|execute|run)\\b[^.\\n]{0,60}\\b(?:SQL statement|IDO method|global script)\\b",
+    "\\b(?:retry|repeat|try again)\\b[^.\\n]{0,60}\\b(?:WSForm\\.invoke|runtime button|bridge invocation)\\b",
+    "\\b(?:delete|overwrite|replace)\\b[^.\\n]{0,60}\\b(?:FX_BridgeTest|FX_Bridge/index\\.html)\\b"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "related_experiments": [
+    "EXP-130",
+    "EXP-129",
+    "EXP-128",
+    "EXP-093",
+    "EXP-094",
+    "EXP-095",
+    "EXP-096",
+    "EXP-002-R2",
+    "EXP-036"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_BridgeTest",
+    "artifacts": [
+      "FX_BridgeTest",
+      "FX_Bridge/index.html",
+      "FX_BridgeControl",
+      "FX_Echo"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Preflight evidence in evidence/EXP-131/ visibly establishes the live account identity, User editing scope, clean Designer, console baseline and successful account-isolation gate: an existing Hello World FX_ Form is present, while MockLoginPortal and FX_InventoryPrototype01 are absent from the inspected Form inventory. The exact target Form and asset are also established absent before creation. If a gate is inconclusive or fails, no mutation occurs."
+    },
+    {
+      "id": "AC-2",
+      "description": "A supported Designer screenshot or snapshot visibly identifies exactly one newly created FX_BridgeTest Form, its actual Name and User version, with no unexpected unsaved state or unrelated Form creation."
+    },
+    {
+      "id": "AC-3",
+      "description": "Evidence from the Web User Control Assets editor identifies FX_Bridge/index.html and displays its relevant HTML and script content: the specified script dependency, exactly one intended button, one output element and the configured WSForm.invoke bridge attempt. The evidence distinguishes the configured candidate call from verified runtime behavior."
+    },
+    {
+      "id": "AC-4",
+      "description": "Designer evidence for FX_BridgeTest identifies exactly one FX_BridgeControl UserControl component with Use Web Control and Web User Control Asset referencing FX_Bridge/index.html. The C# Form Script editor shows exactly one FX_Echo method with the specified signature and prefix-return behavior. No unrelated Form definition is changed."
+    },
+    {
+      "id": "AC-5",
+      "description": "Evidence records the successful asset commit and ordinary Form Save, clean Designer state, one ordinary FX_BridgeTest close and one supported reopen. Post-reopen readbacks confirm the same Form identity, UserControl asset reference and FX_Echo method. A separate read-only asset-editor inspection confirms the stored asset content remains present. A weak same-session UI persistence boundary is claimed, not database-level durability."
+    },
+    {
+      "id": "AC-6",
+      "description": "The runtime screenshot and matching captured UI observations show the FX_BridgeTest Form identity, test button and output element. After exactly one button activation, successful round-trip evidence must display the literal FX_ECHO:bridge-probe. If no such output appears, record the actual error or unchanged output and classify the bridge outcome as unsuccessful or unresolved, without further experimentation."
+    },
+    {
+      "id": "AC-7",
+      "description": "Final runtime evidence confirms the worker-opened runtime Form was closed without saving, no unexpected dialog remains, and inherited application Forms are preserved. Designer Save is disabled and no worker-attributable unsaved changes remain."
+    },
+    {
+      "id": "AC-8",
+      "description": "The final EXP-131 evidence manifest contains the exact created-artifact inventory, visible proof references, console comparisons, browser-action totals, save and reopen accounting, runtime outcome, unverified contract assumptions, and repository-confinement audit. No prohibited Mongoose mutation, browser-code execution or unrelated repository edit is reported; authoritative operator Git review remains the final confinement check."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-131",
+  "replay_of": null,
+  "initial_instruction": "Begin EXP-131 with T1 PREFLIGHT ONLY. Read AGENTS.md and the relevant approved recipes and evidence. Inspect the existing browser and Designer through supported visible UI controls. Establish the signed-in account, editing scope User, clean Designer state and console baseline. Confirm that the live Form inventory includes the expected Hello World FX_ Forms and excludes both source-account isolation markers specified in AC-1. Verify the absence of FX_BridgeTest and FX_Bridge/index.html through their respective supported inventories. Capture concise, nonsensitive evidence proving the positive control, negative checks, exact target absence and scope. If any identity, isolation, liveness or absence gate fails, stop without mutation. Do not begin Form creation, asset authoring or bridge configuration during T1. Report the decisive evidence paths, limitations and action accounting for operator review.",
+  "notes": "Proposed by the coordinator after run R-20261025-191745-xNrM. Rationale: EXP-130 established the Mock application's structure and produced an accepted, qualified rebuild specification. The operator has switched to their own account. Before rebuilding inventory, authentication or dashboard functionality, the smallest useful architectural test is to establish whether one FX_-owned Web User Control can communicate with one C# Form Script method using WSForm.invoke. Existing factory recipes support basic Form creation, script editing and close/reopen recovery, while EXP-128 supplies observational guidance for Web User Control references. The UserControl.js and WSForm.invoke contracts remain unverified. This experiment isolates that uncertainty without creating SQL tables, IDOs, inventory records or authentication functionality."
+}
