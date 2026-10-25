@@ -1,0 +1,155 @@
+- generic [ref=e5]:
+  - banner "Portal Top Navigation Bar" [ref=e6]:
+    - generic [ref=e8]:
+      - generic:
+        - generic [ref=e10]:
+          - generic:
+            - link "Home" [ref=e12] [cursor=pointer]
+            - button "Open navigation menu" [ref=e15] [cursor=pointer]
+        - generic [ref=e17]:
+          - tablist "Tabs" [ref=e18]:
+            - tab "Mongoose" [selected] [ref=e19] [cursor=pointer]:
+              - link "Mongoose" [ref=e23]
+              - button "Open tab menu" [ref=e26]
+            - tab "API Gateway" [ref=e27] [cursor=pointer]:
+              - link "API Gateway" [ref=e31]
+            - tab "ION" [ref=e33] [cursor=pointer]:
+              - link "ION" [ref=e37]
+            - tab "System Administrator" [ref=e39] [cursor=pointer]:
+              - link "System Administrator" [ref=e40]
+              - button "Close tab System Administrator" [ref=e43]
+          - button "Tabs menu more" [ref=e47] [cursor=pointer]
+        - generic [ref=e49]:
+          - generic:
+            - generic [ref=e50]: DEM
+            - button "Health Notifications" [ref=e54] [cursor=pointer]
+            - button "User menu" [ref=e56] [cursor=pointer]
+            - button "Hide Smart Panel" [ref=e58] [cursor=pointer]
+    - generic:
+      - generic:
+        - generic: Infor OS Portal
+        - generic: 2026.10.03 (20261016-163925, 20261016-153347, 1069, 1589, 730)
+        - generic:
+          - generic:
+            - text: Copyright © 2026 Infor. All rights reserved. The word and design marks set forth herein are trademarks and/or registered trademarks of Infor and/or its affiliates and subsidiaries. All other trademarks listed herein are the property of their respective owners
+            - generic: www.infor.com
+            - text: .
+  - main [ref=e59]:
+    - iframe [active] [ref=e70]:
+      - generic [ref=f1e1]:
+        - banner [ref=f1e2]:
+          - heading "Infor Mongoose Application Development Framework" [level=1] [ref=f1e3]
+          - link "Skip to Main Content" [ref=f1e4] [cursor=pointer]:
+            - /url: "#formContainer"
+          - navigation [ref=f1e5]:
+            - button "Explorer" [ref=f1e6] [cursor=pointer]
+            - separator
+            - button "Form" [active] [ref=f1e10] [cursor=pointer]
+            - separator
+            - button "Actions" [ref=f1e127] [cursor=pointer]
+            - separator
+            - button "Edit" [ref=f1e12] [cursor=pointer]
+            - separator
+            - button "View" [ref=f1e14] [cursor=pointer]
+            - separator
+            - button "Window" [ref=f1e16] [cursor=pointer]
+            - separator
+            - button "Help" [ref=f1e18] [cursor=pointer]
+            - button "<secret>SECRET_MONGOOSE_USERNAME</secret> | G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT" [ref=f1e20] [cursor=pointer]
+          - toolbar [ref=f1e22]:
+            - button "Open" [ref=f1e23] [cursor=pointer]:
+              - button "Open" [ref=f1e24]
+            - button "Save" [disabled] [ref=f1e26]:
+              - button "Save" [disabled]
+            - button "New" [disabled] [ref=f1e27]:
+              - button "New" [disabled]
+            - button "Delete" [disabled] [ref=f1e28]:
+              - button "Delete" [disabled]
+            - button "Refresh" [disabled] [ref=f1e29]:
+              - button "Refresh" [disabled]
+            - button "Filter in Place" [disabled] [ref=f1e30]:
+              - button "FiP" [disabled]
+            - button "Get More Rows" [disabled] [ref=f1e31]:
+              - button "Get More Rows" [disabled]
+            - button "System Notes" [disabled] [ref=f1e32]:
+              - button "System Notes" [disabled]
+            - button "Documents" [disabled] [ref=f1e33]:
+              - button "Documents" [disabled]
+            - button "Send email for the current object" [disabled] [ref=f1e34]:
+              - button "Send email for the current object" [disabled]
+            - button "Export To Excel" [disabled] [ref=f1e35]:
+              - button "Export To Excel" [disabled]
+            - button [ref=f1e36] [cursor=pointer]:
+              - button "Designer" [ref=f1e37]
+            - button "Designer" [ref=f1e39] [cursor=pointer]:
+              - button "Designer" [ref=f1e40]
+            - button "Help Current Form" [ref=f1e42] [cursor=pointer]:
+              - button "Help Current Form" [ref=f1e129]
+        - region [ref=f1e43]:
+          - heading "Explorer" [ref=f1e44]
+          - button "Collapse Panel"
+          - grid [ref=f1e45]:
+            - columnheader "Name"
+            - tree [ref=f1e50]:
+              - generic [ref=f1e51]:
+                - table [ref=f1e52]:
+                  - rowgroup [ref=f1e53]:
+                    - row [ref=f1e54]:
+                      - treeitem [ref=f1e55]:
+                        - treeitem "My Folders" [ref=f1e57]
+                - table [ref=f1e58]:
+                  - rowgroup [ref=f1e59]:
+                    - row [ref=f1e60]:
+                      - treeitem [ref=f1e61]:
+                        - treeitem "Master Explorer" [ref=f1e63]
+                - table [ref=f1e64]:
+                  - rowgroup [ref=f1e65]:
+                    - row [ref=f1e66]:
+                      - treeitem [ref=f1e67]:
+                        - treeitem "Public Folders" [ref=f1e69]
+                - table [ref=f1e70]:
+                  - rowgroup [ref=f1e71]:
+                    - row [ref=f1e72]:
+                      - treeitem [ref=f1e73]:
+                        - treeitem "User Folders" [ref=f1e75]
+        - region [ref=f1e76]:
+          - main [ref=f1e77]:
+            - tablist [ref=f1e131]:
+              - tab [selected] [ref=f1e132] [cursor=pointer]:
+                - heading "MockLoginPortal" [level=2] [ref=f1e133]
+                - button "Close Panel MockLoginPortal" [ref=f1e134]:
+                  - img "Close Panel MockLoginPortal"
+            - tabpanel "MockLoginPortal" [ref=f1e135]:
+              - iframe [ref=f1e138]:
+                - main [ref=f2e2]:
+                  - generic [ref=f2e4]:
+                    - generic [ref=f2e5]:
+                      - generic [ref=f2e6]: W
+                      - generic [ref=f2e8]:
+                        - generic [ref=f2e9]: WAREHOUSE
+                        - generic [ref=f2e10]: MANAGEMENT SYSTEM
+                    - generic [ref=f2e11]:
+                      - generic [ref=f2e12]: WELCOME BACK
+                      - heading "Sign in to your account" [level=1] [ref=f2e13]
+                      - paragraph [ref=f2e14]: Enter your credentials to continue to your workspace.
+                    - generic [ref=f2e15]:
+                      - generic [ref=f2e16]:
+                        - generic [ref=f2e17]: Username
+                        - textbox "Username" [ref=f2e23]:
+                          - /placeholder: Enter your username
+                      - generic [ref=f2e25]:
+                        - generic [ref=f2e26]: Password
+                        - generic [ref=f2e28]:
+                          - textbox "Password" [ref=f2e33]:
+                            - /placeholder: Enter your password
+                          - button "Show password" [ref=f2e34] [cursor=pointer]
+                      - button "Sign In" [ref=f2e39] [cursor=pointer]
+                    - generic [ref=f2e43]: Secure access to your workspace
+          - text: ⁞
+    - complementary "Smart Panel" [ref=e71]:
+      - generic: Smart Help
+      - generic [ref=e72]:
+        - button "Insights" [ref=e75] [cursor=pointer]
+        - button "Inbox" [ref=e78] [cursor=pointer]
+        - button "Smart Help" [ref=e81] [cursor=pointer]
+        - button "Popout Smart Panel" [ref=e84] [cursor=pointer]

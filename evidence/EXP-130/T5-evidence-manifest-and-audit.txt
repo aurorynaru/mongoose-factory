@@ -1,0 +1,124 @@
+EXP-130 T5 - evidence manifest, action accounting, acceptance matrix and repository-confinement audit
+run_id=R-20261025-191745-xNrM  experiment_id=EXP-130  task=T5  cycle_id=6
+Date: 2026-10-25
+Scope of this file: the T1 to T5 evidence manifest, the consolidated browser-action accounting, the acceptance assessment (AC-1 to AC-12), limitations, the security/privacy qualification, and the repository-confinement audit. The REBUILD SPECIFICATION itself is in experiments/EXP-130-final-read-only-mock-application-study-and-rebuild.md.
+
+=== 1. Browser-action accounting (consolidated; one convention) ===
+Convention used: every tool call is classified as an action (state-changing or input: clicks, key presses, typing, mouse moves, wheel steps, tab selection, screenshot, wait) or a read (tab list, console read, snapshot, find). Tab selection is counted as an action, as in the T1, T2 and T4 controller audits. The T3 controller audit counts the selection as a read; the reconciliation is shown below.
+
+| Task | Actions | Reads | Total calls | Notes |
+| --- | --- | --- | --- | --- |
+| T1 (IDO inspection) | 11 (tab select 3; click 6; type 1 [IDO name only]; key F4 1) | 8 (tab list 1; console read 1; snapshot 5; wait 1) | 19 | Controller audit: 11 actions, 8 reads; agrees. Controller flagged browser_type 1 (the authorised IDO-name entry). |
+| T2 (Designer metadata) | 40 (tab select 1; click 26; key ArrowRight 2; mouse move 4; wheel 7) | 24 (tab list 1; snapshot 19; find 4) | 64 | Controller audit: 40 actions, 24 reads; agrees. |
+| T3 (pre-login checkpoint) | 4 worker convention (tab select 1; click 2; screenshot 1) | 3 (tab list 1; snapshot 2) | 7 | Controller audit: 3 actions, 4 reads. The difference is the tab select (worker: action; controller: read). Total calls agree at 7. |
+| T4 (post-login observation) | 1 (tab select 1) | 2 (tab list 1; snapshot 1) | 3 | Controller audit: 1 action, 2 reads; agrees. |
+| T5 Part A (cleanup) | 2 (tab select 1; Form-tab close click 1) | 2 (tab list 1; snapshot 1) | 4 | Read-only file checks after the cleanup decision are not browser calls. |
+| TOTAL | 58 | 39 | 97 | Controller-convention view of the same 97 calls: 57 actions, 40 reads (T3 select as a read). |
+
+Reconciliation: the only classification difference is the T3 tab selection (1 call). Totals of 97 calls and of 58 worker-convention actions / 39 reads are stated; the controller-convention view (57/40) is given for comparison. No count was silently chosen.
+
+Other counts (all tasks):
+- Screenshots: 1 (T3 element capture, evidence/EXP-130/t3-02-mockloginportal-empty-login-card.png). Zero in T1, T2, T4 and T5.
+- Coordinate clicks: 0 in all tasks. T2 used a mouse move to place the pointer for view-only wheel steps (4 moves, 7 wheel steps); no click by coordinate.
+- Browser JavaScript written, executed or injected by the worker: 0. Note: the MCP tool result for each click or screenshot includes a generated "Ran Playwright code" block describing the tool's own internal call. The worker did not author, supply or run any script; these blocks are disclosed for the no-JavaScript audit.
+- F4 presses: 1 (T1, MockInventory exact-name query). Filter in Place clicks: 0.
+- Save, Save and Close, OK, Apply, Yes, Regenerate, Delete, Check In, Check Out, Undo Check Out, Finish: none clicked in any task. Save-prompt answers: none required (no save prompt was observed in any task; T2 and T5 closures had no prompt).
+- Form-tab closures by the worker: IDOs Form (T1); MockInventory and MockInventoryDashboard (T2); MockLoginPortal (T5 Part A). None by the worker in T3 or T4.
+- "Ref not found" errors: 0. Fresh-snapshot recovery allowance used: 0 of 1 in every task.
+- Browser tool errors: 0 in T1 to T5. Controller repository-read errors (not browser): T1 2 (wrong-path read; file over the 256 KB read limit, read again with offset/limit); T3 1 (wrong-path Grep, EXP-128 record name). Neither changed any state.
+- Credentials typed: 0 in every task (the only typed text was the IDO name MockInventory in T1). The operator performed the MockLoginPortal login; no worker typed, clicked or read any credential.
+
+=== 2. Console comparison (EXP-128 stop rule) ===
+- Web Client: 3 errors / 10 warnings at T1 preflight, T1 post-close, T3 start, T3 post-open, T4 post-login, T5 start and T5 post-close. No rise at any reading, so the stop rule was not triggered.
+- Designer: 2 errors / 0 warnings at T1 preflight and T2 start and end. Not read in T3, T4 or T5 (no Designer action in those tasks).
+- The EXP-128 T11 Web Client baseline (5 errors / 2 warnings) is a different reading from a different session and is not used as the EXP-130 baseline. EXP-130 uses the 3 / 10 baseline recorded at T1 preflight.
+- The "Permissions policy violation" errors and Infor widget/origin-trial warnings recorded in T1 are the same categories noted in EXP-128; their cause is not investigated.
+
+=== 3. Acceptance matrix (AC-1 to AC-12) ===
+| AC | Status | Basis (evidence) | Qualification |
+| --- | --- | --- | --- |
+| AC-1 Preflight (session, scope, Designer state, console, repo baseline; no mutation; FX_InventoryPrototype01 untouched) | MET | T1 preflight snapshots t1-00-web-client-preflight-snapshot.md and t1-00-designer-preflight-snapshot.md; T2 snapshot t2-00-designer-preflight-snapshot.md (no Form open, Save/Regenerate disabled, ScopeType User, 2/0). FX_InventoryPrototype01 never opened or selected. | Repository baseline is the conversation-start Git snapshot; Git was not run (no shell). Operator Git review required. |
+| AC-2 Runtime IDOs query (empty gate; one MockInventory criterion; one F4; visible exact name; no Filter in Place) | MET | t1-02-idos-form-pregate-snapshot.md (IDO Name empty; one blank row; no prompt); t1-03-idos-post-f4-snapshot.md (one row, IDO Name MockInventory). Controller: type 1, key F4 1, no Filter in Place. | Matching semantics not independently verified. EXP-128 T27 zero-row result for MockLoginIDO remains unexplained. Uniqueness across the whole IDO set not shown. |
+| AC-3 MockInventory definition (Tables, Properties, Methods; source-attributed transcription; unavailable fields listed) | MET in part | evidence/EXP-130/MockInventory-ido-definition.txt: header, Tables (1 row), Properties (14 rows), Methods (headers only); section 3 lists limitations. | Methods unavailable (no rows; absence not established). Checkbox mapping inferred. Property grid end not confirmed by scrolling. Other lower tabs not opened. Lock origin unknown. No method or record operation occurred. |
+| AC-4 Design-time Form identities; collection Options and filter | MET by explicit non-exposure | T2 evidence (record section T2; T2-designer-metadata-gaps.txt): both Forms identified from tab, URL MGForm and Properties (User version, Normal, Is Master True); Collection General values recorded. Options and filter: not exposed through the permitted UI (grid Expand and one ArrowRight did not expand). | Options and filter contents are UNKNOWN. No change was made. Inspection surfaces dismissed; Forms closed without a save prompt. |
+| AC-5 vInventoryJson and vMockLoginJson presence and details on Variables surfaces and Edit > Variable | MET for the inspected surfaces | vInventoryJson: present in both Forms' Global - Persistent group and in Edit > Variable (Persistent True, Global True, Value blank). vMockLoginJson: absent from both Forms' rendered rows and from the global list (checked in T2 and EXP-128 T9). | MockLoginPortal's own Form-level Variables were not inspected in EXP-130 (Form - Persistent of that Form was read in EXP-128 T2 and does not list vMockLoginJson; its Form - Temporary category was not read). Location of vMockLoginJson: UNKNOWN. Runtime binding of vInventoryJson: UNKNOWN. |
+| AC-6 Previously skipped global Script segment (names only; boundaries; no source opened) | MET in part | t2-15 to t2-18 snapshots and T2-designer-metadata-gaps.txt section 8: six names rendered between GetChartTypeByChartStyle and GetComponentList (GetComponentList, GetComponentListByType, GetComponentListSorted, GetConnectionStringOptionNames, GetDataCatalogObjectList, GetDataCatalogObjectName). No row clicked; no source opened. | Coverage boundary: rows between GetChartTypeByChartStyle and GetComponentList were not rendered in any window. The range is UNVERIFIED. The segment end at GetDataLakeObjects was not reached in T2. |
+| AC-7 Pre-login checkpoint: one credential-free empty-card screenshot; no worker login; no filled screenshot | MET | evidence/EXP-130/t3-02-mockloginportal-empty-login-card.png (viewed: tab heading MockLoginPortal; sign-in card; placeholder text only; account name not in crop). t3-01 snapshot (both fields placeholder-only). T3-prelogin-checkpoint.txt states that no worker login was attempted and operator action was pending. | None. The image does not prove the Form's Name/Version properties or the asset that renders the card. |
+| AC-8 Post-operator-login observation (credential-free state; messages; navigation; Form identity; dashboard layout) | MET under the fallback clause | t4-00-post-login-fresh-snapshot.md (redacted in place): the resulting surface was NOT credential-free (an alert showed submitted field names and values). Values not recorded or captured; no screenshot; no click. Operator then dismissed the alert and reports the sign-in card returned with no dashboard, no other Form and no navigation (OPERATOR-OBSERVED). T5 Part A snapshot t5-00 confirms no alert at the cleanup decision. | The dashboard layout was NOT observed in EXP-130. The post-login dashboard structure in the spec comes from EXP-128 T11 (worker-observed in EXP-128) and is not an EXP-130 observation. No further login was attempted. |
+| AC-9 Final application-state audit (dialogs dismissed; only worker-opened Forms closed; No to save prompts; no unsaved change from this run; no mutation; console and action reconciliation) | MET with qualifications | T2 and T1 closures without save prompts; T2 dialogs closed with Cancel; T5 Part A closed MockLoginPortal once with no prompt (t5-00, page-...12-06-57-324Z.yml). The Designer was last read in T2 (clean). Console reconciled (section 2 above); action accounting reconciled (section 1 above). | The Designer was not re-read after T2. The MockLoginPortal alert was dismissed by the operator, not by the worker. The inherited Web Client had no other Form open. No prompt-answer was needed. |
+| AC-10 REBUILD SPECIFICATION (source-attributed; every proposed identity begins with FX_; missing details marked unknown) | MET | Section "REBUILD SPECIFICATION" in the experiment record, with inventory tables, proposed FX_ names and an UNKNOWN marker on each unresolved detail. | Proposed names are not known to exist. FX_InventoryPrototype01 (EXP-129) is not part of the specification. |
+| AC-11 Readiness checklist (known / partly known / unknown with evidence); dependency-ordered plan labelled unverified and unexecuted | MET | Checklist and plan in the same REBUILD SPECIFICATION section. | Every plan step is NOT EXECUTED and UNVERIFIED. No cross-account equivalence is claimed. |
+| AC-12 Evidence manifest, task summaries, action accounting; repository audit (writes confined; no earlier record changed) | MET with qualifications | This file (sections 1, 4, 5 and 6); each task summary in the record; the repository audit in section 6. | Operator Git review required. Playwright tool-written outputs outside evidence/EXP-130/ are disclosed in section 6. The harness computes confinement. |
+
+=== 4. Evidence manifest (proof statements) ===
+Browser-related evidence (EXP-130):
+- evidence/EXP-130/t1-00-web-client-preflight-snapshot.md: Web Client usable; no Form open; console 3/10. Proves session and console baseline. Does not prove account identity (placeholder).
+- evidence/EXP-130/t1-00-designer-preflight-snapshot.md: Designer clean, Save/Regenerate disabled, User scope, console 2/0. Proves Designer baseline at T1.
+- evidence/EXP-130/t1-01-web-client-fresh-snapshot.md: Web Client after tab reselection. Proves no change before the IDOs open.
+- evidence/EXP-130/t1-02-idos-form-pregate-snapshot.md: IDOs Form before the query; IDO Name empty; one blank row; no prompt. Proves the AC-2 gate.
+- evidence/EXP-130/t1-03-idos-post-f4-snapshot.md: one row, IDO Name MockInventory; header, Tables and Properties tabs. Proves the visible identity of the returned row. Does not prove uniqueness or match semantics.
+- evidence/EXP-130/MockInventory-ido-definition.txt: source-attributed transcription of the IDO header, Tables (1), Properties (14), Methods (headers only). Proves the transcribed values as rendered. Does not prove Methods absence, checkbox meaning, or property grid end.
+- evidence/EXP-130/t2-00 to t2-18 snapshots and evidence/EXP-130/T2-designer-metadata-gaps.txt: Form identities, Collections, Options (not exposed), Variables grids, Edit > Variable, and the names-only Script segment. Proves the rendered rows and flags. Does not prove the Options or filter contents, runtime binding, or the unrendered Script range.
+- evidence/EXP-130/t3-00-web-client-fresh-snapshot.md and t3-01-mockloginportal-open-snapshot.md: pre-login state; card controls; placeholder-only fields. Proves the empty card at T3. Does not prove the Form's properties.
+- evidence/EXP-130/t3-02-mockloginportal-empty-login-card.png: empty card with the MockLoginPortal tab heading (viewed). Proves AC-7 visual state. Does not prove Form identity beyond the tab heading, or any post-login behaviour.
+- evidence/EXP-130/T3-prelogin-checkpoint.txt: checkpoint report and action accounting for T3.
+- evidence/EXP-130/t4-00-post-login-fresh-snapshot.md: REDACTED in place. Proves the alert presence, the Form tab, the URL, and the console at T4. Its dialog line now holds a redaction note only. Does not prove login success or failure.
+- evidence/EXP-130/T4-post-login-observation.txt: T4 observation, credential-safety assessment, redaction record, and key names only.
+- evidence/EXP-130/t5-00-cleanup-fresh-snapshot.md: T5 Part A visible state before the close. Proves: the MockLoginPortal Form tab present; no alert; no credential text (file-based check). Does not prove the Form content.
+- evidence/EXP-130/T5-cleanup-checkpoint.txt: Part A record (operator decision; calls; closure; credential statement).
+- evidence/EXP-130/T5-evidence-manifest-and-audit.txt: this file.
+- experiments/EXP-130-final-read-only-mock-application-study-and-rebuild.md: the experiment record (T1 to T5 sections and the REBUILD SPECIFICATION).
+
+Repository evidence read in T5 (not modified): experiments/EXP-128-mock-inventory-portal-read-only-study.md (sections T2, T3, T6, T7, T8, T9, T10, T11, T12, T19, T20, T21, T26, T27, T28, T29, operator disposition); evidence/EXP-128/MockLoginPortal-form-script.cs.txt (complete, 141 lines); evidence/EXP-128/MockInventoryDashboard-form-script.cs.txt (complete, 59 lines); evidence/EXP-128/MockInventory-form-script.cs.txt (complete, 20 lines); evidence/EXP-128/MockLoginIDO-metadata.txt (sections A to F). Searches for credential values across evidence/EXP-128 and evidence/EXP-130 returned no matches.
+
+=== 5. Security and privacy qualification ===
+- Credential exposure in this run: the T4 snapshot read returned the post-login alert text, which included the test login's submitted field values, into the worker's conversation context before the saved copy was redacted. No value was written to any repository file. Rotation of the test credential is the operator's decision (open question).
+- The existing login behaviour shows the stored password in a success alert (EXP-128 MockLoginPortal copy, source lines 60 and 70: the JSON record that includes Password is serialised at source line 60 and shown in the success alert at source line 70). This is observed in source and, per the operator, displayed at runtime. The worker observed the alert's key names only (Username, Password, Store, Role), not its values. The spec does not carry this behaviour forward.
+- Privacy items: screenshots taken in EXP-128 show the signed-in account name in the status bar or header (privacy item D-7; 97 PNG files per the EXP-128 final review, not all inspected). EXP-130 has one screenshot (t3-02), cropped to the Form panel, and it does not show the account name. EXP-130 snapshot files contain only placeholders for the account name and the tenant/session values in tab URLs.
+- Inventory data: the dashboard and record values in EXP-128 T11 and EXP-130 were not copied into any spec or evidence file. The spec records structure and labels only.
+
+=== 6. Repository-confinement audit ===
+Scope of this audit: writes reported by the worker for T1 to T5 and the controller audit tables for T1 to T4 (harness-audit-T1.md to harness-audit-T4.md). The harness computes confinement from before/after Git state and the evidence diff; the worker did not run Git (no shell). The operator's authoritative Git review remains necessary.
+
+Repository writes attributable to EXP-130 (all inside the permitted paths):
+- experiments/EXP-130-final-read-only-mock-application-study-and-rebuild.md: created in T1, modified in T2, T3, T4 and T5.
+- evidence/EXP-130/MockInventory-ido-definition.txt (T1, created).
+- evidence/EXP-130/t1-00-web-client-preflight-snapshot.md, t1-00-designer-preflight-snapshot.md, t1-01-web-client-fresh-snapshot.md, t1-02-idos-form-pregate-snapshot.md, t1-03-idos-post-f4-snapshot.md (T1, created by the tool at the worker's filename).
+- evidence/EXP-130/T2-designer-metadata-gaps.txt (T2, created, edited once); evidence/EXP-130/t2-00 to t2-18 snapshot files (T2, created by the tool at the worker's filename).
+- evidence/EXP-130/t3-00-web-client-fresh-snapshot.md, t3-01-mockloginportal-open-snapshot.md, t3-02-mockloginportal-empty-login-card.png, T3-prelogin-checkpoint.txt (T3, created).
+- evidence/EXP-130/t4-00-post-login-fresh-snapshot.md (T4, created, then edited once to redact); evidence/EXP-130/T4-post-login-observation.txt (T4, created, edited three times).
+- evidence/EXP-130/t5-00-cleanup-fresh-snapshot.md, T5-cleanup-checkpoint.txt, T5-evidence-manifest-and-audit.txt (T5, created).
+- evidence/EXP-130/harness-audit-T1.md to harness-audit-T4.md: controller-generated (not worker-written).
+
+Tool-written outputs OUTSIDE evidence/EXP-130/ (disclosed; the brief's confinement rule covers worker writes, and these are written by the browser tool):
+- evidence/playwright/page-2026-10-25T11-19-07-459Z.yml through page-2026-10-25T11-20-40-356Z.yml (T1 action snapshots).
+- evidence/playwright/page-2026-10-25T11-24-* through page-2026-10-25T11-30-* (T2 action snapshots; 25 or so files, not individually listed).
+- evidence/playwright/page-2026-10-25T11-34-49-514Z.yml, page-2026-10-25T11-34-54-977Z.yml (T3).
+- evidence/playwright/page-2026-10-25T12-06-57-324Z.yml (T5 close action).
+- evidence/playwright/console-2026-10-25T11-18-29-804Z.log (T1); console-2026-10-25T11-34-40-480Z.log and -481Z.log (T3); console-2026-10-25T11-40-03-384Z.log (T4); console-2026-10-25T12-06-42-350Z.log and -351Z.log (T5); and other tab-event console logs written during T2 (not individually listed).
+- Note: the T4 snapshot's tool-written page file (if one was written for the post-login state) was not identified in this task; the T4 file search over evidence/ for the test values found no match in any tool-written file.
+
+Worker-modified files outside EXP-130: none.
+Files read but not modified in T5: AGENTS.md (not re-read in T5; read in full in earlier tasks), EXP-128 record and copies, EXP-129 record (read in T1), EXP-130 controller audits.
+AGENTS.md, existing recipes, earlier experiment records, $app/scripts/UserControl.js, FX_InventoryPrototype01: not modified, not opened, not inspected.
+Existing Mongoose artifacts: none created, modified, saved, regenerated, deleted, checked in or checked out in any task.
+
+=== 7. Limitations summary ===
+1. Runtime post-login dashboard layout is not observed in EXP-130. Dashboard structure in the spec is from EXP-128 T11 (worker-observed in EXP-128).
+2. The operator's post-login observations are OPERATOR-OBSERVED, not verified by the worker.
+3. MockInventory lock origin unknown (Locked By = signed-in account; Check In enabled).
+4. Property checkbox mapping inferred. Methods unavailable. Other IDO lower tabs not inspected.
+5. Collection Options and filter contents unknown (not exposed).
+6. vInventoryJson runtime binding unknown. vMockLoginJson Form-level location (MockLoginPortal Form - Temporary) unknown.
+7. Temporary-variable counts unreconciled: the EXP-130 MockInventory Global - Temporary group shows 13 rows (including 7 names of the form <signed-in user>.Temp.*); the EXP-128 T9 global dialog shows 6 Temporary names (48 + 6 = 54). The 7 extra rows are not reconciled.
+8. Global Script range between GetChartTypeByChartStyle and GetComponentList unrendered (UNVERIFIED). No Script source read.
+9. $app/scripts/UserControl.js not read (excluded by brief; EXP-128 D-13). The WSForm bridge contract (callback, return value, argument passing) is therefore UNVERIFIED.
+10. Login implementation: source-level only (EXP-128 copies). Runtime behaviour partly observed (alert key names; operator-described alert content).
+11. Line references: the spec cites source line numbers (the copy headers state the numbering). The login copy evidence/EXP-128/MockLoginPortal-form-script.cs.txt has its source lines 1 to 141 starting at file line 10, so source line = file line minus 9. A first read in T5 compared file line numbers and wrongly suggested a mismatch with EXP-128 T19; on re-check, the EXP-128 T19 citations (ProcessLogin lines 16 to 79; vMockLoginJson writes at source lines 62 and 128) are correct in source numbering. No correction to EXP-128 is needed.
+12. Dashboard Location/Warehouse apparent swap in two rows (EXP-128 T11): cause unknown.
+13. The EXP-128 T27 zero-row MockLoginIDO lookup and the EXP-130 one-row MockInventory lookup have different outcomes; the cause is unexplained.
+14. Controller counts for T3 classify the tab selection differently from T1, T2 and T4. Reconciled in section 1.
+15. The MockLoginPortal Form's own Name, Version and Form Type were not read in EXP-130 (no Designer access in T3 or T4). EXP-128 T2 recorded Form Type Flex and Version User version.
+16. The Designer's state was not re-read after T2.
+17. Git was not run by the worker (no shell). Operator Git review remains necessary.
+18. Account names appear in EXP-128 screenshots (privacy D-7; not reviewed by this run).

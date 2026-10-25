@@ -1,0 +1,144 @@
+- grid [ref=e802] [box=263,741,638,126]:
+  - generic [ref=e803] [box=263,741,623,870]:
+    - table [ref=e849] [box=263,741,623,53]:
+      - rowgroup [ref=e850] [box=263,742,623,52]:
+        - row [ref=e851] [box=263,742,623,29]:
+          - cell "Global - Persistent" [ref=e852] [box=263,742,623,29]
+        - row [ref=e855] [box=263,771,623,23]:
+          - gridcell "ccvw_OutputFormatInlineAll" [ref=e856] [box=263,771,623,23]
+    - table [ref=e858] [box=263,794,623,24]:
+      - rowgroup [ref=e859] [box=263,795,623,23]:
+        - row [ref=e860] [box=263,795,623,23]:
+          - gridcell "ccvw_PrinterName" [ref=e861] [box=263,795,623,23]
+    - table [ref=e863] [box=263,818,623,24]:
+      - rowgroup [ref=e864] [box=263,819,623,23]:
+        - row [ref=e865] [box=263,819,623,23]:
+          - gridcell "gbgc_bg" [ref=e866] [box=263,819,623,23]
+    - table [ref=e868] [box=263,842,623,24]:
+      - rowgroup [ref=e869] [box=263,843,623,23]:
+        - row [ref=e870] [box=263,843,623,23]:
+          - gridcell "gbgc_GradientTest1" [ref=e871] [box=263,843,623,23]
+    - table [ref=e873] [box=263,866,623,24]:
+      - rowgroup [ref=e874] [box=263,867,623,23]:
+        - row [ref=e875] [box=263,867,623,23]:
+          - gridcell "gbgc_GradientTest2" [ref=e876] [box=263,867,623,23]
+    - table [ref=e878] [box=263,890,623,24]:
+      - rowgroup [ref=e879] [box=263,891,623,23]:
+        - row [ref=e880] [box=263,891,623,23]:
+          - gridcell "gbgc_GradientTest3" [ref=e881] [box=263,891,623,23]
+    - table [ref=e883] [box=263,914,623,24]:
+      - rowgroup [ref=e884] [box=263,915,623,23]:
+        - row [ref=e885] [box=263,915,623,23]:
+          - gridcell "IncludeBadgeStatusVar" [ref=e886] [box=263,915,623,23]
+    - table [ref=e888] [box=263,938,623,24]:
+      - rowgroup [ref=e889] [box=263,939,623,23]:
+        - row [ref=e890] [box=263,939,623,23]:
+          - gridcell "IsDiagnosticsTimerElapsed" [ref=e891] [box=263,939,623,23]
+    - table [ref=e893] [box=263,962,623,24]:
+      - rowgroup [ref=e894] [box=263,963,623,23]:
+        - row [ref=e895] [box=263,963,623,23]:
+          - gridcell "LoginFoundUser" [ref=e896] [box=263,963,623,23]
+    - table [ref=e898] [box=263,986,623,24]:
+      - rowgroup [ref=e899] [box=263,987,623,23]:
+        - row [ref=e900] [box=263,987,623,23]:
+          - gridcell "lse_BackgroundQueue.MonthlyDay" [ref=e901] [box=263,987,623,23]
+    - table [ref=e903] [box=263,1010,623,24]:
+      - rowgroup [ref=e904] [box=263,1011,623,23]:
+        - row [ref=e905] [box=263,1011,623,23]:
+          - gridcell "lse_BackgroundQueue.Weekly" [ref=e906] [box=263,1011,623,23]
+    - table [ref=e908] [box=263,1034,623,24]:
+      - rowgroup [ref=e909] [box=263,1035,623,23]:
+        - row [ref=e910] [box=263,1035,623,23]:
+          - gridcell "lse_DataTypeCode" [ref=e911] [box=263,1035,623,23]
+    - table [ref=e913] [box=263,1058,623,24]:
+      - rowgroup [ref=e914] [box=263,1059,623,23]:
+        - row [ref=e915] [box=263,1059,623,23]:
+          - gridcell "lse_EventActionType" [ref=e916] [box=263,1059,623,23]
+    - table [ref=e918] [box=263,1082,623,24]:
+      - rowgroup [ref=e919] [box=263,1083,623,23]:
+        - row [ref=e920] [box=263,1083,623,23]:
+          - gridcell "lse_EventChronoFrsLstInlineList" [ref=e921] [box=263,1083,623,23]
+    - table [ref=e923] [box=263,1106,623,24]:
+      - rowgroup [ref=e924] [box=263,1107,623,23]:
+        - row [ref=e925] [box=263,1107,623,23]:
+          - gridcell "lse_EventChronoInlineList" [ref=e926] [box=263,1107,623,23]
+    - table [ref=e928] [box=263,1130,623,24]:
+      - rowgroup [ref=e929] [box=263,1131,623,23]:
+        - row [ref=e930] [box=263,1131,623,23]:
+          - gridcell "lse_EventChronoNoInsteadInlineList" [ref=e931] [box=263,1131,623,23]
+    - table [ref=e933] [box=263,1154,623,24]:
+      - rowgroup [ref=e934] [box=263,1155,623,23]:
+        - row [ref=e935] [box=263,1155,623,23]:
+          - gridcell "lse_MethodType" [ref=e936] [box=263,1155,623,23]
+    - table [ref=e938] [box=263,1178,623,24]:
+      - rowgroup [ref=e939] [box=263,1179,623,23]:
+        - row [ref=e940] [box=263,1179,623,23]:
+          - gridcell "lse_MIMEType" [ref=e941] [box=263,1179,623,23]
+    - table [ref=e943] [box=263,1202,623,24]:
+      - rowgroup [ref=e944] [box=263,1203,623,23]:
+        - row [ref=e945] [box=263,1203,623,23]:
+          - gridcell "lse_MonthlyDayVar" [ref=e946] [box=263,1203,623,23]
+    - table [ref=e948] [box=263,1226,623,24]:
+      - rowgroup [ref=e949] [box=263,1227,623,23]:
+        - row [ref=e950] [box=263,1227,623,23]:
+          - gridcell "lse_OutputFormatInline" [ref=e951] [box=263,1227,623,23]
+    - table [ref=e953] [box=263,1250,623,24]:
+      - rowgroup [ref=e954] [box=263,1251,623,23]:
+        - row [ref=e955] [box=263,1251,623,23]:
+          - gridcell "lse_OutputFormatInlineAll" [ref=e956] [box=263,1251,623,23]
+    - table [ref=e958] [box=263,1274,623,24]:
+      - rowgroup [ref=e959] [box=263,1275,623,23]:
+        - row [ref=e960] [box=263,1275,623,23]:
+          - gridcell "lse_PreviewFormatInline" [ref=e961] [box=263,1275,623,23]
+    - table [ref=e963] [box=263,1298,623,24]:
+      - rowgroup [ref=e964] [box=263,1299,623,23]:
+        - row [ref=e965] [box=263,1299,623,23]:
+          - gridcell "lse_PropertyTypeInlineList" [ref=e966] [box=263,1299,623,23]
+    - table [ref=e968] [box=263,1322,623,24]:
+      - rowgroup [ref=e969] [box=263,1323,623,23]:
+        - row [ref=e970] [box=263,1323,623,23]:
+          - gridcell "lse_PropertyTypeNoSubInlineList" [ref=e971] [box=263,1323,623,23]
+    - table [ref=e973] [box=263,1346,623,24]:
+      - rowgroup [ref=e974] [box=263,1347,623,23]:
+        - row [ref=e975] [box=263,1347,623,23]:
+          - gridcell "lse_TableTypeInlineList" [ref=e976] [box=263,1347,623,23]
+    - table [ref=e978] [box=263,1370,623,24]:
+      - rowgroup [ref=e979] [box=263,1371,623,23]:
+        - row [ref=e980] [box=263,1371,623,23]:
+          - gridcell "lse_TableTypeNoPrimInlineList" [ref=e981] [box=263,1371,623,23]
+    - table [ref=e983] [box=263,1394,623,24]:
+      - rowgroup [ref=e984] [box=263,1395,623,23]:
+        - row [ref=e985] [box=263,1395,623,23]:
+          - gridcell "lse_TimerInterval" [ref=e986] [box=263,1395,623,23]
+    - table [ref=e988] [box=263,1418,623,24]:
+      - rowgroup [ref=e989] [box=263,1419,623,23]:
+        - row [ref=e990] [box=263,1419,623,23]:
+          - gridcell "lse_TimeZoneMonth" [ref=e991] [box=263,1419,623,23]
+    - table [ref=e993] [box=263,1442,623,24]:
+      - rowgroup [ref=e994] [box=263,1443,623,23]:
+        - row [ref=e995] [box=263,1443,623,23]:
+          - gridcell "lse_UetDataType" [ref=e996] [box=263,1443,623,23]
+    - table [ref=e998] [box=263,1466,623,24]:
+      - rowgroup [ref=e999] [box=263,1467,623,23]:
+        - row [ref=e1000] [box=263,1467,623,23]:
+          - gridcell "lse_WBDateRange" [ref=e1001] [box=263,1467,623,23]
+    - table [ref=e1003] [box=263,1490,623,24]:
+      - rowgroup [ref=e1004] [box=263,1491,623,23]:
+        - row [ref=e1005] [box=263,1491,623,23]:
+          - gridcell "lse_WBDrillColName" [ref=e1006] [box=263,1491,623,23]
+    - table [ref=e1008] [box=263,1514,623,24]:
+      - rowgroup [ref=e1009] [box=263,1515,623,23]:
+        - row [ref=e1010] [box=263,1515,623,23]:
+          - gridcell "lse_WBFilterExpressionDateRangeVar" [ref=e1011] [box=263,1515,623,23]
+    - table [ref=e1013] [box=263,1538,623,24]:
+      - rowgroup [ref=e1014] [box=263,1539,623,23]:
+        - row [ref=e1015] [box=263,1539,623,23]:
+          - gridcell "lsm1_CoreDocumentType" [ref=e1016] [box=263,1539,623,23]
+    - table [ref=e1018] [box=263,1562,623,24]:
+      - rowgroup [ref=e1019] [box=263,1563,623,23]:
+        - row [ref=e1020] [box=263,1563,623,23]:
+          - gridcell "lsm1_CustomMethodNameVar" [ref=e1021] [box=263,1563,623,23]
+    - table [ref=e1023] [box=263,1586,623,25]:
+      - rowgroup [ref=e1024] [box=263,1587,623,23]:
+        - row [ref=e1025] [box=263,1587,623,23]:
+          - gridcell "lsm1_DefaultReporType" [ref=e1026] [box=263,1587,623,23]

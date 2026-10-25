@@ -1,0 +1,479 @@
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - button "Form" [ref=e3] [cursor=pointer]
+    - button "Edit" [ref=e5] [cursor=pointer]
+    - button "View" [ref=e7] [cursor=pointer]
+    - button "Help" [ref=e9] [cursor=pointer]
+  - toolbar [ref=e11]:
+    - button [ref=e12] [cursor=pointer]:
+      - button "Design" [ref=e13]
+    - button "Save" [disabled] [ref=e15]:
+      - button "Save" [disabled]
+    - button "Regenerate Form" [disabled] [ref=e16]:
+      - button "Regenerate Form" [disabled]
+    - separator [ref=e17]
+    - button [ref=e18] [cursor=pointer]:
+      - button "New" [ref=e19]
+    - button [ref=e21] [cursor=pointer]:
+      - button "Copy" [ref=e22]
+    - button [ref=e24] [cursor=pointer]:
+      - button "Delete" [ref=e25]
+    - separator [ref=e27]
+    - button "Align Left" [disabled] [ref=e28]:
+      - button "Align Left" [disabled]
+    - button "Align Center" [disabled] [ref=e29]:
+      - button "Align Center" [disabled]
+    - button "Align Right" [disabled] [ref=e30]:
+      - button "Align Right" [disabled]
+    - button "Align Top" [disabled] [ref=e31]:
+      - button "Align Top" [disabled]
+    - button "Align Middle" [disabled] [ref=e32]:
+      - button "Align Middle" [disabled]
+    - button "Align Bottom" [disabled] [ref=e33]:
+      - button "Align Bottom" [disabled]
+    - separator [ref=e34]
+    - button "Make Same Width" [disabled] [ref=e35]:
+      - button "Make Same Width" [disabled]
+    - button "Make Same Height" [disabled] [ref=e36]:
+      - button "Make Same Height" [disabled]
+    - button "Make Same Size" [disabled] [ref=e37]:
+      - button "Make Same Size" [disabled]
+    - separator [ref=e38]
+    - button "Space Horizontally" [disabled] [ref=e39]:
+      - button "Space Horizontally" [disabled]
+    - button "Space Vertically" [disabled] [ref=e40]:
+      - button "Space Vertically" [disabled]
+    - separator [ref=e41]
+    - button "Tab Order" [disabled] [ref=e42]:
+      - button "Tab Order" [disabled]
+    - button "Tab Order At" [disabled] [ref=e43]:
+      - button "Tab Order At" [disabled]
+    - separator [ref=e44]
+    - button "Undo" [disabled] [ref=e45]:
+      - button "Undo" [disabled]
+    - button "Redo" [disabled] [ref=e46]:
+      - button "Redo" [disabled]
+  - grid "Toolbox" [ref=e47]:
+    - text: 
+    - button "Collapse Panel" [ref=e49] [cursor=pointer]
+    - generic [ref=e50]:
+      - generic [ref=e51]: "Search Toolbox:"
+      - generic [ref=e54]:
+        - textbox "Search Toolbox:" [ref=e56]:
+          - /placeholder: Search Toolbox
+        - generic [ref=e57] [cursor=pointer]
+    - columnheader "Name"
+    - tree [ref=e62]:
+      - generic [ref=e63]:
+        - table [ref=e64]:
+          - rowgroup [ref=e65]:
+            - row [ref=e66]:
+              - treeitem "Framework Components" [ref=e67]
+        - table [ref=e69]:
+          - rowgroup [ref=e70]:
+            - row [ref=e71]:
+              - treeitem "Pointer" [ref=e72]
+        - table [ref=e74]:
+          - rowgroup [ref=e75]:
+            - row [ref=e76]:
+              - treeitem "Barcode" [ref=e77]
+        - table [ref=e79]:
+          - rowgroup [ref=e80]:
+            - row [ref=e81]:
+              - treeitem "Browser" [ref=e82]
+        - table [ref=e84]:
+          - rowgroup [ref=e85]:
+            - row [ref=e86]:
+              - treeitem "Button" [ref=e87]
+        - table [ref=e89]:
+          - rowgroup [ref=e90]:
+            - row [ref=e91]:
+              - treeitem "Calendar" [ref=e92]
+        - table [ref=e94]:
+          - rowgroup [ref=e95]:
+            - row [ref=e96]:
+              - treeitem "Chart" [ref=e97]
+        - table [ref=e99]:
+          - rowgroup [ref=e100]:
+            - row [ref=e101]:
+              - treeitem "CheckBox" [ref=e102]
+        - table [ref=e104]:
+          - rowgroup [ref=e105]:
+            - row [ref=e106]:
+              - treeitem "ComboBox" [ref=e107]
+        - table [ref=e109]:
+          - rowgroup [ref=e110]:
+            - row [ref=e111]:
+              - treeitem "DataView" [ref=e112]
+        - table [ref=e114]:
+          - rowgroup [ref=e115]:
+            - row [ref=e116]:
+              - treeitem "DateCombo" [ref=e117]
+        - table [ref=e119]:
+          - rowgroup [ref=e120]:
+            - row [ref=e121]:
+              - treeitem "Diagram" [ref=e122]
+        - table [ref=e124]:
+          - rowgroup [ref=e125]:
+            - row [ref=e126]:
+              - treeitem "DropList" [ref=e127]
+        - table [ref=e129]:
+          - rowgroup [ref=e130]:
+            - row [ref=e131]:
+              - treeitem "Edit" [ref=e132]
+        - table [ref=e134]:
+          - rowgroup [ref=e135]:
+            - row [ref=e136]:
+              - treeitem "FlexLayout" [ref=e137]
+        - table [ref=e139]:
+          - rowgroup [ref=e140]:
+            - row [ref=e141]:
+              - treeitem "FormPage" [ref=e142]
+        - table [ref=e144]:
+          - rowgroup [ref=e145]:
+            - row [ref=e146]:
+              - treeitem "Gauge" [ref=e147]
+        - table [ref=e149]:
+          - rowgroup [ref=e150]:
+            - row [ref=e151]:
+              - treeitem "Grid" [ref=e152]
+        - table [ref=e154]:
+          - rowgroup [ref=e155]:
+            - row [ref=e156]:
+              - treeitem "GroupBox" [ref=e157]
+        - table [ref=e159]:
+          - rowgroup [ref=e160]:
+            - row [ref=e161]:
+              - treeitem "HyperLinkButton" [ref=e162]
+        - table [ref=e164]:
+          - rowgroup [ref=e165]:
+            - row [ref=e166]:
+              - treeitem "Infocon" [ref=e167]
+        - table [ref=e169]:
+          - rowgroup [ref=e170]:
+            - row [ref=e171]:
+              - treeitem "Infor Chart" [ref=e172]
+        - table [ref=e174]:
+          - rowgroup [ref=e175]:
+            - row [ref=e176]:
+              - treeitem "List" [ref=e177]
+        - table [ref=e179]:
+          - rowgroup [ref=e180]:
+            - row [ref=e181]:
+              - treeitem "MenuItem" [ref=e182]
+        - table [ref=e184]:
+          - rowgroup [ref=e185]:
+            - row [ref=e186]:
+              - treeitem "MultiLineEdit" [ref=e187]
+        - table [ref=e189]:
+          - rowgroup [ref=e190]:
+            - row [ref=e191]:
+              - treeitem "NoteBook" [ref=e192]
+        - table [ref=e194]:
+          - rowgroup [ref=e195]:
+            - row [ref=e196]:
+              - treeitem "Process Intelligence" [ref=e197]
+        - table [ref=e199]:
+          - rowgroup [ref=e200]:
+            - row [ref=e201]:
+              - treeitem "RadioButton" [ref=e202]
+        - table [ref=e204]:
+          - rowgroup [ref=e205]:
+            - row [ref=e206]:
+              - treeitem "Static" [ref=e207]
+        - table [ref=e209]:
+          - rowgroup [ref=e210]:
+            - row [ref=e211]:
+              - treeitem "SubForm" [ref=e212]
+        - table [ref=e214]:
+          - rowgroup [ref=e215]:
+            - row [ref=e216]:
+              - treeitem "ToolbarButton" [ref=e217]
+        - table [ref=e219]:
+          - rowgroup [ref=e220]:
+            - row [ref=e221]:
+              - treeitem "Tree" [ref=e222]
+        - table [ref=e224]:
+          - rowgroup [ref=e225]:
+            - row [ref=e226]:
+              - treeitem "UserControl" [ref=e227]
+        - table [ref=e229]:
+          - rowgroup [ref=e230]:
+            - row [ref=e231]:
+              - treeitem "VerticalGrid" [ref=e232]
+        - table [ref=e234]:
+          - rowgroup [ref=e235]:
+            - row [ref=e236]:
+              - treeitem "User Components" [ref=e237]
+  - separator [ref=e239]
+  - text: 
+  - tablist [ref=e240]
+  - separator [ref=e241]
+  - text: 
+  - generic [ref=e242]: Properties
+  - button "Collapse Panel" [ref=e243] [cursor=pointer]
+  - tabpanel [aria-hidden] [ref=e244]:
+    - toolbar [ref=e245]:
+      - button [ref=e246] [cursor=pointer]: 
+      - generic [ref=e247]:
+        - generic [ref=e248]: "Search Properties:"
+        - generic [ref=e251]:
+          - textbox [ref=e253]
+          - generic [ref=e254] [cursor=pointer]
+      - button [ref=e255] [cursor=pointer]: 
+      - button [ref=e256] [cursor=pointer]: 
+    - generic: Name
+    - generic [ref=e257]: Value
+    - tree [ref=e265]
+    - generic [ref=e267]:
+      - generic [ref=e268]: Empty Property Description Field
+      - textbox [ref=e273]
+  - tablist [ref=e274]:
+    - tab [selected] [ref=e275] [cursor=pointer]:
+      - heading "Form" [level=2] [ref=e276]
+    - tab [ref=e277] [cursor=pointer]:
+      - heading "Component" [level=2] [ref=e278]
+  - toolbar [ref=e279]:
+    - generic [ref=e280]: "[ ScopeType: User / ScopeName: <secret>SECRET_MONGOOSE_USERNAME</secret> ]"
+    - generic [ref=e281]: en-US
+    - separator [ref=e282]
+    - img "Powered by Infor" [ref=e283]
+  - generic [ref=e285]:
+    - alert
+    - alert
+    - complementary
+    - complementary
+  - dialog "Global Objects" [active] [ref=e2149]:
+    - generic [ref=e2151]:
+      - group [ref=e2152]:
+        - grid [ref=e2155]:
+          - toolbar [ref=e2156]:
+            - generic [ref=e2159]:
+              - textbox [ref=e2161]
+              - generic [ref=e2162] [cursor=pointer]
+          - columnheader "name"
+          - grid [ref=e2167]:
+            - generic [ref=e2168]:
+              - table [ref=e2229]:
+                - rowgroup [ref=e2230]:
+                  - row [ref=e2231]:
+                    - gridcell "gbgc_bg" [ref=e2232]
+              - table [ref=e2234]:
+                - rowgroup [ref=e2235]:
+                  - row [ref=e2236]:
+                    - gridcell "gbgc_GradientTest1" [ref=e2237]
+              - table [ref=e2239]:
+                - rowgroup [ref=e2240]:
+                  - row [ref=e2241]:
+                    - gridcell "gbgc_GradientTest2" [ref=e2242]
+              - table [ref=e2244]:
+                - rowgroup [ref=e2245]:
+                  - row [ref=e2246]:
+                    - gridcell "gbgc_GradientTest3" [ref=e2247]
+              - table [ref=e2249]:
+                - rowgroup [ref=e2250]:
+                  - row [ref=e2251]:
+                    - gridcell "IncludeBadgeStatusVar" [ref=e2252]
+              - table [ref=e2254]:
+                - rowgroup [ref=e2255]:
+                  - row [ref=e2256]:
+                    - gridcell "IsDiagnosticsTimerElapsed" [ref=e2257]
+              - table [ref=e2259]:
+                - rowgroup [ref=e2260]:
+                  - row [ref=e2261]:
+                    - gridcell "LoginFoundUser" [ref=e2262]
+              - table [ref=e2264]:
+                - rowgroup [ref=e2265]:
+                  - row [ref=e2266]:
+                    - gridcell "lse_BackgroundQueue.MonthlyDay" [ref=e2267]
+              - table [ref=e2269]:
+                - rowgroup [ref=e2270]:
+                  - row [ref=e2271]:
+                    - gridcell "lse_BackgroundQueue.Weekly" [ref=e2272]
+              - table [ref=e2274]:
+                - rowgroup [ref=e2275]:
+                  - row [ref=e2276]:
+                    - gridcell "lse_DataTypeCode" [ref=e2277]
+              - table [ref=e2279]:
+                - rowgroup [ref=e2280]:
+                  - row [ref=e2281]:
+                    - gridcell "lse_EventActionType" [ref=e2282]
+              - table [ref=e2284]:
+                - rowgroup [ref=e2285]:
+                  - row [ref=e2286]:
+                    - gridcell "lse_EventChronoFrsLstInlineList" [ref=e2287]
+              - table [ref=e2289]:
+                - rowgroup [ref=e2290]:
+                  - row [ref=e2291]:
+                    - gridcell "lse_EventChronoInlineList" [ref=e2292]
+              - table [ref=e2294]:
+                - rowgroup [ref=e2295]:
+                  - row [ref=e2296]:
+                    - gridcell "lse_EventChronoNoInsteadInlineList" [ref=e2297]
+              - table [ref=e2299]:
+                - rowgroup [ref=e2300]:
+                  - row [ref=e2301]:
+                    - gridcell "lse_MethodType" [ref=e2302]
+              - table [ref=e2304]:
+                - rowgroup [ref=e2305]:
+                  - row [ref=e2306]:
+                    - gridcell "lse_MIMEType" [ref=e2307]
+              - table [ref=e2309]:
+                - rowgroup [ref=e2310]:
+                  - row [ref=e2311]:
+                    - gridcell "lse_MonthlyDayVar" [ref=e2312]
+              - table [ref=e2314]:
+                - rowgroup [ref=e2315]:
+                  - row [ref=e2316]:
+                    - gridcell "lse_OutputFormatInline" [ref=e2317]
+              - table [ref=e2319]:
+                - rowgroup [ref=e2320]:
+                  - row [ref=e2321]:
+                    - gridcell "lse_OutputFormatInlineAll" [ref=e2322]
+              - table [ref=e2324]:
+                - rowgroup [ref=e2325]:
+                  - row [ref=e2326]:
+                    - gridcell "lse_PreviewFormatInline" [ref=e2327]
+              - table [ref=e2329]:
+                - rowgroup [ref=e2330]:
+                  - row [ref=e2331]:
+                    - gridcell "lse_PropertyTypeInlineList" [ref=e2332]
+              - table [ref=e2334]:
+                - rowgroup [ref=e2335]:
+                  - row [ref=e2336]:
+                    - gridcell "lse_PropertyTypeNoSubInlineList" [ref=e2337]
+              - table [ref=e2339]:
+                - rowgroup [ref=e2340]:
+                  - row [ref=e2341]:
+                    - gridcell "lse_TableTypeInlineList" [ref=e2342]
+              - table [ref=e2344]:
+                - rowgroup [ref=e2345]:
+                  - row [ref=e2346]:
+                    - gridcell "lse_TableTypeNoPrimInlineList" [ref=e2347]
+              - table [ref=e2349]:
+                - rowgroup [ref=e2350]:
+                  - row [ref=e2351]:
+                    - gridcell "lse_TimerInterval" [ref=e2352]
+              - table [ref=e2354]:
+                - rowgroup [ref=e2355]:
+                  - row [ref=e2356]:
+                    - gridcell "lse_TimeZoneMonth" [ref=e2357]
+              - table [ref=e2359]:
+                - rowgroup [ref=e2360]:
+                  - row [ref=e2361]:
+                    - gridcell "lse_UetDataType" [ref=e2362]
+              - table [ref=e2364]:
+                - rowgroup [ref=e2365]:
+                  - row [ref=e2366]:
+                    - gridcell "lse_WBDateRange" [ref=e2367]
+              - table [ref=e2369]:
+                - rowgroup [ref=e2370]:
+                  - row [ref=e2371]:
+                    - gridcell "lse_WBDrillColName" [ref=e2372]
+              - table [ref=e2374]:
+                - rowgroup [ref=e2375]:
+                  - row [ref=e2376]:
+                    - gridcell "lse_WBFilterExpressionDateRangeVar" [ref=e2377]
+              - table [ref=e2379]:
+                - rowgroup [ref=e2380]:
+                  - row [ref=e2381]:
+                    - gridcell "lsm1_CoreDocumentType" [ref=e2382]
+              - table [ref=e2384]:
+                - rowgroup [ref=e2385]:
+                  - row [ref=e2386]:
+                    - gridcell "lsm1_CustomMethodNameVar" [ref=e2387]
+              - table [ref=e2389]:
+                - rowgroup [ref=e2390]:
+                  - row [ref=e2391]:
+                    - gridcell "lsm1_DefaultReporType" [ref=e2392]
+              - table [ref=e2394]:
+                - rowgroup [ref=e2395]:
+                  - row [ref=e2396]:
+                    - gridcell "lsm1_DocumentationClass" [ref=e2397]
+              - table [ref=e2399]:
+                - rowgroup [ref=e2400]:
+                  - row [ref=e2401]:
+                    - gridcell "lsm1_GetCharacterTypeColumns" [ref=e2402]
+              - table [ref=e2404]:
+                - rowgroup [ref=e2405]:
+                  - row [ref=e2406]:
+                    - gridcell "lsm1_TemplateNameClass" [ref=e2407]
+              - table [ref=e2409]:
+                - rowgroup [ref=e2410]:
+                  - row [ref=e2411]:
+                    - gridcell "lsm1_TimeZone" [ref=e2412]
+              - table [ref=e2458]:
+                - rowgroup [ref=e2459]:
+                  - row [ref=e2460]:
+                    - gridcell "lsm1_UserName_Default" [ref=e2461]
+              - table [ref=e2463]:
+                - rowgroup [ref=e2464]:
+                  - row [ref=e2465]:
+                    - gridcell "lsp_CoreDocumentType" [ref=e2466]
+              - table [ref=e2468]:
+                - rowgroup [ref=e2469]:
+                  - row [ref=e2470]:
+                    - gridcell "MPPassword" [ref=e2471]
+              - table [ref=e2473]:
+                - rowgroup [ref=e2474]:
+                  - row [ref=e2475]:
+                    - gridcell "MPUsername" [ref=e2476]
+              - table [ref=e2478]:
+                - rowgroup [ref=e2479]:
+                  - row [ref=e2480]:
+                    - gridcell "Parm_DefaultStartingToEnding" [ref=e2481]
+              - table [ref=e2483]:
+                - rowgroup [ref=e2484]:
+                  - row [ref=e2485]:
+                    - gridcell "Parm_DisplayReportHeaders" [ref=e2486]
+              - table [ref=e2488]:
+                - rowgroup [ref=e2489]:
+                  - row [ref=e2490]:
+                    - gridcell "Parm_Site" [ref=e2491]
+              - table [ref=e2493]:
+                - rowgroup [ref=e2494]:
+                  - row [ref=e2495]:
+                    - gridcell "SiteFormName" [ref=e2496]
+              - table [ref=e2498]:
+                - rowgroup [ref=e2499]:
+                  - row [ref=e2500]:
+                    - gridcell "vInventoryJson" [ref=e2501]
+              - table [ref=e2503]:
+                - rowgroup [ref=e2504]:
+                  - row [ref=e2505]:
+                    - gridcell "vsc_OnSelectDocType" [ref=e2506]
+              - table [ref=e2508]:
+                - rowgroup [ref=e2509]:
+                  - row [ref=e2510]:
+                    - gridcell "vsv_CoreDocumentType" [ref=e2511]
+              - table [ref=e2513]:
+                - rowgroup [ref=e2514]:
+                  - row [ref=e2515]:
+                    - gridcell "vsv_WBKPINumGaugeSettings" [ref=e2516]
+          - toolbar [ref=e2414]:
+            - button "" [ref=e2415] [cursor=pointer]
+            - button "" [ref=e2416] [cursor=pointer]
+            - button "" [ref=e2417] [cursor=pointer]
+      - separator [ref=e2418]: ⁞
+      - group [ref=e2419]:
+        - toolbar [ref=e2422]:
+          - generic [ref=e2423]:
+            - generic [ref=e2424]: "Search Properties:"
+            - generic [ref=e2427]:
+              - textbox "Search Properties:" [ref=e2429]
+              - generic [ref=e2430] [cursor=pointer]
+          - button "Expand" [ref=e2431] [cursor=pointer]: 
+          - button "Collapse" [ref=e2432] [cursor=pointer]: 
+        - generic: Name
+        - generic: Value
+        - tree [ref=e2441]
+        - generic [ref=e2443]:
+          - generic [ref=e2444]: Empty Property Description Field
+          - textbox "Empty Property Description Field" [ref=e2449]
+        - toolbar [ref=e2450]:
+          - button "Undo" [disabled]: 
+          - button "Redo" [disabled]: 
+    - toolbar [ref=e2451]:
+      - button "OK" [ref=e2452] [cursor=pointer]
+      - button "Cancel" [ref=e2454] [cursor=pointer]
+      - button "Help" [ref=e2456] [cursor=pointer]

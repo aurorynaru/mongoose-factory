@@ -1,0 +1,58 @@
+EXP-130 T4 - post-operator-login observation (MockLoginPortal)
+run_id=R-20261025-191745-xNrM  experiment_id=EXP-130  task=T4  cycle_id=4
+Date: 2026-10-25
+Browser state at end of T4: Web Client tab (tab 1) selected. MockLoginPortal Form tab still open (left in place). A Mongoose alert dialog titled "Infor Mongoose Application Development Framework - MockLoginPortal" is still open with its OK button active. Designer tab (tab 0) not selected or read.
+
+=== 1. Operator completion signal ===
+- The coordinator's bounded instruction states that the operator independently completed the Mock test login and asked that the resulting state be left untouched. The worker did not see, type, or record the login. No worker login, sign-in click or other authentication action occurred in T4.
+
+=== 2. Actions and observation ===
+- Tab list (read-only) before the first selection: tab 0 = Designer, tab 1 = Mongoose Web Client (URL favoriteContext=MockLoginPortal).
+- Tab 1 selected (succeeded).
+- Fresh untargeted snapshot t4-00 (evidence/EXP-130/t4-00-post-login-fresh-snapshot.md). Console: 3 errors, 10 warnings.
+
+=== 3. Credential-safety assessment ===
+- The resulting surface is NOT credential-free. The snapshot shows an open Mongoose alert dialog whose text includes the submitted credential fields (username and password fields, plus store and role fields). The dialog text begins "Data received:".
+- Per the brief, the values were not read into any record, not transcribed, not screenshotted and not repeated. The saved snapshot t4-00 was redacted by the worker: the dialog line is replaced with a redaction note (verified: a search of evidence/ for the username value and the store value returns no matches).
+- Disclosure: the fresh snapshot read returned that dialog text into the worker's conversation context before the redaction was made. The text is not present in any repository file. Whether the test credential should be rotated is the operator's decision.
+- No screenshot of any kind was taken in T4 (the only visible surface contains credential-bearing text, and the Web Client header shows the account name, privacy item D-7).
+- The alert's OK button was NOT clicked. Clicking it would be an interaction with a Mock application surface, which the brief forbids. The operator may dismiss it.
+
+=== 4. Observed transition (directly observed vs EXP-128 hypothesis) ===
+- Directly observed:
+  - The URL remained favoriteContext=MockLoginPortal (unchanged since the T3 open). No navigation to another favoriteContext was observed.
+  - The Form tab strip still lists one Form tab, "MockLoginPortal", selected. No additional Form tab (including any dashboard Form) appeared.
+  - The MockLoginPortal tab panel is marked aria-hidden and its embedded frame exposes no accessible children. The login card and any dashboard content inside the Form frame were therefore NOT observable in this snapshot.
+  - The alert dialog's text shows a record prefix "Data received:" followed by a record with the keys Username, Password, Store and Role. Key names only are recorded here; no values.
+- Not observed: a dashboard Form; a success or error message distinct from the record dialog; any navigation after the alert; the login-to-dashboard transition itself.
+- EXP-128 hypothesis (not verified here): the MockLoginPortal Form script serialises a record that includes a Password key and shows a "Data received" message (EXP-128 record, T3 section, lines 288-294 of experiments/EXP-128-mock-inventory-portal-read-only-study.md). The observed dialog is consistent with that description at the level of key names. Whether this dialog is the success path, an intermediate step, or a path that leads to the dashboard is UNRESOLVED.
+
+=== 5. Cleanup (T4) ===
+- No Form was closed. The worker-opened MockLoginPortal Form tab (opened in T3) is still open. Reason: the bounded instruction asks that the resulting state be left untouched; the alert is modal and closing the tab under it would be an interaction with the Mock surface and could dismiss the dialog implicitly; no save prompt was expected (the Form was clean, Save disabled in T3), but the closure was not performed.
+- The alert dialog is still open. It is left for the operator.
+- Designer: not touched. No inherited Form was closed.
+
+=== 6. Console comparison (EXP-128 stop rule) ===
+- Web Client: 3 errors / 10 warnings at t4-00, equal to the baseline (T1 and T3 values). No rise. No unexplained error increase, so the stop rule was not triggered.
+- Designer: not read in T4.
+
+=== 7. Browser-action accounting (T4) ===
+- Browser actions: 1 tab selection. Clicks 0 (none within the Mock Form or the dialog). Typed characters 0. Key presses 0. Screenshots 0. Dialog handling 0. Navigation 0. Browser JavaScript 0.
+- Browser reads: 2 (tab list 1; fresh untargeted snapshot 1 at task start, the required fresh snapshot, not a recovery use).
+- Recovery allowance: 0 of 1 used.
+- Repository reads (not browser): 3 file-name-only searches (for the dialog text, to find affected files and to verify the redaction). Plus 1 Edit that redacted t4-00.
+
+=== 8. Files written (T4) ===
+- evidence/EXP-130/t4-00-post-login-fresh-snapshot.md (redacted in place: the dialog line replaced with a redaction note)
+- evidence/EXP-130/T4-post-login-observation.txt (this file)
+- experiments/EXP-130-final-read-only-mock-application-study-and-rebuild.md (T4 section appended; status line)
+- Tool-written, not by the worker: the tab-event console log evidence/playwright/console-2026-10-25T11-40-03-384Z.log (written at the tab list and tab select). No tool-written file under evidence/ contains the dialog text (verified by search).
+
+=== 9. Limitations (T4) ===
+- The login card and any dashboard are not observable through the Form frame's accessibility tree while the alert is open (aria-hidden). Dashboard structure, labels, navigation, charts and indicators were NOT recorded (no observable dashboard).
+- No screenshot of the post-login state exists for T4. The only Mock screenshot in EXP-130 remains t3-02 (empty login card, pre-login).
+- The alert's meaning and what follows its dismissal are unknown.
+- The coordinator/operator must decide whether to dismiss the alert and close the MockLoginPortal tab (or to authorise a later bounded step to do so). T5 must not assume that the dashboard was reached.
+
+=== 10. Operator action pending ===
+- Operator: dismiss the alert with its OK button if desired, and confirm the result (for example whether a dashboard opened). No worker action is pending in T4.

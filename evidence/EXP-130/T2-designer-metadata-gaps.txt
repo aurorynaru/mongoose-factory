@@ -1,0 +1,217 @@
+EXP-130 T2 - Designer metadata gaps (read-only)
+Run: R-20261025-191745-xNrM | cycle 1 | task T2 | date 2026-10-25
+Editing scope: User (Designer status bar ScopeType: User; ScopeName shown as <signed-in user> here)
+Account: the signed-in account is written as <signed-in user> in this file (credential/account placeholder rule).
+Source of every observation: accessibility snapshots listed per section (evidence/EXP-130/t2-NN-*.md or evidence/playwright/page-2026-10-25T11-*.yml). No screenshot was taken in T2.
+Proof classes: OBSERVED = seen in the named snapshot; NOT EXPOSED = the permitted UI did not show it; UNRESOLVED = not established.
+
+=====================================================================
+0. PREFLIGHT (AC-1 support)
+=====================================================================
+- Tab list (read) before any selection: tab 0 = Designer (designer/Default.aspx), tab 1 = Web Client (favoriteContext=IdoCollections). Tab 0 selected (ok).
+- Designer clean at start: no Form tab open; Save [disabled]; Regenerate Form [disabled]; Undo/Redo disabled; no dialog; ScopeType User; console 2 errors / 0 warnings.
+  Source: evidence/EXP-130/t2-00-designer-preflight-snapshot.md
+- Web Client (tab 1) was NOT selected, read or acted on in T2.
+- FX_InventoryPrototype01: not opened, not selected, not interacted with. The Form menu's recent list shows an entry captioned "Inventory Prototype" (the FX_ prototype's caption, not opened); it was not clicked.
+
+=====================================================================
+1. MockInventory - Form identity (Designer, opened from Form menu > recent MockInventory)
+=====================================================================
+- Designer tab heading: "MockInventory" (closable tab). URL carried MGForm=MockInventory.
+- Form Properties (Form tab): Name = MockInventory; Version = "User version for user <signed-in user>"; Device Type = Default; Form Type = Normal; Is Master = True; Caption = blank (no text shown).
+  Source: evidence/EXP-130/t2-01-mockinventory-designer-open-snapshot.md (Properties pane, lines ~305-420 of that file)
+- Details panel expanded via its own "Expand Panel" control. Details tabs present: Collections, Components, Event Handlers, Variables, Design View Size. Only Collections and Variables were read in T2 (Components, Event Handlers, Design View Size were not in T2 scope).
+  Source: evidence/EXP-130/t2-02-mockinventory-details-expanded-snapshot.md
+
+=====================================================================
+2. MockInventory - collection (EXP-128 Q-11, collection part)
+=====================================================================
+- Collections tree: one row, "Primary Collection: MockInventory" (collapsed). No secondary collection row.
+- General group (row selected by ref, not by its chevron):
+  - Collection = MockInventory [OBSERVED]
+  - Base Table and Alias = "The primary table and its alias for this IDO is MockInventory mock_inv" (table MockInventory, alias mock_inv) [OBSERVED]
+  - Collection Name = blank; Custom Load Method = blank; Method Parameters = blank; Read Mode = blank [OBSERVED as blank]
+  Source: evidence/EXP-130/t2-03-mockinventory-collection-options-snapshot.md (General rows)
+- Group rows visible after the grid-level Expand control: Options, Standard Operations, Advanced Options, Selection (siblings at one level). [OBSERVED]
+- Options group: NOT EXPOSED. Row is present and collapsed; no child rows appear after (a) a semantic click on the Options row (select only) and (b) one ArrowRight key press on the selected row. The EXP-128 T4 coordinate chevron clicks were NOT repeated. The Primary Collection node was NOT expanded in T2 (its 36 child property rows from EXP-128 T4 are not re-read here).
+- Collection filter / filter expressions: NOT EXPOSED. No filter row appeared. Filter expression text: UNRESOLVED.
+- Standard Operations, Advanced Options, Selection: group names only; their children were not expanded (no click on these rows). Contents: UNRESOLVED. (These may hold collection-level settings; the permitted route did not open them in T2.)
+- Save remained disabled after the Options attempts (no unsaved change attributable to T2).
+
+=====================================================================
+3. MockInventory - Form Variables (Details > Variables) (EXP-128 Q-4/Q-5 surface)
+=====================================================================
+- Category groups in the grid, before expansion: Global - Persistent; Global - Temporary. [OBSERVED]
+- NO "Form - Persistent" group and NO "Form - Temporary" group is shown for MockInventory. [OBSERVED absence of groups]
+  Source: evidence/EXP-130/t2-04-mockinventory-variables-snapshot.md
+- After the grid-level Expand control and view-only wheel steps (grid rendering is windowed; two windows were read and they overlap):
+  - Global - Persistent: 48 rows rendered in union, from ccvw_OutputFormatInlineAll to vsv_WBKPINumGaugeSettings. Names (names only): ccvw_OutputFormatInlineAll, ccvw_PrinterName, gbgc_bg, gbgc_GradientTest1, gbgc_GradientTest2, gbgc_GradientTest3, IncludeBadgeStatusVar, IsDiagnosticsTimerElapsed, LoginFoundUser, lse_BackgroundQueue.MonthlyDay, lse_BackgroundQueue.Weekly, lse_DataTypeCode, lse_EventActionType, lse_EventChronoFrsLstInlineList, lse_EventChronoInlineList, lse_EventChronoNoInsteadInlineList, lse_MethodType, lse_MIMEType, lse_MonthlyDayVar, lse_OutputFormatInline, lse_OutputFormatInlineAll, lse_PreviewFormatInline, lse_PropertyTypeInlineList, lse_PropertyTypeNoSubInlineList, lse_TableTypeInlineList, lse_TableTypeNoPrimInlineList, lse_TimerInterval, lse_TimeZoneMonth, lse_UetDataType, lse_WBDateRange, lse_WBDrillColName, lse_WBFilterExpressionDateRangeVar, lsm1_CoreDocumentType, lsm1_CustomMethodNameVar, lsm1_DefaultReporType, lsm1_DocumentationClass, lsm1_GetCharacterTypeColumns, lsm1_TemplateNameClass, lsm1_TimeZone, lsm1_UserName_Default, lsp_CoreDocumentType, MPPassword, MPUsername, SiteFormName, vInventoryJson, vsc_OnSelectDocType, vsv_CoreDocumentType, vsv_WBKPINumGaugeSettings. (48 rows; name only; no value read. MPPassword/MPUsername/LoginFoundUser: name only, credential rule.)
+    Sources: t2-06 (first window), t2-07 (second window, lse_TimerInterval onward).
+  - Global - Temporary: 13 rows: AccessAs; <signed-in user>.Temp.BulkUpdate; <signed-in user>.Temp.Delete; <signed-in user>.Temp.Edit; <signed-in user>.Temp.Execute; <signed-in user>.Temp.Insert; <signed-in user>.Temp.Read; <signed-in user>.Temp.Update; FarmEnableExtensionBundle; FarmEnforcePrefixFromAccessAs; Parm_DefaultStartingToEnding; Parm_DisplayReportHeaders; Parm_Site. [OBSERVED] (see UNRESOLVED note U-3 on the seven .Temp rows.)
+    Source: t2-07-mockinventory-variables-v-rows-snapshot.md
+- vInventoryJson (Details grid row, selected by ref, read-only):
+  - Category: Global - Persistent (group in which the row sits). Scope: Global (no owning Form). Version: User version for user <signed-in user>.
+  - Name = vInventoryJson; Persistent = True; Global = True; Description = blank; Value = blank (no text in the Value cell).
+  Source: evidence/EXP-130/t2-07-mockinventory-variables-v-rows-snapshot.md; action snapshot evidence/playwright/page-2026-10-25T11-26-45-623Z.yml (Properties rows, lines ~494-537).
+- vMockLoginJson: ABSENT from MockInventory's rendered Variables rows (find "vMockLoginJson" -> no match after the union of both windows; no Form-level group holds it). Absence in the rendered rows is observed; the end of the Global - Temporary group was not confirmed beyond Parm_Site. Form-level presence: NOT FOUND on this Form. [OBSERVED absence in rendered rows]
+
+=====================================================================
+4. MockInventoryDashboard - Form identity
+=====================================================================
+- Designer tab heading: "MockInventoryDashboard" (closable tab). URL carried MGForm=MockInventoryDashboard.
+- Form Properties: Name = MockInventoryDashboard; Version = "User version for user <signed-in user>"; Device Type = Default; Form Type = Normal; Is Master = True; Caption = blank (no text shown).
+  Source: evidence/EXP-130/t2-08-dashboard-designer-open-snapshot.md
+- Details tabs: Collections, Components, Event Handlers, Variables, Design View Size (only Collections and Variables read in T2).
+  Source: evidence/EXP-130/t2-09-dashboard-details-expanded-snapshot.md
+
+=====================================================================
+5. MockInventoryDashboard - collection (EXP-128 Q-11, collection part)
+=====================================================================
+- Collections tree: one row, "Primary Collection: MockInventory" (collapsed). [OBSERVED]
+- General group (row selected by ref): Collection = MockInventory; Base Table and Alias = "The primary table and its alias for this IDO is MockInventory mock_inv"; Collection Name, Custom Load Method, Method Parameters, Read Mode = blank. [OBSERVED]
+  Source: evidence/EXP-130/t2-10-dashboard-collection-options-snapshot.md (General rows, same snapshot family as t2-09)
+- Groups visible: Options (collapsed), Standard Operations, Advanced Options, Selection. [OBSERVED]
+- Options: NOT EXPOSED. Select-only click on the Options row, then one ArrowRight press: no child rows. Filter: NOT EXPOSED. Contents of the three sibling groups: UNRESOLVED (not expanded).
+- Save remained disabled.
+
+=====================================================================
+6. MockInventoryDashboard - Form Variables (EXP-128 Q-5 and Q-11 Form-Temporary part)
+=====================================================================
+- Category groups before expansion: Form - Persistent; Global - Persistent; Global - Temporary. [OBSERVED] NO "Form - Temporary" group is shown. [OBSERVED absence of group]
+  Source: evidence/EXP-130/t2-11-dashboard-variables-snapshot.md
+- Form - Persistent (5 rows, names only; consistent with EXP-128 T6 names): fds_SC2; InitialCommand; UserCtrl_userControl1_USER; UserCtrlAsm_userControl1_USER; UserCtrlUrl_userControl1_USER. Values not re-read in T2 (EXP-128 T6 recorded them; not re-verified here).
+- Global - Persistent: 48 rows in union, identical in membership to MockInventory's Global - Persistent (includes vInventoryJson; does NOT include vMockLoginJson). Source: t2-11 (first window) and t2-12 (after wheel 1500; second window from lse_TimerInterval).
+- Global - Temporary: 13 rows, identical in membership to MockInventory's Global - Temporary.
+- vInventoryJson on this Form (Details row, selected by ref):
+  - Category: Global - Persistent. Scope: Global. Version: User version for user <signed-in user>.
+  - Name = vInventoryJson; Persistent = True; Global = True; Value = blank.
+  Source: evidence/EXP-130/t2-12-dashboard-variables-after-wheel-snapshot.md; action snapshot evidence/playwright/page-2026-10-25T11-28-17-651Z.yml (lines ~408-448, Value row lines ~424-428).
+- No Form-level vInventoryJson is shown on this Form (no Form - Persistent row, and no Form - Temporary group). The runtime binding of ThisForm.Variables("vInventoryJson") is therefore NOT established by T2 (UNRESOLVED U-1). Not inferred.
+- vMockLoginJson: ABSENT from this Form's rendered rows (find -> no match). Form-level presence: NOT FOUND on this Form.
+
+=====================================================================
+7. Edit > Variable (Designer global definitions; opened with no Form open)
+=====================================================================
+- Edit menu > Variable opened the dialog titled "Global Objects" (Variables/name list; Properties pane; OK, Cancel, Help). [OBSERVED]
+  Source: evidence/EXP-130/t2-13-edit-variable-dialog-snapshot.md; t2-14-edit-variable-after-wheel-snapshot.md
+- vInventoryJson: PRESENT in the flat list (ref e2501 at the time). Selected by ref (select only). Properties pane: Name = vInventoryJson; Persistent = True; Global = True; Version = User version for user <signed-in user>; Value = blank; Description = blank. [OBSERVED]
+  Source: action snapshot evidence/playwright/page-2026-10-25T11-29-01-924Z.yml (Properties rows at lines ~480-517).
+- vMockLoginJson: ABSENT from the flat list (find "vMockLoginJson" -> no match; both windows read: list top AccessAs..lsm1_TimeZone and bottom lse_BackgroundQueue.MonthlyDay..vsv_WBKPINumGaugeSettings; list end at vsv_WBKPINumGaugeSettings). [OBSERVED absence]
+- Dialog closed with Cancel (ref e2454). Post-close snapshot: no dialog; Save disabled. Source: evidence/playwright/page-2026-10-25T11-29-11-340Z.yml.
+- Design-time value of vInventoryJson: blank (matches EXP-128 T9).
+
+=====================================================================
+8. Designer > Edit > Script: global Scripts names, GAP SEGMENT only (EXP-128 T21 gap)
+=====================================================================
+- Edit menu > Script opened the dialog "Global Objects" with the "Scripts" pane (flat list; column "name") and the "Properties" pane (empty; no row selected). Buttons OK, Cancel, Help. [OBSERVED]
+  Source: evidence/EXP-130/t2-15-global-script-dialog-snapshot.md
+- No Script source was opened. No row was clicked. No add, copy or delete control was used. The filter box was not typed in. Scrolling was by view-only mouse wheel steps (deltaY 300, 800, -300) over the list.
+- Rows rendered before the segment (for context; EXP-128 T21 names, not re-read here): ... GetAllStringNames, GetChartTypeByChartStyle (the segment's start boundary; observed again at ref e2847).
+- SEGMENT BETWEEN GetChartTypeByChartStyle AND GetDataLakeObjects - names observed (in list order):
+  1. GetComponentList
+  2. GetComponentListByType
+  3. GetComponentListSorted
+  4. GetConnectionStringOptionNames
+  5. GetDataCatalogObjectList
+  6. GetDataCatalogObjectName
+  - then GetDataLakeObjects (the segment's end boundary; observed at ref e2926).
+  Source: evidence/EXP-130/t2-17-global-script-after-wheel-800-snapshot.md (rows e2896 to e2921); the same six names reappear in t2-18.
+- COVERAGE BOUNDARY (not closed): between GetChartTypeByChartStyle (ref e2847) and GetComponentList (ref e2896) the accessibility snapshot emitted NO row names in three windows (t2-15, t2-16, t2-17/t2-18 show the same adjacency). Reference numbers e2848-e2892 are not emitted. Whether rows exist in that ref range, and their names, is UNRESOLVED. Not guessed.
+- Mock-related check on the observed segment rows: none of the six names contains "Mock", "mocklogin", "vInventoryJson", "UserControl" or "WSForm". This is a name-only observation; source not read.
+- The total count and the unrendered range are not established.
+
+=====================================================================
+9. OPERATOR-DECISION / SCOPE NOTES
+=====================================================================
+- MockLoginPortal was NOT opened in T2 (outside the T2 bounded Form list: "only MockInventory and MockInventoryDashboard"). Therefore the Form-level Variables surface of MockLoginPortal (where vMockLoginJson is set by ProcessLogin) is NOT inspected in T2. Form - Temporary on MockLoginPortal remains UNRESOLVED.
+- No Components, Event Handlers, Design View Size, Form Script or UserControl reference was read in T2.
+- $app/scripts/UserControl.js was not inspected (brief exclusion).
+
+=====================================================================
+10. VARIABLE PRESENCE TABLE (AC-5)
+=====================================================================
+Surface                         | vInventoryJson                                  | vMockLoginJson
+--------------------------------|-------------------------------------------------|--------------------------------
+MockInventory Variables grid    | Present in Global - Persistent (Global=True)    | Absent from rendered rows
+                                | Form-level: none shown                          | Form-level: none shown
+MockInventoryDashboard Variables| Present in Global - Persistent (Global=True)    | Absent from rendered rows
+                                | Form-level: none shown (no Form - Temporary grp)| Form-level: none shown
+Edit > Variable (global list)   | Present; Persistent True, Global True; value blank | Absent (find; list end)
+MockLoginPortal Variables       | not inspected in T2                             | not inspected in T2 (Form - Temporary unknown)
+
+Category, persistence, Global, initial value and owning Form, where visible:
+- vInventoryJson: category Global - Persistent (Details) / global list; Persistent True; Global True; initial value blank (design time); owning Form: none (Global); version User version for user <signed-in user>.
+- vMockLoginJson: no definition observed on the inspected surfaces. Category, persistence, Global, initial value, scope: UNKNOWN (not inferred from ProcessLogin code).
+
+=====================================================================
+11. UNRESOLVED / LIMITATIONS
+=====================================================================
+- U-1: Runtime resolution of ThisForm.Variables("vInventoryJson") on the dashboard (global definition observed; no Form-level one shown). Runtime not observed. [UNRESOLVED]
+- U-2: MockLoginPortal Form-level variables (Form - Temporary) and vMockLoginJson's Form-level presence there: not inspected in T2. [UNRESOLVED]
+- U-3: Seven rows "<signed-in user>.Temp.*" appear in the Details Global - Temporary group (13 rows) and in the Edit > Variable flat list. EXP-128 T9 recorded 54 global entries (48 persistent + 6 temporary) and did not name these seven rows. The difference is not reconciled; their flags were not read. [UNRESOLVED]
+- U-4: Collection Options and collection filter: not exposed through the permitted UI (click, grid Expand and one ArrowRight). Standard Operations, Advanced Options and Selection contents not expanded. [UNRESOLVED / NOT EXPOSED]
+- U-5: Script segment: 6 names captured; the unrendered ref range between GetChartTypeByChartStyle and GetComponentList could hold further names. Not closed. [UNRESOLVED]
+- U-6: Form Properties Caption is blank on both Forms (no text shown); not an absence proof. [LIMITATION]
+- U-7: Variables grid rendering is windowed. Union of two windows is used; the Temporary group end was not confirmed beyond Parm_Site (Details) and the flat list end was confirmed at vsv_WBKPINumGaugeSettings. [LIMITATION]
+- U-8: Values of Form - Persistent entries InitialCommand, UserCtrlAsm, UserCtrlUrl were not re-read in T2 (EXP-128 T6 values are unverified in this run). [LIMITATION]
+- Credential values: none read, typed, copied or recorded. MPPassword, MPUsername and LoginFoundUser appear by name only. [NO CREDENTIAL]
+
+=====================================================================
+12. ACCEPTANCE (T2 view)
+=====================================================================
+- AC-1 (preflight, T2 part): met. Designer clean, User scope, console 2/0 before and after. No Mongoose mutation. FX_InventoryPrototype01 untouched.
+- AC-4 (Form identities and Collections): partly met. Form identities met (both Forms, tab + Name + Version). Collection identity, IDO binding and General group met. Options and filter: NOT EXPOSED through permitted UI (recorded, not forced).
+- AC-5 (variables): met for MockInventory and MockInventoryDashboard Variables surfaces and Edit > Variable (table in section 10). MockLoginPortal not inspected (U-2).
+- AC-6 (script gap names): partly met. Boundaries and six names recorded; unrendered range recorded (U-5); no source opened.
+- AC-9 (final audit, T2 part): see section 13.
+
+=====================================================================
+13. FINAL DESIGNER STATE AND COUNTS (T2)
+=====================================================================
+- Both worker-opened Forms (MockInventory, MockInventoryDashboard) closed through their own tab controls. Neither closure showed a save prompt (Save disabled throughout). No answer "Yes" was given to any prompt; no "No" answer was needed.
+- Dialogs dismissed: Edit > Variable (Cancel), Edit > Script (Cancel). No dialog open at end.
+- Final state: no Form tab open, no dialog, Save [disabled], Regenerate Form [disabled], ScopeType User, console 2 errors / 0 warnings (last reading evidence/playwright/page-2026-10-25T11-30-21-122Z.yml).
+- No inherited Form was present at T2 start, so none was closed. No inherited Form state was changed.
+- Mongoose mutations in T2: none. No Save, OK, Apply, Regenerate, Delete, Check In, Check Out, Undo Check Out, Filter in Place, or Finish was clicked. No collection Option, filter, variable property or initial value was changed. No IDO method, record or Script source was opened.
+
+=====================================================================
+14. BROWSER ACTION ACCOUNTING (T2, exact)
+=====================================================================
+Browser actions (40): clicks 26 (Form menu x2; recent MockInventory; Expand Panel x2; Primary Collection row x2; Collections grid Expand; Options row x2; Variables tab x2; Variables grid Expand x2; vInventoryJson row x3 (MockInventory, dashboard, Edit > Variable); close MockInventory; recent MockInventoryDashboard; close dashboard; Edit menu x2; Variable menu item; Script menu item; Cancel x2); tab select 1 (Designer); key presses 2 (ArrowRight on the selected Options rows); mouse moves 4 (positioning for wheel); mouse wheel 7 (view only: 600, 1500, 1500, 1500, 300, 800, -300).
+- Clicks by coordinates: 0. Mouse moves are coordinate-based positioning only (no click).
+- Fresh-snapshot recovery allowance: 0 of 1 used (no "Ref not found" in T2).
+- Browser reads (24): tab list 1; untargeted snapshots 18; targeted snapshot (ref e802 with boxes) 1; find 4 (vInventoryJson, vMockLoginJson, lsm1_DefaultReporType, vMockLoginJson on Edit > Variable).
+- Screenshots: 0. Browser JavaScript: 0. Repository reads: EXP-128 record (targeted greps and reads), EXP-128 t21 names file, T1 record.
+- Console counts: Designer 2 errors / 0 warnings at every reading. No rise. The EXP-128 stop rule was not triggered. The Web Client console was not read in T2.
+
+=====================================================================
+15. WORKER-WRITTEN FILES (T2)
+=====================================================================
+Repository (T2):
+- evidence/EXP-130/T2-designer-metadata-gaps.txt (this file)
+- evidence/EXP-130/t2-00-designer-preflight-snapshot.md ... t2-18-global-script-after-wheel-up300-snapshot.md (19 snapshot files written by the browser tool at the worker's filename request; listed in section 16)
+- experiments/EXP-130-final-read-only-mock-application-study-and-rebuild.md (T2 section appended; status line updated)
+Tool-written browser action outputs (not worker-authored; outside evidence/EXP-130/): one snapshot per action under evidence/playwright/page-2026-10-25T11-24-*.yml through page-2026-10-25T11-30-*.yml, and console logs written by the tool under evidence/playwright/ when the tab events fired. Disclosed for the confinement audit.
+
+=====================================================================
+16. SNAPSHOT FILE MAP (T2)
+=====================================================================
+t2-00 Designer preflight (clean state)
+t2-01 MockInventory open: Form properties, tab identity
+t2-02 MockInventory Details expanded: Collections tree
+t2-03 MockInventory Collections General group; Options row (after select and ArrowRight)
+t2-04 MockInventory Variables tab: categories (Global - Persistent, Global - Temporary)
+t2-05 MockInventory Variables grid box (targeted, boxes)
+t2-06 MockInventory Variables after wheel 600 (no change) - first window
+t2-07 MockInventory Variables after wheel 1500 - second window; vInventoryJson; Global - Temporary rows
+t2-08 MockInventoryDashboard open: Form properties, tab identity
+t2-09 Dashboard Details expanded: Collections tree
+t2-10 Dashboard Collections General group; Options row (after select and ArrowRight)
+t2-11 Dashboard Variables: Form - Persistent, Global - Persistent, Global - Temporary (collapsed)
+t2-12 Dashboard Variables after wheel 1500 (expanded); vInventoryJson rows
+t2-13 Edit > Variable dialog open (Global Objects; flat list top)
+t2-14 Edit > Variable after wheel 1500 (flat list bottom; vInventoryJson present)
+t2-15 Edit > Script dialog open (Scripts list top)
+t2-16 Edit > Script after wheel 300 (no change)
+t2-17 Edit > Script after wheel 800 (segment rows; GetComponentList..GetDataCatalogObjectName)
+t2-18 Edit > Script after wheel -300 (no new rows in the gap)

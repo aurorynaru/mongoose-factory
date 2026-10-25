@@ -1,0 +1,479 @@
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - button "Form" [ref=e3] [cursor=pointer]
+    - button "Edit" [ref=e5] [cursor=pointer]
+    - button "View" [ref=e7] [cursor=pointer]
+    - button "Help" [ref=e9] [cursor=pointer]
+  - toolbar [ref=e11]:
+    - button [ref=e12] [cursor=pointer]:
+      - button "Design" [ref=e13]
+    - button "Save" [disabled] [ref=e15]:
+      - button "Save" [disabled]
+    - button "Regenerate Form" [disabled] [ref=e16]:
+      - button "Regenerate Form" [disabled]
+    - separator [ref=e17]
+    - button [ref=e18] [cursor=pointer]:
+      - button "New" [ref=e19]
+    - button [ref=e21] [cursor=pointer]:
+      - button "Copy" [ref=e22]
+    - button [ref=e24] [cursor=pointer]:
+      - button "Delete" [ref=e25]
+    - separator [ref=e27]
+    - button "Align Left" [disabled] [ref=e28]:
+      - button "Align Left" [disabled]
+    - button "Align Center" [disabled] [ref=e29]:
+      - button "Align Center" [disabled]
+    - button "Align Right" [disabled] [ref=e30]:
+      - button "Align Right" [disabled]
+    - button "Align Top" [disabled] [ref=e31]:
+      - button "Align Top" [disabled]
+    - button "Align Middle" [disabled] [ref=e32]:
+      - button "Align Middle" [disabled]
+    - button "Align Bottom" [disabled] [ref=e33]:
+      - button "Align Bottom" [disabled]
+    - separator [ref=e34]
+    - button "Make Same Width" [disabled] [ref=e35]:
+      - button "Make Same Width" [disabled]
+    - button "Make Same Height" [disabled] [ref=e36]:
+      - button "Make Same Height" [disabled]
+    - button "Make Same Size" [disabled] [ref=e37]:
+      - button "Make Same Size" [disabled]
+    - separator [ref=e38]
+    - button "Space Horizontally" [disabled] [ref=e39]:
+      - button "Space Horizontally" [disabled]
+    - button "Space Vertically" [disabled] [ref=e40]:
+      - button "Space Vertically" [disabled]
+    - separator [ref=e41]
+    - button "Tab Order" [disabled] [ref=e42]:
+      - button "Tab Order" [disabled]
+    - button "Tab Order At" [disabled] [ref=e43]:
+      - button "Tab Order At" [disabled]
+    - separator [ref=e44]
+    - button "Undo" [disabled] [ref=e45]:
+      - button "Undo" [disabled]
+    - button "Redo" [disabled] [ref=e46]:
+      - button "Redo" [disabled]
+  - grid "Toolbox" [ref=e47]:
+    - text: 
+    - button "Collapse Panel" [ref=e49] [cursor=pointer]
+    - generic [ref=e50]:
+      - generic [ref=e51]: "Search Toolbox:"
+      - generic [ref=e54]:
+        - textbox "Search Toolbox:" [ref=e56]:
+          - /placeholder: Search Toolbox
+        - generic [ref=e57] [cursor=pointer]
+    - columnheader "Name"
+    - tree [ref=e62]:
+      - generic [ref=e63]:
+        - table [ref=e64]:
+          - rowgroup [ref=e65]:
+            - row [ref=e66]:
+              - treeitem "Framework Components" [ref=e67]
+        - table [ref=e69]:
+          - rowgroup [ref=e70]:
+            - row [ref=e71]:
+              - treeitem "Pointer" [ref=e72]
+        - table [ref=e74]:
+          - rowgroup [ref=e75]:
+            - row [ref=e76]:
+              - treeitem "Barcode" [ref=e77]
+        - table [ref=e79]:
+          - rowgroup [ref=e80]:
+            - row [ref=e81]:
+              - treeitem "Browser" [ref=e82]
+        - table [ref=e84]:
+          - rowgroup [ref=e85]:
+            - row [ref=e86]:
+              - treeitem "Button" [ref=e87]
+        - table [ref=e89]:
+          - rowgroup [ref=e90]:
+            - row [ref=e91]:
+              - treeitem "Calendar" [ref=e92]
+        - table [ref=e94]:
+          - rowgroup [ref=e95]:
+            - row [ref=e96]:
+              - treeitem "Chart" [ref=e97]
+        - table [ref=e99]:
+          - rowgroup [ref=e100]:
+            - row [ref=e101]:
+              - treeitem "CheckBox" [ref=e102]
+        - table [ref=e104]:
+          - rowgroup [ref=e105]:
+            - row [ref=e106]:
+              - treeitem "ComboBox" [ref=e107]
+        - table [ref=e109]:
+          - rowgroup [ref=e110]:
+            - row [ref=e111]:
+              - treeitem "DataView" [ref=e112]
+        - table [ref=e114]:
+          - rowgroup [ref=e115]:
+            - row [ref=e116]:
+              - treeitem "DateCombo" [ref=e117]
+        - table [ref=e119]:
+          - rowgroup [ref=e120]:
+            - row [ref=e121]:
+              - treeitem "Diagram" [ref=e122]
+        - table [ref=e124]:
+          - rowgroup [ref=e125]:
+            - row [ref=e126]:
+              - treeitem "DropList" [ref=e127]
+        - table [ref=e129]:
+          - rowgroup [ref=e130]:
+            - row [ref=e131]:
+              - treeitem "Edit" [ref=e132]
+        - table [ref=e134]:
+          - rowgroup [ref=e135]:
+            - row [ref=e136]:
+              - treeitem "FlexLayout" [ref=e137]
+        - table [ref=e139]:
+          - rowgroup [ref=e140]:
+            - row [ref=e141]:
+              - treeitem "FormPage" [ref=e142]
+        - table [ref=e144]:
+          - rowgroup [ref=e145]:
+            - row [ref=e146]:
+              - treeitem "Gauge" [ref=e147]
+        - table [ref=e149]:
+          - rowgroup [ref=e150]:
+            - row [ref=e151]:
+              - treeitem "Grid" [ref=e152]
+        - table [ref=e154]:
+          - rowgroup [ref=e155]:
+            - row [ref=e156]:
+              - treeitem "GroupBox" [ref=e157]
+        - table [ref=e159]:
+          - rowgroup [ref=e160]:
+            - row [ref=e161]:
+              - treeitem "HyperLinkButton" [ref=e162]
+        - table [ref=e164]:
+          - rowgroup [ref=e165]:
+            - row [ref=e166]:
+              - treeitem "Infocon" [ref=e167]
+        - table [ref=e169]:
+          - rowgroup [ref=e170]:
+            - row [ref=e171]:
+              - treeitem "Infor Chart" [ref=e172]
+        - table [ref=e174]:
+          - rowgroup [ref=e175]:
+            - row [ref=e176]:
+              - treeitem "List" [ref=e177]
+        - table [ref=e179]:
+          - rowgroup [ref=e180]:
+            - row [ref=e181]:
+              - treeitem "MenuItem" [ref=e182]
+        - table [ref=e184]:
+          - rowgroup [ref=e185]:
+            - row [ref=e186]:
+              - treeitem "MultiLineEdit" [ref=e187]
+        - table [ref=e189]:
+          - rowgroup [ref=e190]:
+            - row [ref=e191]:
+              - treeitem "NoteBook" [ref=e192]
+        - table [ref=e194]:
+          - rowgroup [ref=e195]:
+            - row [ref=e196]:
+              - treeitem "Process Intelligence" [ref=e197]
+        - table [ref=e199]:
+          - rowgroup [ref=e200]:
+            - row [ref=e201]:
+              - treeitem "RadioButton" [ref=e202]
+        - table [ref=e204]:
+          - rowgroup [ref=e205]:
+            - row [ref=e206]:
+              - treeitem "Static" [ref=e207]
+        - table [ref=e209]:
+          - rowgroup [ref=e210]:
+            - row [ref=e211]:
+              - treeitem "SubForm" [ref=e212]
+        - table [ref=e214]:
+          - rowgroup [ref=e215]:
+            - row [ref=e216]:
+              - treeitem "ToolbarButton" [ref=e217]
+        - table [ref=e219]:
+          - rowgroup [ref=e220]:
+            - row [ref=e221]:
+              - treeitem "Tree" [ref=e222]
+        - table [ref=e224]:
+          - rowgroup [ref=e225]:
+            - row [ref=e226]:
+              - treeitem "UserControl" [ref=e227]
+        - table [ref=e229]:
+          - rowgroup [ref=e230]:
+            - row [ref=e231]:
+              - treeitem "VerticalGrid" [ref=e232]
+        - table [ref=e234]:
+          - rowgroup [ref=e235]:
+            - row [ref=e236]:
+              - treeitem "User Components" [ref=e237]
+  - separator [ref=e239]
+  - text: 
+  - tablist [ref=e240]
+  - separator [ref=e241]
+  - text: 
+  - generic [ref=e242]: Properties
+  - button "Collapse Panel" [ref=e243] [cursor=pointer]
+  - tabpanel [aria-hidden] [ref=e244]:
+    - toolbar [ref=e245]:
+      - button [ref=e246] [cursor=pointer]: 
+      - generic [ref=e247]:
+        - generic [ref=e248]: "Search Properties:"
+        - generic [ref=e251]:
+          - textbox [ref=e253]
+          - generic [ref=e254] [cursor=pointer]
+      - button [ref=e255] [cursor=pointer]: 
+      - button [ref=e256] [cursor=pointer]: 
+    - generic: Name
+    - generic [ref=e257]: Value
+    - tree [ref=e265]
+    - generic [ref=e267]:
+      - generic [ref=e268]: Empty Property Description Field
+      - textbox [ref=e273]
+  - tablist [ref=e274]:
+    - tab [selected] [ref=e275] [cursor=pointer]:
+      - heading "Form" [level=2] [ref=e276]
+    - tab [ref=e277] [cursor=pointer]:
+      - heading "Component" [level=2] [ref=e278]
+  - toolbar [ref=e279]:
+    - generic [ref=e280]: "[ ScopeType: User / ScopeName: <secret>SECRET_MONGOOSE_USERNAME</secret> ]"
+    - generic [ref=e281]: en-US
+    - separator [ref=e282]
+    - img "Powered by Infor" [ref=e283]
+  - generic [ref=e285]:
+    - alert
+    - alert
+    - complementary
+    - complementary
+  - dialog "Global Objects" [active] [ref=e2584]:
+    - generic [ref=e2586]:
+      - group [ref=e2587]:
+        - grid [ref=e2590]:
+          - toolbar [ref=e2591]:
+            - generic [ref=e2594]:
+              - textbox [ref=e2596]
+              - generic [ref=e2597] [cursor=pointer]
+          - columnheader "name"
+          - grid [ref=e2602]:
+            - generic [ref=e2603]:
+              - table [ref=e2604]:
+                - rowgroup [ref=e2605]:
+                  - row [ref=e2606]:
+                    - gridcell "AccessAs" [ref=e2607]
+              - table [ref=e2609]:
+                - rowgroup [ref=e2610]:
+                  - row [ref=e2611]:
+                    - gridcell "Ask" [ref=e2612]
+              - table [ref=e2614]:
+                - rowgroup [ref=e2615]:
+                  - row [ref=e2616]:
+                    - gridcell "AutoReplaceAccessAsPrefix" [ref=e2617]
+              - table [ref=e2619]:
+                - rowgroup [ref=e2620]:
+                  - row [ref=e2621]:
+                    - gridcell "CanViewReport" [ref=e2622]
+              - table [ref=e2624]:
+                - rowgroup [ref=e2625]:
+                  - row [ref=e2626]:
+                    - gridcell "CheckAccessAsPrefix" [ref=e2627]
+              - table [ref=e2629]:
+                - rowgroup [ref=e2630]:
+                  - row [ref=e2631]:
+                    - gridcell "CheckAppViewName" [ref=e2632]
+              - table [ref=e2634]:
+                - rowgroup [ref=e2635]:
+                  - row [ref=e2636]:
+                    - gridcell "CheckDuplicateCachedSettingName" [ref=e2637]
+              - table [ref=e2639]:
+                - rowgroup [ref=e2640]:
+                  - row [ref=e2641]:
+                    - gridcell "CheckDuplicateMethod" [ref=e2642]
+              - table [ref=e2644]:
+                - rowgroup [ref=e2645]:
+                  - row [ref=e2646]:
+                    - gridcell "CheckDuplicateProperty" [ref=e2647]
+              - table [ref=e2649]:
+                - rowgroup [ref=e2650]:
+                  - row [ref=e2651]:
+                    - gridcell "CheckDuplicatePropertyClassName" [ref=e2652]
+              - table [ref=e2654]:
+                - rowgroup [ref=e2655]:
+                  - row [ref=e2656]:
+                    - gridcell "CheckDuplicateRuleName" [ref=e2657]
+              - table [ref=e2659]:
+                - rowgroup [ref=e2660]:
+                  - row [ref=e2661]:
+                    - gridcell "CheckGroupCircularRef" [ref=e2662]
+              - table [ref=e2664]:
+                - rowgroup [ref=e2665]:
+                  - row [ref=e2666]:
+                    - gridcell "CheckIfIDOExtendsBaseIDO" [ref=e2667]
+              - table [ref=e2669]:
+                - rowgroup [ref=e2670]:
+                  - row [ref=e2671]:
+                    - gridcell "ClearAccessAs" [ref=e2672]
+              - table [ref=e2674]:
+                - rowgroup [ref=e2675]:
+                  - row [ref=e2676]:
+                    - gridcell "CommaSubToString" [ref=e2677]
+              - table [ref=e2679]:
+                - rowgroup [ref=e2680]:
+                  - row [ref=e2681]:
+                    - gridcell "CompareStringValid" [ref=e2682]
+              - table [ref=e2684]:
+                - rowgroup [ref=e2685]:
+                  - row [ref=e2686]:
+                    - gridcell "CopyCompletedMarkComponentsValid" [ref=e2687]
+              - table [ref=e2689]:
+                - rowgroup [ref=e2690]:
+                  - row [ref=e2691]:
+                    - gridcell "CoreDocumentTypeChanged" [ref=e2692]
+              - table [ref=e2694]:
+                - rowgroup [ref=e2695]:
+                  - row [ref=e2696]:
+                    - gridcell "CreateIDOProject" [ref=e2697]
+              - table [ref=e2699]:
+                - rowgroup [ref=e2700]:
+                  - row [ref=e2701]:
+                    - gridcell "DateTimeGTCurrent" [ref=e2702]
+              - table [ref=e2704]:
+                - rowgroup [ref=e2705]:
+                  - row [ref=e2706]:
+                    - gridcell "DefaultAssemblyFileName" [ref=e2707]
+              - table [ref=e2709]:
+                - rowgroup [ref=e2710]:
+                  - row [ref=e2711]:
+                    - gridcell "DefaultStartingToEnding" [ref=e2712]
+              - table [ref=e2714]:
+                - rowgroup [ref=e2715]:
+                  - row [ref=e2716]:
+                    - gridcell "DeleteMsgWithoutResponse" [ref=e2717]
+              - table [ref=e2719]:
+                - rowgroup [ref=e2720]:
+                  - row [ref=e2721]:
+                    - gridcell "DocumentObjectCriteria" [ref=e2722]
+              - table [ref=e2724]:
+                - rowgroup [ref=e2725]:
+                  - row [ref=e2726]:
+                    - gridcell "EffectiveToActual" [ref=e2727]
+              - table [ref=e2729]:
+                - rowgroup [ref=e2730]:
+                  - row [ref=e2731]:
+                    - gridcell "EffectiveToActualDataChange" [ref=e2732]
+              - table [ref=e2734]:
+                - rowgroup [ref=e2735]:
+                  - row [ref=e2736]:
+                    - gridcell "EnableDisableDeleteByPrefix" [ref=e2737]
+              - table [ref=e2739]:
+                - rowgroup [ref=e2740]:
+                  - row [ref=e2741]:
+                    - gridcell "EncryptText" [ref=e2742]
+              - table [ref=e2744]:
+                - rowgroup [ref=e2745]:
+                  - row [ref=e2746]:
+                    - gridcell "EncryptUserPassword" [ref=e2747]
+              - table [ref=e2749]:
+                - rowgroup [ref=e2750]:
+                  - row [ref=e2751]:
+                    - gridcell "EncryptUserPassword_2" [ref=e2752]
+              - table [ref=e2754]:
+                - rowgroup [ref=e2755]:
+                  - row [ref=e2756]:
+                    - gridcell "EventHandlerLoadList" [ref=e2757]
+              - table [ref=e2759]:
+                - rowgroup [ref=e2760]:
+                  - row [ref=e2761]:
+                    - gridcell "ExtensionHandle" [ref=e2762]
+              - table [ref=e2764]:
+                - rowgroup [ref=e2765]:
+                  - row [ref=e2766]:
+                    - gridcell "FB_GetAssignee" [ref=e2767]
+              - table [ref=e2769]:
+                - rowgroup [ref=e2770]:
+                  - row [ref=e2771]:
+                    - gridcell "FB_GetDistributionUsers" [ref=e2772]
+              - table [ref=e2774]:
+                - rowgroup [ref=e2775]:
+                  - row [ref=e2776]:
+                    - gridcell "FB_GetFinishParameters" [ref=e2777]
+              - table [ref=e2779]:
+                - rowgroup [ref=e2780]:
+                  - row [ref=e2781]:
+                    - gridcell "FB_GetPersonId" [ref=e2782]
+              - table [ref=e2784]:
+                - rowgroup [ref=e2785]:
+                  - row [ref=e2786]:
+                    - gridcell "FB_GetWorkflows" [ref=e2787]
+              - table [ref=e2789]:
+                - rowgroup [ref=e2790]:
+                  - row [ref=e2791]:
+                    - gridcell "FldNameValid" [ref=e2792]
+              - table [ref=e2794]:
+                - rowgroup [ref=e2795]:
+                  - row [ref=e2796]:
+                    - gridcell "FormBuilderFormContextMsgGenerator" [ref=e2797]
+              - table [ref=e2799]:
+                - rowgroup [ref=e2800]:
+                  - row [ref=e2801]:
+                    - gridcell "FormBuilderListContextMsgGenerator" [ref=e2802]
+              - table [ref=e2804]:
+                - rowgroup [ref=e2805]:
+                  - row [ref=e2806]:
+                    - gridcell "FormNameValid" [ref=e2807]
+              - table [ref=e2809]:
+                - rowgroup [ref=e2810]:
+                  - row [ref=e2811]:
+                    - gridcell "FormsExtendedInfoListSource" [ref=e2812]
+              - table [ref=e2814]:
+                - rowgroup [ref=e2815]:
+                  - row [ref=e2816]:
+                    - gridcell "FormsServerStrings" [ref=e2817]
+              - table [ref=e2819]:
+                - rowgroup [ref=e2820]:
+                  - row [ref=e2821]:
+                    - gridcell "GenerateEventWithReturn" [ref=e2822]
+              - table [ref=e2824]:
+                - rowgroup [ref=e2825]:
+                  - row [ref=e2826]:
+                    - gridcell "GenerateFilterStringXML" [ref=e2827]
+              - table [ref=e2829]:
+                - rowgroup [ref=e2830]:
+                  - row [ref=e2831]:
+                    - gridcell "GeneratePropertyListOfLoadCollection" [ref=e2832]
+              - table [ref=e2834]:
+                - rowgroup [ref=e2835]:
+                  - row [ref=e2836]:
+                    - gridcell "GenericDropDownList" [ref=e2837]
+              - table [ref=e2839]:
+                - rowgroup [ref=e2840]:
+                  - row [ref=e2841]:
+                    - gridcell "GetAllStringNames" [ref=e2842]
+              - table [ref=e2844]:
+                - rowgroup [ref=e2845]:
+                  - row [ref=e2846]:
+                    - gridcell "GetChartTypeByChartStyle" [ref=e2847]
+          - toolbar [ref=e2849]:
+            - button "" [ref=e2850] [cursor=pointer]
+            - button "" [ref=e2851] [cursor=pointer]
+            - button "" [ref=e2852] [cursor=pointer]
+      - separator [ref=e2853]: ⁞
+      - group [ref=e2854]:
+        - toolbar [ref=e2857]:
+          - generic [ref=e2858]:
+            - generic [ref=e2859]: "Search Properties:"
+            - generic [ref=e2862]:
+              - textbox "Search Properties:" [ref=e2864]
+              - generic [ref=e2865] [cursor=pointer]
+          - button "Expand" [ref=e2866] [cursor=pointer]: 
+          - button "Collapse" [ref=e2867] [cursor=pointer]: 
+        - generic: Name
+        - generic: Value
+        - tree [ref=e2876]
+        - generic [ref=e2878]:
+          - generic [ref=e2879]: Empty Property Description Field
+          - textbox "Empty Property Description Field" [ref=e2884]
+        - toolbar [ref=e2885]:
+          - button "Undo" [disabled]: 
+          - button "Redo" [disabled]: 
+    - toolbar [ref=e2886]:
+      - button "OK" [ref=e2887] [cursor=pointer]
+      - button "Cancel" [ref=e2889] [cursor=pointer]
+      - button "Help" [ref=e2891] [cursor=pointer]
