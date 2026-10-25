@@ -3,7 +3,7 @@
   "title": "EXP-132 — FX_ Web User Control Bridge via Form Variable Readback",
   "record_path": "experiments/EXP-132-fx-web-user-control-bridge-via-form-variable-readb.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Determine whether an existing FX_ Web User Control can invoke the existing FX_Echo C# Form Script method and then obtain the expected string through WSForm.getVarValue. Preserve FX_BridgeTest and FX_BridgeControl; create exactly one FX_vEcho variable of the documented appropriate scope and persistence type; extend FX_Echo to assign FX_ECHO: plus its argument to that variable while retaining its existing string return; and update FX_Bridge/index.html to display the raw invocation callback value separately in FX_BridgeStatus before requesting FX_vEcho through getVarValue. After one ordinary Designer Form Save and one close/reopen readback, perform exactly one runtime activation. Success requires visible FX_BridgeOutput text FX_ECHO:bridge-probe and a recorded FX_BridgeStatus value. A different result is recorded as an unsuccessful observation without retry or alternate API calls.",
   "scope": {
     "in_scope": [
