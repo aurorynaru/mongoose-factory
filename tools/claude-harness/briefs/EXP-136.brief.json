@@ -3,7 +3,7 @@
   "title": "EXP-136 — FX_InventoryDashboard: Web User Control, C# IDO Bridge and Runtime Inventory Verification",
   "record_path": "experiments/EXP-136-fx-inventorydashboard-web-user-control-c-ido-bridg.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Create exactly one User-scoped Classic BuildFromScratch Form named FX_InventoryDashboard using the committed FX_Inventory Web User Control and C# Form Script sources. Create one Global persistent variable FX_vInventoryJson, install one Web User Control Asset at FX_Inventory/index.html, place one UserControl component named FX_InventoryControl, and add the FX_LoadInventoryFromIDO Form Script method. Verify the saved definitions through a freshly opened Designer, then perform one runtime Refresh Data activation. The dashboard must display the three existing FX_InventoryItems records and the expected totals: Total Items 3, Total Units 128, Low Stock 1, and Out of Stock 1. Do not modify the underlying inventory records or any existing Form. Treat the full sequence as one controlled integration capability with mandatory stop gates after each stage.",
   "scope": {
     "in_scope": [
