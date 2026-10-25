@@ -1,0 +1,32 @@
+using System;
+using System.Collections.Generic;
+using Mongoose.Scripting;
+using Newtonsoft.Json;
+
+//<Ref>Newtonsoft.Json.dll</Ref>
+
+namespace Mongoose.FormScripts
+{
+    public class FX_InventoryDashboard : FormScript
+    {
+        public void FX_LoadInventoryFromIDO()
+        {
+            string properties = "FX_Item, FX_Description, FX_Location, FX_QuantityOnHand, FX_ReorderLevel, FX_Warehouse";
+            var response = IDOClient.LoadCollection("FX_InventoryItems", properties, "", "", 100);
+            var inventory = new List<Dictionary<string, object>>();
+            for (int i = 0; i < response.Items.Count; i++)
+            {
+                var item = response.Items[i];
+                var record = new Dictionary<string, object>();
+                record["Item"] = item.PropertyValues[0].Value;
+                record["Description"] = item.PropertyValues[1].Value;
+                record["Location"] = item.PropertyValues[2].Value;
+                record["QuantityOnHand"] = item.PropertyValues[3].Value;
+                record["ReorderLevel"] = item.PropertyValues[4].Value;
+                record["Warehouse"] = item.PropertyValues[5].Value;
+                inventory.Add(record);
+            }
+            ThisForm.Variables("FX_vInventoryJson").Value = JsonConvert.SerializeObject(inventory);
+        }
+    }
+}

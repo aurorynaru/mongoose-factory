@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>FX Inventory Dashboard</title>
+<script type="text/javascript" src="../$app/scripts/UserControl.js"></script>
+<style>
+body{font-family:Arial,sans-serif;margin:8px;color:#222}
+#FX_InvCards{display:flex;gap:8px;margin:8px 0}
+.FX_InvCard{border:1px solid #ccc;border-radius:4px;padding:6px 10px;min-width:90px}
+.FX_InvCard b{display:block;font-size:18px}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid #ccc;padding:3px 6px;text-align:left;font-size:12px}
+</style>
+</head>
+<body>
+<h3>FX Inventory Dashboard</h3>
+<button type="button" id="FX_InvRefresh">Refresh Data</button>
+<span id="FX_InvStatus">Not loaded</span>
+<div id="FX_InvCards">
+<div class="FX_InvCard">Total Items<b id="FX_InvTotalItems">-</b></div>
+<div class="FX_InvCard">Total Units<b id="FX_InvTotalUnits">-</b></div>
+<div class="FX_InvCard">Low Stock<b id="FX_InvLowStock">-</b></div>
+<div class="FX_InvCard">Out of Stock<b id="FX_InvOutOfStock">-</b></div>
+</div>
+<table>
+<thead><tr><th>Item</th><th>Description</th><th>Warehouse</th><th>Location</th><th>Quantity</th><th>Reorder Level</th><th>Status</th></tr></thead>
+<tbody id="FX_InvTableBody"></tbody>
+</table>
+<script type="text/javascript">
+(function () {
+  var statusElement = document.getElementById("FX_InvStatus");
+  var tableBody = document.getElementById("FX_InvTableBody");
+  function setText(id, value) { document.getElementById(id).textContent = value; }
+  function render(json) {
+    var rows = JSON.parse(json || "[]");
+    var units = 0, low = 0, out = 0;
+    tableBody.innerHTML = "";
+    rows.forEach(function (row) {
+      var qty = parseFloat(row.QuantityOnHand) || 0;
+      var reorder = parseFloat(row.ReorderLevel) || 0;
+      var status = qty <= 0 ? "Out of Stock" : (qty <= reorder ? "Low Stock" : "OK");
+      units += qty;
+      if (status === "Out of Stock") { out++; } else if (status === "Low Stock") { low++; }
+      var tr = document.createElement("tr");
+      [row.Item, row.Description, row.Warehouse, row.Location, qty, reorder, status].forEach(function (value) {
+        var td = document.createElement("td");
+        td.textContent = value;
+        tr.appendChild(td);
+      });
+      tableBody.appendChild(tr);
+    });
+    setText("FX_InvTotalItems", rows.length);
+    setText("FX_InvTotalUnits", units);
+    setText("FX_InvLowStock", low);
+    setText("FX_InvOutOfStock", out);
+    statusElement.textContent = "Loaded " + rows.length + " records";
+  }
+  function load() {
+    statusElement.textContent = "Loading...";
+    WSForm.invoke("FX_LoadInventoryFromIDO", function () {
+      WSForm.getVarValue("FX_vInventoryJson", function (value) {
+        try { render(value); } catch (e) { statusElement.textContent = "Could not read inventory data"; }
+      });
+    });
+  }
+  document.getElementById("FX_InvRefresh").addEventListener("click", load);
+})();
+</script>
+</body>
+</html>
