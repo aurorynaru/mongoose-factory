@@ -1,0 +1,78 @@
+EXP-128 T10 - MockLoginIDO metadata inventory (read-only). Task cycle 15, bounded instruction "T10 only".
+Three things are kept apart below: (A) the Designer Form named MockLoginIDO, (B) the IDO that this Form is bound to, (C) what was NOT inspected. Observed in the Designer UI unless marked "source" (read from a copied .txt) or "not read".
+
+=== A. Form MockLoginIDO (Designer, Form menu > recent entry "MockLoginIDO"; URL designer/default.aspx?MGForm=MockLoginIDO) ===
+Form-level Design group (Form tab, Properties pane):
+- Name: MockLoginIDO
+- Description: blank
+- Caption: blank (combo with ellipsis; no value shown)
+- Version: "User version for user <signed-in user>"
+- Device Type: Default
+- Form Type: Normal
+- Is Master: True
+- Template row: none shown.
+Details > Collections:
+- Primary Collection: MockLogin  (tree node "Primary Collection: MockLogin"; expanded once to read the properties below)
+- Secondary collections: none shown in the tree.
+- Collection node properties (expanded node, selected node):
+    Collection: MockLogin
+    Base Table and Alias: "The primary table and its alias for this IDO is MockLogin mock_login"
+    Collection Name, Custom Load Method, Method Parameters, Read Mode, Options: no value shown in the accessibility text (not expanded further; not read in detail).
+- Primary-collection property list (36 names, rendered in the tree, alphabetical): _ItemId, _ItemWarnings, CreateDate, CreatedBy, ID, InWorkflow, NoteExistsFlag, Password, RecordDate, Role, RowPointer, Store, UDFDateTime1-6, UDFDecimal1-6, UDFInteger1-6, UDFLongText1-2, UDFMediumText1-4.
+    NOT in the rendered list: Username. The Username column of the canvas grid is bound to object.Username (see Components). The list ends at UDFMediumText4 with no further rows rendered, so Username may be cut off in the tree. UNRESOLVED.
+    Property classes, data types and bindings of these properties: NOT read.
+Details > Components:
+- Pane (00)  (top-level folder row, expanded once)
+  - FormCollectionGrid  Type: Grid; Data Source: "objects"; Pane 0
+    Properties (Component tab): Binding Type "Primary Collection Grid"; Binding "objects"; Enabled When: blank; Visible When: blank; Required When: blank; Events Primary / Data Change / Lose Focus / Gain Focus: blank; Drag From Events 0; Drop On Events 0; Component Class blank; Client Grid Pagination None; From Device Master True; Location 0;0; Size 69;21.
+    - IDGridCol        GridColumn, Data Source object.ID,       tab order 1
+    - UsernameGridCol  GridColumn, Data Source object.Username, tab order 2
+    - PasswordGridCol  GridColumn, Data Source object.Password, tab order 3
+    - RoleGridCol      GridColumn, Data Source object.Role,     tab order 4
+    - StoreGridCol     GridColumn, Data Source object.Store,    tab order 5
+  Total components: 7 rows (Pane (00), FormCollectionGrid, five columns). No UserControl. No other components.
+Details > Event Handlers:
+- Grid column headers shown (Sequence, Response Type, Disabled, Response Parameters); no rows rendered. This is "no rows visible", not proof of none (the panel rendering was not verified against a second source).
+Details > Variables:
+- Categories shown: Global - Persistent, Global - Temporary. NO Form - Persistent or Form - Temporary category appears, so no Form variables are shown for this Form. The global lists were not expanded in T10 (they were read in T9 as a tenant-wide list of 54 names, including vInventoryJson and SiteFormName).
+Form Script (Edit > Form Script; opened once; closed with Cancel):
+- VB.NET (despite the .cs.txt file name): Option Explicit On; Option Strict On; Imports System, Microsoft.VisualBasic, Mongoose.IDO.Protocol, Mongoose.Scripting; Namespace Mongoose.FormScripts; Public Class MockLoginIDO : Inherits FormScript; body is only the comment "' Methods go here".
+- No method, no IDOClient or IDO call, no variable read or set, no event generated. Copy: evidence/EXP-128/MockLoginIDO-form-script.cs.txt (complete; 20 lines; 0 redactions).
+
+=== B. IDO bound to the Form: "MockLogin" (as named by the Form's primary collection) ===
+- Name (as shown in the Form): MockLogin. The Form is named MockLoginIDO; the bound IDO is named MockLogin. These are two different names; the Form is NOT bound to an IDO named MockLoginIDO, as far as the Form's Collections tree shows.
+- Base table: MockLogin, alias mock_login (from the collection's "Base Table and Alias" text).
+- Source (T3 copy, MockLoginPortal Form Script): ProcessLogin calls IDOClient.LoadCollection("MockLogin", "Username, Password, Store, Role", filter, "", 1). This is the same IDO name as the bound collection of MockLoginIDO (source-level match of the name only).
+- IDO-level metadata NOT read in T10: project, extension class or custom assembly name, IDO properties with their property classes and bindings beyond the list in A, IDO methods and their parameters and types, table list beyond the base table, filters, and any IDO-level data rule. See C.
+
+=== C. Not inspected (and why) ===
+1. The IDO definition of MockLogin (project, assembly, methods, property classes, bindings): NOT inspected. The Designer's Form menu entry "IDOs" opened a Mongoose system Form named "IdoCollections" (caption "fIDOs", tab "IDOs") with an empty IDO grid (IDO Name, Description, Locked By, Revision Date, Revision Num columns; no rows rendered) and blank detail fields. Reading it needs a typed IDO Name filter, which this task did not perform (typing is restricted to the Select Form filter). The screenshot evidence/EXP-128/t10-02-designer-idos-idocollections-form.png shows the empty grid. That IdoCollections Form also has Check Out, Undo Check Out, New IDO, New Table, New Property, New Method and Compare buttons; none was clicked.
+2. The Web Client Filter In Place route (the original T10 step: runtime IDOs Form, Filter In Place on "MockLoginIDO", F4): NOT performed. This bounded instruction lists Filter In Place among prohibited actions for this step. The operator needs to authorise it in a separate bounded task if the IDO definition is required.
+3. Existence of an IDO named MockLoginIDO: NOT established either way.
+4. Property Data Type, property classes and bindings of the 36 rendered IDO properties: NOT read.
+5. Whether the Username property exists on the IDO: UNRESOLVED (see A).
+6. Data records of MockLogin: NOT opened and NOT read (credential rule; the canvas data row was not expanded).
+
+=== D. Redactions and credential handling ===
+- The canvas grid of MockLoginIDO shows one data row: ID "3" is visible in the screenshot; the Username, Password, Role and Store cells are blank in the accessibility text and in the screenshot (evidence/EXP-128/t10-03-mockloginido-details-collections.png, t10-01-mockloginido-form-script-editor.png). No record value was read or copied.
+- The Version row shows the account as "User version for user <signed-in user>" (placeholder used in this file).
+- No password, token, key or connection string appears in any text recorded here or in the Form Script copy.
+- Redactions made: 1 placeholder (the account name written as <signed-in user>). 0 credential values.
+
+=== E. Screenshots (T10) ===
+- t10-01-mockloginido-form-script-editor.png: Script Editor, lines 1-20 (the VB.NET skeleton). Proves the script text and line layout; shows no credential; the Form canvas behind the dialog is covered in the data row area.
+- t10-02-designer-idos-idocollections-form.png: IdoCollections (IDOs) Form, empty IDO grid, Check Out and New buttons visible (not used). Proves the grid shows no rows in this view; does not prove that no IDOs exist.
+- t10-03-mockloginido-details-collections.png: MockLoginIDO Form, canvas with ID 3 and blank other cells, Details > Collections with "Primary Collection: MockLogin" (collapsed in this image), Form properties (Name MockLoginIDO, Form Type Normal, Is Master True). Save icon active (accidental change, see the record). Proves the collection name and the Form properties; does not show the expanded property list.
+- The status bars of these images show the signed-in account name. NOT redacted; the operator decides before sharing.
+
+=== F. Source-copy status ===
+- MockLoginIDO Form Script: complete copy (20 lines), VB.NET, 0 redactions.
+- IDO MockLogin: no source copy (no IDO source is available through an inspected interface).
+
+=== G. T22 addendum (2026-10-25; read-only; Designer; observed Form-side view only) ===
+- The IDO MockLogin definition was NOT located or read (project, assembly, property types, classes, bindings, keys, methods, tables beyond the base table, filters, data rules). The Designer IDO lists (IdoCollections, IdoProjects) showed headers and no rows; that is not evidence of absence. See the T22 section of the experiment record.
+- Form MockLoginIDO > Details > Collections > Primary Collection: MockLogin, General properties: Collection "MockLogin"; Base Table and Alias "The primary table and its alias for this IDO is MockLogin mock_login"; Collection Name, Custom Load Method, Read Mode, Options: value cells with no text (not confirmed as empty); Method Parameters: an edit button with no text.
+- Property names in the collection tree: 36, the same set as section A. Username is NOT listed; after one view-only wheel step the tree still ends at UDFMediumText4. The grid column UsernameGridCol binds object.Username and the grid header reads "* Username". Unresolved; not inferred either way.
+- Preview grid (Designer canvas, design-time): one row, ID 3; Username, Password, Role and Store cells blank in the accessibility text and in evidence/EXP-128/t22-03-mockloginido-collection-node-properties.png. No value was read or copied.
+- Source correlation (source level; name match only): ProcessLogin calls IDOClient.LoadCollection("MockLogin", "Username, Password, Store, Role", ...) (MockLoginPortal copy line 38; property string line 35); LoadMockLoginJson sets idoName "MockLogin" (line 107) and calls IDOClient.LoadCollection (line 112).
+- Redactions in this addendum: 0 credential values.

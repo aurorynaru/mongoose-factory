@@ -1,0 +1,152 @@
+EXP-128 T21 - names visible in the Designer Edit > Script list (dialog title "Global Objects", pane "Scripts", column "name")
+Worker-written name list (accessibility text of the rendered rows; names only; no source was read or copied).
+Credentials: none present in these names. Redactions: 0.
+Account-name placeholder: <signed-in user> (not used in this file).
+
+Capture method: one untargeted snapshot after Edit > Script (rows AccessAs .. GetChartTypeByChartStyle), then view-only mouse wheel
+steps (deltaY 1500, 3000, 1000) with snapshots/finds after each. Rows between GetChartTypeByChartStyle and GetDataLakeObjects
+were skipped by the wheel steps and were NOT captured.
+
+Segment A (rows captured in the first snapshot; 48 names, in list order):
+AccessAs
+Ask
+AutoReplaceAccessAsPrefix
+CanViewReport
+CheckAccessAsPrefix
+CheckAppViewName
+CheckDuplicateCachedSettingName
+CheckDuplicateMethod
+CheckDuplicateProperty
+CheckDuplicatePropertyClassName
+CheckDuplicateRuleName
+CheckGroupCircularRef
+CheckIfIDOExtendsBaseIDO
+ClearAccessAs
+CommaSubToString
+CompareStringValid
+CopyCompletedMarkComponentsValid
+CoreDocumentTypeChanged
+CreateIDOProject
+DateTimeGTCurrent
+DefaultAssemblyFileName
+DefaultStartingToEnding
+DeleteMsgWithoutResponse
+DocumentObjectCriteria
+EffectiveToActual
+EffectiveToActualDataChange
+EnableDisableDeleteByPrefix
+EncryptText
+EncryptUserPassword
+EncryptUserPassword_2
+EventHandlerLoadList
+ExtensionHandle
+FB_GetAssignee
+FB_GetDistributionUsers
+FB_GetFinishParameters
+FB_GetPersonId
+FB_GetWorkflows
+FldNameValid
+FormBuilderFormContextMsgGenerator
+FormBuilderListContextMsgGenerator
+FormNameValid
+FormsExtendedInfoListSource
+FormsServerStrings
+GenerateEventWithReturn
+GenerateFilterStringXML
+GeneratePropertyListOfLoadCollection
+GenericDropDownList
+GetAllStringNames
+GetChartTypeByChartStyle
+
+-- not captured: rows between GetChartTypeByChartStyle and GetDataLakeObjects --
+
+Segment B (rows captured after the first wheel step; 49 names):
+GetDataLakeObjects
+GetEventReferenceIdUsage
+GetEventsList
+GetExpressionDateIntervals
+GetExpressionFunctionNames
+GetFormCollections
+GetFormNames
+GetIdoPropertyList
+GetImageNames
+GetImageWebAssets
+GetJavaScriptWebAssets
+GetLocalIdo
+GetMGDiagramDesignerOptions
+GetMobileFormNames
+GetPropertyList_DM
+GetScriptNames
+GetSourceControlComment
+GetSubstitutionValueListBySource
+GetVariableList
+GetWebAssetReferences
+GetWizardFormNames
+GoToCalendarDate
+IDOCheckoutAllowed
+IDOExtensionClassSkeletonGenerator
+IIF
+IntranetLicensingFormAllowed
+IsMGDiagramDesignerAvailable
+IsNotNull
+IsOnMaintenanceMode
+IsPasswordRequired
+LinkFilesFromServer
+ListOfAllForms
+ListPrintServers
+MsgApp
+MsgAppWithTitle
+NotBeginUnderscore
+ObjectNameLOV
+ObjectNameLOV_ScopeAll
+ObjectNameValid
+PasswordValid
+PasswordValid_2
+PopulateFontDropdown
+PopulateListBoxFromJSON
+PrintersListFromFileServer
+ProcessDefaultHasValidation
+PropertyExists
+ReportSubmitted
+RightClickSelect
+SetAccessIdentifierValues
+
+Segment C (rows captured after the second and third wheel steps; 34 names; the last rendered row did not change after the third step, so the list end is taken as WBSearchSourceLOV):
+SetCalendarMode
+SetDateOffset
+SetDateToNowTime
+SetListSourcebyStringSplit
+SetPropertyFromProperty
+SetValueType
+SqlReservedWord
+SupportedGraphTypeList
+TimeGreater
+TimeLessThan
+ToggleAccessAsPrefixObjectName
+UETPseudoDelete
+UETRefreshAfterPseudoDelete
+UpdateProcessMiningActive
+ValidateBadPassword
+ValidateEmailTypeByDescription
+ValidateFont
+ValidateFormGroupFlag
+ValidateFormName
+ValidateFromListSource
+ValidateIdentifier
+ValidateIdentifierIgnoreSpace
+ValidateIDOLinkedView
+ValidateRow
+ValidateSourceTargetIdo
+ValidateTableName
+ValidateToObjectName
+ValidateUEObjects
+ValidateValueByRegEx
+WBDataViewExists
+WBDataViewLayoutLOV
+WBIDOAliasLOV
+WBIDOPropertyLOV
+WBSearchSourceLOV
+
+Totals: 131 names captured (48 + 49 + 34). The total list is at least 131 names; the uncaptured G-range gap means the exact total is not established.
+Checks on the captured rows: no name containing "Mock" or "mocklogin"; no "MockLoginPortal", "MockInventory", "MockInventoryDashboard" or "MockLoginIDO"; no "UserControl" or "WSForm" name; no name starting with X, Y or Z.
+Not established by this list: the object type of each entry (the dialog shows names only), and whether any entry is a script with relevance to the Mock Forms (no entry was opened).

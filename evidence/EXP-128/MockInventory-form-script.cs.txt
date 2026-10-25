@@ -1,0 +1,40 @@
+EXP-128 T5 retry - MockInventory Form Script (verbatim copy of the Script Editor, 20 lines, complete)
+
+Language: VB.NET as shown by the editor (not C#). The editor title is "Script Editor"; the Designer Form was MockInventory (Designer URL MGForm=MockInventory, Properties Name MockInventory).
+Entry used: Designer Edit menu > Form Script (menu item ref e1494 in the snapshot taken after the Edit menu opened).
+Copy status: COMPLETE for the visible file. The editor showed lines 1 to 20 with no scrolling needed; line 20 is blank (trailing). Source: accessibility snapshot of the editor code area and screenshot evidence/EXP-128/t5-09-mockinventory-form-script-editor-rendered.png.
+Blank lines: reconstructed from the line-number gutter and the screenshot (lines 3, 8, 9, 13, 17, 20 are blank).
+Redactions: none. No credential, token, password, connection string or user name appears in this script (0 values redacted).
+
+----- BEGIN SOURCE (verbatim) -----
+1: Option Explicit On
+2: Option Strict On
+3:
+4: Imports System
+5: Imports Microsoft.VisualBasic
+6: Imports Mongoose.IDO.Protocol
+7: Imports Mongoose.Scripting
+8:
+9:
+10: Namespace Mongoose.FormScripts
+11: Public Class MockInventory
+12: Inherits FormScript
+13:
+14: '
+15: ' Methods go here
+16: '
+17:
+18: End Class
+19: End Namespace
+20:
+----- END SOURCE -----
+
+Observed content (what the script contains, as shown):
+- Methods: none. The class body contains only the comment "' Methods go here".
+- WSForm.invoke targets: none (no method exists to be invoked).
+- IDO operations (LoadCollection, InvokeIDOMethod, CallIDOMethod, IDO request calls): none.
+- Form variables read or set: none.
+- Events generated: none.
+- Imports: Mongoose.IDO.Protocol and Mongoose.Scripting are imported but no code uses them in the file.
+
+What this does NOT prove: the copy shows the file as the Script Editor displayed it. It does not prove the Form has no other script entry, and it does not show whether the script was ever compiled or is used at runtime (no compile or run was done; out of scope).

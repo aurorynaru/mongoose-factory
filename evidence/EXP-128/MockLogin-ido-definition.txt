@@ -1,0 +1,93 @@
+EXP-128 T29 - MockLogin IDO definition (read-only). Partial-to-complete metadata record; see completeness notes.
+Observed in the runtime system IDOs Form (Web Client, tab "IDOs", already open when T29 began; the Form was not opened or queried by the worker in T29).
+Source of observation: worker, T29, directly from the open Form (screenshots t29-01, t29-02, t29-02b, t29-02c, t29-03; tool-saved snapshots noted below). Account name, session identifiers and tenant placeholders are not reproduced here.
+
+=== SECTION 1: WORKER-OBSERVED METADATA (T29) ===
+
+1A. Header (screenshot t29-01-mocklogin-ido-initial.png; the same values appear in t29-02, t29-02b, t29-02c and t29-03)
+- IDO Name: MockLogin
+- Project Name: Mockup
+- Description: blank (textbox empty)
+- Label String ID: oMockLogin
+- Caption: oMockLogin
+- Profile Name: blank
+- Extends: blank (combobox empty)
+- Replace: checkbox disabled and unchecked
+- IDO Assembly Name: blank
+- Ext Class Name: blank
+- Ext Class Namespace: blank
+- Revision Num: 2
+- Revision Date: 10/16/2026
+- Locked By: blank
+- Access As: G6R
+- Buttons visible: Check Out (enabled), Undo Check Out (disabled)
+- Form-level Save toolbar button: disabled (snapshot and screenshot)
+- Not separately visible: a custom assembly name, an extension class name, or a Project/Assembly link beyond the blank fields above (all shown blank).
+
+1B. Tables (Tables tab, selected when t29-01 was taken; one row)
+- Table Name: MockLogin | Table Alias: mock_login | Table Type: Primary Base | Join Type: Inner | Join Text: blank
+- Only one row was rendered. No other table is shown.
+
+1C. Properties (Properties tab, selected; grid scrolled with the mouse wheel; 12 rows rendered in total)
+Scroll check: rows 1 to 12 seen; a second wheel step (t29-02c) showed the same final rows, with row 12 InWorkflow at the bottom. The grid therefore ends at row 12 as displayed. Filter state of the grid was not inspected.
+Columns (header order): Property Name | Sequence | Property Class | Property Type | Column Name | Property Value | Key Sequence | Data Type | Length | Column Type | Read Only | Required | Upper Case | Pseudo Key | Read Only Record.
+Columns Upper Case, Pseudo Key and Read Only Record lie to the right of the visible viewport in the screenshots; their values here are read from the accessibility snapshot (page-2026-10-25T09-43-25-357Z.yml, rows at lines 1526 to 1829). Upper Case shows no text or checkbox in the accessibility text for any row.
+Property Class and Property Value are blank for all 12 rows.
+Property Type is "Bound to Column" for all 12 rows.
+
+| # | Property Name | Seq | Column Name | Key Seq | Data Type | Length | Column Type | Read Only | Required | Pseudo Key | Read Only Record |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | ID | 1 | ID | 1 | Long Integer | (blank) | int | no | yes | no | no |
+| 2 | Username | 2 | Username | 0 | String | 50 | nvarchar | no | yes | no | no |
+| 3 | Password | 3 | Password | 0 | String | 255 | nvarchar | no | yes | no | no |
+| 4 | Store | 4 | Store | 0 | String | 255 | nvarchar | no | yes | no | no |
+| 5 | Role | 5 | Role | 0 | String | 255 | nvarchar | no | yes | no | no |
+| 6 | CreatedBy | 6 | CreatedBy | 0 | String | 128 | UsernameType | yes | no | no | no |
+| 7 | UpdatedBy | 7 | UpdatedBy | 0 | String | 128 | UsernameType | yes | no | no | no |
+| 8 | CreateDate | 8 | CreateDate | 0 | Date | (blank) | CurrentDateType | yes | no | no | no |
+| 9 | RecordDate | 9 | RecordDate | 0 | Date | (blank) | CurrentDateType | yes | no | no | no |
+| 10 | RowPointer | 10 | RowPointer | 0 | GUID | (blank) | RowPointerType | yes | no | no | no |
+| 11 | NoteExistsFlag | 11 | NoteExistsFlag | 0 | Byte | (blank) | FlagNyType | no | no | no | no |
+| 12 | InWorkflow | 12 | InWorkflow | 0 | Byte | (blank) | FlagNyType | no | no | no | yes |
+
+Read Only and Required values in the table are the checkbox states in the accessibility snapshot; rows 1 to 12 match the Read Only and Required checkboxes visible in t29-02 and t29-02b.
+Key flag: the Key Sequence column is the key indicator. Only ID has a non-zero key sequence (1). No other row shows a key sequence.
+
+1D. Presence of the five named properties (worker-observed; the whole rendered property list was inspected)
+- Username: PRESENT (row 2; Bound to Column; column Username; String 50; Required).
+- ID: PRESENT (row 1; Bound to Column; column ID; Key Sequence 1; Required).
+- Password: PRESENT (row 3; Bound to Column; column Password; String 255; Required).
+- Store: PRESENT (row 4; Bound to Column; column Store; String 255; Required).
+- Role: PRESENT (row 5; Bound to Column; column Role; String 255; Required).
+Limitation: "PRESENT" means the row is listed in the Properties grid as displayed. Completeness of the grid (no filter, no hidden rows) was not verified beyond the scroll check.
+
+1E. Methods (Methods tab, selected; snapshot page-2026-10-25T09-45-04-236Z.yml; screenshot t29-03-mocklogin-methods.png)
+- Column headers only: Method Name | Method Type | Stored Procedure.
+- No method rows were rendered. The grid body is empty in the accessibility snapshot and in the screenshot.
+- Interpretation limit: an empty rendered grid is recorded as "no rows visible in this view". It is not treated as proof that the IDO has no methods. Parameters, method types and stored-procedure targets are therefore unavailable.
+
+1F. Observed Form-side comparison (not IDO metadata; recorded for the discrepancy only)
+- The Designer Form MockLoginIDO's primary-collection tree (T10 and T22, Designer, read earlier; see evidence/EXP-128/MockLoginIDO-metadata.txt, section A) lists 36 names. That list includes the names ID, Password, Role, Store, CreateDate, CreatedBy, InWorkflow, NoteExistsFlag, RecordDate and RowPointer, and it also includes _ItemId, _ItemWarnings and UDFDateTime1-6, UDFDecimal1-6, UDFInteger1-6, UDFLongText1-2 and UDFMediumText1-4.
+- The T29 IDO Properties grid (12 rows, section 1C) does NOT list _ItemId, _ItemWarnings or any UDF* name.
+- The T29 IDO Properties grid DOES list Username. The Form-side tree listing (T10/T22) did not show Username.
+- Why these two lists differ is not established by T29. The Form tree is not IDO metadata and is not used here as a source of IDO properties.
+
+=== SECTION 2: OPERATOR-SUPPLIED INFORMATION (NOT WORKER-VERIFIED) ===
+Supplied by the operator in the T28 and T29 instructions. The worker did not personally inspect the operator's screenshot, which is not a repository artifact. The values below match the worker-observed values in section 1; they are recorded here separately for provenance.
+- IDO Name MockLogin; Project Name Mockup; Description blank; Label String ID oMockLogin; Caption oMockLogin; Extends blank; IDO Assembly Name blank; Ext Class Name and Namespace blank; Revision Num 2; Revision Date 10/16/2026; Locked By blank; Access As G6R.
+- Tables: MockLogin | mock_login | Primary Base | Inner.
+- The operator also reported seeing MockInventory and MPLogin entries in the IDO list. These were NOT inspected and are not described in this file.
+- Operator-stated attribution (T29 instructions): the operator opened the runtime IDOs Form, loaded MockLogin into it, closed the MockLoginPortal runtime tab and opened the MockLoginIDO Form in Designer, and states that nothing was edited. The worker did not verify this attribution.
+
+=== SECTION 3: COMPLETENESS AND LIMITATIONS ===
+- Header: all header fields visible in the Form were read. Blank means the field was visibly empty; no field was hidden or unread.
+- Tables: one row visible; no other table is shown. Table list completeness was not checked against any other source.
+- Properties: 12 rows rendered and checked by a second wheel step. Three columns (Upper Case, Pseudo Key, Read Only Record) were read from the accessibility snapshot, not from a visible screenshot region. No property-definition dialog was opened. No property was edited or inspected in detail.
+- Methods: no rows rendered. Method names, types and parameters are NOT recorded because none were visible. This is a limitation, not an observed absence.
+- Filters, data rules, referenced property classes and advanced attributes: not inspected (not in T29 scope).
+- Property Class: blank for all rows. Whether a class exists elsewhere is not established.
+- No IDO record data was opened. No value of any record was read or copied. No method was executed.
+- The IDO was not located by a lookup in T29; it was observed in the already-open Form (see the T29 section of the record).
+
+=== SECTION 4: REDACTIONS ===
+- Credential values copied: 0. Redactions in this file: 0 credential values. The account name (signed-in user) is NOT copied; the Web Client header shows it in screenshots (privacy item D-7).

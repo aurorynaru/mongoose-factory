@@ -1,0 +1,150 @@
+EVIDENCE COPY - EXP-128 - Form Script of MockLoginPortal (C#), read-only
+Source: Designer (Web Designer, MGForm=MockLoginPortal) > Edit > "Form Script" (menu item) -> dialog titled "Script Editor", tab "Script".
+Copy status: COMPLETE TO THE END OF THE FILE (source lines 1-141; line 141 is the empty last line, line 140 is the namespace closing brace). Lines 1-77 were copied in T3 and are unchanged. Lines 78-141 were added in the pre-T12 recovery (worker task of 2026-10-25, record section "Pre-T12 source recovery"). Indentation and blank lines of lines 78-97 were NOT visually verified: see "Transcription limit" below.
+Assembly: exact text for each line from the accessibility text of the editor code region (snapshots of 2026-10-23 03:27 to 03:28); indentation and blank lines from the editor screenshots (t3-01, t3-04, t3-06, t3-08). The alignment of "=" in lines 51-52 and 57-58 is as shown in the screenshots. Lines 45-77 were re-checked against screenshot t17-02 (2026-10-25); lines 1-33 against t3-01.
+Assembly of lines 78-141 (2026-10-25): exact text for each line from the accessibility text of the editor code region, read in view-only scroll steps (one mouse-wheel call, then one targeted snapshot of the code region, repeated). The accessibility text carries no indentation and does not expose blank lines. Lines 98-130 were checked against screenshot t17-03 and lines 110-141 against screenshot t17-04 (indentation and blank lines as shown there). No screenshot shows lines 78-97 as a view (t17-02 ends at line 77).
+Transcription limit: the indentation of lines 78-97 and the blank lines 80 and 92 are inferred from the code structure (the conventions of lines 1-77) and the line numbering of the snapshots; they are not visually verified. Their text is verified; their spacing is not.
+Redaction: no credential value appears in lines 1-141. Zero values redacted. The identifiers password, storedPassword, vMockLoginJson, idoName and properties are names, not values; "MockLogin" is an IDO name and the quoted property list is a list of property names.
+Not saved: the editor was closed with Cancel. Nothing was compiled, run or saved.
+----- BEGIN SOURCE (lines 1-141) -----
+using System;
+using System.Collections.Generic;
+using Mongoose.Scripting;
+using Newtonsoft.Json;
+
+//<Ref>Newtonsoft.Json.dll</Ref>
+
+namespace Mongoose.FormScripts
+{
+    public class MockLoginPortal : FormScript
+    {
+        // -----------------------------------------------------------------
+        // JS passes the credentials here; C# decides and alerts.
+        // JS: WSForm.invoke("ProcessLogin", username, password, callback)
+        // -----------------------------------------------------------------
+        public string ProcessLogin(string username, string password)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                {
+                    ShowMongooseAlert("Username and password are required.");
+                    return "missing";
+                }
+
+                string properties = "Username, Password, Store, Role";
+                string filter = "Username = '" + username.Replace("'", "''") + "'";
+
+                var response = IDOClient.LoadCollection(
+                    "MockLogin",
+                    properties,
+                    filter,
+                    "",
+                    1
+                );
+
+                // ---------- nothing came back ----------
+                if (response.Items.Count == 0)
+                {
+                    ShowMongooseAlert(
+                        "No data found. No user matches '" + username + "'."
+                    );
+
+                    return "empty";
+                }
+
+                // ---------- data was gotten ----------
+                var item = response.Items[0];
+
+                string storedPassword = Convert.ToString(item.PropertyValues[1].Value);
+                string store          = Convert.ToString(item.PropertyValues[2].Value);
+                string role           = Convert.ToString(item.PropertyValues[3].Value);
+
+                var record = new Dictionary<string, object>();
+                record["Username"] = Convert.ToString(item.PropertyValues[0].Value);
+                record["Password"] = storedPassword;
+                record["Store"]    = store;
+                record["Role"]     = role;
+
+                string json = JsonConvert.SerializeObject(record, Formatting.Indented);
+
+                ThisForm.Variables("vMockLoginJson").Value = json;
+
+                if (storedPassword != password)
+                {
+                    ShowMongooseAlert("Data received, but the password is incorrect.");
+                    return "invalid";
+                }
+
+                ShowMongooseAlert("Data received:\n" + json);
+                return "ok";
+            }
+            catch (Exception ex)
+            {
+                // ---------- thrown ----------
+                ShowMongooseAlert("Login error: " + ex.Message);
+                return "error";
+            }
+        }
+
+        // -----------------------------------------------------------------
+        // Single alert helper — if this one line doesn't compile in your
+        // version, swap it for the alternative shown in the comment.
+        // -----------------------------------------------------------------
+        private void ShowMongooseAlert(string message)
+        {
+            // Swap this ONE line:
+            // ThisForm.ShowMessage(message);
+            Application.ShowMessage(message);
+            // ThisForm.ShowMessage("Mongoose Login", message);
+        }
+
+        // -----------------------------------------------------------------
+        // Your original loader — kept, unchanged.
+        // -----------------------------------------------------------------
+        public string LoadMockLoginJson()
+        {
+            string idoName = "MockLogin";
+            string properties = "Username, Password, Store, Role";
+
+            try
+            {
+                var response = IDOClient.LoadCollection(
+                    idoName,
+                    properties,
+                    "",
+                    "",
+                    100
+                );
+
+                var users = new List<Dictionary<string, object>>();
+
+                for (int i = 0; i < response.Items.Count; i++)
+                {
+                    var item = response.Items[i];
+                    var record = new Dictionary<string, object>();
+
+                    record["Username"] = item.PropertyValues[0].Value;
+                    record["Password"] = item.PropertyValues[1].Value;
+                    record["Store"] = item.PropertyValues[2].Value;
+                    record["Role"] = item.PropertyValues[3].Value;
+
+                    users.Add(record);
+                }
+
+                string json = JsonConvert.SerializeObject(users, Formatting.Indented);
+
+                ThisForm.Variables("vMockLoginJson").Value = json;
+
+                return json;
+            }
+            catch (Exception ex)
+            {
+                var error = new Dictionary<string, object>();
+                error["error"] = ex.ToString();
+                return JsonConvert.SerializeObject(error, Formatting.Indented);
+            }
+        }
+    }
+}
+----- END SOURCE (lines 1-141; line 141 is the empty last line of the editor) -----

@@ -1,0 +1,106 @@
+EXP-128 T9 - Global variable inventory (Designer, Edit > Variable)
+Task cycle 14 (bounded instruction: T9 only). Read-only. Nothing created, changed, saved or deleted.
+
+SOURCE AND IDENTITY
+- Menu entry: Edit > "Variable" (menu item e332 of the Edit menu; this is the global-variables entry that T1 expected).
+- Dialog title: "Global Objects". Left pane heading "Variables" (a flat list with one "name" column). Right pane heading "Properties". Buttons: OK, Cancel, Help. Closed with Cancel.
+- No Form was open. Scope: User (status bar). The Designer tab was the only tab used.
+- The list has NO category headers. Category is shown only by row colour (see below). This differs from the Details > Variables grid in a Form (T2, T4, T5, T6), which shows "Form - Persistent", "Global - Persistent" and "Global - Temporary" groups.
+- The list was read in two passes: (1) the top of the list from the first snapshot, which rendered AccessAs through Parm_Site (49 rows); (2) after one view-only wheel scroll (deltaY 1500), the rest from gbgc_bg to vsv_WBKPINumGaugeSettings (49 rows). The union is 54 contiguous rows. The final scroll position shows the scrollbar thumb at the bottom (screenshot t9-02) and the last row is vsv_WBKPINumGaugeSettings.
+- Total: 54 global variable definitions observed.
+
+GROUPS
+- Non-persistent group (salmon-coloured rows; 6 names). Matches the 6 Global - Temporary names recorded in T2. Verified for one row only (Parm_Site: Persistent False, Global True). The other five are grouped by colour and name match, not by reading their flags.
+  1. AccessAs
+  2. FarmEnableExtensionBundle
+  3. FarmEnforcePrefixFromAccessAs
+  4. Parm_DefaultStartingToEnding
+  5. Parm_DisplayReportHeaders
+  6. Parm_Site
+- Persistent group (default colour; 48 names). Matches the 48 Global - Persistent names recorded in T2. Persistent True was read for SiteFormName and vInventoryJson only.
+  1. ccvw_OutputFormatInlineAll
+  2. ccvw_PrinterName
+  3. gbgc_bg
+  4. gbgc_GradientTest1
+  5. gbgc_GradientTest2
+  6. gbgc_GradientTest3
+  7. IncludeBadgeStatusVar
+  8. IsDiagnosticsTimerElapsed
+  9. LoginFoundUser
+  10. lse_BackgroundQueue.MonthlyDay
+  11. lse_BackgroundQueue.Weekly
+  12. lse_DataTypeCode
+  13. lse_EventActionType
+  14. lse_EventChronoFrsLstInlineList
+  15. lse_EventChronoInlineList
+  16. lse_EventChronoNoInsteadInlineList
+  17. lse_MethodType
+  18. lse_MIMEType
+  19. lse_MonthlyDayVar
+  20. lse_OutputFormatInline
+  21. lse_OutputFormatInlineAll
+  22. lse_PreviewFormatInline
+  23. lse_PropertyTypeInlineList
+  24. lse_PropertyTypeNoSubInlineList
+  25. lse_TableTypeInlineList
+  26. lse_TableTypeNoPrimInlineList
+  27. lse_TimerInterval
+  28. lse_TimeZoneMonth
+  29. lse_UetDataType
+  30. lse_WBDateRange
+  31. lse_WBDrillColName
+  32. lse_WBFilterExpressionDateRangeVar
+  33. lsm1_CoreDocumentType
+  34. lsm1_CustomMethodNameVar
+  35. lsm1_DefaultReporType
+  36. lsm1_DocumentationClass
+  37. lsm1_GetCharacterTypeColumns
+  38. lsm1_TemplateNameClass
+  39. lsm1_TimeZone
+  40. lsm1_UserName_Default
+  41. lsp_CoreDocumentType
+  42. MPPassword        (name only; value and flags NOT read: credential rule)
+  43. MPUsername       (name only; value and flags NOT read: credential rule)
+  44. SiteFormName
+  45. vInventoryJson
+  46. vsc_OnSelectDocType
+  47. vsv_CoreDocumentType
+  48. vsv_WBKPINumGaugeSettings
+
+MOCK-RELATED ENTRIES (values as shown in the Properties pane when the row was selected)
+- vInventoryJson (row 45 of the persistent group):
+    Name: vInventoryJson
+    Description: blank
+    Value: empty (the Value cell showed no text in the snapshot)
+    Persistent: True
+    Global: True
+    Version: "User version for user <signed-in user>" (the account name is written as <signed-in user>; no value redacted beyond this)
+  Interpretation: a global definition named exactly as the dashboard script's form-variable name exists in the tenant-wide list. Its Value is empty at design time. Whether the dashboard script's ThisForm.Variables("vInventoryJson") writes this definition or a Form-level variable is NOT established (see the record, open questions).
+- SiteFormName (row 44):
+    Value: Sites
+    Persistent: True
+    Global: True
+    Version: "Vendor Default version"
+- Parm_Site (non-persistent group, row 6):
+    Value: ~LIT~(DEFAULT)
+    Persistent: False
+    Global: True
+    Version: no Version row was shown in the Properties pane for this row
+- MPUsername, MPPassword: the names are present in the persistent group. Their values, flags and versions were NOT read or recorded. A selection would display the value, so no row was selected. Redactions: no value was copied, so the redaction count is 0 (no value to redact).
+- LoginFoundUser, IncludeBadgeStatusVar: names present. Values not read (LoginFoundUser may hold a user name; treated as credential-bearing). Flags not read.
+
+NAMES NOT PRESENT (checked against the complete 54-row list)
+- vMockLoginJson: NOT present in the global list. Its absence is established by the complete list. It is a Form variable set by the MockLoginPortal ProcessLogin method (T3 copy, line 69). The MockLoginPortal Form - Persistent list (T2) does not contain it. Its Form - Temporary category (if any) was not inspected in T9.
+- vInventoryJson: present in the global list (above).
+
+OBSERVED SAFE VALUES COPIED INTO THIS FILE
+- Sites; ~LIT~(DEFAULT); empty; Vendor Default version; User version for user <signed-in user>. None is a credential.
+- Redactions made in this file: 1 account-name placeholder written as <signed-in user> (it is the status-bar convention, not a secret).
+
+SCREENSHOTS (see the record)
+- t9-01-global-variables-dialog-list.png: dialog open, top of list; scrollbar thumb at top; salmon rows AccessAs, FarmEnableExtensionBundle, FarmEnforcePrefixFromAccessAs visible; no row selected; no values shown.
+- t9-02-global-variables-dialog-list-scrolled-end.png: dialog after one view-only scroll; bottom rows visible including salmon Parm_DefaultStartingToEnding, Parm_DisplayReportHeaders, Parm_Site; scrollbar at bottom; MPUsername shows a pointer-hover highlight only (not selected); Properties pane empty; no values shown.
+
+COMPLETENESS
+- Complete: the list (54 names, both ends of the list observed). Group membership: colour-based for 53 rows; flag-verified for SiteFormName, vInventoryJson, Parm_Site only.
+- Not read: Persistent/Global flags and Version for most rows (not in T9 scope); values for LoginFoundUser, IncludeBadgeStatusVar, MPUsername and MPPassword (credential rule).
