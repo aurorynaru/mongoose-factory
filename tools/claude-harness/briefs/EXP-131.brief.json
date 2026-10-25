@@ -3,7 +3,7 @@
   "title": "EXP-131 — First FX_ Web User Control to Form Script Bridge",
   "record_path": "experiments/EXP-131-first-fx-web-user-control-to-form-script-bridge.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "In the operator's own account, first verify account separation using the live Designer Form inventory and the current account identity. If all gates pass, create exactly one User-scoped Form named FX_BridgeTest and one Web User Control Asset named FX_Bridge/index.html. The asset loads ../$app/scripts/UserControl.js and contains a single test button and output element. The button attempts one WSForm.invoke call to the Form-local C# method FX_Echo using one fixed, nonsensitive string argument and a callback that displays the returned value. Bind one UserControl component to the asset, save the definition, close and reopen the Form, verify retained configuration, and perform one runtime round-trip test. If the bridge contract fails, record the observed result without improvising another invocation mechanism. All activity is limited to this single architectural bridge capability.",
   "scope": {
     "in_scope": [
