@@ -3,7 +3,7 @@
   "title": "EXP-135 — FX_InventoryEditor Creation and Three Test Inventory Records",
   "record_path": "experiments/EXP-135-fx-inventoryeditor-creation-and-three-test-invento.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Create exactly one User-scope Classic MultiView maintenance Form named FX_InventoryEditor, with Caption FX_InventoryEditor, bound to the existing FX_InventoryItems IDO. The Form must expose a grid and Static/Edit field pairs for all six business properties: FX_Item, FX_Description, FX_Warehouse, FX_QuantityOnHand, FX_ReorderLevel, and FX_Location. Use the previously observed Form wizard on an existing IDO, with exactly one Finish and at most one ordinary Designer Save if the wizard leaves unsaved changes. Close and reopen the Form in Designer and verify its saved definition. Only after those checks pass, open FX_InventoryEditor in the Web Client and create exactly three specified fake inventory records, saving each once and verifying all three after an ordinary runtime Form close/reopen. Preserve all other application objects and data. Record explicit evidence for every gate, created artifact, committed row, and recovery boundary. Findings remain observed until a separately authorized independent replay.",
   "scope": {
     "in_scope": [
