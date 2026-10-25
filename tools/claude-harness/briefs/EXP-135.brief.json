@@ -1,0 +1,162 @@
+{
+  "experiment_id": "EXP-135",
+  "title": "EXP-135 — FX_InventoryEditor Creation and Three Test Inventory Records",
+  "record_path": "experiments/EXP-135-fx-inventoryeditor-creation-and-three-test-invento.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Create exactly one User-scope Classic MultiView maintenance Form named FX_InventoryEditor, with Caption FX_InventoryEditor, bound to the existing FX_InventoryItems IDO. The Form must expose a grid and Static/Edit field pairs for all six business properties: FX_Item, FX_Description, FX_Warehouse, FX_QuantityOnHand, FX_ReorderLevel, and FX_Location. Use the previously observed Form wizard on an existing IDO, with exactly one Finish and at most one ordinary Designer Save if the wizard leaves unsaved changes. Close and reopen the Form in Designer and verify its saved definition. Only after those checks pass, open FX_InventoryEditor in the Web Client and create exactly three specified fake inventory records, saving each once and verifying all three after an ordinary runtime Form close/reopen. Preserve all other application objects and data. Record explicit evidence for every gate, created artifact, committed row, and recovery boundary. Findings remain observed until a separately authorized independent replay.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md completely, the relevant EXP-130 rebuild specification sections 2 and 3, EXP-134's accepted record and qualifications, and the applicable documented EXP-041-R3 and EXP-042-R3 procedures before browser mutation.",
+      "Read recipes/session/session-expiry-and-stale-designer.md and applicable verified Form creation instructions without editing the recipes.",
+      "Capture an initial repository baseline, browser state, and existing open-Form inventory. Do not close unrelated Forms or save unrelated pending changes.",
+      "Confirm the Web Client account header is anton.ramos@3mworks.com.ph and the Designer editing footer identifies User scope.",
+      "Confirm the existing IDO FX_InventoryItems belongs to FX_HelloWorldProject01 and exposes exactly the six expected business properties with the types established in EXP-134: FX_Item String 50 primary key; FX_Description String 255; FX_Warehouse String 100; FX_QuantityOnHand Decimal 12,2; FX_ReorderLevel Decimal 12,2; FX_Location String 100. Observe the alias fxinv if the permitted read-only surface exposes it.",
+      "Rely on the EXP-134 record for the pre-creation empty state of FX_InventoryItems (no rows were inserted and no Form existed). Do not open a non-FX_ Form to read it. Obtain the authoritative zero-row result in the FX_InventoryEditor runtime before the first insertion; if any row exists, stop before inserting.",
+      "Verify FX_InventoryEditor is absent from the live Select Form inventory using an exact-name, case-insensitive collision check with a known-existing positive control. An expired session, ineffective filter, or incomplete result does not establish absence.",
+      "Create one User-scope FX_InventoryEditor Form using the Classic MultiView wizard on existing IDO FX_InventoryItems. Use the observed standard Name-entry method, set Caption to FX_InventoryEditor, select all six business properties, and leave Save Template unchecked.",
+      "Capture the wizard configuration before Finish, including the Form name, Form type, selected IDO, property selections, and any available caption or layout settings.",
+      "Invoke Finish exactly once only after all pre-Finish gates pass. Record the outcome and verify the created Form is the intended FX_InventoryEditor.",
+      "Inspect the generated Form's grid and its Static/Edit components, confirming the six property bindings. Keep any permitted Form-only corrections within FX_InventoryEditor; do not add global objects or change the underlying IDO. Stop if the required layout would need an undocumented rebuild.",
+      "Perform at most one ordinary Designer Save only if the wizard leaves unsaved changes. Confirm the Designer is clean before proceeding.",
+      "Close the clean FX_InventoryEditor Designer Form tab once and reopen the same User-scoped version using the supported Designer recent-forms route. Read back the Caption, bound IDO, grid, six property bindings, and clean state.",
+      "Open only FX_InventoryEditor in the Web Client runtime and verify that it is initially empty before inserting test data.",
+      "Create record 1: FX_Item=FX-ITEM-001; FX_Description=FX test widget; FX_Warehouse=FX-WH-A; FX_QuantityOnHand=120.00; FX_ReorderLevel=20.00; FX_Location=FX-LOC-01.",
+      "Create record 2: FX_Item=FX-ITEM-002; FX_Description=FX test bracket; FX_Warehouse=FX-WH-A; FX_QuantityOnHand=8.00; FX_ReorderLevel=10.00; FX_Location=FX-LOC-02.",
+      "Create record 3: FX_Item=FX-ITEM-003; FX_Description=FX test gasket; FX_Warehouse=FX-WH-B; FX_QuantityOnHand=0.00; FX_ReorderLevel=5.00; FX_Location=FX-LOC-03.",
+      "Save each newly entered runtime record exactly once through the supported runtime Save control, verifying the committed record before beginning the next. If a Save outcome is ambiguous, perform a read-only identity lookup before considering any retry.",
+      "Close FX_InventoryEditor at runtime once after the three successful saves, reopen it once, retrieve all three records, and verify the six exact business-field values for each.",
+      "Write the experiment record and task-local screenshots, captured responses, mutation inventory, recovery accounting, and acceptance matrix under evidence/EXP-135/."
+    ],
+    "out_of_scope": [
+      "Creating, replacing, or altering SQL tables, IDOs, IDO projects, property classes, validators, or global objects.",
+      "Opening or modifying IdoProjects or any other vendor/non-FX_ Form.",
+      "Opening or modifying FX_InventoryPrototype01, MockInventory, MockLoginPortal, MockLoginIDO, or any other Mock object.",
+      "Building FX_InventoryDashboard, authentication functionality, Web User Controls, JavaScript bridges, or navigation handlers.",
+      "Creating event handlers, Form scripts, stored procedures, derived properties, or business logic.",
+      "Modifying existing FX_InventoryItems IDO metadata, property definitions, field requirements, primary keys, or the physical SQL schema.",
+      "Editing or deleting existing inventory records, including records created in this experiment after they have been successfully committed.",
+      "Creating inventory records beyond the three specified fake records.",
+      "Testing unapproved alternative wizard routes or repairing blocked product behavior by widening the task.",
+      "Metadata-cache unloading, FormSync, deployment, direct SQL writes, schema migration, and database administration.",
+      "Changing account permissions, security configuration, tenant settings, editing scope, or User Preferences.",
+      "Editing AGENTS.md, environment files, recipes, other experiment records, or harness implementation.",
+      "Claiming cross-session durability, database-level durability, or replay verification from ordinary close/reopen observations."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Never perform application mutation until account, User scope, Form-name absence, existing IDO schema, and repository baseline gates have passed (the zero-row data state is checked in the FX_InventoryEditor runtime before the first insertion, per AC-3 and AC-7).",
+    "Never open, edit, or save a non-FX_ Form. In particular, never use the vendor IdoProjects Form for preflight verification.",
+    "Never save a Designer session while a non-FX_ Form is loaded or an unrelated dirty Form could be included in the Save operation.",
+    "Never create or modify another SQL table, IDO, IDO project, Form, global object, script, or handler.",
+    "Never invoke Finish more than once. If the Finish result is ambiguous, inspect the existing target before any further action and stop for operator disposition rather than retrying.",
+    "Never press Save repeatedly after a timeout or ambiguous response. First verify the intended record identity and committed state using an approved read-only surface.",
+    "Never create duplicate FX_Item values or substitute different sample values.",
+    "Never delete, truncate, reset, bulk-update, or overwrite inventory records.",
+    "Never use direct SQL INSERT, UPDATE, DELETE, DDL, or execution of generated FormSync SQL.",
+    "Never invoke Unload All Global Form Objects, unload IDO metadata, FormSync, deployment, or application-wide cache-clearing actions.",
+    "Never create external libraries, import scripts, or modify shared JavaScript resources.",
+    "Never use browser JavaScript execution or synthetic application-state mutation. Require worker_tool_policy.deny_browser_javascript=true.",
+    "Never bypass browser authentication or record credentials, passwords, tokens, cookies, or session secrets in evidence.",
+    "If the Designer appears stale, inspect the supported liveness surface first, including one Edit-menu liveness probe, before attempting the documented Designer split-button route. Do not repeatedly launch Designers.",
+    "If Web Client authentication expires, permit at most one recovery through the documented session-expiry recipe, with no secret disclosure, then repeat every affected read-only gate. Stop if the recovery fails or cannot be performed compliantly.",
+    "Never exceed one fresh browser snapshot and one corrected inspection per worker task for recovery. A second unresolved stale-reference or inspection failure is a blocker.",
+    "Never click through an unexplained save prompt or wizard error. Preserve state and report the exact blocker.",
+    "Never compensate for a missing required grid or field binding by broad Form regeneration or unrelated component changes.",
+    "Never start data entry if Form creation, clean Save, or Designer close/reopen verification fails.",
+    "Never continue inserting later records after an unsuccessful or ambiguous earlier record Save.",
+    "Never claim success from a click, toast, filename, HTTP status alone, or uninspected screenshot. Require the associated semantic postcondition."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:create|alter|drop|truncate|rename|replace)\\s+(?:(?:a|an|the|new|vendor|existing|another|other)\\s+)*(?:SQL\\s+table|database\\s+table|IDO(?:\\s+project)?|property\\s+class|validator|global\\s+object)\\b",
+    "\\b(?:open|edit|modify|save|launch|inspect|navigate\\s+to)\\s+(?:(?:a|an|the|new|vendor|existing|another|other)\\s+)*(?:IdoProjects|MockInventory|MockLoginPortal|MockLoginIDO|FX_InventoryPrototype01)\\b",
+    "\\b(?:create|add|modify|execute)\\s+(?:(?:a|an|the|new|vendor|existing|another|other)\\s+)*(?:event\\s+handler|form\\s+script|stored\\s+procedure|web\\s+user\\s+control|javascript\\s+bridge)\\b",
+    "\\b(?:invoke|execute|perform|run|launch)\\s+(?:(?:a|an|the|new|vendor|existing|another|other)\\s+)*(?:FormSync|Unload\\s+All\\s+Global\\s+Form\\s+Objects|ClearCache|deployment)\\b",
+    "\\b(?:delete|drop|truncate|overwrite|bulk\\s+update)\\s+(?:(?:a|an|the|new|vendor|existing|another|other)\\s+)*(?:inventory|FX_InventoryItems|records?|rows?|table)\\b",
+    "\\b(?:execute|run|apply)\\s+(?:(?:a|an|the|new|vendor|existing|another|other)\\s+)*(?:SQL\\s+(?:INSERT|UPDATE|DELETE)|DDL|generated\\s+SQL)\\b",
+    "\\b(?:page\\.evaluate|browser_evaluate|execute_script|javascript:)\\b",
+    "\\b(?:create|insert|add)\\b[^.\\n]{0,80}\\bFX-ITEM-00(?:[4-9]|[1-9][0-9])\\b",
+    "\\b(?:create|edit|modify|regenerate|delete)\\s+(?:(?:a|an|the|new|vendor|existing|another|other)\\s+)*FX_InventoryDashboard\\b"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "related_experiments": [
+    "EXP-128",
+    "EXP-129",
+    "EXP-130",
+    "EXP-131",
+    "EXP-132",
+    "EXP-133",
+    "EXP-134",
+    "EXP-041-R3",
+    "EXP-042-R3",
+    "EXP-050",
+    "EXP-051",
+    "EXP-072",
+    "EXP-006"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_InventoryEditor",
+    "artifacts": [
+      "FX_InventoryEditor",
+      "FX_InventoryItems",
+      "FX_HelloWorldProject01"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "PRE-MUTATION GATES: Task-local evidence establishes the expected Web Client account header, live Designer User scope, correct tenant/configuration, initial repository baseline, and a usable application session. The worker records that the required source instructions and prior experiment records were reviewed. Screenshots must visibly identify the account and editing scope without exposing credentials. No application mutation occurs before this check and AC-2 and AC-3."
+    },
+    {
+      "id": "AC-2",
+      "description": "TARGET IDENTITY AND COLLISION GATE: Before creation, the live Select Form inventory returns zero case-insensitive Name matches for FX_InventoryEditor, with a known-existing positive-control Form confirming the lookup works. A permitted read-only IDO identity/schema inspection confirms FX_InventoryItems and all six business properties with the specified types. Capture target-identifying screenshots or authorized read-only responses. Failure of either check blocks Finish."
+    },
+    {
+      "id": "AC-3",
+      "description": "EMPTY DATA GATE: No FX_ Form bound to FX_InventoryItems exists before this experiment, and a non-FX_ Form must not be opened, so the pre-creation empty state rests on the EXP-134 record (table and IDO created with no rows inserted; no Form created). The authoritative zero-row result is then obtained in the FX_InventoryEditor runtime before the first insertion (AC-7): a refreshed or freshly retrieved collection that visibly returns zero records for FX_InventoryItems. If that runtime read shows any existing row, stop before inserting."
+    },
+    {
+      "id": "AC-4",
+      "description": "WIZARD CONFIGURATION AND SINGLE CREATION: Pre-Finish evidence visibly identifies Classic MultiView, FX_InventoryEditor, existing IDO FX_InventoryItems, all six selected properties, User editing scope, and Save Template unchecked. Exactly one Finish is invoked. Post-Finish evidence demonstrates that exactly one FX_InventoryEditor Form was created and opened successfully. No additional SQL table, IDO, or IDO project is created."
+    },
+    {
+      "id": "AC-5",
+      "description": "FORM DEFINITION: The created Form has Caption FX_InventoryEditor, is bound to FX_InventoryItems, and contains a grid and Static/Edit field pairs for FX_Item, FX_Description, FX_Warehouse, FX_QuantityOnHand, FX_ReorderLevel, and FX_Location. Evidence identifies actual property bindings rather than relying on visual captions alone. Only this FX_ Form's definition may be changed."
+    },
+    {
+      "id": "AC-6",
+      "description": "SAVE AND DESIGNER RECOVERY: The worker captures the Form's saved/clean state, performing zero ordinary Designer Saves if the wizard already leaves the Form clean or exactly one if it leaves permitted unsaved changes. One ordinary close and one supported recent-forms reopen recover the same FX_InventoryEditor User-scoped version, Caption, IDO association, component structure, and six bindings unchanged. Designer Save is disabled after reopen. Evidence identifies the recovered target and scoped version."
+    },
+    {
+      "id": "AC-7",
+      "description": "RUNTIME OPEN AND INITIAL STATE: After AC-6 passes, the Web Client opens exactly FX_InventoryEditor. Its collection loads successfully, and an explicit refresh or supported read confirms zero records before the first insertion. Capture the runtime Form identity, working grid/detail view, and initial empty-state result."
+    },
+    {
+      "id": "AC-8",
+      "description": "THREE EXACT COMMITS: Exactly three new records are created through the FX_InventoryEditor runtime Form, each with one successful Save. Record 1 is FX-ITEM-001 / FX test widget / FX-WH-A / 120.00 / 20.00 / FX-LOC-01. Record 2 is FX-ITEM-002 / FX test bracket / FX-WH-A / 8.00 / 10.00 / FX-LOC-02. Record 3 is FX-ITEM-003 / FX test gasket / FX-WH-B / 0.00 / 5.00 / FX-LOC-03. Capture a target-identified committed-state readback for each record immediately after its Save. All six properties must be evidenced, and no duplicate or fourth record is permitted."
+    },
+    {
+      "id": "AC-9",
+      "description": "RUNTIME CLOSE/REOPEN READBACK: After the three commits, close the clean runtime Form once and reopen FX_InventoryEditor once. A fresh supported collection retrieval returns exactly three rows with the three expected distinct FX_Item keys. Read back all six values for every record. The numeric comparisons establish that FX-ITEM-002 has 8.00 below 10.00 and FX-ITEM-003 has 0.00 below 5.00, without claiming that any dashboard status logic or color indicator has been implemented. Capture one identifiable grid overview and sufficient detail evidence for all 18 business-field values."
+    },
+    {
+      "id": "AC-10",
+      "description": "CONFINEMENT AND ACTION AUDIT: evidence/EXP-135/ contains a concise task-by-task acceptance matrix, representative screenshots or captured responses, and exact action counts: wizard Finish at most one and exactly one if created; Designer ordinary Save zero or one; Designer close/reopen one each after successful creation; runtime successful record Saves exactly three; runtime close/reopen one each after successful data entry. The recorded Mongoose changes are restricted to one FX_InventoryEditor Form and the three specified FX_InventoryItems records. Zero prohibited application actions are identified. Repository changes are confined to the new EXP-135 experiment record and evidence/EXP-135/ after accounting separately for any pre-existing changes. No recipes are promoted."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-135",
+  "replay_of": null,
+  "initial_instruction": "PROPOSAL ONLY UNTIL OPERATOR APPROVAL. Upon authorization, begin EXP-135 with a bounded repository-only review and preflight task. Read AGENTS.md in full, EXP-134's authoritative acceptance and qualification details, EXP-130 sections 2 and 3, the cited existing-IDO Form and runtime-record procedures, and the session-recovery recipe. Configure worker_tool_policy.deny_browser_javascript=true. Establish a repository baseline and record the exact current browser state. Prove AC-1 and AC-2 before any application mutation. AC-3 rests on the EXP-134 record before creation, and its zero-row read happens in the FX_InventoryEditor runtime before the first insertion; do not invent a new API workflow or access a vendor Form. If a gate is unsupported or ambiguous, PAUSE with evidence and no mutation. After passing all gates, execute the Form wizard phase with one Finish, verify its saved definition and Designer close/reopen recovery, and PAUSE at that phase boundary if any check fails. Only after AC-4 through AC-6 pass may the runtime phase insert the three exact fake records, with a committed-state checkpoint after each Save. Never replay an uncertain mutation without first proving its post-state. Capture target identity and semantic result early in each phase. After every editable grid commit, obtain a fresh snapshot before relying on another grid reference; note that Tab after Name entry can shift focus into Property Class, as observed in EXP-134. Use one fresh snapshot and one corrected inspection per task as the entire recovery allowance. Preserve partial success and report blockers without cleanup. Finish with AC-1 through AC-10 evidence mapping, exact action inventory, repository confinement review, and explicit observed-only conclusions. Do not begin EXP-136 or dashboard construction.",
+  "notes": "Proposed by the coordinator after run R-20261026-031627-MXfT. Rationale: EXP-134 was accepted with qualifications and established the FX_InventoryItems SQL table and checked-in IDO under FX_HelloWorldProject01. The next useful controlled step is to create one User-scope maintenance Form over that existing IDO and populate it with exactly three fake inventory records. This follows the existing-IDO Form wizard procedure from EXP-041-R3 and the runtime record-entry procedure from EXP-042-R3. Form creation and data entry are sequential phases, with data entry prohibited until Form creation, Save, and close/reopen verification succeed. The resulting records will support a later FX_InventoryDashboard experiment without constructing that dashboard now."
+}
