@@ -3,7 +3,7 @@
   "title": "EXP-133 — Minimal FX_LoginPortal With Client Validation and Form Script Bridge",
   "record_path": "experiments/EXP-133-minimal-fx-loginportal-with-client-validation-and-.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Create exactly one User-scoped Classic BuildFromScratch Form named FX_LoginPortal, two associated Web User Control assets, one Global persistent variable, one UserControl component and one C# Form Script method. The login interface will validate input locally and, for a valid fake test pair, invoke FX_ProcessLogin and display the nonsensitive code received through WSForm.getVarValue. Complete one ordinary Designer Save, one close/reopen with readback, and one controlled runtime submission. Establish observable behavior and same-session definition retention without claiming real authentication, definitive Global-variable resolution, independent database durability or replay verification.",
   "scope": {
     "in_scope": [
