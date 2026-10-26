@@ -3,7 +3,7 @@
   "title": "EXP-137 — FX_LoginUsers: Login Data Layer, Wizard-Generated Form and One Hashed Test Record",
   "record_path": "experiments/EXP-137-fx-loginusers-login-data-layer-wizard-generated-fo.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Create exactly one SQL table FX_LoginUsers and one IDO FX_LoginUsers with alias fxlogin, using the accepted EXP-134 Data Maintenance Wizard route in existing IDO project FX_HelloWorldProject01. Configure four properties without Property Classes: FX_Username String(50), Primary Key and Required; FX_PasswordHash String(64); FX_Role String(50); FX_Store String(50). Leave Create Scripts unchecked. After proving the creation gates, execute the wizard Finish once and, provided the FX_ artifact boundary can be established before committing Form creation, answer Yes once to Create Form. Observe and identify the resulting maintenance Form, expected FX_LoginUsers in User scope; do not create a separate replacement Form. Check in the IDO once if left checked out, and verify the IDO, SQL table and SQL columns through supported Mongoose interfaces. Using the established portal-reload route, open the generated Form at runtime, establish an empty initial collection, insert and save exactly one fake record with username fx_probe, the supplied 64-character SHA-256 hash, role FX-Viewer and store FX-STORE-01, then close and reopen the runtime Form and verify exact recovery. Capture decisive, target-identified evidence at each stage and report any blocked prerequisite without speculative repair.",
   "scope": {
     "in_scope": [
