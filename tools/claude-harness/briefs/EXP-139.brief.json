@@ -3,7 +3,7 @@
   "title": "EXP-139 — FX_InventoryDashboard: Replace the FX_Inventory/index.html Web User Control Asset with the Dark-Theme Redesign",
   "record_path": "experiments/EXP-139-fx-inventorydashboard-dark-theme-asset-replacement.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Replace the content of the existing Web User Control Asset FX_Inventory/index.html (created in EXP-136 T12) with the committed flush-left redesign assets/FX_Inventory/index.flat.html (commit 657720d, SHA-256 52e6ccd2aa293f61579cb5140501f68667c7613d6490cc3bf64b60874382a9d6, supplied by the operator; same page as assets/FX_Inventory/index.html commit d8ff7a0 with leading whitespace removed). Use the EXP-136 T12 route: Designer Edit > Web User Control Assets, the asset's Content edit dialog, one full-content fill, Edit Browser File OK, then the Web Assets dialog OK. Perform one ordinary Designer Save while FX_InventoryDashboard is the active Designer Form, verify persistence through a Designer reopen and a read-only asset readback, then prove at runtime, after one portal reload, that one Refresh Data click in FX_InventoryDashboard renders the redesign with the unchanged EXP-135 data: headline 2 of 3 items need reordering., legend 1 Out of Stock, 1 Low Stock, 1 In Stock, totals 128 units on hand in 3 items, 2 warehouses, and the three rows FX-ITEM-003 Out of Stock, FX-ITEM-002 Low Stock, FX-ITEM-001 In Stock.",
   "scope": {
     "in_scope": [
