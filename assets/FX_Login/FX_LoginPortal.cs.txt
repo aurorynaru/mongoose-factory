@@ -1,0 +1,41 @@
+using System;
+using System.Security.Cryptography;
+using System.Text;
+using Mongoose.IDO.Protocol;
+using Mongoose.Scripting;
+
+namespace Mongoose.FormScripts
+{
+    public class FX_LoginPortal : FormScript
+    {
+        public string FX_ProcessLogin(string username, string password) {
+            string code = "error";
+            try {
+                if (username == null || password == null) { code = "missing"; }
+                else if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password)) { code = "empty"; }
+                else {
+                    string filter = "FX_Username = '" + username.Trim().Replace("'", "''") + "'";
+                    var response = IDOClient.LoadCollection("FX_LoginUsers", "FX_Username, FX_PasswordHash", filter, "", 1);
+                    if (response.Items.Count == 0) { code = "unknown"; }
+                    else {
+                        string stored = response.Items[0].PropertyValues[1].Value;
+                        string supplied = FX_Sha256Hex(password);
+                        code = (stored != null && string.Equals(stored.Trim(), supplied, StringComparison.OrdinalIgnoreCase)) ? "ok" : "invalid";
+                    }
+                }
+            }
+            catch (Exception) { code = "error"; }
+            ThisForm.Variables("FX_vLoginResult").Value = code;
+            return code;
+        }
+
+        private static string FX_Sha256Hex(string value) {
+            using (SHA256 sha = SHA256.Create()) {
+                byte[] bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(value));
+                StringBuilder hex = new StringBuilder(64);
+                foreach (byte b in bytes) { hex.Append(b.ToString("x2")); }
+                return hex.ToString();
+            }
+        }
+    }
+}
