@@ -1,0 +1,157 @@
+{
+  "experiment_id": "EXP-137",
+  "title": "EXP-137 — FX_LoginUsers: Login Data Layer, Wizard-Generated Form and One Hashed Test Record",
+  "record_path": "experiments/EXP-137-fx-loginusers-login-data-layer-wizard-generated-fo.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Create exactly one SQL table FX_LoginUsers and one IDO FX_LoginUsers with alias fxlogin, using the accepted EXP-134 Data Maintenance Wizard route in existing IDO project FX_HelloWorldProject01. Configure four properties without Property Classes: FX_Username String(50), Primary Key and Required; FX_PasswordHash String(64); FX_Role String(50); FX_Store String(50). Leave Create Scripts unchecked. After proving the creation gates, execute the wizard Finish once and, provided the FX_ artifact boundary can be established before committing Form creation, answer Yes once to Create Form. Observe and identify the resulting maintenance Form, expected FX_LoginUsers in User scope; do not create a separate replacement Form. Check in the IDO once if left checked out, and verify the IDO, SQL table and SQL columns through supported Mongoose interfaces. Using the established portal-reload route, open the generated Form at runtime, establish an empty initial collection, insert and save exactly one fake record with username fx_probe, the supplied 64-character SHA-256 hash, role FX-Viewer and store FX-STORE-01, then close and reopen the runtime Form and verify exact recovery. Capture decisive, target-identified evidence at each stage and report any blocked prerequisite without speculative repair.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, EXP-130 T5 sections 2, 4, 5 and 7.1, and the relevant EXP-134, EXP-135 and EXP-136 records before browser mutation.",
+      "Set worker_tool_policy.deny_browser_javascript to true before any browser operation.",
+      "Read-only preflight: verify the account header identifies anton.ramos@3mworks.com.ph, the active configuration is G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT, Designer editing scope is User, and FX_HelloWorldProject01 exists.",
+      "Read-only collision checks proving FX_LoginUsers is absent, including case-insensitive checks in IDOs, Sql Tables and Select Form with visible positive controls where supported. Stop on a collision, stale inventory or inconclusive result.",
+      "Create the single FX_LoginUsers SQL table and matching IDO in FX_HelloWorldProject01 using the accepted Data Maintenance Wizard route from EXP-134.",
+      "Set table/IDO alias fxlogin; configure FX_Username as String length 50, Primary Key and Required; FX_PasswordHash as String length 64; FX_Role as String length 50; and FX_Store as String length 50. Use no Property Class on any of the four properties.",
+      "Use rendered Data Type dropdown options and explicitly entered lengths. Following EXP-134, click Data Type directly after entering Name rather than assuming Tab reaches the correct cell; obtain a fresh snapshot after commits and never use Escape within the Property Class combobox.",
+      "Capture the complete final wizard configuration with property names, types, lengths, key/required flags, project, alias and Create Scripts unchecked before the single permitted Finish.",
+      "Execute exactly one wizard Finish after all preconditions and configuration checks pass. Record the actual completion message and any created-object inventory.",
+      "Investigate the single Create Form prompt. Answer Yes at most once only if the supported visible UI or previously verified creation contract establishes before that answer that every generated Form artifact will be FX_-prefixed, with the intended name and User scope. If that safety condition cannot be established, leave Yes unexecuted, stop at the prompt and report the generation step blocked.",
+      "If a Form is successfully generated, identify its actual Name, ScopeType and ScopeName, and verify that the Name begins with FX_. Capture the exact generated Form identity and baseline without editing its components or layout.",
+      "Check in FX_LoginUsers once if its IDO is left checked out. Otherwise record the existing checked-in state without performing another check-in.",
+      "Close and reopen the relevant IDOs and SQL metadata views through supported UI, then verify FX_LoginUsers in IDOs, Sql Tables and Sql Columns with the expected property and column definitions.",
+      "Use the EXP-135 T9 portal-reload route once when necessary: navigate to the existing portal URL, then open Mongoose from portal navigation search. Re-establish visible session and account identity before proceeding.",
+      "Open only the generated FX_LoginUsers maintenance Form at runtime. Capture the actual Form identity and verify that the FX_LoginUsers collection initially contains zero records before any insertion.",
+      "Insert exactly one fake runtime record: FX_Username=fx_probe, FX_PasswordHash=1d1fde6df9638dab75a1061542350affcf8a697a2fdee3bf9a1d0e5892609b40, FX_Role=FX-Viewer and FX_Store=FX-STORE-01. Perform one runtime record Save only.",
+      "Perform one ordinary runtime Form close and one reopen through a supported Form-navigation path, and read back the saved record without changing it.",
+      "Use only the documented session recovery surfaces when needed: the EXP-006 Designer split-button route, the session-expiry-and-stale-designer recipe once, and ordinary closure of stale Designer browser tabs without saving, as in EXP-136 T8. Revalidate all guards after recovery.",
+      "Permit coordinate clicks only as a documented AGENTS.md last resort when no usable accessibility reference exists; record the target, reason and result, following EXP-136 T23.",
+      "Limit each task's browser recovery to one fresh snapshot and one corrected inspection before reporting a blocker.",
+      "Write the experiment record and bounded screenshots, captured responses, object inventory, action accounting and acceptance evidence under evidence/EXP-137/. Record every created artifact and runtime row."
+    ],
+    "out_of_scope": [
+      "Any object whose actual name does not begin with FX_, including all Mock application artifacts.",
+      "Opening FX_InventoryPrototype01.",
+      "Changing FX_LoginPortal, FX_ProcessLogin, FX_InventoryItems, FX_InventoryEditor, FX_InventoryDashboard or any other previously created inventory Form.",
+      "Creating or changing login event handlers, C# scripts, JavaScript, password-validation logic, authentication flows, tokens or session authorization behavior.",
+      "Implementing login verification, role authorization, store permissions, password resets, password migrations or additional cryptographic features.",
+      "Adding Property Classes, extra IDO properties, extra SQL columns, indexes beyond wizard-generated defaults, or additional runtime test records.",
+      "Creating a replacement Form if the Data Maintenance Wizard does not generate a usable FX_LoginUsers Form.",
+      "Manually repairing generated Form layout, adding components, changing bindings or regenerating an unsuccessful Form.",
+      "Metadata-cache unloading, global Form-object unloading, FormSync, deployment, publication, import/export, and direct SQL data manipulation.",
+      "Modifying AGENTS.md, existing recipes, environment files, unrelated experiment records, harness code, browser security settings or unrelated repository files.",
+      "Production-user credentials or production authentication testing.",
+      "Independent replay verification, broad compatibility claims, and database durability claims beyond what the captured evidence actually establishes."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Create, edit, delete or save any non-FX_-prefixed artifact.",
+    "Answer Yes to Create Form when the wizard's generated artifact name or required scope cannot be established safely before creation.",
+    "Modify, repair or delete an unexpectedly generated non-FX_ Form; immediately stop and report its identity and observed creation boundary if such an artifact unexpectedly appears.",
+    "Perform a second wizard Finish, create a second IDO or SQL table, or repeat an ambiguous creation action without proving its previous outcome.",
+    "Change Create Scripts to checked, execute generated SQL scripts manually, or create custom scripts as part of this experiment.",
+    "Press Escape while the Property Class combobox is active.",
+    "Use Tab as an unverified shortcut from a property Name cell into the Data Type cell.",
+    "Create a separate maintenance Form through another wizard if the single authorized Create Form attempt fails or is blocked.",
+    "Save a real or plaintext password, store a password in FX_Username, or persist more than the one specified fake user row.",
+    "Perform additional runtime Saves, modify existing records, or insert duplicate fx_probe records.",
+    "Check in or check out unrelated IDOs or IDO projects.",
+    "Unload IDO metadata or global Form objects, execute FormSync, perform deployment, or modify unrelated objects to make the new Form visible.",
+    "Use browser JavaScript execution, hidden Ext JS state mutation, internal product APIs, direct database writes or unsupported automation shortcuts.",
+    "Use coordinate interaction when an actionable accessibility reference is available.",
+    "Repeat session recovery beyond the specified allowance or silently treat a session-expired result as valid absence evidence.",
+    "Conceal failed responses, extra operations, unexpected artifacts, unresolved compilation status, permission denials or evidence gaps.",
+    "Declare experiment acceptance or replay_verified status without operator review."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:create|add|edit|modify|delete|save|update|open|check[ -]?out|regenerate)\\s+(?:(?:a|an|the|new|existing|vendor|other)\\s+)*(?:Mock\\w*|FX_InventoryPrototype01|FX_LoginPortal|FX_ProcessLogin|FX_InventoryItems|FX_InventoryEditor|FX_InventoryDashboard)\\b",
+    "\\b(?:create|add|write|execute|run)\\s+(?:(?:a|an|the|new|existing|vendor|other)\\s+)*(?:event handler|form script|c# script|javascript script|sql script)s?\\b",
+    "\\b(?:unload all global form objects|unload ido metadata|clear metadata cache|formsync|deploy(?:ment)?)\\b",
+    "\\b(?:direct sql|sql insert|sql update|sql delete|database write|browser javascript|page\\.evaluate|evaluate\\()\\b",
+    "\\b(?:modify|edit|overwrite|delete|replace)\\b[^\\n]{0,100}\\b(?:AGENTS\\.md|recipes/|environment/|tools/learning-harness/)\\b",
+    "\\b(?:insert|add|create|save)\\b[^\\n]{0,60}\\b(?:second|duplicate|another)\\b[^\\n]{0,40}\\b(?:login record|user record|fx_probe)\\b"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "related_experiments": [
+    "EXP-130",
+    "EXP-133",
+    "EXP-134",
+    "EXP-135",
+    "EXP-136",
+    "EXP-039",
+    "EXP-040",
+    "EXP-006"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_LoginUsers",
+    "artifacts": [
+      "FX_LoginUsers",
+      "FX_HelloWorldProject01"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Pre-mutation screenshots or supported readbacks identify the correct account, configuration, Designer User scope and existing IDO project FX_HelloWorldProject01. IDOs, Sql Tables and Select Form show no existing FX_LoginUsers match, including case-insensitive checks where supported and a working positive control. Evidence under evidence/EXP-137/ identifies each inspected surface and result."
+    },
+    {
+      "id": "AC-2",
+      "description": "The final Data Maintenance Wizard configuration is captured before Finish and visibly identifies project FX_HelloWorldProject01, IDO/table FX_LoginUsers, alias fxlogin, four properties with their exact names, String data types, lengths 50/64/50/50, FX_Username Primary Key and Required, no Property Classes, and Create Scripts unchecked. Fresh snapshots and a concise worker readback distinguish actual committed grid values from intended entries."
+    },
+    {
+      "id": "AC-3",
+      "description": "Exactly one wizard Finish is executed after the configuration gate; the completion response and created-object identities are captured. The worker records whether the wizard positively reported SQL table and IDO creation. No second Finish or alternate creation route occurs."
+    },
+    {
+      "id": "AC-4",
+      "description": "The Create Form prompt and its safety gate are captured before response. If an FX_-prefixed generated name and User-scope contract are established, exactly one Yes is issued and the actual generated Form identity and outcome are captured. If the safety gate is not established, no Yes is issued and AC-4 is marked blocked rather than passed. A completed click or dismissed prompt alone is not proof of Form generation."
+    },
+    {
+      "id": "AC-5",
+      "description": "When Form generation succeeds, the resulting Form is found as FX_LoginUsers, with Name, ScopeType=User and ScopeName visibly or authoritatively identified; there is exactly one matching generated Form in the accessible scoped inventory. Its existing maintenance layout is captured without manual changes. A differently named, non-FX_ or unverified Form does not satisfy this check."
+    },
+    {
+      "id": "AC-6",
+      "description": "The IDO FX_LoginUsers is located in FX_HelloWorldProject01, and its post-creation checkout state is recorded. If initially checked out, exactly one successful check-in returns it to a visibly checked-in state with no unrelated checkout/check-in. If already checked in, the unchanged state is recorded and no check-in is performed."
+    },
+    {
+      "id": "AC-7",
+      "description": "After ordinary closing and reopening of the relevant metadata views, supported IDOs, Sql Tables and Sql Columns readbacks identify FX_LoginUsers and show its four configured properties and corresponding SQL column definitions. Evidence separately identifies IDO metadata, physical table metadata, key/required status and string lengths. Any discrepancy or unsupported readback remains explicit and prevents a full pass."
+    },
+    {
+      "id": "AC-8",
+      "description": "The supported portal-reload route returns a usable Web Client with the expected account context. The generated FX_LoginUsers Form can be selected and opened at runtime without creating a replacement Form, modifying another Form or performing metadata unload. A target-identified runtime capture shows the Form and an initial zero-row collection before insertion."
+    },
+    {
+      "id": "AC-9",
+      "description": "Exactly one fake record is entered and exactly one runtime Save is performed. The successful save or an equivalent committed-record response is captured, followed by a readback showing FX_Username=fx_probe, FX_PasswordHash=1d1fde6df9638dab75a1061542350affcf8a697a2fdee3bf9a1d0e5892609b40, FX_Role=FX-Viewer and FX_Store=FX-STORE-01. The hash is exactly 64 hexadecimal characters; the record does not contain the plaintext test password. No additional record is created."
+    },
+    {
+      "id": "AC-10",
+      "description": "After one ordinary runtime Form close and one supported reopen, FX_LoginUsers again displays exactly one matching fx_probe record with all four values equal to the saved baseline. Captures establish the target Form identity, recovered row identity, relevant values and clean runtime state. Same-session recovery is classified observed, not automatically treated as proof of database durability or replay verification."
+    },
+    {
+      "id": "AC-11",
+      "description": "The final worker audit reconciles all Form, IDO, table and row creation operations; wizard Finish, Create Form Yes, check-in, runtime Save, close and reopen counts; any recovery attempts; and all discovered artifacts. Evidence includes concise proof/limitation notes with target-identified screenshots or responses. Unexpected errors, missing compilation confirmation, partial saves and inconclusive operations are disclosed rather than silently treated as successful."
+    },
+    {
+      "id": "AC-12",
+      "description": "Repository and application confinement is reconciled. The worker records the experiment-document and evidence-file inventory, baseline-versus-final changes, and confirms no authorized mutation outside FX_LoginUsers and its documented wizard-generated FX_ artifacts. Existing FX_ objects remain unchanged except the existing project membership needed for the new IDO. Git status/diff and source hashes are reported when accessible; if .git access is denied, authoritative Git confinement remains pending operator review rather than being claimed proven."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-137",
+  "replay_of": null,
+  "initial_instruction": "EXP-137 T1 — PREFLIGHT ONLY. Before using the browser, set worker_tool_policy.deny_browser_javascript=true. Read AGENTS.md and the relevant existing experiment records, especially EXP-130 T5, EXP-134, EXP-135 and EXP-136, together with the documented session-recovery recipe. Establish the initial repository/evidence baseline. Using supported rendered Mongoose surfaces, capture the current account identity, configuration, Designer User scope, FX_HelloWorldProject01 availability, and the absence of FX_LoginUsers from IDOs, Sql Tables and Select Form. Prove filter behavior with visible positive controls and distinguish missing data from an expired session. Inspect the accepted EXP-134 wizard route and determine whether supported pre-commit evidence can establish that answering Yes to Create Form will generate only an FX_-prefixed User-scope Form. Do not infer that safety guarantee merely from the expected IDO name. Record the actual findings and remaining unknowns in evidence/EXP-137/ with a concise gate summary. Do not execute Finish, answer Create Form, create an artifact, save a record, unload metadata or change any Mongoose object in T1. Use no more than one fresh browser snapshot and one corrected inspection for recovery; stop and report a blocker if a gate remains inconclusive. Subsequent separately bounded tasks may perform the wizard configuration, the single guarded Finish/Form-generation operation, metadata verification, and one runtime record/save/reopen sequence only after their relevant gates pass. The operator reviews this proposal before any experiment execution.",
+  "notes": "Proposed by the coordinator after run R-20261026-062909-9GoC. Rationale: EXP-134 established an accepted, qualified Data Maintenance Wizard route for creating an FX_-prefixed SQL table and IDO. EXP-135 established runtime inventory record creation and readback, including the portal-reload route. EXP-136 established the inventory dashboard's runtime behavior and was accepted with operator qualifications. The inventory reproduction chain is therefore complete enough to begin the independent login data layer described in EXP-130 T5 sections 2, 4, 5 and 7.1. This experiment reuses the established data-layer workflow while introducing one new learning question: whether answering Yes to the Data Maintenance Wizard's Create Form prompt produces a usable FX_-prefixed maintenance Form in User scope. The experiment uses one fake login record containing a fixed SHA-256 hexadecimal hash instead of a plaintext password. Form generation, schema verification, and runtime record recovery are treated as sequential gates, not permission to widen scope or repair unrelated objects. EXP-136's qualified acceptance does not imply that its previously unobserved affirmative compilation-result operation occurred."
+}
