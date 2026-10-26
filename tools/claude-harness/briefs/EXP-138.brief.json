@@ -3,7 +3,7 @@
   "title": "EXP-138 — FX_LoginPortal: Hashed FX_LoginUsers Lookup in FX_ProcessLogin",
   "record_path": "experiments/EXP-138-fx-loginportal-hashed-fx-loginusers-lookup.md",
   "new_record": true,
-  "reviewed": false,
+  "reviewed": true,
   "objective": "Replace the C# Form Script of the existing User-scoped Form FX_LoginPortal (EXP-133) with the committed source assets/FX_Login/FX_LoginPortal.cs.txt (SHA-256 0ba26a44b67afee8a8b38dc5502dff1eecfe330bc809e7118ba52cc526b2514b, supplied by the operator) so that FX_ProcessLogin(string username, string password) loads FX_LoginUsers filtered on FX_Username, compares the SHA-256 hex of the supplied password with the stored FX_PasswordHash, and sets the existing Global variable FX_vLoginResult to exactly one of missing, empty, unknown, invalid, ok or error. Install it by the accepted EXP-136 T15 full-content fill route, perform one ordinary Designer Save, verify persistence through a Designer reopen, then prove at runtime through the unchanged FX_Login Web User Control that fx_probe with the fake test value fx-probe-only returns ok, fx_probe with fx-wrong-value returns invalid, and fx_nobody with fx-probe-only returns unknown. The ok result also proves end to end that the EXP-137 record stored fx_probe in FX_Username and the hash in FX_PasswordHash.",
   "scope": {
     "in_scope": [
