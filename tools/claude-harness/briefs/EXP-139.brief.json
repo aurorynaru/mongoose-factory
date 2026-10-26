@@ -1,0 +1,124 @@
+{
+  "experiment_id": "EXP-139",
+  "title": "EXP-139 — FX_InventoryDashboard: Replace the FX_Inventory/index.html Web User Control Asset with the Dark-Theme Redesign",
+  "record_path": "experiments/EXP-139-fx-inventorydashboard-dark-theme-asset-replacement.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Replace the content of the existing Web User Control Asset FX_Inventory/index.html (created in EXP-136 T12) with the committed flush-left redesign assets/FX_Inventory/index.flat.html (commit 657720d, SHA-256 52e6ccd2aa293f61579cb5140501f68667c7613d6490cc3bf64b60874382a9d6, supplied by the operator; same page as assets/FX_Inventory/index.html commit d8ff7a0 with leading whitespace removed). Use the EXP-136 T12 route: Designer Edit > Web User Control Assets, the asset's Content edit dialog, one full-content fill, Edit Browser File OK, then the Web Assets dialog OK. Perform one ordinary Designer Save while FX_InventoryDashboard is the active Designer Form, verify persistence through a Designer reopen and a read-only asset readback, then prove at runtime, after one portal reload, that one Refresh Data click in FX_InventoryDashboard renders the redesign with the unchanged EXP-135 data: headline 2 of 3 items need reordering., legend 1 Out of Stock, 1 Low Stock, 1 In Stock, totals 128 units on hand in 3 items, 2 warehouses, and the three rows FX-ITEM-003 Out of Stock, FX-ITEM-002 Low Stock, FX-ITEM-001 In Stock.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, the EXP-136 record (especially T12, T16, T19 and T20 to T23), the EXP-138 record (T3 truncation lesson and Amendment A1), the committed source assets/FX_Inventory/index.flat.html and recipes/session/session-expiry-and-stale-designer.md before browser mutation.",
+      "Set worker_tool_policy.deny_browser_javascript to true before any browser operation.",
+      "Before every screenshot or input, select the intended browser tab (browser tabs select) so it is the foreground tab; screenshots of a background tab time out (EXP-137 T6 and T7).",
+      "Read-only preflight: verify the account header identifies anton.ramos@3mworks.com.ph, the configuration is G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT and Designer editing scope is User; open FX_InventoryDashboard in the Designer as the User version; open Edit > Web User Control Assets and confirm FX_Inventory/index.html exists with Content text/html and Version User; read its current content (EXP-136 page: Refresh Data button FX_InvRefresh, four metric cards) and Cancel.",
+      "Replace the asset content exactly once: open the FX_Inventory/index.html Content edit dialog, click inside the editor, Ctrl+A, one full-content fill with the complete text of assets/FX_Inventory/index.flat.html, read back the start and end of the content before OK, then Edit Browser File OK once and the Web Assets dialog OK once (EXP-136 T12 precedent).",
+      "Perform exactly one ordinary Designer Save while FX_InventoryDashboard is the active Designer Form and capture the response and the clean post-Save state.",
+      "Verify persistence by closing FX_InventoryDashboard in the Designer and reopening it from the recent-forms list (or a supported Designer reload as in EXP-136 T19), then read the asset content read-only once more and Cancel.",
+      "Open FX_InventoryDashboard at runtime in the Web Client by the EXP-135 T9 portal-reload route once (top-level navigation to the portal URL, then Mongoose from the portal navigation search, then Form > Open).",
+      "Exactly one Refresh Data activation in the runtime dashboard, followed by screenshots of the rendered summary and table; then at most one client-side filter click on Needs reorder (expected 2 rows) with a screenshot. The filter is page-only and changes no data.",
+      "If the Web User Control frame exposes no accessibility reference, a native coordinate click on a control verified from a fresh screenshot is permitted as the AGENTS.md last resort and must be recorded (EXP-136 T23).",
+      "Write the experiment record and bounded evidence under evidence/EXP-139/, record every changed object, and reconcile all actions in a final audit."
+    ],
+    "out_of_scope": [
+      "Changes to the FX_InventoryDashboard Form Script, its UserControl component, layout, Caption, event handlers or the FX_vInventoryJson variable definition.",
+      "Any change to FX_InventoryItems (table, IDO, rows) or to FX_InventoryEditor.",
+      "Any change to the FX_Login assets, FX_LoginPortal or FX_LoginUsers.",
+      "Creating a new Web User Control Asset or folder; only the content of the existing FX_Inventory/index.html is replaced.",
+      "Mock objects, FX_InventoryPrototype01, the vendor IdoCollections Form and the built-in $app assets."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Editing the asset content by any route other than the single full-content fill of the committed flush-left source; partial edits, retyping or a second fill without first proving the previous outcome.",
+    "Creating, renaming or deleting any Web User Control Asset or folder, or opening any asset other than FX_Inventory/index.html in an editing dialog other than to read and Cancel.",
+    "Performing more than one ordinary Designer Save.",
+    "Saving while a Form other than FX_InventoryDashboard is the active Designer Form; never save IdoCollections.",
+    "Inserting, editing or deleting FX_InventoryItems rows, or performing a runtime Save on any Form.",
+    "More than one runtime Refresh Data activation or more than one filter click.",
+    "Using the Designer top-toolbar Delete Form Definition.",
+    "Unload IDO metadata or global Form objects, execute FormSync, or perform deployment.",
+    "Use browser JavaScript execution, hidden Ext JS state mutation, internal product APIs, direct database access or unsupported automation shortcuts.",
+    "Use coordinate interaction when an actionable accessibility reference is available.",
+    "Repeat session recovery beyond the specified allowance or silently treat a session-expired result as a valid test result.",
+    "Conceal failed responses, extra operations, unexpected artifacts, unresolved compilation status, permission denials or evidence gaps.",
+    "Declare experiment acceptance or replay_verified status without operator review."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:create|add|edit|modify|delete|save|update|open|check[ -]?out|regenerate)\\s+(?:(?:a|an|the|new|existing|vendor|other)\\s+)*(?:Mock\\w*|FX_InventoryPrototype01|FX_InventoryItems|FX_InventoryEditor|FX_LoginPortal|FX_LoginUsers|IdoCollections)\\b",
+    "\\b(?:create|add|write|execute|run)\\s+(?:(?:a|an|the|new|existing|vendor|other)\\s+)*(?:event handler|javascript script|sql script)s?\\b",
+    "\\b(?:unload all global form objects|unload ido metadata|clear metadata cache|formsync|deploy(?:ment)?)\\b",
+    "\\b(?:direct sql|sql insert|sql update|sql delete|database write|browser javascript|page\\.evaluate|evaluate\\()\\b",
+    "\\b(?:modify|edit|overwrite|delete|replace)\\b[^\\n]{0,100}\\b(?:AGENTS\\.md|recipes/|environment/|tools/learning-harness/)\\b",
+    "\\b(?:insert|add|create|save|delete)\\s+(?:(?:a|an|the|new|existing|vendor|other)\\s+)*(?:inventory record|item record|FX_InventoryItems row)s?\\b"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "related_experiments": [
+    "EXP-136",
+    "EXP-138",
+    "EXP-135",
+    "EXP-134",
+    "EXP-132",
+    "EXP-006"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_InventoryDashboard",
+    "artifacts": [
+      "FX_InventoryDashboard",
+      "FX_Inventory/index.html",
+      "FX_vInventoryJson",
+      "FX_LoadInventoryFromIDO"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Pre-mutation evidence identifies the account anton.ramos@3mworks.com.ph, configuration G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT, Designer User scope, FX_InventoryDashboard loaded as the User version, and the existing asset FX_Inventory/index.html (Content text/html, Version User) with the EXP-136 content."
+    },
+    {
+      "id": "AC-2",
+      "description": "Exactly one full-content fill installs the committed flush-left source (operator-supplied SHA-256 52e6ccd2aa293f61579cb5140501f68667c7613d6490cc3bf64b60874382a9d6). The readback before OK shows the start (<!DOCTYPE html>, the ../$app/scripts/UserControl.js include) and the end (the WSForm.invoke(FX_LoadInventoryFromIDO) and WSForm.getVarValue(FX_vInventoryJson) calls, </html>), with no leftover EXP-136 metric-card markup. Edit Browser File OK and the Web Assets OK are each pressed once with no error dialog."
+    },
+    {
+      "id": "AC-3",
+      "description": "Exactly one ordinary Designer Save with FX_InventoryDashboard active; the response (expected: Form [FX_InventoryDashboard] and global object(s) were saved.) and the clean post-Save state are captured."
+    },
+    {
+      "id": "AC-4",
+      "description": "After a Designer close and reopen (or supported reload), a read-only readback of FX_Inventory/index.html still shows the redesigned content (headline element FX_InvHeadline, filter buttons, FX_InvFilters, the stock gauge markup) and Version User."
+    },
+    {
+      "id": "AC-5",
+      "description": "After the one portal reload, FX_InventoryDashboard opens at runtime with the account header re-established and the redesigned page visible before Refresh: heading Inventory, status Not loaded, button Refresh data and the empty-table text No stock loaded yet. Select Refresh data."
+    },
+    {
+      "id": "AC-6",
+      "description": "One Refresh Data activation renders: headline 2 of 3 items need reordering.; legend 1 Out of Stock, 1 Low Stock, 1 In Stock; totals 128 units on hand in 3 items, 2 warehouses; status beginning Loaded 3 records; rows FX-ITEM-003 (0, reorder at 5, Out of Stock), FX-ITEM-002 (8, reorder at 10, Low Stock), FX-ITEM-001 (120, reorder at 20, In Stock) in that order."
+    },
+    {
+      "id": "AC-7",
+      "description": "At most one Needs reorder filter click shows exactly the two rows FX-ITEM-003 and FX-ITEM-002 (client-side only)."
+    },
+    {
+      "id": "AC-8",
+      "description": "No inventory data, Form Script, component, variable or other asset is changed; the FX_InventoryItems rows are unchanged (read-only observation only)."
+    },
+    {
+      "id": "AC-9",
+      "description": "The final audit reconciles every fill, OK, Cancel, Designer Save, close, reopen, portal reload, Refresh Data and filter click, lists all changed objects (only the FX_Inventory/index.html content), and records the evidence-file inventory and confinement."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-139",
+  "replay_of": null,
+  "initial_instruction": "EXP-139 T1 — PREFLIGHT ONLY. Before using the browser, set worker_tool_policy.deny_browser_javascript=true. Read AGENTS.md, the EXP-136 and EXP-138 records, the committed source assets/FX_Inventory/index.flat.html and the session-recovery recipe. Select the intended browser tab before each screenshot or input. Using supported rendered Mongoose surfaces, capture the account identity, configuration and Designer User scope; open FX_InventoryDashboard in the Designer and confirm it is the User version; open Edit > Web User Control Assets, confirm FX_Inventory/index.html exists with Content text/html and Version User, open its content read-only, record what it shows, then Cancel the content dialog and Cancel the Web Assets dialog. Record findings in evidence/EXP-139/ with a concise gate summary. Do not fill the editor, press OK, Save, reload the portal, click Refresh Data or change any Mongoose object in T1. Use no more than one fresh browser snapshot and one corrected inspection for recovery; stop and report a blocker if a gate remains inconclusive. Later separately bounded tasks perform the single content fill, the single Save, the reopen readback, the portal reload and the runtime check.",
+  "notes": "Written by the operator assistant at the operator's request (2026-10-27) after the dashboard page redesign (commit d8ff7a0; flush-left install copy 657720d). The page keeps the EXP-136 Mongoose contract: the UserControl.js include, WSForm.invoke(FX_LoadInventoryFromIDO) then WSForm.getVarValue(FX_vInventoryJson), and the status labels In Stock / Low Stock / Out of Stock. It was previewed locally in headless Chrome with a stub WSForm returning the three EXP-135 records: no page errors; Refresh twice, the filter and the search all behaved; the flat and indented copies render pixel-identical. Risk: the content is about 17 KB (EXP-136 used 2.9 KB); an asset-size or field-length limit is unverified. The flat copy avoids the EXP-138 auto-indent stacking. The C# Form Script needs no change."
+}
