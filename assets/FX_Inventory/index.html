@@ -39,7 +39,7 @@ th,td{border:1px solid #ccc;padding:3px 6px;text-align:left;font-size:12px}
     rows.forEach(function (row) {
       var qty = parseFloat(row.QuantityOnHand) || 0;
       var reorder = parseFloat(row.ReorderLevel) || 0;
-      var status = qty <= 0 ? "Out of Stock" : (qty <= reorder ? "Low Stock" : "OK");
+      var status = qty <= 0 ? "Out of Stock" : (qty <= reorder ? "Low Stock" : "In Stock");
       units += qty;
       if (status === "Out of Stock") { out++; } else if (status === "Low Stock") { low++; }
       var tr = document.createElement("tr");
