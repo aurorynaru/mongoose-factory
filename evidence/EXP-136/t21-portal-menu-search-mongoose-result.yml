@@ -1,0 +1,23 @@
+- navigation "Navigation menu" [ref=f2e429]:
+  - generic [ref=f2e432]:
+    - generic:
+      - search [active] [ref=f2e435]:
+        - textbox "Search menu" [ref=f2e442]:
+          - /placeholder: Search this menu
+          - text: Mongoose
+      - generic [ref=f2e549]:
+        - generic:
+          - generic [ref=f2e550]: 1 Result
+          - generic [ref=f2e552]:
+            - generic:
+              - heading "Applications" [level=2] [ref=f2e553]
+              - link "Mongoose" [ref=f2e556] [cursor=pointer]:
+                - generic [ref=f2e559]:
+                  - generic:
+                    - generic [ref=f2e560]: Mongoose
+                    - generic [ref=f2e562]: OS
+      - region "Navigation menu footer" [ref=f2e540]:
+        - generic [ref=f2e541]:
+          - generic:
+            - button "Recently closed" [ref=f2e544] [cursor=pointer]
+            - button "Menu Settings" [ref=f2e547] [cursor=pointer]
