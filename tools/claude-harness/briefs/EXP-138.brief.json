@@ -1,0 +1,136 @@
+{
+  "experiment_id": "EXP-138",
+  "title": "EXP-138 — FX_LoginPortal: Hashed FX_LoginUsers Lookup in FX_ProcessLogin",
+  "record_path": "experiments/EXP-138-fx-loginportal-hashed-fx-loginusers-lookup.md",
+  "new_record": true,
+  "reviewed": false,
+  "objective": "Replace the C# Form Script of the existing User-scoped Form FX_LoginPortal (EXP-133) with the committed source assets/FX_Login/FX_LoginPortal.cs.txt (SHA-256 0ba26a44b67afee8a8b38dc5502dff1eecfe330bc809e7118ba52cc526b2514b, supplied by the operator) so that FX_ProcessLogin(string username, string password) loads FX_LoginUsers filtered on FX_Username, compares the SHA-256 hex of the supplied password with the stored FX_PasswordHash, and sets the existing Global variable FX_vLoginResult to exactly one of missing, empty, unknown, invalid, ok or error. Install it by the accepted EXP-136 T15 full-content fill route, perform one ordinary Designer Save, verify persistence through a Designer reopen, then prove at runtime through the unchanged FX_Login Web User Control that fx_probe with the fake test value fx-probe-only returns ok, fx_probe with fx-wrong-value returns invalid, and fx_nobody with fx-probe-only returns unknown. The ok result also proves end to end that the EXP-137 record stored fx_probe in FX_Username and the hash in FX_PasswordHash.",
+  "scope": {
+    "in_scope": [
+      "Read AGENTS.md, the EXP-133, EXP-136 and EXP-137 records (especially EXP-133 T7, EXP-136 T15 to T23 and the EXP-137 acceptance), the committed source assets/FX_Login/FX_LoginPortal.cs.txt and recipes/session/session-expiry-and-stale-designer.md before browser mutation.",
+      "Set worker_tool_policy.deny_browser_javascript to true before any browser operation.",
+      "Before every screenshot or input, select the intended browser tab (browser tabs select) so it is the foreground tab; screenshots of a background tab time out (EXP-137 T6 and T7).",
+      "Read-only preflight: verify the account header identifies anton.ramos@3mworks.com.ph, the configuration is G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT, Designer editing scope is User, and FX_LoginPortal opens in the Designer as the User version with Script Language Visual C#.",
+      "Read-only readback of the current FX_LoginPortal Form Script (open the Form Script editor, read, then Cancel) and comparison with the EXP-133 T7 committed method; record any difference and stop on an unexpected script.",
+      "Install the committed source exactly once by the EXP-136 T15 route: open the Form Script editor, click inside the editor, Ctrl+A, one full-content fill with the complete text of assets/FX_Login/FX_LoginPortal.cs.txt, read back the whole script before OK, then OK.",
+      "Reopen the Form Script editor read-only after OK, read back the whole script, record the Compile Result Output and Errors exactly as observed, then Cancel.",
+      "Perform exactly one ordinary Designer Save of FX_LoginPortal and capture the response and the clean post-Save state.",
+      "Verify persistence by closing FX_LoginPortal in the Designer and reopening it (or a supported Designer reload as in EXP-134 T5), then read back the Form Script once more.",
+      "Open FX_LoginPortal at runtime in the Web Client, using the EXP-135 T9 portal-reload route once when the Web Client needs to load the saved script (top-level navigation to the portal URL, then Mongoose from the portal navigation search).",
+      "Run exactly three runtime Sign In attempts with fake fixture values only, each followed by a screenshot of the displayed result text: fx_probe with fx-probe-only (expected ok); fx_probe with fx-wrong-value (expected invalid); fx_nobody with fx-probe-only (expected unknown).",
+      "If the Web User Control frame exposes no accessibility reference, a native coordinate click on a control verified from a fresh screenshot is permitted as the AGENTS.md last resort and must be recorded (EXP-136 T23).",
+      "Write the experiment record and bounded evidence under evidence/EXP-138/, record every changed object, and reconcile all actions in a final audit."
+    ],
+    "out_of_scope": [
+      "Changes to the Web User Control assets FX_Login/index.html and FX_Login/script/app.js.",
+      "Changes to the FX_vLoginResult variable definition, any FX_LoginPortal component, layout, Caption or event handler.",
+      "Any change to FX_LoginUsers (table, IDO, Form or its fx_probe row) or to the inventory objects.",
+      "Sessions, cookies, tokens, role-based navigation or any real authentication.",
+      "Mock objects, FX_InventoryPrototype01, the vendor IdoCollections Form and the built-in $app assets."
+    ]
+  },
+  "prohibited_actions": [
+    "Creating, modifying or deleting any non-FX_ artifact",
+    "Starting any other experiment or replay",
+    "Modifying production data or disabling security",
+    "Reading or printing credential values",
+    "Typing the SECRET_MONGOOSE placeholders or any real credential into the FX_LoginPortal page; only the fake fixture values fx_probe, fx_nobody, fx-probe-only and fx-wrong-value may be typed there.",
+    "Editing the Form Script by any route other than the single full-content fill of the committed source; partial edits, retyping or a second fill without first proving the previous outcome.",
+    "Performing more than one ordinary Designer Save of FX_LoginPortal.",
+    "Saving while a Form other than FX_LoginPortal is the active Designer Form; never save IdoCollections.",
+    "Opening FX_Login/index.html or FX_Login/script/app.js in an editing dialog other than to read and Cancel.",
+    "Inserting, editing or deleting FX_LoginUsers rows, or performing a runtime Save on any Form.",
+    "Running more than the three specified Sign In attempts, or repeating an attempt without first recording its displayed result.",
+    "Using the Designer top-toolbar Delete Form Definition.",
+    "Unload IDO metadata or global Form objects, execute FormSync, or perform deployment.",
+    "Use browser JavaScript execution, hidden Ext JS state mutation, internal product APIs, direct database access or unsupported automation shortcuts.",
+    "Use coordinate interaction when an actionable accessibility reference is available.",
+    "Repeat session recovery beyond the specified allowance or silently treat a session-expired result as a valid test result.",
+    "Conceal failed responses, extra operations, unexpected artifacts, unresolved compilation status, permission denials or evidence gaps.",
+    "Declare experiment acceptance or replay_verified status without operator review."
+  ],
+  "prohibited_patterns": [
+    "\\b(?:create|add|edit|modify|delete|save|update|open|check[ -]?out|regenerate)\\s+(?:(?:a|an|the|new|existing|vendor|other)\\s+)*(?:Mock\\w*|FX_InventoryPrototype01|FX_InventoryItems|FX_InventoryEditor|FX_InventoryDashboard|IdoCollections)\\b",
+    "\\b(?:create|add|write|execute|run)\\s+(?:(?:a|an|the|new|existing|vendor|other)\\s+)*(?:event handler|javascript script|sql script)s?\\b",
+    "\\b(?:unload all global form objects|unload ido metadata|clear metadata cache|formsync|deploy(?:ment)?)\\b",
+    "\\b(?:direct sql|sql insert|sql update|sql delete|database write|browser javascript|page\\.evaluate|evaluate\\()\\b",
+    "\\b(?:modify|edit|overwrite|delete|replace)\\b[^\\n]{0,100}\\b(?:AGENTS\\.md|recipes/|environment/|tools/learning-harness/)\\b",
+    "\\b(?:insert|add|create|save|delete)\\s+(?:(?:a|an|the|new|existing|vendor|other)\\s+)*(?:login record|user record|fx_probe record|FX_LoginUsers row)s?\\b"
+  ],
+  "worker_tool_policy": {
+    "deny_browser_javascript": true
+  },
+  "related_experiments": [
+    "EXP-130",
+    "EXP-133",
+    "EXP-136",
+    "EXP-137",
+    "EXP-135",
+    "EXP-134",
+    "EXP-006"
+  ],
+  "environment": {
+    "record": "environments/current-environment.md",
+    "editing_scope": "User",
+    "notes": ""
+  },
+  "target": {
+    "form": "FX_LoginPortal",
+    "artifacts": [
+      "FX_LoginPortal",
+      "FX_ProcessLogin",
+      "FX_vLoginResult",
+      "FX_LoginUsers"
+    ]
+  },
+  "acceptance_checks": [
+    {
+      "id": "AC-1",
+      "description": "Pre-mutation evidence identifies the account anton.ramos@3mworks.com.ph, configuration G6R8LJ9Q4E8C2Z8Y_MONGOOSE_DEM_DEFAULT, Designer User scope and FX_LoginPortal loaded as the User version with Script Language Visual C#."
+    },
+    {
+      "id": "AC-2",
+      "description": "The pre-change Form Script is read back and compared with the EXP-133 T7 method (FX_ProcessLogin returning missing, empty or received); any difference is recorded before mutation."
+    },
+    {
+      "id": "AC-3",
+      "description": "Exactly one full-content fill installs the committed source (operator-supplied SHA-256 0ba26a44b67afee8a8b38dc5502dff1eecfe330bc809e7118ba52cc526b2514b). The readback before OK and the read-only readback after OK both show class FX_LoginPortal, the usings System.Security.Cryptography and System.Text, the signature public string FX_ProcessLogin(string username, string password), the IDOClient.LoadCollection call on FX_LoginUsers with properties FX_Username, FX_PasswordHash, the six result codes, the assignment to ThisForm.Variables(FX_vLoginResult) and the private FX_Sha256Hex helper, with no leftover EXP-133 method. The Compile Result is recorded exactly as observed."
+    },
+    {
+      "id": "AC-4",
+      "description": "Exactly one ordinary Designer Save of FX_LoginPortal; the response and clean post-Save state (Save disabled) are captured."
+    },
+    {
+      "id": "AC-5",
+      "description": "After a Designer close and reopen (or supported reload), the Form Script read back from FX_LoginPortal still matches AC-3."
+    },
+    {
+      "id": "AC-6",
+      "description": "FX_LoginPortal opens at runtime in the Web Client with the FX_Login username field, password field and Sign In button visible, after the portal-reload route when needed, with the account context re-established."
+    },
+    {
+      "id": "AC-7",
+      "description": "Sign In with username fx_probe and the fake test value fx-probe-only displays the result text ok."
+    },
+    {
+      "id": "AC-8",
+      "description": "Sign In with username fx_probe and fx-wrong-value displays the result text invalid."
+    },
+    {
+      "id": "AC-9",
+      "description": "Sign In with username fx_nobody and fx-probe-only displays the result text unknown."
+    },
+    {
+      "id": "AC-10",
+      "description": "Only result codes are displayed; no password or fixture value is stored or shown outside the typed input boxes. FX_LoginUsers, the FX_Login assets and the FX_vLoginResult definition are not edited."
+    },
+    {
+      "id": "AC-11",
+      "description": "The final audit reconciles every Form Script fill, OK, Cancel, Designer Save, close, reopen, portal reload and Sign In attempt, lists all changed objects (only the FX_LoginPortal Form Script), and records the evidence-file inventory and confinement."
+    }
+  ],
+  "evidence_dir": "evidence/EXP-138",
+  "replay_of": null,
+  "initial_instruction": "EXP-138 T1 — PREFLIGHT ONLY. Before using the browser, set worker_tool_policy.deny_browser_javascript=true. Read AGENTS.md, the EXP-133, EXP-136 and EXP-137 records, the committed source assets/FX_Login/FX_LoginPortal.cs.txt and the session-recovery recipe. Select the intended browser tab before each screenshot or input. Using supported rendered Mongoose surfaces, capture the account identity, configuration and Designer User scope; open FX_LoginPortal in the Designer and confirm it is the User version with Script Language Visual C#; open the Form Script editor, read back the current script, compare it with the EXP-133 T7 method, then Cancel. Record findings in evidence/EXP-138/ with a concise gate summary. Do not fill the editor, press OK, Save, run a Sign In attempt or change any Mongoose object in T1. Use no more than one fresh browser snapshot and one corrected inspection for recovery; stop and report a blocker if a gate remains inconclusive. Later separately bounded tasks perform the single script fill, the single Save, the reopen readback and the three runtime Sign In attempts.",
+  "notes": "Written by the operator assistant because the coordinator proposal step failed three times on a ChatGPT composer fill timeout; modelled on the approved EXP-137 brief. Rationale: EXP-133 proved the FX_LoginPortal bridge (received); EXP-137 created FX_LoginUsers with the fake fx_probe row and its SHA-256 hash. This experiment completes the FX_ reproduction of the Mock login (EXP-130 T5 sections 2, 4, 5 and 7.1) with a hashed comparison and nonsensitive result codes. The C# source was compiled and unit-tested locally against stubbed Mongoose types before commit (commit 09486c8)."
+}
