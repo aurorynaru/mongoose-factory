@@ -5,13 +5,53 @@ Infor Mongoose through the browser.
 
 ## Current mode
 
-LEARNING MODE.
+Two modes (operator decision, 2026-10-27):
 
-Do not build production applications yet.
+- **LEARNING MODE** applies to experiments (`experiments/EXP-*`, harness runs):
+  small controlled experiments that verify this environment's behavior and turn
+  successful experiments into reusable procedures. All rules below apply unchanged.
+- **BUILD MODE** applies when the operator asks for a feature, form, portal or
+  dashboard to be built or changed. See "Build mode" below.
 
-The objective is to perform small controlled experiments, verify the
-actual behavior of this Mongoose environment, and convert successful
-experiments into reusable procedures.
+## Build mode (operator decision, 2026-10-27)
+
+- Use the project skill `.claude/skills/mongoose-builder/` (SKILL.md and its
+  playbooks). Its playbooks are distilled from the experiments and recipes and
+  carry their knowledge states.
+- Record every build in `builds/BLD-NNN-<slug>.md` (brief, then build record), with
+  evidence in `evidence/BLD-NNN/`.
+- FX_-prefixed objects may be created and modified freely. This includes Forms,
+  IDOs, SQL tables, property classes, validators, component classes, strings,
+  themes, images, variables and FX_ Web User Control Assets.
+- **Non-FX_ objects:** creating, altering or deleting any non-FX_ object (an
+  existing Form, IDO, table, global object, asset or data) needs the operator's
+  explicit approval **for that specific object in the current task**. Record the
+  approval in the build record. Approval does not carry over to other objects or
+  tasks. Prefer, in order:
+  1. an FX_ copy;
+  2. a User-scope version;
+  3. a Form extension.
+
+  Use Group or Site scope only after the change is proven in User scope and
+  approved.
+- Before changing an existing object, record its current state (identity and
+  version screenshot plus a readback of everything the change touches) so it can
+  be rolled back. New components, handlers, variables and strings added to an
+  existing object still use the FX_ prefix.
+- Tenant-wide operations need explicit approval in the task:
+  - metadata-cache unloading;
+  - FormSync;
+  - deployment;
+  - Site- or Group-scope saves;
+  - schema changes on non-FX_ tables.
+- These rules still apply in build mode:
+  - the Safety, Mongoose authentication and Browser automation sections;
+  - the read-only Mock account rule;
+  - the evidence rules;
+  - "Never modify production data";
+  - "Never disable security or authorization".
+- Steps that rely only on unverified knowledge run as small probe steps first: do
+  one change, save, close/reopen and verify before building on it.
 
 ## Technology scope
 

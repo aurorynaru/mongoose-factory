@@ -39,6 +39,8 @@ artifacts, evidence for every claim. The rules for the agents are in [AGENTS.md]
 | [experiments/](experiments)                       | One record per experiment (`EXP-NNN-…md`): objective, method, observations, verification, result |
 | [evidence/](evidence)                             | Screenshots and captured responses per experiment (`evidence/EXP-NNN/`)                          |
 | [recipes/](recipes)                               | Reusable procedures, with their knowledge state (observed / verified)                            |
+| [.claude/skills/mongoose-builder/](.claude/skills/mongoose-builder) | Build-mode skill: workflow, approval gates and playbooks distilled from the experiments |
+| [builds/](builds)                                 | One record per build-mode task (`BLD-NNN-…md`)                                                   |
 | [environments/](environments)                     | What is known about the target Mongoose environment                                              |
 | [claims/](claims)                                 | Reserved for knowledge claims                                                                    |
 | [opencode.json](opencode.json)                    | OpenCode worker config: local model provider, Playwright MCP, permissions                        |
