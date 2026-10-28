@@ -1,0 +1,72 @@
+using System;
+using System.IO;
+using System.Net;
+using Mongoose.IDO.Protocol;
+using Mongoose.Scripting;
+
+namespace Mongoose.FormScripts
+{
+    public class FX_ApiProbe : FormScript
+    {
+        // G3: Infor ION API GET through the IONAPIMethods IDO, wired like the vendor IONAPITestInvoke form.
+        public void FX_CallIonHello()
+        {
+            string text;
+            try {
+                InvokeRequestData req = new InvokeRequestData();
+                req.IDOName = "IONAPIMethods";
+                req.MethodName = "InvokeIONAPIMethod2";
+                req.Parameters.Add("1");
+                req.Parameters.Add("1");
+                req.Parameters.Add("WM");
+                req.Parameters.Add("GET");
+                req.Parameters.Add("/wmwebservice_rest/v1/feature/helloworld");
+                req.Parameters.Add("");
+                req.Parameters.Add("");
+                req.Parameters.Add("10000");
+                req.Parameters.Add("0");
+                req.Parameters.Add(IDONull.Value);
+                req.Parameters.Add(IDONull.Value);
+                req.Parameters.Add(IDONull.Value);
+                req.Parameters.Add(IDONull.Value);
+                InvokeResponseData res = IDOClient.Invoke(req);
+                text = "ION GET helloworld" + Environment.NewLine
+                    + "Code: " + res.Parameters[9].Value + Environment.NewLine
+                    + "Infobar: " + res.Parameters[12].Value + Environment.NewLine
+                    + "Content: " + FX_Clip(res.Parameters[10].Value);
+            }
+            catch (Exception ex) { text = "ION call failed: " + ex.GetType().Name + ": " + ex.Message; }
+            FX_Show(text);
+        }
+
+        // G4: external GET straight from the form script.
+        public void FX_CallHttpbin()
+        {
+            string text;
+            try {
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://httpbin.org/get");
+                req.Method = "GET";
+                req.Timeout = 10000;
+                using (HttpWebResponse res = (HttpWebResponse)req.GetResponse())
+                using (StreamReader reader = new StreamReader(res.GetResponseStream())) {
+                    text = "httpbin GET" + Environment.NewLine
+                        + "Code: " + (int)res.StatusCode + Environment.NewLine
+                        + "Content: " + FX_Clip(reader.ReadToEnd());
+                }
+            }
+            catch (Exception ex) { text = "httpbin call failed: " + ex.GetType().Name + ": " + ex.Message; }
+            FX_Show(text);
+        }
+
+        private void FX_Show(string text)
+        {
+            ThisForm.Components["FX_ResultEdit"].Value = text;
+        }
+
+        private static string FX_Clip(string value)
+        {
+            if (value == null) { return "(null)"; }
+            return value.Length > 2000 ? value.Substring(0, 2000) + "..." : value;
+        }
+    }
+}

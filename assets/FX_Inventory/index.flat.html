@@ -38,7 +38,21 @@ button,input{font:inherit;color:inherit}
 #FX_InvRefresh[aria-busy="true"] svg{animation:FX_spin .8s linear infinite}
 @keyframes FX_spin{to{transform:rotate(360deg)}}
 
-.FX_InvSummary{margin-bottom:24px}
+.FX_InvSummary{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,260px);gap:18px 28px;align-items:start;margin-bottom:24px}
+.FX_InvSummaryMain{min-width:0}
+
+.FX_InvKpi{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;padding:14px 16px 15px;text-align:left;border:1px solid var(--line);border-left:3px solid var(--low);border-radius:6px;background:var(--rack);cursor:pointer;transition:background-color .15s,border-color .15s}
+.FX_InvKpi:hover{background:var(--rack-hover);border-color:var(--steel);border-left-color:var(--low)}
+.FX_InvKpi[aria-pressed="true"]{border-color:var(--low)}
+.FX_InvKpi.is-clear{border-left-color:var(--stocked)}
+.FX_InvKpiLabel{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+.FX_InvKpiValue{font:300 15px var(--sign);color:var(--ink-soft)}
+.FX_InvKpiValue b{font:600 34px/1.05 var(--sign);color:var(--low);font-variant-numeric:tabular-nums;margin-right:6px}
+.FX_InvKpi.is-clear .FX_InvKpiValue b{color:var(--stocked)}
+.FX_InvKpiNote{font-size:13px;color:var(--ink-soft)}
+.FX_InvKpiNote b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.FX_InvKpiOut{font-size:12.5px;color:var(--out)}
+.FX_InvKpiOut:empty,.FX_InvKpiNote:empty{display:none}
 #FX_InvHeadline{font:300 clamp(22px,3.4vw,32px)/1.15 var(--sign);margin:0 0 14px;max-width:32ch}
 .FX_InvMix{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--rack);margin-bottom:12px;max-width:640px}
 .FX_InvMix span{display:block;height:100%;width:0;transition:width .7s cubic-bezier(.2,.7,.2,1)}
@@ -94,6 +108,7 @@ button,input{font:inherit;color:inherit}
 
 @media (max-width:640px){
 body{padding:16px}
+.FX_InvSummary{grid-template-columns:1fr}
 .FX_InvTable thead{display:none}
 .FX_InvTable,.FX_InvTable tbody{display:block}
 .FX_InvTable tbody tr{display:grid;grid-template-columns:1fr auto;gap:8px 12px;padding:12px 4px;border-bottom:1px solid var(--line)}
@@ -122,6 +137,7 @@ Refresh data
 </header>
 
 <section class="FX_InvSummary" aria-label="Stock summary">
+<div class="FX_InvSummaryMain">
 <p id="FX_InvHeadline">Refresh to load the latest stock levels.</p>
 <div class="FX_InvMix" aria-hidden="true">
 <span class="is-out" id="FX_InvMixOut"></span><span class="is-low" id="FX_InvMixLow"></span><span class="is-stocked" id="FX_InvMixStocked"></span>
@@ -132,12 +148,21 @@ Refresh data
 <li class="is-stocked"><b id="FX_InvInStock">-</b>In Stock</li>
 </ul>
 <p id="FX_InvTotals"><b id="FX_InvTotalUnits">-</b> units on hand in <b id="FX_InvTotalItems">-</b><span id="FX_InvItemsWord"> items</span><span id="FX_InvWarehouses"></span></p>
+</div>
+<button type="button" class="FX_InvKpi" id="FX_InvLowCard" aria-pressed="false" title="Show only low-stock items">
+<span class="FX_InvKpiLabel">Low stock</span>
+<span class="FX_InvKpiValue"><b id="FX_InvKpiLow">-</b><span id="FX_InvKpiLowWord">items</span></span>
+<span class="FX_InvKpiNote" id="FX_InvKpiShort">Refresh to load.</span>
+<span class="FX_InvKpiNote" id="FX_InvKpiUrgent"></span>
+<span class="FX_InvKpiOut" id="FX_InvKpiOut"></span>
+</button>
 </section>
 
 <div class="FX_InvTools">
 <div class="FX_InvFilters" role="group" aria-label="Show items">
 <button type="button" data-filter="all" aria-pressed="true">All<small id="FX_InvCountAll"></small></button>
 <button type="button" data-filter="reorder" aria-pressed="false">Needs reorder<small id="FX_InvCountReorder"></small></button>
+<button type="button" data-filter="low" aria-pressed="false">Low Stock<small id="FX_InvCountLow"></small></button>
 <button type="button" data-filter="out" aria-pressed="false">Out of Stock<small id="FX_InvCountOut"></small></button>
 </div>
 <input type="search" id="FX_InvSearch" placeholder="Find an item, warehouse or location" aria-label="Find an item, warehouse or location">
@@ -168,6 +193,7 @@ var statusElement = document.getElementById("FX_InvStatus");
 var tableBody = document.getElementById("FX_InvTableBody");
 var refreshButton = document.getElementById("FX_InvRefresh");
 var searchInput = document.getElementById("FX_InvSearch");
+var lowCard = document.getElementById("FX_InvLowCard");
 var items = [];
 var view = { filter: "all", query: "", sort: "status", dir: 1 };
 var loadTimer = null;
@@ -229,6 +255,8 @@ setText("FX_InvTotalItems", total);
 setText("FX_InvCountAll", total);
 setText("FX_InvCountReorder", needs);
 setText("FX_InvCountOut", counts.out);
+setText("FX_InvCountLow", counts.low);
+summarizeLow(counts);
 var count = Object.keys(warehouses).length;
 setText("FX_InvItemsWord", total === 1 ? " item" : " items");
 setText("FX_InvWarehouses", count ? ", " + count + (count === 1 ? " warehouse" : " warehouses") : "");
@@ -238,6 +266,33 @@ segment.style.width = "0";
 segment.offsetWidth;
 segment.style.width = total ? (counts[key] / total * 100) + "%" : "0";
 });
+}
+
+function summarizeLow(counts) {
+var low = items.filter(function (item) { return item.key === "low"; });
+var short = 0;
+var urgent = null;
+low.forEach(function (item) {
+short += Math.max(item.reorder - item.qty, 0);
+if (!urgent || item.ratio < urgent.ratio) { urgent = item; }
+});
+lowCard.classList.toggle("is-clear", low.length === 0);
+setText("FX_InvKpiLow", low.length);
+setText("FX_InvKpiLowWord", low.length === 1 ? "item" : "items");
+if (low.length === 0) {
+setText("FX_InvKpiShort", "No items are at or below their reorder level.");
+document.getElementById("FX_InvKpiUrgent").textContent = "";
+} else {
+var shortNote = document.getElementById("FX_InvKpiShort");
+shortNote.textContent = "";
+shortNote.appendChild(el("b", "", formatNumber(short)));
+shortNote.appendChild(document.createTextNode(short === 1 ? " unit below reorder level" : " units below reorder level"));
+var urgentNote = document.getElementById("FX_InvKpiUrgent");
+urgentNote.textContent = "Most urgent: ";
+urgentNote.appendChild(el("b", "", urgent.item));
+urgentNote.appendChild(document.createTextNode(", " + formatNumber(urgent.qty) + " of " + formatNumber(urgent.reorder)));
+}
+setText("FX_InvKpiOut", counts.out ? "+ " + counts.out + " out of stock" : "");
 }
 
 function compare(a, b) {
@@ -254,6 +309,7 @@ var query = view.query.toLowerCase();
 return items.filter(function (item) {
 if (view.filter === "reorder" && item.key === "stocked") { return false; }
 if (view.filter === "out" && item.key !== "out") { return false; }
+if (view.filter === "low" && item.key !== "low") { return false; }
 if (!query) { return true; }
 return (item.item + " " + item.description + " " + item.warehouse + " " + item.location).toLowerCase().indexOf(query) >= 0;
 }).sort(compare);
@@ -349,15 +405,20 @@ try { render(value); } catch (e) { setStatus("Could not read inventory data. Ref
 
 refreshButton.addEventListener("click", load);
 
+function setFilter(filter) {
+view.filter = filter;
 Array.prototype.forEach.call(document.querySelectorAll(".FX_InvFilters button"), function (button) {
-button.addEventListener("click", function () {
-view.filter = button.getAttribute("data-filter");
-Array.prototype.forEach.call(document.querySelectorAll(".FX_InvFilters button"), function (other) {
-other.setAttribute("aria-pressed", other === button ? "true" : "false");
+button.setAttribute("aria-pressed", button.getAttribute("data-filter") === filter ? "true" : "false");
 });
+lowCard.setAttribute("aria-pressed", filter === "low" ? "true" : "false");
 if (items.length) { renderRows(false); }
+}
+
+Array.prototype.forEach.call(document.querySelectorAll(".FX_InvFilters button"), function (button) {
+button.addEventListener("click", function () { setFilter(button.getAttribute("data-filter")); });
 });
-});
+
+lowCard.addEventListener("click", function () { setFilter(view.filter === "low" ? "all" : "low"); });
 
 searchInput.addEventListener("input", function () {
 view.query = searchInput.value.trim();

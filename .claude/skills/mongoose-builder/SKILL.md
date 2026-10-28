@@ -40,6 +40,7 @@ workflow. The playbooks in `playbooks/` hold the procedures. Load **only** the o
    - screenshots into `evidence/BLD-NNN/` at the AGENTS.md moments;
    - on a server-event error or session expiry, stop, recover per the playbook, re-inspect and continue.
 5. **Verify.** Close/reopen in the Designer and read the values back. Then open the runtime, Refresh, and exercise the feature. For data changes, re-read through the data Form.
+   - For any full-content fill (asset, script), save the editor snapshot to a file and run `tools/compare-readback.js` against the source. Do this before the change (rollback baseline), before OK, and after reopen. "Looks right" is not a readback.
 6. **Record.** Complete the build record:
    - objects created/changed;
    - approvals;
@@ -61,6 +62,7 @@ workflow. The playbooks in `playbooks/` hold the procedures. Load **only** the o
 | a login page / user table / roles | `playbooks/login-and-security.md` |
 | dropdowns from another table, validators, drill-downs, component classes | `playbooks/validation-and-classes.md` |
 | colours, fonts, themes, images, logos | `playbooks/look-and-feel.md` |
+| to call an Infor ION API or an external HTTP API from a form script, or to run/schedule a background task | `playbooks/api-calls-and-background-tasks.md` (+ `events-and-scripts.md`) |
 | to change an existing (non-FX_) form or portal | `playbooks/extending-existing-forms.md` (+ the feature playbook) |
 | browser driving, Designer launch, session expiry, evidence | `playbooks/browser-and-session.md` (always skim it before the first browser step) |
 
@@ -76,8 +78,8 @@ Not yet exercised here, so treat these as unverified:
 - Form Extensions / Extend Form wizard;
 - Group/Site scope saves;
 - Gauge/Aggregate/DataView bindings;
-- REST/ION API wizards;
-- background tasks;
+- REST/ION API wizards (calling ION from a C# script is observed);
+- background tasks: submitting and running them (the survey and the submit pattern are observed; see `api-calls-and-background-tasks.md`);
 - IDO extension classes (.NET);
 - FormSync/deployment;
 - form copy;
@@ -89,3 +91,4 @@ Not yet exercised here, so treat these as unverified:
 - **Portal:** FX_CustomerPortal (Flex portal: header, menu, pages, tiles, drag-to-cart, checkout), with tile form FX_ItemsTile.
 - **Dashboard:** FX_InventoryDashboard (web-user-control dashboard over FX_InventoryItems; dark theme).
 - **Login:** FX_LoginPortal + FX_LoginUsers (hashed login).
+- **API probe:** FX_ApiProbe (C# script calls the ION API through IONAPIMethods, and httpbin through HttpWebRequest).

@@ -1,0 +1,17 @@
+Found 1 match for /dialog "Select Form"[\s\S]*/:
+
+- generic [ref=f2e4]:
+  - generic:
+    - generic [ref=f2e5]:
+      - main [ref=f2e45]:
+        - iframe [active] [ref=f2e588]:
+          - generic [ref=f3e1]:
+            - region [ref=f3e78]:
+              ...
+              - generic [ref=f3e85]: en-US
+              - separator [ref=f3e86]
+              - img "Powered by Infor" [ref=f3e87]
+            - dialog "Select Form" [ref=f3e89]:
+              - button "Close Window" [ref=f3e91] [cursor=pointer]
+              - grid [ref=f3e92]:
+                - row [ref=f3e93]:

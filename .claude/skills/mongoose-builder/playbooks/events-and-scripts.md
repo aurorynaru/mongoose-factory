@@ -78,3 +78,11 @@ C# form scripts are used by the web-user-control bridge. See web-user-controls.m
 - Runtime prompts block everything. Expect the Prompt handlers you add (e.g. Hello World on every refresh) and dismiss them.
 - Before Save, verify with Properties readback. After Save + reopen, verify with the Components grid and Event Handlers grid.
 - `Console: N errors` in Designer headers is pre-existing noise and has not been investigated.
+- **The Designer degrades in long sessions (EXP-144).** Once visibilityMode/parentNode client errors pile up, dialogs open off-screen and dropdowns stop opening. To recover:
+  1. Save the good state.
+  2. Reload the Designer tab (accept beforeunload).
+  3. Choose Scope **User** → OK.
+  4. Reopen the form from the Form-menu recent list.
+- **New event handler name:** press **Enter** instead of clicking OK, because a mouse OK dropped the last character (`FX_CallIo`). A wrong name can be fixed in the property grid's Event field.
+- **Response Type list:** options are `table.mg-list-table td` cells. Scroll the option into view, then click it.
+- C# script → ION API / external HTTP, and Run Background Task: see `api-calls-and-background-tasks.md`.

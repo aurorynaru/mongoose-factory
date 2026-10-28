@@ -8,6 +8,8 @@ Knowledge state: **observed**. The full round trip works at runtime:
 
 Every step ran in single runs only, with same-session evidence.
 
+Exception: **replacing an existing asset's content** (section below) is **verified**. It has run twice with persistence and a runtime check: EXP-139 and BLD-001. The upgrade was approved by the operator on 2026-10-27.
+
 Reference implementations (copy these):
 
 | App | Asset | Form script | Form / component / variable |
@@ -41,7 +43,7 @@ WSForm.invoke("FX_Method", [args...,] function(){ ──►   public void/string
    1. Designer **Edit › Web User Control Assets** → Global Objects (Web Assets tree) → leftmost **+** (New).
    2. Enter Name `FX_<App>/index.html`, then Tab and OK. This creates the folder `FX_<App>` with the child `index.html`.
    3. Select the file → Content row "Open Edit Property Dialog" → **Edit Browser File**. The template already includes `../$app/scripts/UserControl.js`. Keep that include.
-   4. Replace the content with one full-text fill.
+   4. Replace the content with one full-text fill. Read it back before OK with the readback check (below).
    5. Click **Edit Browser File OK**, then **Global Objects OK** (EXP-131 T6).
    6. Add more files (e.g. `FX_Login/app.js`) the same way.
    - Absence check: look at the Web Assets top level for the `FX_` folder.
@@ -64,11 +66,26 @@ WSForm.invoke("FX_Method", [args...,] function(){ ──►   public void/string
    - The iframe often has **no accessibility refs**. Coordinate clicks inside the control are the accepted last resort.
    - Screenshot the before/after states.
 
-## Replacing or updating a dashboard page (EXP-139 route)
+## Replacing or updating an asset page (verified: EXP-139, BLD-001)
 1. Edit the file in `assets/FX_<App>/index.html` locally (version-controlled).
-2. Produce the flush-left install copy.
-3. In Mongoose: Edit › Web User Control Assets → file → Edit Browser File → one full-content fill → OK → Global Objects OK → Designer Save.
-4. Reload the portal or reopen the Form, and verify at runtime (Refresh data, filters).
+2. Produce the flush-left install copy (`index.flat.html`).
+3. Open FX_<Form> in the Designer (User scope) → Edit › Web User Control Assets → expand `FX_<App>` (click the folder, then ArrowRight) → select the file → Content row **Open Edit Property Dialog** → Edit Browser File.
+4. **Rollback baseline:** save the editor value with `browser_snapshot { target: <editor ref>, filename: "evidence/<ID>/baseline-editor-content.yml" }`. Compare it with the git version you expect to be live. A match proves which version is the rollback source.
+5. Click in the editor, press Ctrl+A, then do **one** full-content fill (`browser_type` with the whole file).
+6. **Readback before OK:** snapshot the editor to a file again, then run the readback check against the install copy. It must say `equal true`.
+7. Edit Browser File OK → Global Objects OK → Designer Save. Expected notice: "Global object(s) were saved."
+8. Close the Form tab (no prompt expected), reopen it from the Form menu recent list, and open the asset again. Run the readback check a third time, then Cancel both dialogs.
+9. Runtime: in the Web Client, Open › Select Form opens the Form with the new asset. No portal reload was needed in BLD-001. Click Refresh data and exercise the changed feature.
+- The frame exposed accessibility refs in EXP-139 T6 and in BLD-001, but not in EXP-139 T7/T8. Use refs when present. Coordinates are the fallback.
+- When finding refs, never use a regex that matches `textbox`: the editor's full content comes back in the result.
+
+## Readback check (`tools/compare-readback.js`)
+```
+node .claude/skills/mongoose-builder/tools/compare-readback.js evidence/<ID>/<snapshot>.yml <source-file>
+```
+- It reads the longest textbox value in a Playwright element snapshot and compares it with the source. Both sides are whitespace-normalized.
+- Exit codes: 0 equal, 1 different (prints where), 2 no editor value found.
+- It proves the content is the same, not the bytes (line breaks and indentation are not compared). That also makes it work for Form Scripts, where the Script Editor adds its own indentation. Applying it to the Script Editor is not exercised yet: check that the editor's snapshot exposes its value first.
 
 ## Local design loop (fast)
 - The HTML is a normal standalone page. Develop and preview it locally with mock JSON (the `typeof WSForm === "undefined"` branch), then install it.

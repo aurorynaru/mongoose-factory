@@ -33,6 +33,8 @@ Sources:
   - String-ID Caption comboboxes need key-by-key typing, then leave by clicking another row.
   - Checkboxes are often covered by a span. Click the **label**.
   - ExtJS combos aren't `<select>`: open the list and click the option.
+- **Filter in Place forms** (they open with an empty query, "Filter in Place" in the status bar): run the query with **Actions › Filter › Execute in Place**. Enter in an empty field did not run it (EXP-141).
+- **Auto-started rows:** some forms (Deployment, Object External APIs) open with an unsaved `*1` row. Closing the tab without Save leaves nothing behind (EXP-140/141).
 - **Open forms:**
   - Web Client: toolbar Open → Select Form (filter Name, key events, double-click the row).
   - Designer: toolbar Open (`data-mgcompname="openButton"`) or the **Form menu recent list**. The Designer Form menu has no Open item.
@@ -62,4 +64,5 @@ Sources:
 - **Where:** screenshots go in `evidence/<BLD-or-EXP-id>/<step>-<what>.png`.
   - Take them at: entering a new designer, before risky mutations, after create, after save, after reopen, and on errors.
 - **What to record:** for each decisive screenshot, note what it shows (identity, scope, values) and what it doesn't prove.
+- **Long editor content** (assets, scripts): save it with `browser_snapshot { target, filename }` instead of pasting it into the record, and compare it with `tools/compare-readback.js` (see `web-user-controls.md`).
 - **Credentials:** never capture them. If a screenshot shows a filled sign-in form, delete it unopened.
