@@ -93,6 +93,11 @@ node .claude/skills/mongoose-builder/tools/compare-readback.js evidence/<ID>/<sn
 - `assets/FX_Inventory/index.html` is the reference for the dark theme, KPI cards, filters, sort and the status line.
 
 ## Pitfalls
+- **Wait for the Form before the first `WSForm.invoke` (BLD-002, observed).** An invoke sent from the page's startup code never reached the server (no event after `forminit`), and the page timed out. Wrap the first load in `MG.onReady(function () { load(); })`, guarded with `typeof MG !== "undefined"` so the local preview still runs. See `assets/FX_ASNPortal/index.html` (end of script) and `docs/mongoose/guides/user-control.md`.
+- **UserControl Size (BLD-002, observed):** typing "100; 30" into Layout › Size did not commit. Set Width and Height separately, committing each by clicking another cell.
+- **Control URL change:** after picking the Control URL, an info dialog about regeneration appears and blocks clicks until OK is pressed.
+- **Control frame size (BLD-002):** on a Normal form with Size 100; 30, the page renders in a fixed frame of about 730×540 px. On a **Flex** form (operator's ASNPORTAL, UserControl in Pixel units with Flex attributes), the page filled the form width (observed).
+- **Form script class name = form name (BLD-002, observed):** the C# template for form ASNPORTAL is `public class ASNPORTAL : FormScript`. When the same script is used on another form, rename only the class line, or the editor may refuse it with "class name has changed".
 - Designer sessions expire about hourly. A stale Designer gives "server event processing returned an error". Stop, re-login at the top-level portal and reload (browser-and-session.md).
 - A positional `PropertyValues[i]` mapping must match the property list order in `LoadCollection`.
 - Escape `'` in filter strings (`Replace("'", "''")`), as in `FX_LoginPortal`.

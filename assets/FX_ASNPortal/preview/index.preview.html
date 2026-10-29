@@ -6,54 +6,48 @@
 <title>FX ASN Portal</title>
 <script>
 // Preview only (never installed): a fake WSForm so index.html runs in a normal browser.
-// It mimics the C# methods' result shape in FX_vAsnResult. Data is generated test data.
+// It mimics FX_ASNPortal.cs.txt's result shape (WM data, BLD-002). Data is generated test data.
 (function () {
   var vars = {};
-  var lookups = [
-    ["ActivityType", "Delivery"], ["ActivityType", "TEST Activity 2"],
-    ["DeptCode", "50 - Hardware"], ["DeptCode", "TEST Dept 2"],
-    ["DeliveryMode", "TEST Mode 1"], ["DeliveryMode", "TEST Mode 2"],
-    ["LocationCode", "TEST Loc 1"], ["LocationCode", "TEST Loc 2"],
-    ["TruckType", "TEST Truck 1"], ["TruckType", "TEST Truck 2"]
-  ].map(function (p) { return { Type: p[0], Value: p[1] }; });
+  var lookups = [["ActivityType", "delivery"], ["DeptCode", "50"], ["DeliveryMode", "VIA DC"], ["TruckType", "4W"], ["LocationCode", "STAGE"]]
+    .map(function (p) { return { Type: p[0], Value: p[1] }; });
   var asns = [];
   var seed = 7;
   function rnd(n) { seed = (seed * 9301 + 49297) % 233280; return Math.floor(seed / 233280 * n); }
   function pad(n, w) { var s = String(n); while (s.length < w) { s = "0" + s; } return s; }
-  function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1, 2) + "-" + pad(d.getDate(), 2); }
-  var statuses = ["Approved", "Approved", "Approved", "Pending Approval", "Received", "Cancelled", "No Show"];
-  var vdr = ["DC Received", "Intransit", "RDU Received", "Completed"];
-  for (var i = 1; i <= 60; i++) {
-    var month = i <= 12 ? 8 : 9;
-    var d = new Date(2026, month, 1 + rnd(31));
-    var st = statuses[rnd(statuses.length)];
-    var hasVdr = st === "Approved" || st === "Received";
-    asns.push({
-      AsnId: i, AsnNum: "WAP" + pad(i, 9), VdrNum: hasVdr ? "VDR" + pad(12300 + i, 7) : "",
-      EnvCode: "WAP", DeptCode: "50 - Hardware", DeliveryDate: ymd(d), BoxQty: 10 + rnd(20),
-      VdrStatus: hasVdr ? vdr[rnd(4)] : "", AsnStatus: st, DocsPct: hasVdr ? 100 : 40 + rnd(60),
-      CreatedDate: ymd(new Date(d.getTime() - 5 * 864e5))
+  function iso(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1, 2) + "-" + pad(d.getDate(), 2) + "T11:00:00.000+00:00"; }
+  for (var i = 1; i <= 30; i++) {
+    var d = new Date(2026, 9, 1 + rnd(31));
+    asns.push({ AsnNum: pad(370 + i, 10), ExternKey: "FXTEST-" + pad(i, 4), Storer: "MINISO", WmStatus: "0", AsnStatus: "Pending Approval",
+      DeliveryDate: iso(d), CreatedDate: iso(new Date(2026, 9, 29, 6, i)) });
+  }
+  function shape() {
+    asns.sort(function (a, b) { return b.CreatedDate.localeCompare(a.CreatedDate); });
+    asns.forEach(function (a, idx) {
+      a.AsnId = idx;
+      if (idx < 6 && !a.DeptCode) { a.DeptCode = "50"; a.EnvCode = "WAP"; a.BoxQty = String(1 + rnd(30)); }
     });
+    return { ok: true, asns: asns, lookups: lookups };
   }
-  function next() { return asns.reduce(function (m, a) { return Math.max(m, a.AsnId); }, 0) + 1; }
-  function save(json, generate) {
+  function generate(json) {
     var data = JSON.parse(json);
-    var row = data.AsnId ? asns.filter(function (a) { return String(a.AsnId) === data.AsnId; })[0] : null;
-    if (!row) { row = { AsnId: next(), EnvCode: "WAP", CreatedDate: ymd(new Date()) }; asns.push(row); }
-    for (var k in data) { if (k !== "AsnId") { row[k] = data[k]; } }
-    row.BoxQty = data.BoxQty === "" ? null : +data.BoxQty;
-    row.AsnStatus = generate ? "Pending Approval" : "Draft";
-    if (generate) {
-      var max = asns.reduce(function (m, a) { return a.AsnNum ? Math.max(m, +a.AsnNum.slice(3)) : m; }, 0);
-      row.AsnNum = "WAP" + pad(max + 1, 9);
+    var lines = JSON.parse(data.Lines || "[]");
+    for (var i = 0; i < lines.length; i++) {
+      if (!items.hasOwnProperty(lines[i].Sku)) { return { ok: false, message: "SKU " + lines[i].Sku + " was not found in WM (owner MINISO)." }; }
     }
-    return { ok: true, asnId: row.AsnId, asnNum: row.AsnNum || "", message: generate ? "ASN generated." : "Draft saved." };
+    var key = pad(370 + asns.length + 1, 10);
+    asns.push({ AsnNum: key, ExternKey: "WMS" + key, Storer: "MINISO", WmStatus: "0", AsnStatus: "Pending Approval",
+      DeliveryDate: data.DeliveryDate + "T11:00:00.000+00:00", CreatedDate: new Date().toISOString(),
+      DeptCode: data.DeptCode, EnvCode: "WAP", BoxQty: data.BoxQty });
+    return { ok: true, asnNum: key, message: "ASN " + key + " created in WM warehouse 1." };
   }
-  var methods = {
-    FX_LoadAsnData: function () { return { ok: true, asns: asns, lookups: lookups }; },
-    FX_SaveAsnDraft: function (json) { return save(json, false); },
-    FX_GenerateAsn: function (json) { return save(json, true); }
-  };
+  // Preview-only item list; the real check calls WM (FX_CheckSku).
+  var items = { MNSSKU1: "Preview item 1", MNSSKU2: "Preview item 2" };
+  function checkSku(sku) {
+    sku = String(sku || "").trim();
+    return { ok: true, found: items.hasOwnProperty(sku), sku: sku, descr: items[sku] || "" };
+  }
+  var methods = { FX_LoadAsnData: shape, FX_GenerateAsn: generate, FX_CheckSku: checkSku };
   window.WSForm = {
     invoke: function () {
       var args = Array.prototype.slice.call(arguments);
@@ -184,9 +178,16 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
 .FX_AsnTile{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:16px;margin-top:10px;border:0;border-radius:10px;background:#e8eef7;color:var(--ink);font-weight:600;cursor:pointer}
 .FX_AsnTile:hover{background:#dce5f2}
 .FX_AsnTile svg.FX_I{color:var(--brand)}
-.FX_AsnDraftNote{margin:10px 0 0;font-size:12.5px;color:var(--ink-soft)}
-.FX_AsnDraftNote:empty{display:none}
+.FX_AsnSkuCard{grid-column:1 / -1}
+.FX_AsnLines input{width:100%;min-width:90px;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:#fff;font:inherit}
+.FX_AsnLines tr[aria-invalid="true"] input{border-color:var(--error)}
+.FX_AsnLines td.is-found{color:var(--transit)}
+.FX_AsnLines td.is-missing{color:var(--error)}
+.FX_AsnSkuCard > .FX_AsnErr{margin:8px 0 0;font-size:12px;color:var(--error)}
+.FX_AsnSkuCard > .FX_AsnErr:empty{display:none}
+.FX_AsnSkuCard small{display:block;margin-top:8px;font-size:11.5px;color:var(--ink-soft)}
 .FX_AsnSoon{max-width:520px;margin:40px auto;text-align:center}
+.FX_AsnNote{margin:8px 0 0;font-size:12.5px;color:var(--ink-soft);text-align:center}
 
 @media (max-width:1100px){
   .FX_AsnKpis{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -265,13 +266,14 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
         <div class="FX_AsnCard FX_AsnChartBox">
           <div class="FX_AsnCardHead"><h2><svg class="FX_I"><use href="#FX_iChart"/></svg>Monthly VDR Trend</h2><select class="FX_AsnMonth" aria-label="Month"></select></div>
           <div id="FX_AsnTrend"></div>
+          <p class="FX_AsnNote" data-vdr-note hidden>No VDR data source yet.</p>
           <div class="FX_AsnLegend" id="FX_AsnTrendLegend"></div>
         </div>
         <div class="FX_AsnCard">
           <div class="FX_AsnCardHead"><h2><svg class="FX_I"><use href="#FX_iTruck"/></svg>Validated Delivery Receipt (VDR) Status</h2><select class="FX_AsnMonth" aria-label="Month"></select></div>
           <div class="FX_AsnVdr">
             <div class="FX_AsnChartBox" id="FX_AsnDonut"></div>
-            <table class="FX_AsnSmallTable"><thead><tr><th>Status</th><th>Count</th><th>Percentage</th></tr></thead><tbody id="FX_AsnVdrBody"></tbody></table>
+            <div><table class="FX_AsnSmallTable"><thead><tr><th>Status</th><th>Count</th><th>Percentage</th></tr></thead><tbody id="FX_AsnVdrBody"></tbody></table><p class="FX_AsnNote" data-vdr-note hidden>No VDR data source yet.</p></div>
           </div>
         </div>
       </div>
@@ -295,10 +297,10 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
             <div class="FX_AsnField is-wide"><label for="FX_AsnActivityType">Activity Type<span class="FX_Req">*</span></label><select id="FX_AsnActivityType" name="ActivityType" data-lookup="ActivityType" data-placeholder="-- Select Activity Type --" required></select><span class="FX_AsnErr"></span></div>
             <div class="FX_AsnField"><label for="FX_AsnDeptCode">Department Code<span class="FX_Req">*</span></label><select id="FX_AsnDeptCode" name="DeptCode" data-lookup="DeptCode" data-placeholder="-- Select Department --" required></select><span class="FX_AsnErr"></span></div>
             <div class="FX_AsnField"><label for="FX_AsnDeliveryMode">Delivery Mode<span class="FX_Req">*</span></label><select id="FX_AsnDeliveryMode" name="DeliveryMode" data-lookup="DeliveryMode" data-placeholder="-- Select Delivery Mode --" required></select><span class="FX_AsnErr"></span></div>
-            <div class="FX_AsnField"><label for="FX_AsnLocationCode">Location Code<span class="FX_Req">*</span></label><select id="FX_AsnLocationCode" name="LocationCode" data-lookup="LocationCode" data-placeholder="-- Select Location Code --" required></select><span class="FX_AsnErr"></span></div>
+            <div class="FX_AsnField"><label for="FX_AsnLocationCode">Location Code</label><select id="FX_AsnLocationCode" name="LocationCode" data-lookup="LocationCode" data-default="STAGE" data-placeholder="-- Select Location Code --"></select><small>Default STAGE. Sent to WM as the receiving location of each SKU line.</small><span class="FX_AsnErr"></span></div>
             <div class="FX_AsnField"><label for="FX_AsnDeliveryDate">ASN Delivery Date<span class="FX_Req">*</span></label><input type="date" id="FX_AsnDeliveryDate" name="DeliveryDate" required><small>Arrival at selected delivery location.</small><span class="FX_AsnErr"></span></div>
             <div class="FX_AsnField"><label for="FX_AsnNeedByDate">Need by Date<span class="FX_Req">*</span></label><input type="date" id="FX_AsnNeedByDate" name="NeedByDate" required><small>Date when the store needs the items.</small><span class="FX_AsnErr"></span></div>
-            <div class="FX_AsnField"><label for="FX_AsnBoxQty">Box Quantity<span class="FX_Req">*</span></label><div class="FX_AsnInline"><input type="number" id="FX_AsnBoxQty" name="BoxQty" min="1" step="1" placeholder="Enter box qty" required><button type="button" class="FX_AsnGhost" data-soon="SKU Details"><svg class="FX_I"><use href="#FX_iBox"/></svg>SKU Details</button></div><span class="FX_AsnErr"></span></div>
+            <div class="FX_AsnField"><label for="FX_AsnBoxQty">Box Quantity<span class="FX_Req">*</span></label><div class="FX_AsnInline"><input type="number" id="FX_AsnBoxQty" name="BoxQty" min="1" step="1" placeholder="Enter box qty" required><button type="button" class="FX_AsnGhost" id="FX_AsnSkuJump"><svg class="FX_I"><use href="#FX_iBox"/></svg>SKU Details</button></div><span class="FX_AsnErr"></span></div>
           </div>
           <p class="FX_AsnMandatory">* Mandatory Field</p>
         </div>
@@ -311,7 +313,6 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
             <div class="FX_AsnField is-wide"><label for="FX_AsnDriverName">Driver Name</label><input type="text" id="FX_AsnDriverName" name="DriverName" maxlength="60" placeholder="Enter driver name"><span class="FX_AsnErr"></span></div>
             <div class="FX_AsnField is-wide"><label for="FX_AsnHelpers">No. of Helpers<span class="FX_Req">*</span></label><input type="number" id="FX_AsnHelpers" name="Helpers" min="0" step="1" placeholder="Enter number of helpers" required><span class="FX_AsnErr"></span></div>
           </div>
-          <p class="FX_AsnDraftNote" id="FX_AsnDraftNote"></p>
         </div>
 
         <div>
@@ -322,6 +323,18 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
             <button type="button" class="FX_AsnTile" data-soon="Upload ASN File"><svg class="FX_I"><use href="#FX_iUpload"/></svg>Upload ASN File</button>
             <button type="button" class="FX_AsnTile" data-soon="Box Details"><svg class="FX_I"><use href="#FX_iBox"/></svg>Box Details</button>
           </div>
+        </div>
+
+        <div class="FX_AsnCard FX_AsnSkuCard" id="FX_AsnSkuCard">
+          <div class="FX_AsnCardHead"><h2><svg class="FX_I"><use href="#FX_iBox"/></svg>SKU Details<span class="FX_Req">*</span></h2><button type="button" class="FX_AsnSave" id="FX_AsnAddLine">Add SKU line</button></div>
+          <div class="FX_AsnTableWrap">
+            <table class="FX_AsnTable FX_AsnLines">
+              <thead><tr><th>Line</th><th>SKU</th><th>Description (WM)</th><th>Qty (Ea)</th><th></th></tr></thead>
+              <tbody id="FX_AsnLines"></tbody>
+            </table>
+          </div>
+          <p class="FX_AsnErr" id="FX_AsnLinesErr"></p>
+          <small>Each SKU is checked in WM (owner MINISO) when you leave the field, and again on Generate.</small>
         </div>
       </form>
     </section>
@@ -346,8 +359,7 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
     "Pending Approval": { color: "#b7791f", bg: "#fff4dc" },
     "Cancelled": { color: "#d0342c", bg: "#fde8e7" },
     "Received": { color: "#2f80ed", bg: "#e3efff" },
-    "No Show": { color: "#5b6b82", bg: "#edf1f6" },
-    "Draft": { color: "#5b6b82", bg: "#edf1f6" }
+    "No Show": { color: "#5b6b82", bg: "#edf1f6" }
   };
   var PAGES = {
     home: { title: "ASN Portal Dashboard", sub: "Advance Shipping Notice" },
@@ -367,7 +379,7 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
   var monthSelects = document.querySelectorAll(".FX_AsnMonth");
   var asns = [];
   var lookups = [];
-  var state = { page: "home", month: null, showAll: false, draftId: null, busy: false };
+  var state = { page: "home", month: null, showAll: false, busy: false };
 
   function setStatus(text, kind) {
     statusLine.textContent = text || "";
@@ -470,10 +482,10 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
     return MONTHS[state.month % 100] + " " + Math.floor(state.month / 100);
   }
 
-  // ASNs count for a month by ASN Delivery Date; drafts are not ASNs yet (BLD-002, proposed rule).
+  // ASNs count for a month by ASN Delivery Date (BLD-002); ASNs without a delivery date are not counted.
   function inMonth(a) {
     var d = parseDate(a.DeliveryDate);
-    return d && monthKey(d) === state.month && a.AsnStatus !== "Draft";
+    return d && monthKey(d) === state.month;
   }
 
   function renderDashboard() {
@@ -487,6 +499,7 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
       b.textContent = formatCount(month.filter(function (a) { return a.AsnStatus === name; }).length);
     });
     var vdrRows = month.filter(function (a) { return a.VdrNum && a.VdrStatus; });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-vdr-note]"), function (n) { n.hidden = asns.length === 0 || vdrRows.length > 0; });
     renderTrend(vdrRows);
     renderDonut(vdrRows);
     renderRecent();
@@ -609,7 +622,8 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
   function renderRecent() {
     var body = document.getElementById("FX_AsnRecentBody");
     body.innerHTML = "";
-    var list = asns.slice().sort(function (a, b) { return String(b.CreatedDate).localeCompare(String(a.CreatedDate)) || (b.AsnId - a.AsnId); });
+    // Newest first; ties keep the server's order (AsnId), which is the order the details were loaded in.
+    var list = asns.slice().sort(function (a, b) { return String(b.CreatedDate).localeCompare(String(a.CreatedDate)) || (a.AsnId - b.AsnId); });
     if (!state.showAll) { list = list.slice(0, 6); }
     document.querySelector("#FX_AsnViewAll span").textContent = state.showAll ? "Show Recent Only" : "View All ASN";
     if (!list.length) {
@@ -622,7 +636,7 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
     }
     list.forEach(function (a) {
       var tr = el("tr");
-      tr.appendChild(el("td", "", a.AsnNum || "(draft)"));
+      tr.appendChild(el("td", "", a.AsnNum || ""));
       tr.appendChild(el("td", "", a.VdrNum || ""));
       tr.appendChild(el("td", "", a.EnvCode || ""));
       tr.appendChild(el("td", "", a.DeptCode || ""));
@@ -633,6 +647,8 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
       tr.appendChild(vdr);
       var st = el("td");
       if (a.AsnStatus) { st.appendChild(badge(a.AsnStatus, ASN_BADGE[a.AsnStatus] || ASN_BADGE["No Show"])); }
+      // WM status codes are not mapped yet (BLD-002); keep the raw code visible on hover.
+      if (a.WmStatus !== undefined) { st.title = "WM status " + a.WmStatus; }
       tr.appendChild(st);
       var docs = el("td");
       if (a.DocsPct !== null && a.DocsPct !== undefined && a.DocsPct !== "") {
@@ -657,7 +673,8 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
   function fillLookups() {
     Array.prototype.forEach.call(form.querySelectorAll("select[data-lookup]"), function (select) {
       var type = select.getAttribute("data-lookup");
-      var keep = select.value;
+      var preset = select.getAttribute("data-default") || "";
+      var keep = select.value || preset;
       select.innerHTML = "";
       var first = el("option", "", select.getAttribute("data-placeholder"));
       first.value = "";
@@ -665,6 +682,8 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
       lookups.filter(function (l) { return l.Type === type; }).forEach(function (l) {
         var option = el("option", "", l.Value);
         option.value = l.Value;
+        // defaultSelected keeps the preset after form.reset().
+        option.defaultSelected = l.Value === preset;
         select.appendChild(option);
       });
       select.value = keep;
@@ -676,7 +695,6 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
     Array.prototype.forEach.call(form.elements, function (input) {
       if (input.name) { data[input.name] = input.value.trim(); }
     });
-    if (state.draftId !== null) { data.AsnId = String(state.draftId); }
     return data;
   }
 
@@ -688,7 +706,7 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
     if (text) { field.setAttribute("aria-invalid", "true"); } else { field.removeAttribute("aria-invalid"); }
   }
 
-  // Generate needs every * field; Save (draft) only checks the numbers that were typed.
+  // full: every * field must be filled (Generate); otherwise only typed numbers are checked.
   function validate(full) {
     var missing = [];
     Array.prototype.forEach.call(form.elements, function (input) {
@@ -709,40 +727,146 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
     return missing;
   }
 
+  // ---- SKU lines: sent as one JSON text field "Lines"; owner MINISO and UOM Ea are fixed on the server. ----
+  var linesBody = document.getElementById("FX_AsnLines");
+  var linesErr = document.getElementById("FX_AsnLinesErr");
+
+  function numberLines() {
+    Array.prototype.forEach.call(linesBody.rows, function (tr, i) { tr.cells[0].textContent = String(i + 1); });
+  }
+
+  function addLine() {
+    var tr = el("tr");
+    tr.appendChild(el("td"));
+    var sku = el("input");
+    sku.type = "text";
+    sku.maxLength = 50;
+    sku.placeholder = "Enter SKU";
+    sku.setAttribute("aria-label", "SKU");
+    var skuCell = el("td");
+    skuCell.appendChild(sku);
+    tr.appendChild(skuCell);
+    var descr = el("td");
+    tr.appendChild(descr);
+    var qty = el("input");
+    qty.type = "number";
+    qty.min = "1";
+    qty.step = "1";
+    qty.placeholder = "Qty";
+    qty.setAttribute("aria-label", "Quantity");
+    var qtyCell = el("td");
+    qtyCell.appendChild(qty);
+    tr.appendChild(qtyCell);
+    var remove = el("button", "FX_AsnGhost", "Remove");
+    remove.type = "button";
+    var removeCell = el("td");
+    removeCell.appendChild(remove);
+    tr.appendChild(removeCell);
+    remove.addEventListener("click", function () {
+      if (linesBody.rows.length > 1) {
+        linesBody.removeChild(tr);
+        numberLines();
+      } else {
+        sku.value = "";
+        qty.value = "";
+        setDescr(descr, "", "");
+      }
+    });
+    sku.addEventListener("change", function () { checkSku(sku, descr); });
+    linesBody.appendChild(tr);
+    numberLines();
+    return sku;
+  }
+
+  function resetLines() {
+    linesBody.innerHTML = "";
+    linesErr.textContent = "";
+    addLine();
+  }
+
+  function setDescr(cell, text, kind) {
+    cell.textContent = text;
+    cell.className = kind ? "is-" + kind : "";
+  }
+
+  function checkSku(input, cell) {
+    var value = input.value.trim();
+    if (!value) { setDescr(cell, "", ""); return; }
+    // One server call at a time (one result variable); Generate checks every SKU again anyway.
+    if (state.busy) { setDescr(cell, "Checked on Generate.", ""); return; }
+    setBusy(true);
+    setDescr(cell, "Checking in WM...", "");
+    callServer("FX_CheckSku", [value], function (err, result) {
+      setBusy(false);
+      if (input.value.trim() !== value) { return; }
+      if (err) { setDescr(cell, err, "missing"); return; }
+      if (result.found) {
+        setDescr(cell, result.descr || "Found in WM (no description).", "found");
+      } else {
+        setDescr(cell, "Not found in WM.", "missing");
+      }
+    });
+  }
+
+  function readLines() {
+    var lines = [];
+    Array.prototype.forEach.call(linesBody.rows, function (tr) {
+      var inputs = tr.querySelectorAll("input");
+      var sku = inputs[0].value.trim();
+      var qty = inputs[1].value.trim();
+      if (sku || qty) { lines.push({ Sku: sku, Qty: qty }); }
+    });
+    return lines;
+  }
+
+  // Returns "" when the lines may be sent, otherwise a message; marks the rows at fault.
+  function validateLines() {
+    var problem = "";
+    Array.prototype.forEach.call(linesBody.rows, function (tr, i) {
+      var inputs = tr.querySelectorAll("input");
+      var sku = inputs[0].value.trim();
+      var qty = inputs[1].value.trim();
+      var bad = "";
+      if (sku && !qty) {
+        bad = "quantity is required";
+      } else if (qty && !sku) {
+        bad = "SKU is required";
+      } else if (qty && (!/^\d{1,6}$/.test(qty) || +qty < 1)) {
+        bad = "quantity must be a whole number of at least 1";
+      }
+      if (bad) { tr.setAttribute("aria-invalid", "true"); } else { tr.removeAttribute("aria-invalid"); }
+      if (bad && !problem) { problem = "Line " + (i + 1) + ": " + bad + "."; }
+    });
+    if (!problem && readLines().length === 0) { problem = "Add at least one SKU line."; }
+    linesErr.textContent = problem;
+    return problem;
+  }
+
   function setBusy(busy) {
     state.busy = busy;
     Array.prototype.forEach.call(form.querySelectorAll("[data-save], #FX_AsnGenerate"), function (b) { b.disabled = busy; });
   }
 
-  function saveDraft() {
-    if (state.busy) { return; }
-    var bad = validate(false);
-    if (bad.length) { setStatus("Fix these fields first: " + bad.join(", ") + ".", "error"); return; }
-    setBusy(true);
-    setStatus("Saving draft...");
-    callServer("FX_SaveAsnDraft", [JSON.stringify(readForm())], function (err, result) {
-      setBusy(false);
-      if (err) { setStatus("Draft not saved. " + err, "error"); return; }
-      state.draftId = result.asnId;
-      document.getElementById("FX_AsnDraftNote").textContent = "Draft saved (draft id " + result.asnId + "). Generate ASN to submit it.";
-      setStatus(result.message || "Draft saved.", "ok");
-      load(true);
-    });
+  // Operator, 2026-10-29: WM has no draft state, so Save does nothing for now.
+  function onSave() {
+    setStatus("Save is not available yet. Use Generate ASN to create the ASN in WM.");
   }
 
   function generate() {
     if (state.busy) { return; }
     var bad = validate(true);
+    if (validateLines()) { bad.push("SKU Details"); }
     if (bad.length) { setStatus("Fill in or fix: " + bad.join(", ") + ".", "error"); return; }
+    var data = readForm();
+    data.Lines = JSON.stringify(readLines());
     setBusy(true);
-    setStatus("Generating ASN...");
-    callServer("FX_GenerateAsn", [JSON.stringify(readForm())], function (err, result) {
+    setStatus("Creating the ASN in WM...");
+    callServer("FX_GenerateAsn", [JSON.stringify(data)], function (err, result) {
       setBusy(false);
-      if (err) { setStatus("ASN not generated. " + err, "error"); return; }
+      if (err) { setStatus("ASN not created. " + err, "error"); return; }
       form.reset();
-      state.draftId = null;
-      document.getElementById("FX_AsnDraftNote").textContent = "";
-      setStatus("ASN " + result.asnNum + " generated with status Pending Approval.", "ok");
+      resetLines();
+      setStatus(result.message || "ASN " + result.asnNum + " created.", "ok");
       load(true);
     });
   }
@@ -781,15 +905,26 @@ svg.FX_I{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-w
     state.showAll = !state.showAll;
     renderRecent();
   });
-  Array.prototype.forEach.call(form.querySelectorAll("[data-save]"), function (b) { b.addEventListener("click", saveDraft); });
+  Array.prototype.forEach.call(form.querySelectorAll("[data-save]"), function (b) { b.addEventListener("click", onSave); });
   document.getElementById("FX_AsnGenerate").addEventListener("click", generate);
   Array.prototype.forEach.call(document.querySelectorAll("[data-soon]"), function (b) {
     b.addEventListener("click", function () { setStatus(b.getAttribute("data-soon") + " is not built yet."); });
   });
   form.addEventListener("input", function (e) { if (e.target.name) { setFieldError(e.target, ""); } });
+  document.getElementById("FX_AsnAddLine").addEventListener("click", function () { addLine().focus(); });
+  document.getElementById("FX_AsnSkuJump").addEventListener("click", function () {
+    document.getElementById("FX_AsnSkuCard").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  resetLines();
 
   showPage("home");
-  load();
+  // An invoke sent before the Form is ready never reaches the server (BLD-002 runtime); MG.onReady waits for it.
+  // Outside Mongoose (local preview) there is no MG, so load at once.
+  if (typeof MG !== "undefined" && typeof MG.onReady === "function") {
+    MG.onReady(function () { load(); });
+  } else {
+    load();
+  }
 })();
 </script>
 </body>

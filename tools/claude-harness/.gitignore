@@ -1,6 +1,0 @@
-node_modules/
-dist/
-data/
-claude-data/
-harness.config.json
-.phase1-snapshot.json

@@ -1,1 +1,0 @@
-# Fixture environment (test only)

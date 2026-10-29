@@ -1,52 +1,46 @@
 // Preview only (never installed): a fake WSForm so index.html runs in a normal browser.
-// It mimics the C# methods' result shape in FX_vAsnResult. Data is generated test data.
+// It mimics FX_ASNPortal.cs.txt's result shape (WM data, BLD-002). Data is generated test data.
 (function () {
   var vars = {};
-  var lookups = [
-    ["ActivityType", "Delivery"], ["ActivityType", "TEST Activity 2"],
-    ["DeptCode", "50 - Hardware"], ["DeptCode", "TEST Dept 2"],
-    ["DeliveryMode", "TEST Mode 1"], ["DeliveryMode", "TEST Mode 2"],
-    ["LocationCode", "TEST Loc 1"], ["LocationCode", "TEST Loc 2"],
-    ["TruckType", "TEST Truck 1"], ["TruckType", "TEST Truck 2"]
-  ].map(function (p) { return { Type: p[0], Value: p[1] }; });
+  var lookups = [["ActivityType", "delivery"], ["DeptCode", "50"], ["DeliveryMode", "VIA DC"], ["TruckType", "4W"], ["LocationCode", "STAGE"]]
+    .map(function (p) { return { Type: p[0], Value: p[1] }; });
   var asns = [];
   var seed = 7;
   function rnd(n) { seed = (seed * 9301 + 49297) % 233280; return Math.floor(seed / 233280 * n); }
   function pad(n, w) { var s = String(n); while (s.length < w) { s = "0" + s; } return s; }
-  function ymd(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1, 2) + "-" + pad(d.getDate(), 2); }
-  var statuses = ["Approved", "Approved", "Approved", "Pending Approval", "Received", "Cancelled", "No Show"];
-  var vdr = ["DC Received", "Intransit", "RDU Received", "Completed"];
-  for (var i = 1; i <= 60; i++) {
-    var month = i <= 12 ? 8 : 9;
-    var d = new Date(2026, month, 1 + rnd(31));
-    var st = statuses[rnd(statuses.length)];
-    var hasVdr = st === "Approved" || st === "Received";
-    asns.push({
-      AsnId: i, AsnNum: "WAP" + pad(i, 9), VdrNum: hasVdr ? "VDR" + pad(12300 + i, 7) : "",
-      EnvCode: "WAP", DeptCode: "50 - Hardware", DeliveryDate: ymd(d), BoxQty: 10 + rnd(20),
-      VdrStatus: hasVdr ? vdr[rnd(4)] : "", AsnStatus: st, DocsPct: hasVdr ? 100 : 40 + rnd(60),
-      CreatedDate: ymd(new Date(d.getTime() - 5 * 864e5))
+  function iso(d) { return d.getFullYear() + "-" + pad(d.getMonth() + 1, 2) + "-" + pad(d.getDate(), 2) + "T11:00:00.000+00:00"; }
+  for (var i = 1; i <= 30; i++) {
+    var d = new Date(2026, 9, 1 + rnd(31));
+    asns.push({ AsnNum: pad(370 + i, 10), ExternKey: "FXTEST-" + pad(i, 4), Storer: "MINISO", WmStatus: "0", AsnStatus: "Pending Approval",
+      DeliveryDate: iso(d), CreatedDate: iso(new Date(2026, 9, 29, 6, i)) });
+  }
+  function shape() {
+    asns.sort(function (a, b) { return b.CreatedDate.localeCompare(a.CreatedDate); });
+    asns.forEach(function (a, idx) {
+      a.AsnId = idx;
+      if (idx < 6 && !a.DeptCode) { a.DeptCode = "50"; a.EnvCode = "WAP"; a.BoxQty = String(1 + rnd(30)); }
     });
+    return { ok: true, asns: asns, lookups: lookups };
   }
-  function next() { return asns.reduce(function (m, a) { return Math.max(m, a.AsnId); }, 0) + 1; }
-  function save(json, generate) {
+  function generate(json) {
     var data = JSON.parse(json);
-    var row = data.AsnId ? asns.filter(function (a) { return String(a.AsnId) === data.AsnId; })[0] : null;
-    if (!row) { row = { AsnId: next(), EnvCode: "WAP", CreatedDate: ymd(new Date()) }; asns.push(row); }
-    for (var k in data) { if (k !== "AsnId") { row[k] = data[k]; } }
-    row.BoxQty = data.BoxQty === "" ? null : +data.BoxQty;
-    row.AsnStatus = generate ? "Pending Approval" : "Draft";
-    if (generate) {
-      var max = asns.reduce(function (m, a) { return a.AsnNum ? Math.max(m, +a.AsnNum.slice(3)) : m; }, 0);
-      row.AsnNum = "WAP" + pad(max + 1, 9);
+    var lines = JSON.parse(data.Lines || "[]");
+    for (var i = 0; i < lines.length; i++) {
+      if (!items.hasOwnProperty(lines[i].Sku)) { return { ok: false, message: "SKU " + lines[i].Sku + " was not found in WM (owner MINISO)." }; }
     }
-    return { ok: true, asnId: row.AsnId, asnNum: row.AsnNum || "", message: generate ? "ASN generated." : "Draft saved." };
+    var key = pad(370 + asns.length + 1, 10);
+    asns.push({ AsnNum: key, ExternKey: "WMS" + key, Storer: "MINISO", WmStatus: "0", AsnStatus: "Pending Approval",
+      DeliveryDate: data.DeliveryDate + "T11:00:00.000+00:00", CreatedDate: new Date().toISOString(),
+      DeptCode: data.DeptCode, EnvCode: "WAP", BoxQty: data.BoxQty });
+    return { ok: true, asnNum: key, message: "ASN " + key + " created in WM warehouse 1." };
   }
-  var methods = {
-    FX_LoadAsnData: function () { return { ok: true, asns: asns, lookups: lookups }; },
-    FX_SaveAsnDraft: function (json) { return save(json, false); },
-    FX_GenerateAsn: function (json) { return save(json, true); }
-  };
+  // Preview-only item list; the real check calls WM (FX_CheckSku).
+  var items = { MNSSKU1: "Preview item 1", MNSSKU2: "Preview item 2" };
+  function checkSku(sku) {
+    sku = String(sku || "").trim();
+    return { ok: true, found: items.hasOwnProperty(sku), sku: sku, descr: items[sku] || "" };
+  }
+  var methods = { FX_LoadAsnData: shape, FX_GenerateAsn: generate, FX_CheckSku: checkSku };
   window.WSForm = {
     invoke: function () {
       var args = Array.prototype.slice.call(arguments);

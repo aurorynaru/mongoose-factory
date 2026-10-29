@@ -61,13 +61,19 @@ Source: EXP-141, EXP-142, EXP-144, EXP-149. Reference build: **FX_ApiProbe** (Us
   - `path` fills a `{name}` placeholder in the path, so the path can keep `{warehouse}`.
   - `query` adds a query parameter.
   - **`body`**: Value = the JSON *string*, and Content Type (parameter 6) = `application/json`. This created WM ASNs with `POST /{wh}/advancedshipnotice` (200, 20 times).
-  - From C#: same array, still **unverified**.
+  - From C#: same array, **observed** (BLD-002 runtime). `FX_GenerateAsn` in `assets/FX_ASNPortal/FX_ASNPortal.cs.txt` built the array with `JObject`/`JArray`, posted with `application/json`, and WM created ASN 0000000414.
+- **Json.NET dates in form scripts (BLD-002, observed).**
+  - `JArray.Parse` / `JObject.Parse` turn ISO date strings into `DateTime`. `(string)token` then prints them in the server culture, e.g. "10/13/2026 11:00:00", not the ISO text.
+  - To pass WM dates through unchanged, read with a `JsonTextReader` that has `DateParseHandling = DateParseHandling.None` (helper `FX_ParseJson` in FX_ASNPortal.cs.txt).
+- **Script Editor rejected `using System.IO;` (BLD-002, observed once).** Adding that line gave "Cannot Save – the class name has changed (did you paste in the wrong script?)" on ▶. The fully qualified `new System.IO.StringReader(...)` with no new `using` compiled. Prefer fully qualified names over new `using` lines until the rule is understood.
   - Samples: `docs/Api-Gateway/samples/`.
 - **WM ASNs (EXP-152), wmwhse1:**
   - list: `POST /{wh}/bodlist/showadvanceshipnoticelist` (query `serialkey`, `recordcount`). It leaves out `ext_udf_str*` and `suppliercode`.
   - read: `GET /{wh}/advancedshipnotice/{receiptkey}` and `GET /{wh}/advancedshipnotice/externreceiptkey/{key}`.
   - create: `POST /{wh}/advancedshipnotice` with a ReceiptDTO body. WM assigns the receiptkey. If externreceiptkey is omitted, WM sets it to `WMS<receiptkey>`.
   - The test ASNs `FXTEST-0001…0020` are still in WM.
+- **WM item lookup (BLD-002, observed):** `GET /{wh}/items/{sku}/{owner}` from C# (`FX_FindSku` in FX_ASNPortal.cs.txt). `MNSSKU1`/`MINISO` returned a SkuDTO with `descr` "Miniso SKU1". An unknown SKU was treated as not found: the code accepts 404 or an empty body, and the exact status WM sent was not logged.
+  - The WM spec in this repo has **no list-all-items endpoint**, so a SKU picker must be typed in and checked, or must come from another source.
 
 ## Wiring a button to a script method (Designer): **observed**
 1. **Script:** Form › Script Editor. Insert the flush-left source with `page.keyboard.insertText(...)`; typing it would auto-close braces.

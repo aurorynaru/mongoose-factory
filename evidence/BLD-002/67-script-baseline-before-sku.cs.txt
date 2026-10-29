@@ -1,0 +1,238 @@
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using Mongoose.IDO.Protocol;
+using Mongoose.Scripting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+//<Ref>Newtonsoft.Json.dll</Ref>
+
+namespace Mongoose.FormScripts
+{
+    // BLD-002 ASN Portal over Infor WM warehouse 1 (ION API, SSO; EXP-152). Every public method writes one
+    // JSON result to FX_vAsnResult: {"ok":true,...} or {"ok":false,"message":"..."}.
+    public class FX_ASNPortal : FormScript
+    {
+        // Line and partner values from the operator's working sample payload (BLD-002). Real vendor/SKU entry is not built yet.
+        const string TestStorer = "MINISO";
+        const string TestSupplier = "3MWORKS CORP";
+        const string TestSku = "MNSSKU1";
+        const string TestUom = "Ea";
+        const int RecentWithDetails = 6;
+
+        // Dropdown values: the only codes known to work in WM (operator's sample, BLD-002).
+        static readonly string[,] Lookups = {
+            { "ActivityType", "delivery" }, { "DeptCode", "50" }, { "DeliveryMode", "VIA DC" }, { "TruckType", "4W" }
+        };
+        static readonly string[] Required = { "ActivityType", "DeptCode", "DeliveryMode", "DeliveryDate", "NeedByDate", "BoxQty", "TruckType", "Helpers" };
+
+        public void FX_LoadAsnData()
+        {
+            try
+            {
+                string wh = FX_Warehouse();
+                var rows = new List<JObject>();
+                // The list answers ASNs with serialkey in (S, S+N]; an empty range is a 404 (EXP-151). Stop after 2 empty ranges.
+                int empty = 0;
+                for (int start = 0, page = 0; empty < 2 && page < 20; start += 200, page++)
+                {
+                    InvokeResponseData res = FX_WmInvoke("POST", "/wmwebservice_rest/" + wh + "/bodlist/showadvanceshipnoticelist?serialkey=" + start + "&recordcount=200", "", "");
+                    string code = Convert.ToString(res.Parameters[9].Value);
+                    if (code == "404") { empty++; continue; }
+                    if (code != "200") { FX_Fail("ASN list failed: HTTP " + code + " " + res.Parameters[12].Value); return; }
+                    JArray list = (JArray)FX_ParseJson(Convert.ToString(res.Parameters[10].Value));
+                    empty = list.Count == 0 ? empty + 1 : 0;
+                    foreach (JObject r in list) { rows.Add(r); }
+                }
+                rows.Sort((a, b) => string.CompareOrdinal((string)b["adddate"] ?? "", (string)a["adddate"] ?? ""));
+
+                var asns = new List<Dictionary<string, object>>();
+                for (int i = 0; i < rows.Count; i++)
+                {
+                    JObject r = rows[i];
+                    var row = new Dictionary<string, object>();
+                    row["AsnId"] = i;
+                    row["AsnNum"] = (string)r["receiptkey"];
+                    row["ExternKey"] = (string)r["externreceiptkey"];
+                    row["Storer"] = (string)r["storerkey"];
+                    row["WmStatus"] = (string)r["status"];
+                    // Operator, 2026-10-29: WM status meanings are unknown, so every ASN shows as Pending Approval for now.
+                    row["AsnStatus"] = "Pending Approval";
+                    row["DeliveryDate"] = (string)r["expectedreceiptdate"];
+                    row["CreatedDate"] = (string)r["adddate"];
+                    // The list leaves out the ext_udf fields (EXP-152); read them for the most recent ASNs only.
+                    if (i < RecentWithDetails) { FX_AddDetails(wh, row); }
+                    asns.Add(row);
+                }
+
+                var lookups = new List<Dictionary<string, object>>();
+                for (int l = 0; l < Lookups.GetLength(0); l++)
+                {
+                    var item = new Dictionary<string, object>();
+                    item["Type"] = Lookups[l, 0];
+                    item["Value"] = Lookups[l, 1];
+                    lookups.Add(item);
+                }
+                var result = new Dictionary<string, object>();
+                result["ok"] = true;
+                result["asns"] = asns;
+                result["lookups"] = lookups;
+                FX_Result(result);
+            }
+            catch (Exception ex)
+            {
+                FX_Fail("Load failed. " + ex.GetType().Name + ": " + ex.Message);
+            }
+        }
+
+        public void FX_GenerateAsn(string json)
+        {
+            try
+            {
+                var data = JsonConvert.DeserializeObject<Dictionary<string, string>>(json ?? "") ?? new Dictionary<string, string>();
+                string problem = FX_Check(data);
+                if (problem != null) { FX_Fail(problem); return; }
+
+                string wh = FX_Warehouse();
+                // Field mapping confirmed by the operator (BLD-002): ext_udf_str1..8.
+                var asn = new JObject();
+                asn["whseid"] = wh;
+                asn["storerkey"] = TestStorer;
+                asn["suppliercode"] = TestSupplier;
+                asn["type"] = FX_Get(data, "ActivityType");
+                asn["expectedreceiptdate"] = FX_Get(data, "DeliveryDate");
+                asn["vehiclenumber"] = FX_Get(data, "PlateNum");
+                asn["ext_udf_str1"] = FX_Get(data, "Helpers");
+                asn["ext_udf_str2"] = FX_Get(data, "DriverName");
+                asn["ext_udf_str3"] = FX_Get(data, "BoxQty");
+                asn["ext_udf_str4"] = FX_Get(data, "DeptCode");
+                asn["ext_udf_str5"] = FX_Get(data, "DeliveryMode");
+                asn["ext_udf_str6"] = "WAP";
+                asn["ext_udf_str7"] = FX_Get(data, "NeedByDate");
+                asn["ext_udf_str8"] = FX_Get(data, "TruckType");
+                var line = new JObject();
+                line["storerkey"] = TestStorer;
+                line["sku"] = TestSku;
+                line["qtyexpected"] = 1;
+                line["uom"] = TestUom;
+                line["externlineno"] = "1";
+                asn["receiptdetails"] = new JArray(line);
+
+                // MethodParams: a body parameter carries the JSON text (EXP-152).
+                var body = new JObject();
+                body["Name"] = "body";
+                body["Value"] = asn.ToString(Formatting.None);
+                body["Type"] = "body";
+                InvokeResponseData res = FX_WmInvoke("POST", "/wmwebservice_rest/" + wh + "/advancedshipnotice", new JArray(body).ToString(Formatting.None), "application/json");
+                string code = Convert.ToString(res.Parameters[9].Value);
+                string content = Convert.ToString(res.Parameters[10].Value);
+                if (code != "200")
+                {
+                    FX_Fail("WM rejected the ASN: HTTP " + code + " " + FX_Clip(content.Replace(wh, "<WH>"), 400));
+                    return;
+                }
+                string receiptKey = (string)FX_ParseJson(content)["receiptkey"];
+                var result = new Dictionary<string, object>();
+                result["ok"] = true;
+                result["asnNum"] = receiptKey;
+                result["message"] = "ASN " + receiptKey + " created in WM warehouse 1.";
+                FX_Result(result);
+            }
+            catch (Exception ex)
+            {
+                FX_Fail("Generate failed. " + ex.GetType().Name + ": " + ex.Message);
+            }
+        }
+
+        void FX_AddDetails(string wh, Dictionary<string, object> row)
+        {
+            InvokeResponseData res = FX_WmInvoke("GET", "/wmwebservice_rest/" + wh + "/advancedshipnotice/" + row["AsnNum"], "", "");
+            if (Convert.ToString(res.Parameters[9].Value) != "200") { return; }
+            JObject r = (JObject)FX_ParseJson(Convert.ToString(res.Parameters[10].Value));
+            row["Helpers"] = (string)r["ext_udf_str1"];
+            row["DriverName"] = (string)r["ext_udf_str2"];
+            row["BoxQty"] = (string)r["ext_udf_str3"];
+            row["DeptCode"] = (string)r["ext_udf_str4"];
+            row["DeliveryMode"] = (string)r["ext_udf_str5"];
+            row["EnvCode"] = (string)r["ext_udf_str6"];
+            row["NeedByDate"] = (string)r["ext_udf_str7"];
+            row["TruckType"] = (string)r["ext_udf_str8"];
+        }
+
+        // Returns null when the ASN may be sent, otherwise a message for the page.
+        string FX_Check(Dictionary<string, string> data)
+        {
+            var missing = new List<string>();
+            foreach (string name in Required) { if (FX_Get(data, name) == "") { missing.Add(name); } }
+            if (missing.Count > 0) { return "Missing required fields: " + string.Join(", ", missing) + "."; }
+            foreach (string name in new[] { "BoxQty", "Helpers" })
+            {
+                if (!Regex.IsMatch(FX_Get(data, name), @"^\d{1,6}$")) { return name + " must be a whole number."; }
+            }
+            if (FX_Get(data, "BoxQty") == "0") { return "Box Quantity must be at least 1."; }
+            foreach (string name in new[] { "DeliveryDate", "NeedByDate" })
+            {
+                DateTime d;
+                if (!DateTime.TryParseExact(FX_Get(data, name), "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out d)) { return name + " must be a date (yyyy-MM-dd)."; }
+            }
+            foreach (string name in new[] { "ActivityType", "DeptCode", "DeliveryMode", "TruckType", "PlateNum", "DriverName" })
+            {
+                if (FX_Get(data, name).Length > 30) { return name + " is longer than 30 characters."; }
+            }
+            return null;
+        }
+
+        // Warehouse 1 db_name from /enterprise/facilities (EXP-150); never sent to the page.
+        string FX_Warehouse()
+        {
+            string facilities = Convert.ToString(FX_WmInvoke("GET", "/wmwebservice_rest/enterprise/facilities", "", "").Parameters[10].Value);
+            Match m = Regex.Match(facilities ?? "", "\"db_name\":\"([^\"]*_wmwhse1)\"");
+            if (!m.Success) { throw new InvalidOperationException("wmwhse1 not found in /enterprise/facilities."); }
+            return m.Groups[1].Value;
+        }
+
+        InvokeResponseData FX_WmInvoke(string verb, string path, string methodParams, string contentType)
+        {
+            InvokeRequestData req = new InvokeRequestData();
+            req.IDOName = "IONAPIMethods";
+            req.MethodName = "InvokeIONAPIMethod2";
+            foreach (string p in new[] { "1", "1", "WM", verb, path, methodParams, contentType, "20000", "0" }) { req.Parameters.Add(p); }
+            for (int i = 0; i < 4; i++) { req.Parameters.Add(IDONull.Value); }
+            return IDOClient.Invoke(req);
+        }
+
+        // Keeps WM date strings as sent (ISO). Default parsing turns them into DateTime, which (string) then prints
+        // in the server's culture (e.g. "10/13/2026 11:00:00") and the page can no longer read them (BLD-002 runtime).
+        static JToken FX_ParseJson(string text)
+        {
+            var reader = new JsonTextReader(new System.IO.StringReader(text ?? ""));
+            reader.DateParseHandling = DateParseHandling.None;
+            return JToken.ReadFrom(reader);
+        }
+
+        static string FX_Get(Dictionary<string, string> data, string key)
+        {
+            string v;
+            return data.TryGetValue(key, out v) && v != null ? v.Trim() : "";
+        }
+
+        static string FX_Clip(string text, int max)
+        {
+            return text.Length > max ? text.Substring(0, max) + "..." : text;
+        }
+
+        void FX_Fail(string message)
+        {
+            var result = new Dictionary<string, object>();
+            result["ok"] = false;
+            result["message"] = message;
+            FX_Result(result);
+        }
+
+        void FX_Result(Dictionary<string, object> result)
+        {
+            ThisForm.Variables("FX_vAsnResult").Value = JsonConvert.SerializeObject(result);
+        }
+    }
+}
