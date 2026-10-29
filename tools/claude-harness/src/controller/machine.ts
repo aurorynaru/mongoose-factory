@@ -18,6 +18,8 @@ import { recordConversation } from "../adapters/conversation.js";
 import { actionAudit, compactAudit, persistAudit, type ActionAudit } from "./action-audit.js";
 import { prepareWorkerWindow } from "./window-preflight.js";
 import { attachmentRequests, attachTextFiles } from "./attachments.js";
+import { taskUsage, type TaskUsage } from "../usage.js";
+import type { HandoffData } from "../protocol/envelope.js";
 
 export interface ControllerDeps {
   store: Store;
@@ -369,11 +371,21 @@ export class Controller {
     const lastWorker = this.d.store.inboundForRun(run.id, "worker").pop();
     const observations = lastWorker ? clip(lastWorker.content, Math.floor(this.d.config.browser.maxMessageChars * 0.6), this.refOf(lastWorker.content_path)) : "(no worker report yet in this run)";
     const refs = [...new Set([...(env.evidence_refs ?? []), ...((lastWorker?.meta.changedFiles as string[]) ?? [])])];
+    const policy = this.d.config.chats.specialistSession;
+    const fresh = policy === "per-consultation" || (policy === "per-run" && !this.d.store.opsForRun(run.id).some((o) => o.kind === "specialist"));
+    // A per-consultation session has no chat memory: carry this run's latest consultations inline (the role cannot read the run directory).
+    const history = policy === "per-consultation"
+      ? this.d.store.inboundForRun(run.id, "specialist").slice(-3).map((r) => {
+          const o = this.d.store.getOp(r.op_id);
+          return [`${String(o?.meta.consultationId ?? "earlier consultation")} question: ${clip(String(o?.meta.question ?? ""), 600, "the harness run directory")}`, "Answer (may be clipped):", clip(r.content, 2500, "the harness run directory")].join("\n");
+        })
+      : [];
     const fullText = [
       header({ nonce, runId: run.id, experimentId: run.experiment_id, cycleId: run.cycle_id, kind: "CONSULTATION", extra: { consultation_id: consultationId } }),
       protocolBlock(this.d.protocolDir, "specialist-protocol.md"),
       "",
       `Experiment: ${run.experiment_id} — ${this.brief(run).title}`,
+      ...(history.length ? ["EARLIER CONSULTATIONS IN THIS RUN (this is a new specialist session; most recent last):", ...history, ""] : []),
       "QUESTION FROM THE COORDINATOR:",
       question,
       "",
@@ -389,7 +401,7 @@ export class Controller {
     return this.d.store.tx(() => {
       const pendingNew = this.d.store.getSetting("new_chat:specialist") === "1";
       if (pendingNew) this.d.store.setSetting("new_chat:specialist", null);
-      const op = this.d.store.createOp({ runId: run.id, kind: "specialist", purpose: "CONSULTATION", cycleId: run.cycle_id, nonce, payloadPath: file, payloadText: text, meta: { consultationId, question, ...(pendingNew ? { newConversation: true } : {}) } });
+      const op = this.d.store.createOp({ runId: run.id, kind: "specialist", purpose: "CONSULTATION", cycleId: run.cycle_id, nonce, payloadPath: file, payloadText: text, meta: { consultationId, question, ...(pendingNew || fresh ? { newConversation: true } : {}) } });
       this.d.store.updateRun(run.id, { state: "SPECIALIST_PENDING", pending_op_id: op.id, pending_inbound_id: null, last_action: `plan:specialist:${consultationId}` });
       return op;
     });
@@ -743,30 +755,20 @@ export class Controller {
     this.d.log.log("info", "decision.routed", { run_id: run.id, cycle: run.cycle_id, action: env.action, method });
 
     switch (env.action) {
-      case "SEND_TO_OPENCODE":
+      case "SEND_TO_OPENCODE": {
+        const fresh = this.freshSessionReason(run);
+        if (fresh) {
+          const data = this.autoHandoffData(run, env.message!);
+          this.planWorker(run, env.message!, { newSession: true, reason: `auto: ${fresh}`, handoffText: this.handoffText(run, data, fresh, true), handoffData: data });
+          this.d.log.log("info", "worker.fresh_session_planned", { run_id: run.id, reason: fresh });
+          return;
+        }
         this.planWorker(run, env.message!, { newSession: !run.current_session_id, reason: run.current_session_id ? "continue" : "initial" });
         return;
-      case "NEW_OPENCODE_SESSION": {
-        const workers = store.inboundForRun(run.id, "worker");
-        const detected = [...new Set(workers.flatMap((w) => (w.meta.changedFiles as string[]) ?? []))];
-        const evidence = [...new Set([...detected.filter((f) => f.startsWith(this.brief(run).evidence_dir)), ...store.decisions(run.id).flatMap((d) => ((d.envelope as Envelope | null)?.evidence_refs ?? []))])];
-        const text = renderHandoff({
-          runId: run.id,
-          cycleId: run.cycle_id,
-          brief: this.brief(run),
-          data: env.handoff!,
-          reason: env.reason,
-          evidenceSoFar: evidence,
-          docChangesDetected: detected.filter((f) => /^(experiments|recipes|environments|claims)\//.test(f)),
-          sessions: store.sessions(run.id),
-          counters: run.counters,
-          limits: run.limits,
-          activeMs: this.activeMs(run),
-          failures: store.failures(run.id),
-        });
-        this.planWorker(run, env.message!, { newSession: true, reason: `handoff: ${env.reason}`, handoffText: text, handoffData: env.handoff });
-        return;
       }
+      case "NEW_OPENCODE_SESSION":
+        this.planWorker(run, env.message!, { newSession: true, reason: `handoff: ${env.reason}`, handoffText: this.handoffText(run, env.handoff!, env.reason), handoffData: env.handoff });
+        return;
       case "ASK_SPECIALIST":
         this.planSpecialist(run, env.message!, env);
         return;
@@ -783,6 +785,55 @@ export class Controller {
         return;
       }
     }
+  }
+
+  /** Why the next task should start a fresh worker session (worker.freshSessionAboveTokens), or null to continue. */
+  private freshSessionReason(run: RunRow): string | null {
+    const threshold = this.d.config.worker.freshSessionAboveTokens;
+    if (threshold === null || !run.current_session_id) return null;
+    const last = this.d.store.opsForRun(run.id).filter((o) => o.kind === "worker" && o.session_id === run.current_session_id).at(-1);
+    if (!last) return null;
+    if (threshold === 0) return "fresh session per task (worker.freshSessionAboveTokens=0)";
+    const context = (last.meta.usage as TaskUsage | undefined)?.contextTokens;
+    return context != null && context >= threshold ? `previous task ${last.purpose} ended with ${context} context tokens (worker.freshSessionAboveTokens=${threshold})` : null;
+  }
+
+  /** Handoff facts the harness states itself when it, not the coordinator, starts the fresh session. */
+  private autoHandoffData(run: RunRow, message: string): HandoffData {
+    const { store } = this.d;
+    return {
+      completed_steps: store.opsForRun(run.id).filter((o) => o.kind === "worker" && (o.status === "completed" || o.status === "failed")).map((o) => `${o.purpose}: ${o.status}`),
+      observed_facts: store.findings(run.id).slice(-20).map((f) => `${f.statement} [${f.classification}]`),
+      unverified_hypotheses: [],
+      unresolved_questions: [],
+      documentation_changes: [],
+      next_permitted_action: message.trim() ? "Carry out the task instruction at the end of this message." : "(no instruction)",
+      target_artifacts: [],
+    };
+  }
+
+  private handoffText(run: RunRow, data: HandoffData, reason: string, withLatestReport = false): string {
+    const { store } = this.d;
+    const workers = store.inboundForRun(run.id, "worker");
+    const detected = [...new Set(workers.flatMap((w) => (w.meta.changedFiles as string[]) ?? []))];
+    const evidence = [...new Set([...detected.filter((f) => f.startsWith(this.brief(run).evidence_dir)), ...store.decisions(run.id).flatMap((d) => ((d.envelope as Envelope | null)?.evidence_refs ?? []))])];
+    const last = withLatestReport ? workers.at(-1) : undefined;
+    return renderHandoff({
+      runId: run.id,
+      cycleId: run.cycle_id,
+      brief: this.brief(run),
+      data,
+      reason,
+      evidenceSoFar: evidence,
+      docChangesDetected: detected.filter((f) => /^(experiments|recipes|environments|claims)\//.test(f)),
+      sessions: store.sessions(run.id),
+      counters: run.counters,
+      limits: run.limits,
+      activeMs: this.activeMs(run),
+      failures: store.failures(run.id),
+      // The worker cannot read the run directory, so the report travels inline.
+      ...(last ? { latestReport: { task: store.getOp(last.op_id)?.purpose ?? "previous task", text: clip(last.content || "(the worker produced no text)", Math.floor(this.d.config.browser.maxMessageChars * 0.4), "the harness run directory") } } : {}),
+    });
   }
 
   // ---------- worker operations
@@ -880,7 +931,7 @@ export class Controller {
       const transcript=worker.taskTranscript?await worker.taskTranscript(op.session_id!,op.message_id!):"transcript" in res?res.transcript:"";
       const audit=actionAudit(transcript,op.purpose,res.status,this.brief(run).exact_values);
       const auditFiles=persistAudit(this.d.factoryRoot,this.brief(run).evidence_dir,join(this.d.runsDir,run.id),audit);
-      op=store.updateOp(op.id,{meta:{...op.meta,actionAudit:audit,auditFiles}});
+      op=store.updateOp(op.id,{meta:{...op.meta,actionAudit:audit,auditFiles,usage:taskUsage(transcript)}});
       switch (res.status) {
         case "usage_limit":
           store.updateOp(op.id, { meta: { ...op.meta, usageLimit: res.detail, partialText: res.text,

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Text.RegularExpressions;
 using Mongoose.IDO.Protocol;
 using Mongoose.Scripting;
 
@@ -39,6 +40,76 @@ namespace Mongoose.FormScripts
             FX_Show(text);
         }
 
+        // EXP-150: WM REST GET on a caller-supplied path (GET only; the verb is fixed here, not taken from the page).
+        public void FX_CallWmGet(string path)
+        {
+            string text;
+            if (string.IsNullOrEmpty(path) || !path.StartsWith("/") || path.Contains("://") || path.Contains("..")) {
+                FX_Show("Rejected path: it must start with / and stay inside wmwebservice_rest.");
+                return;
+            }
+            try {
+                InvokeRequestData req = new InvokeRequestData();
+                req.IDOName = "IONAPIMethods";
+                req.MethodName = "InvokeIONAPIMethod2";
+                foreach (string p in new[] { "1", "1", "WM", "GET", "/wmwebservice_rest" + path, "", "", "20000", "0" }) {
+                    req.Parameters.Add(p);
+                }
+                for (int i = 0; i < 4; i++) { req.Parameters.Add(IDONull.Value); }
+                InvokeResponseData res = IDOClient.Invoke(req);
+                text = "WM GET " + path + Environment.NewLine
+                    + "Code: " + res.Parameters[9].Value + Environment.NewLine
+                    + "Infobar: " + res.Parameters[12].Value + Environment.NewLine
+                    + "Content: " + FX_Clip(res.Parameters[10].Value);
+            }
+            catch (Exception ex) { text = "WM call failed: " + ex.GetType().Name + ": " + ex.Message; }
+            FX_Show(text);
+        }
+
+        // EXP-151: one page of wmwhse1 shipment orders. The only POST here (operator-approved list endpoint);
+        // path and verb are fixed, the warehouse is resolved server side, and the page sends only two numbers.
+        public void FX_ListShipments(string serialkey, string recordcount)
+        {
+            string text;
+            int count;
+            if (!Regex.IsMatch(serialkey ?? "", "^[0-9]{1,9}$") || !Regex.IsMatch(recordcount ?? "", "^[0-9]{1,3}$")
+                || !int.TryParse(recordcount, out count) || count < 1 || count > 200) {
+                FX_Show("Rejected: serialkey must be digits and recordcount 1-200.");
+                return;
+            }
+            try {
+                string facilities = (string)FX_WmInvoke("GET", "/wmwebservice_rest/enterprise/facilities", "", "").Parameters[10].Value;
+                Match m = Regex.Match(facilities ?? "", "\"db_name\":\"([^\"]*_wmwhse1)\"");
+                if (!m.Success) {
+                    FX_Show("wmwhse1 not found in /enterprise/facilities.");
+                    return;
+                }
+                string wh = m.Groups[1].Value;
+                string path = "/wmwebservice_rest/" + wh + "/bodlist/showshipmentorderlist?serialkey=" + serialkey + "&recordcount=" + recordcount;
+                // MethodParams is a JSON array of RestMethodParameter, not a request body (EXP-151); this endpoint needs neither.
+                InvokeResponseData res = FX_WmInvoke("POST", path, "", "application/json");
+                string code = Convert.ToString(res.Parameters[9].Value);
+                string body = Convert.ToString(res.Parameters[10].Value).Replace(wh, "<WH>");
+                text = "Code: " + code + Environment.NewLine
+                    + "Infobar: " + res.Parameters[12].Value + Environment.NewLine
+                    + "Content: " + (body.Length > 200000 ? body.Substring(0, 200000) + "..." : body);
+            }
+            catch (Exception ex) { text = "Shipment list failed: " + ex.GetType().Name + ": " + ex.Message; }
+            FX_Show(text);
+        }
+
+        private InvokeResponseData FX_WmInvoke(string verb, string path, string methodParams, string contentType)
+        {
+            InvokeRequestData req = new InvokeRequestData();
+            req.IDOName = "IONAPIMethods";
+            req.MethodName = "InvokeIONAPIMethod2";
+            foreach (string p in new[] { "1", "1", "WM", verb, path, methodParams, contentType, "20000", "0" }) {
+                req.Parameters.Add(p);
+            }
+            for (int i = 0; i < 4; i++) { req.Parameters.Add(IDONull.Value); }
+            return IDOClient.Invoke(req);
+        }
+
         // G4: external GET straight from the form script.
         public void FX_CallHttpbin()
         {
@@ -51,22 +122,30 @@ namespace Mongoose.FormScripts
                 using (StreamReader reader = new StreamReader(res.GetResponseStream())) {
                     text = "httpbin GET" + Environment.NewLine
                         + "Code: " + (int)res.StatusCode + Environment.NewLine
-                        + "Content: " + FX_Clip(reader.ReadToEnd());
+                        + "Content: " + FX_Clip(FX_HideOrigin(reader.ReadToEnd()));
                 }
             }
             catch (Exception ex) { text = "httpbin call failed: " + ex.GetType().Name + ": " + ex.Message; }
             FX_Show(text);
         }
 
+        // Shows the result in the form and hands it to the FX_ApiPage web page through a global variable.
         private void FX_Show(string text)
         {
             ThisForm.Components["FX_ResultEdit"].Value = text;
+            ThisForm.Variables("FX_vApiResult").Value = text;
+        }
+
+        // httpbin echoes the tenant's egress IP; keep it out of screens and evidence.
+        private static string FX_HideOrigin(string body)
+        {
+            return Regex.Replace(body, "\"origin\":\\s*\"[^\"]*\"", "\"origin\": \"(hidden)\"");
         }
 
         private static string FX_Clip(string value)
         {
             if (value == null) { return "(null)"; }
-            return value.Length > 2000 ? value.Substring(0, 2000) + "..." : value;
+            return value.Length > 8000 ? value.Substring(0, 8000) + "..." : value;
         }
     }
 }

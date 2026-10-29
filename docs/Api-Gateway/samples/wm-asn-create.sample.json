@@ -1,0 +1,21 @@
+{
+  "_comment": "POST /wmwebservice_rest/{warehouse}/advancedshipnotice (ReceiptDTO). Worked 20x on 2026-10-29 (EXP-152). <WH> = the facility db_name ending in _wmwhse1 (never commit the real value). ext_udf mapping per BLD-002: str1 Helpers, str2 Driver, str3 Box Qty, str4 Department, str5 Delivery Mode, str6 Environment Code, str7 Need-by Date, str8 Truck Type. Remove this _comment key before sending.",
+  "whseid": "<WH>",
+  "externreceiptkey": "FXTEST-0001",
+  "storerkey": "MINISO",
+  "suppliercode": "3MWORKS CORP",
+  "type": "delivery",
+  "expectedreceiptdate": "2026-10-30",
+  "vehiclenumber": "123ABC",
+  "ext_udf_str1": "2",
+  "ext_udf_str2": "TEST",
+  "ext_udf_str3": "2",
+  "ext_udf_str4": "50",
+  "ext_udf_str5": "VIA DC",
+  "ext_udf_str6": "WAP",
+  "ext_udf_str7": "2026-11-01",
+  "ext_udf_str8": "4W",
+  "receiptdetails": [
+    { "storerkey": "MINISO", "sku": "MNSSKU1", "qtyexpected": 1, "uom": "Ea", "externlineno": "1" }
+  ]
+}

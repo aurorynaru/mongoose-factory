@@ -1,6 +1,6 @@
 # Playbook: API calls from form scripts, and background tasks
 
-Source: EXP-141, EXP-142, EXP-144. Reference build: **FX_ApiProbe** (User scope). Its script is `assets/FX_ApiProbe/FX_ApiProbe.cs.txt`, and the install copy is `FX_ApiProbe.flat.cs.txt`.
+Source: EXP-141, EXP-142, EXP-144, EXP-149. Reference build: **FX_ApiProbe** (User scope). Its script is `assets/FX_ApiProbe/FX_ApiProbe.cs.txt`, and the install copy is `FX_ApiProbe.flat.cs.txt`.
 
 ## Approval gates
 - An outbound call is an action against another system.
@@ -8,7 +8,7 @@ Source: EXP-141, EXP-142, EXP-144. Reference build: **FX_ApiProbe** (User scope)
   - Any other endpoint, and any POST/PUT/DELETE, needs the operator's approval for that call.
 - Never put tokens or credentials in scripts, the repo or evidence.
   - The SSO route (`InvokeIONAPIMethod2`) needs none.
-- Background tasks: creating a BGTaskDefinitions row or submitting a task needs approval (G6/G7 are not yet approved).
+- Background tasks: creating a BGTaskDefinitions row, submitting a task or scheduling recurrence each needs the operator's approval, given for that row or that submit. G6 was approved for a single submit (EXP-145). G7 is not approved.
 
 ## Infor ION API from a C# form script: **observed** (EXP-144 G3)
 - **Server:** ION API server 1 exists, with suites WM and DATAFABRIC (EXP-141).
@@ -37,6 +37,38 @@ Source: EXP-141, EXP-142, EXP-144. Reference build: **FX_ApiProbe** (User scope)
 ## Showing results
 - `ThisForm.Components["FX_ResultEdit"].Value = text;` writes to a MultiLineEdit.
 
+## Calling an API from a web page (JS → C# → API): **observed** (EXP-149)
+- JS never calls the API itself. A page button runs `WSForm.invoke("FX_CallX", cb)`. The C# method makes the call and writes the result to a **Global** variable with `ThisForm.Variables("FX_vApiResult").Value = text`. The callback then reads it with `WSForm.getVarValue("FX_vApiResult", cb)`.
+- No token or credential reaches the browser.
+- Reference: asset `assets/FX_ApiPage/index.html` (status line, 20 s timeout, `WSForm` guard), control `FX_ApiPageControl` on FX_ApiProbe.
+- Both ION helloworld (200, "Hello World!") and httpbin (200) worked from the page.
+- Mask `origin` before display (`FX_HideOrigin`).
+- Wiring a page to a form: `web-user-controls.md`.
+- **Unverified:** error display for a failing endpoint.
+- **WM REST GET with a path from the page: observed (EXP-150).**
+  - `FX_CallWmGet(path)`: the verb is fixed to GET in C#, and the path is checked.
+  - Spec: `docs/Api-Gateway/SCE-WM-REST-API.json`.
+  - The `{warehouse}` path parameter is the facility's full **`db_name`** from `GET /enterprise/facilities` (`<tenant>_<resource>_wmwhseN`). The bare `wmwhseN` gives 500 "Schema … invalid or not authorized".
+  - The facilities response exposes internal DB server names. Don't screenshot it or copy it into records.
+- **WM order list: observed (EXP-151).**
+  - Endpoint: `POST /{wh}/bodlist/showshipmentorderlist?serialkey=S&recordcount=N`, with an empty `MethodParams` and no body. The operator approved this one POST.
+  - It returns a JSON array of orders whose serialkey is in **(S, S+N]**. That is a serial-key *range*, not N rows, so pages can be short or empty where orders were deleted.
+  - Step S by N. An empty range answers **404 `{"message":"No records found"}`**. Treat that as empty, and end after a few empty ranges.
+  - Each order is about 6 KB and includes contact data. Cap the page size (25), and render chosen columns only.
+  - Reference: `FX_ListShipments` (C#) plus the "Shipment orders" section of FX_ApiPage.
+- **`InvokeIONAPIMethod2` parameter 5 (`MethodParams`) is a JSON array of `RestMethodParameter`: `[{"Name":..,"Value":..,"Type":"path"|"query"|"body"}]`. Observed in EXP-152 through the Test ION API Invoke form.**
+  - Passing `{}` fails: "Cannot deserialize … requires a JSON array" (EXP-151).
+  - `path` fills a `{name}` placeholder in the path, so the path can keep `{warehouse}`.
+  - `query` adds a query parameter.
+  - **`body`**: Value = the JSON *string*, and Content Type (parameter 6) = `application/json`. This created WM ASNs with `POST /{wh}/advancedshipnotice` (200, 20 times).
+  - From C#: same array, still **unverified**.
+  - Samples: `docs/Api-Gateway/samples/`.
+- **WM ASNs (EXP-152), wmwhse1:**
+  - list: `POST /{wh}/bodlist/showadvanceshipnoticelist` (query `serialkey`, `recordcount`). It leaves out `ext_udf_str*` and `suppliercode`.
+  - read: `GET /{wh}/advancedshipnotice/{receiptkey}` and `GET /{wh}/advancedshipnotice/externreceiptkey/{key}`.
+  - create: `POST /{wh}/advancedshipnotice` with a ReceiptDTO body. WM assigns the receiptkey. If externreceiptkey is omitted, WM sets it to `WMS<receiptkey>`.
+  - The test ASNs `FXTEST-0001…0020` are still in WM.
+
 ## Wiring a button to a script method (Designer): **observed**
 1. **Script:** Form › Script Editor. Insert the flush-left source with `page.keyboard.insertText(...)`; typing it would auto-close braces.
 2. **Compile:** click ▶, then expand Compile Result and look for "Built with 0 errors".
@@ -48,11 +80,23 @@ Source: EXP-141, EXP-142, EXP-144. Reference build: **FX_ApiProbe** (User scope)
 8. **Persist:** Save, then reload the Designer and reopen the form to read it back.
 9. **Runtime:** a new form only shows in the Web Client's Select Form after the Web Client page is reloaded.
 
-## Background tasks: survey **observed**, submitting **unverified** (EXP-142, EXP-144 G5)
+## Background tasks: survey and submitting **observed** (EXP-142, EXP-144 G5, EXP-145 G6)
+- **TaskMan runs tasks in this cloud tenant** (EXP-145).
+  - An RPT+DATAVIEW task went from submitted to "Task Succeeded" in about 12 s, on task server `RGJU-I9DPAFZ-SV`.
+  - The PDF was written to IdmFileServer (`IdmFileServer_Reports`).
 - **Definitions:**
   - Background Task Definitions holds 24 vendor rows. Executable Types are SP / RPT / IDOMTH; Report Types are SSRS / DATAVIEW / FORM.
   - The vendor rows are editable. Never type into an existing row.
-  - The History and Active Tasks lists were empty: nothing has run yet, so TaskMan is unproven here.
+  - **Filter in Place does not treat `%` as a wildcard.** Filter on the exact Task Name.
+  - An empty result auto-starts an unsaved new row (★).
+- **Proven submit route (EXP-145):**
+  1. **New definition row:** Task Name `FX_…`, Executable Type RPT, Report Type DATAVIEW, Executable Name `<DataView name>`, Max Concurrent 20, Cross-Site -1. Save, then re-filter by the exact name.
+  2. **FX_ form handler:** Response Type **Run Background Task**. In Parameters, the "Edit Background Task Name And Parameters" section has Task Name (combo of definitions), Task Parameters (comma list in the DataView's input order), Task Status, Task Number and Profile Parameters. Add a Success Message on the General tab.
+     Result: `TASKNAME(FX_SchemaProbe)TASKPARMS(FX_InventoryItems,FX_InventoryItems,1,) SUCCESSMESSAGE(FX_SchemaProbe submitted)`.
+  3. **Button:** Primary = the handler. Save, then reload the Designer to confirm. Click it once at runtime.
+  4. **What you see:** the success message, then (RPT only) a **Report Viewer tab opens by itself** (`IDORequestService/ReportServer.aspx?TaskHistoryRowPointer=…`). It waits, then shows the PDF.
+  5. **Read the result:** Background Task History (`BGTaskHistory`, Select Form filter `BGTask`) → Actions › Filter › Execute in Place on Task Name. It shows Return Status, Submitted/Started/Completed, Initiator `Form.<form>`, Task Server, Process ID, parameters and the file server path.
+- **Active Background Tasks** is read-only: New is disabled.
 - **Pattern from vendor DatabaseSchemaReport:**
   - **Run now:** the button event runs **Run Background Task** with
     `TASKNAME(V(BGTaskName)) TASKPARMS(V(BGTaskParms)) TASKSTATUS(V(BGTaskStatus)) TASKNUMBER(BGTaskNumber) ERRORMESSAGE(mBackEndMessage)`,
@@ -64,8 +108,18 @@ Source: EXP-141, EXP-142, EXP-144. Reference build: **FX_ApiProbe** (User scope)
   - **Preview without a task:** Run Form `WBDataViewResults( SETVARVALUES(DataViewName=<name>, InputParameter1=...) )`.
 - **Server method:** `BGTaskDefinitions.BGTaskSubmit` (SP `BGTaskSubmitSp`), with 20 parameters: TaskName, TaskParms1, TaskParms2, Infobar, TaskID, TaskStatusCode, …, Sched*.
   - Calling it from C# through `IDOClient.Invoke` should be possible, but is **unverified**.
-- **Planned first probe (G6, needs approval):**
-  1. Create an FX_ definition row (RPT + DATAVIEW over FX_InventoryItems).
-  2. Add an FX_ button that runs Run Background Task.
-  3. Submit once, then read Active Background Tasks and Background Task History.
-- **Unverified:** whether TaskMan runs in this cloud tenant. IDOMTH tasks reportedly need a TaskMan configuration named after the site.
+- **IDOMTH (EXP-146):**
+  - The Executable Name is `IDO.Method` (vendor examples: `AuditLogs.DeleteAuditLogEntrySp`, `WBSnapshots.SnapshotGeneration`).
+  - Pick Executable Type **from the dropdown**; typed text doesn't take.
+  - Vendor launchers pass TASKPARMS as a positional comma list and may add `BG~TASKID~`. The value count need not equal the method's parameter count.
+  - **IDOMTH `IONAPIMethods.InvokeIONAPIMethod2` (SSO=1) failed** with "Task Failed - Error -1", no message and no Process ID. TaskMan did dispatch it. The cause is not isolated.
+  - **A vendor SP method (`UserNames.GetUserAttributes`, no ION) fails the same way** (EXP-148), on a different task server. So **IDOMTH itself fails in this MTC tenant**, independent of ION/SSO. The likely cause is that IDOMTH dispatch isn't provisioned; this is for Infor Support.
+  - EXP-147: Background Task History held no earlier vendor task runs, so there is no successful IDOMTH baseline here.
+  - **Don't build features on IDOMTH here.** Calling ION from a background task is **not working**. Use the form-script route (synchronous) until a background route is proven.
+- **Still unverified:**
+  - recurring schedules through BackgroundQueue;
+  - whether any IDOMTH task succeeds here (reportedly it needs a TaskMan configuration named after the site);
+  - SP tasks;
+  - submitting from C# through `BGTaskSubmit`;
+  - a task that calls an API (G7);
+  - purging history rows or report files.

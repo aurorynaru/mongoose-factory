@@ -1,0 +1,505 @@
+SOURCE: Infor Mongoose IDO Integration with External Applications (Release 2021.xx), Invoke, REST auth and InvokeIDOMethod
+Original PDF filename: mg_2021.xx_mgiiea__en-us.pdf
+Page numbers below are the printed page numbers shown in the PDF.
+Text extraction: PyMuPDF; table layout/line wrapping may differ from the original.
+Source: supplied Infor documentation; consult the PDF for authoritative formatting.
+
+=== EXTRACTED PRINTED PAGES 34-36 ===
+
+================== PRINTED PAGE 34 (PDF PAGE 34) ==================
+The IDO Request XML Schema
+
+Invoke
+
+An Invoke request/response document executes an IDO method. This method can be code in a custom
+assembly, or it can be a stored procedure.
+
+
+Request data
+
+An Invoke request document has this payload structure and contains data such as the collection name,
+method name, and the method parameter values, which are required to complete the request.
+
+
+ <RequestData>
+   <Name>collection</Name>
+   <Method>methodname</Method>
+   <Parameters>
+     <Parameter>parametervalue</Parameter>
+     <Parameter>parametervalue</Parameter>
+     <Parameter ByRef="Y" />
+   </Parameters>
+ </RequestData>
+
+
+Response data
+
+An Invoke response document has this payload structure and includes requested data and return
+values.
+
+
+ <ResponseData>
+   <Name>collection</Name>
+   <Method>methodname</Method>
+   <Parameters>
+     <Parameter>parametervalue</Parameter>
+     <Parameter>parametervalue</Parameter>
+     <Parameter ByRef="Y">parametervalue</Parameter>
+   </Parameters>
+   <ReturnValue>returnvalue</ReturnValue>
+ </ResponseData>
+
+
+Element descriptions
+
+ Element                      Description
+
+Method                        This is the name of the IDO that contains the method.
+
+Name                          This is the name of the method being invoked.
+
+
+
+
+
+                                           Infor Mongoose IDO Integration with External Applications | 34
+
+================== PRINTED PAGE 35 (PDF PAGE 35) ==================
+The IDO Request XML Schema
+
+
+
+ Element                      Description
+
+Parameter                    This is the name of a parameter for the method.
+
+                                This element can contain the ByRef attribute. This attribute is op-
+                                        tional. When used, parameters that are marked as ByRef in the
+                          IDO metadata are returned in the response, regardless of the
+                          ByRef value in the request. If set to Y, the parameter is input/out-
+                                    put. If set to N, or if this attribute is omitted, the parameter is input-
+                                      only.
+
+                              Note: Parameters should be listed in the order that the method is
+                                expecting them. If you use the obsolete Seq attribute, it is ignored.
+
+ReturnValue              Used only in the response document, this element contains the
+                                  return value from the method.
+
+
+Examples for Invoke
+
+This example request determines the user attributes of user jdoe using the IDO method
+GetUserAttributes.
+
+
+ <IDORequest ProtocolVersion="6.03" SessionID="bde8caa4-1343-4808-9bca-
+ ed844ffe7129">
+   <RequestHeader Type="Invoke">
+     <InitiatorType />
+     <InitiatorName />
+     <SourceName />
+     <SourceConfig />
+     <TargetName />
+     <TargetConfig />
+     <RequestData>
+       <Name>UserNames</Name>
+       <Method>GetUserAttributes</Method>
+       <Parameters>
+         <Parameter>jdoe</Parameter>
+         <Parameter ByRef="Y" />
+         <Parameter ByRef="Y" />
+         <Parameter ByRef="Y" />
+         <Parameter ByRef="Y" />
+       </Parameters>
+     </RequestData>
+   </RequestHeader>
+ </IDORequest>
+
+
+This example response contains the user attributes of the user jdoe.
+
+
+ <IDOResponse ProtocolVersion="6.03" SessionID="bde8caa4-1343-4808-9bca-
+ ed844ffe7129">
+   <ResponseHeader Type="Invoke">
+     <InitiatorType />
+     <InitiatorName />
+     <SourceName />
+
+
+
+                                           Infor Mongoose IDO Integration with External Applications | 35
+
+================== PRINTED PAGE 36 (PDF PAGE 36) ==================
+The IDO Request XML Schema
+
+
+     <SourceConfig />
+     <TargetName />
+     <TargetConfig />
+     <ResponseData>
+       <Name>UserNames</Name>
+       <Method>GetUserAttributes</Method>
+       <Parameters>
+         <Parameter>jdoe</Parameter>
+         <Parameter ByRef="Y">2</Parameter>
+         <Parameter ByRef="Y">1</Parameter>
+         <Parameter ByRef="Y" />
+         <Parameter ByRef="Y" />
+       </Parameters>
+       <ReturnValue>0</ReturnValue>
+     </ResponseData>
+   </ResponseHeader>
+ </IDOResponse>
+
+
+CloseSession
+
+A CloseSession request/response document closes an existing session.
+
+
+Request data
+
+None
+
+
+Response data
+
+None
+
+
+Example for CloseSession
+
+This example request closes a session with the given session ID.
+
+
+ <IDORequest ProtocolVersion="6.03" SessionID="71e1c28d-4e00-495e-bff0-
+ 571b26179649">
+   <RequestHeader Type="CloseSession">
+     <InitiatorType />
+     <InitiatorName />
+     <SourceName />
+     <SourceConfig />
+     <TargetName />
+     <TargetConfig />
+     <RequestData />
+   </RequestHeader>
+ </IDORequest>
+
+
+
+
+
+                                           Infor Mongoose IDO Integration with External Applications | 36
+
+=== EXTRACTED PRINTED PAGES 39-40 ===
+
+================== PRINTED PAGE 39 (PDF PAGE 39) ==================
+Using the REST API
+
+Chapter 3: Using the REST API
+
+
+
+
+
+The REST API allows you to access IDOs from a client-side web project, a mobile app, or an Internet
+of Things (IoT) device to perform IDO-related operations such as loading or updating collections, or
+running methods. It is another layer on top of the IDO Request Interface, using the IDO Request XML
+schema.
+
+
+
+Integration with ION API
+
+The Mongoose REST APIs are also exposed in Infor ION API which allows customers to have one
+common authentication mechanism, a consolidated view, and consumption of APIs from many Infor
+applications. Our APIs are developed to allow ION API to consume them using the OAuth 1.0a
+Zero-Legged authentication mechanism.
+
+For more information on how to use Infor ION API and how to interact with the swagger documentation
+for the API methods, see the Infor ION API Administration Guide.
+
+
+
+REST API versions
+
+The original Mongoose REST API was grown over several years. As a result, it became overly complex
+and difficult to learn. While preserving it for backward-compatibility, Mongoose added a second version
+of the API. Both are described later in this chapter.
+
+
+
+Authentication
+
+The Mongoose REST API offers security by requiring that either a Mongoose security token or a valid
+OAuth 2.0 bearer token be passed in the Authorization header of the API requests.
+
+The Mongoose REST API currently supports these authentication schemes:
+
+•   Mongoose security token
+•   OAuth 1.0a Zero-Legged authentication
+
+
+
+                                           Infor Mongoose IDO Integration with External Applications | 39
+
+================== PRINTED PAGE 40 (PDF PAGE 40) ==================
+Using the REST API
+
+Mongoose security token
+
+A Mongoose security token can be acquired by using the GetSecurityToken API. This is used for
+authenticating requests when the REST API is being called directly.
+
+Mongoose security tokens are unique for each user and should be stored securely. These tokens only
+expire when the user or configuration becomes non-existent, or when the user changes the password.
+
+
+OAuth 1.0a Zero-Legged authentication
+
+OAuth 1.0a authentication is a signature that is computed using a consumer key and a matching
+consumer secret, along with the details of the request.
+
+For the Mongoose REST API, the OAuth 1.0 with HMAC-SHA1 algorithm is used when the REST API
+is being called through the ION API.
+
+This authentication scheme uses these headers to create a Mongoose session using the workstation
+logon mechanism:
+
+ Header                       Description
+
+X-Infor-Identity2          This is a unique, immutable user identifier within a tenant. It is
+                                provided by the ION API.
+
+X-Infor-MongooseConfig    This is the Mongoose configuration name, as provided by the user.
+
+
+These properties must be configured in the IDO Request Service’s web.config:
+
+ Property name                        Property value
+
+ enableRestWorkstationLogon            True
+
+ restOAuthConsumerKey               Consumer key provided by ION API
+
+ restOAuthConsumerSecret            Consumer secret provided by ION API
+
+
+
+REST API, Version 1
+
+This section presents the original version of the Mongoose REST API.
+
+
+Base URL
+
+All endpoints are accessible using HTTP(S) and are located at this URL:
+
+http://<serverName>/IDORequestService/MGRESTService.svc
+
+
+
+
+
+                                           Infor Mongoose IDO Integration with External Applications | 40
+
+=== EXTRACTED PRINTED PAGES 134-136 ===
+
+================== PRINTED PAGE 134 (PDF PAGE 134) ==================
+Using the REST API
+
+GetSecurityToken
+
+The GetSecurityToken API returns a Mongoose security token for a specific user, which can be used
+to authenticate requests when calling the API directly.
+
+
+                   /token/{config}/{username}/{password}   GET
+
+
+    http://localhost/IDORequestService/ido/token/CSI_DALS/sa/Passwe1rd
+
+
+Note: This topic is for REST Version 1. There is also an API for REST Version 1 on page 60.
+
+
+Parameters
+
+Name           In       Required?     Description
+
+ config         Path      Yes            This is the name of a configuration available on the
+                                              application server.
+
+ username      Path      Yes            This is the username for the Mongoose user.
+
+ password      Path     No             This is the password for the Mongoose user.
+
+
+Headers
+
+None
+
+
+Request data
+
+None
+
+
+Response data
+
+
+ {
+    "Message": null,
+    "Success": true,
+    "Token": "b/XdI6IQzCviZOGJ0E+002DoKUFOPmVDkwpQDbQj…=="
+ }
+
+
+Example
+
+This example code retrieves a Mongoose security token that can be used in succeeding requests.
+
+
+ string json = string.Empty;
+
+ using ( var client = new HttpClient() )
+ {
+    string config = "MG_DEV";
+    string username = "sa";
+    string password = string.Empty;
+
+
+
+                                          Infor Mongoose IDO Integration with External Applications | 134
+
+================== PRINTED PAGE 135 (PDF PAGE 135) ==================
+Using the REST API
+
+
+    string requestUrl = $"http://server/IDORequestService/ido/token/{con
+ fig}/{username}/{password}";
+
+    // send the get request
+    HttpResponseMessage response = client.GetAsync( requestUrl ).Result;
+
+    using ( HttpContent content = response.Content )
+    {
+       Task<string> result = content.ReadAsStringAsync();
+       // get the response containing the token
+       json = result.Result;
+    }
+ }
+
+
+InvokeIDOMethod
+
+The InvokeIDOMethod API returns a list of properties and their attributes from an IDO collection.
+
+  POST     /invoke/{ido}
+
+
+    http://localhost/IDORequestService/invoke/UserNames?method=GetUserAttributes
+
+
+
+Parameters
+
+Name           In       Required?     Description
+
+ ido            Path      Yes            This is the name of the IDO collection.
+
+ method       Query    Yes            This is the name of the IDO method.
+
+
+Headers
+
+Name                              Description
+
+ Authorization                                           If the API is called directly, then the Mongoose security to-
+                                  ken is obtained through a call to the GetSecurityToken API.
+
+                                                                 If the API is called through the ION API, then a valid
+                                   OAuth2.0 bearer token is provided by the ION API.
+
+ X-Infor-MongooseConfig               This is the name of a configuration that is available on the
+                                          application server. This is required only when using the
+                               Mongoose API through the ION API.
+
+
+Request data
+
+
+ [
+    "sa",
+
+
+
+                                          Infor Mongoose IDO Integration with External Applications | 135
+
+================== PRINTED PAGE 136 (PDF PAGE 136) ==================
+Using the REST API
+
+
+    null,
+    null,
+    null,
+    null
+ ]
+
+
+Response data
+
+
+ {
+    "Message": null,
+    "Success": true,
+    "Parameters": [
+       "sa",
+       "4",
+       "1",
+       "CoreFormsAdmin",
+       ""
+    ],
+    "ReturnValue": "0"
+ }
+
+
+Example
+
+This example code determines the user attributes of user sa using the IDO method GetUserAttributes.
+
+
+ string json = string.Empty;
+
+ using ( HttpClient client = new HttpClient() )
+ {
+    string ido = "UserNames";
+    string method = "GetUserAttributes";
+    string requestUrl = $"http://server/IDORequestService/ido/in
+ voke/{ido}?method={method}";
+
+    // provide token in the Authorization header
+    client.DefaultRequestHeaders.TryAddWithoutValidation(
+       "Authorization",
+       "b/XdI6IQzCviZOGJ0E+002DoKUFOPmVDkwpQDbQj…==" );
+
+    string[] parameters = new[] { "sa", "", "", "", "" };
+
+    // pass the array of parameters as the request data
+    string contentStr = JsonConvert.SerializeObject( parameters );
+
+    // send the post request
+    HttpResponseMessage response = client.PostAsync( requestUrl.ToString(),
+  new StringContent( contentStr, Encoding.UTF8, "application/json" ) ).Re
+ sult;
+
+    using ( HttpContent content = response.Content )
+    {
+       Task<string> result = content.ReadAsStringAsync();
+       json = result.Result;
+
+
+
+                                          Infor Mongoose IDO Integration with External Applications | 136

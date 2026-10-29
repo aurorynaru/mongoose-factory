@@ -69,7 +69,8 @@
         "effort": "High"
       }
     },
-    "autoSelectModel": true
+    "autoSelectModel": true,
+    "specialistSession": "continue"
   },
   "limits": {
     "maxCycles": 30,
@@ -116,7 +117,8 @@
     "maxSnapshotRefFailures": 6,
     "maxRepeatedBrowserReads": 6,
     "maxRepeatedShellCalls": 6,
-    "allowBackendRestart": false
+    "allowBackendRestart": false,
+    "freshSessionAboveTokens": null
   },
   "chromeWindowStyle": "normal",
   "chromeWindowSize": "1920,1080",

@@ -17,6 +17,8 @@ export interface HandoffInput {
   limits: Limits;
   activeMs: number;
   failures: Array<{ kind: string; detail: string; at: string }>;
+  /** The previous task's report, for harness-initiated fresh sessions (the coordinator wrote no handoff). */
+  latestReport?: { task: string; text: string };
 }
 
 const list = (xs: string[]) => (xs.length ? xs.map((x) => `- ${x}`).join("\n") : "- (none recorded)");
@@ -77,5 +79,8 @@ export function renderHandoff(h: HandoffInput): string {
     `## Remaining limits`,
     remainingLimits(h.counters, h.limits, h.activeMs),
     `Failures so far: ${h.counters.totalFailures}${h.failures.length ? `\n${list(h.failures.slice(-5).map((f) => `${f.at} ${f.kind}: ${f.detail.slice(0, 160)}`))}` : ""}`,
+    ...(h.latestReport
+      ? [``, `## Latest worker report (${h.latestReport.task}; verbatim, may be clipped)`, h.latestReport.text]
+      : []),
   ].join("\n");
 }

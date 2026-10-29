@@ -42,6 +42,12 @@ export const ConfigSchema = z.object({
     maxSnapshotRefFailures: z.number().int().min(0).max(24).default(6),
     maxRepeatedBrowserReads: z.number().int().min(0).max(24).default(6),
     maxRepeatedShellCalls: z.number().int().min(0).max(24).default(6),
+    /**
+     * Start a fresh worker session (with a harness-written handoff) for the next task once the previous task
+     * ended with at least this many context tokens. Every turn re-reads the whole session context, so long
+     * sessions dominate token use. null = keep one session per run (unless the coordinator asks); 0 = every task.
+     */
+    freshSessionAboveTokens: z.number().int().nonnegative().nullable().default(null),
   }).prefault({}),
   mcp: z.object({
     port: z.number().int().min(1024).max(65535).default(8931),
@@ -133,6 +139,12 @@ export const ConfigSchema = z.object({
       contextFile: z.string().default("context/coordinator-context.md"),
       maxDigestChars: z.number().int().positive().default(9000),
       maxContextChars: z.number().int().positive().default(14000),
+      /**
+       * Claude specialist session reuse. "continue" keeps one session across runs; "per-run" opens a new
+       * session for the first consultation of each run; "per-consultation" opens one for every consultation
+       * and includes the run's earlier consultations (clipped) in the message.
+       */
+      specialistSession: z.enum(["continue", "per-run", "per-consultation"]).default("continue"),
     })
     .prefault({}),
   git: z

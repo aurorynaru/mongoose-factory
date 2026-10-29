@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FX API Page</title>
+<script type="text/javascript" src="../$app/scripts/UserControl.js"></script>
+<style>
+body{margin:0;padding:16px;font-family:Segoe UI,Arial,sans-serif;font-size:14px;color:#1f2a37;background:#f5f7fa}
+h1{font-size:18px;margin:0 0 12px}
+.FX_ApiButtons button{font:inherit;padding:8px 14px;margin:0 8px 8px 0;border:0;border-radius:4px;background:#0072ed;color:#fff;cursor:pointer}
+.FX_ApiButtons button:disabled{background:#8aa4c2;cursor:default}
+#FX_WmPath{font:inherit;padding:7px 8px;margin:0 8px 8px 0;width:420px;max-width:100%;border:1px solid #d0d7e2;border-radius:4px}
+#FX_ApiStatus{margin:4px 0 8px;color:#4b5563}
+#FX_ApiStatus.FX_Error{color:#b42318}
+#FX_ApiResult{white-space:pre-wrap;word-break:break-all;background:#fff;border:1px solid #d0d7e2;border-radius:4px;padding:10px;min-height:80px;max-height:240px;overflow:auto;margin:0}
+h2{font-size:16px;margin:20px 0 10px}
+.FX_ShipButtons button{font:inherit;padding:8px 14px;margin:0 8px 8px 0;border:0;border-radius:4px;background:#0072ed;color:#fff;cursor:pointer}
+.FX_ShipButtons button:disabled{background:#8aa4c2;cursor:default}
+#FX_ShipPageSize{font:inherit;width:64px;padding:6px;margin:0 12px 8px 4px;border:1px solid #d0d7e2;border-radius:4px}
+#FX_ShipStatus{margin:4px 0 8px;color:#4b5563}
+#FX_ShipStatus.FX_Error{color:#b42318}
+.FX_ShipWrap{max-height:420px;overflow:auto;border:1px solid #d0d7e2;border-radius:4px;background:#fff}
+#FX_ShipTable{border-collapse:collapse;width:100%;font-size:13px}
+#FX_ShipTable th,#FX_ShipTable td{padding:6px 10px;border-bottom:1px solid #e5e9f0;text-align:left;white-space:nowrap}
+#FX_ShipTable th{position:sticky;top:0;background:#eef2f7}
+</style>
+</head>
+<body>
+<h1>FX API page (JS to C# to API)</h1>
+<div class="FX_ApiButtons">
+<button type="button" id="FX_BtnIon" data-method="FX_CallIonHello">Call ION helloworld</button>
+<button type="button" id="FX_BtnHttp" data-method="FX_CallHttpbin">Call httpbin</button>
+</div>
+<div class="FX_ApiButtons">
+<input type="text" id="FX_WmPath" aria-label="WM REST path" value="/enterprise/facilities">
+<button type="button" id="FX_BtnWm" data-method="FX_CallWmGet" data-arg="FX_WmPath">WM GET</button>
+</div>
+<div id="FX_ApiStatus" role="status">Ready.</div>
+<pre id="FX_ApiResult"></pre>
+<h2>Shipment orders (wmwhse1)</h2>
+<div class="FX_ShipButtons">
+<label>Page size <input type="number" id="FX_ShipPageSize" min="1" max="25" value="25"></label>
+<button type="button" id="FX_BtnShipFirst">Load first page</button>
+<button type="button" id="FX_BtnShipNext" disabled>Next page</button>
+<button type="button" id="FX_BtnShipAll">Load all</button>
+</div>
+<div id="FX_ShipStatus" role="status">No orders loaded.</div>
+<div class="FX_ShipWrap">
+<table id="FX_ShipTable">
+<thead><tr><th>Order key</th><th>Extern key</th><th>Storer</th><th>Status</th><th>Type</th><th>Order date</th><th>Delivery date</th><th>Open qty</th><th>Serial key</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+<script type="text/javascript">
+(function () {
+var buttons = document.querySelectorAll(".FX_ApiButtons button");
+var statusLine = document.getElementById("FX_ApiStatus");
+var result = document.getElementById("FX_ApiResult");
+var timer = null;
+
+function setStatus(text, isError) {
+statusLine.textContent = text;
+statusLine.className = isError ? "FX_Error" : "";
+}
+
+function setBusy(busy) {
+Array.prototype.forEach.call(buttons, function (b) { b.disabled = busy; });
+}
+
+function call(method, arg) {
+if (typeof WSForm === "undefined") {
+setStatus("Open this page inside the FX_ApiProbe Form to call the API.", true);
+return;
+}
+setBusy(true);
+result.textContent = "";
+setStatus("Calling " + method + "...");
+timer = setTimeout(function () {
+setBusy(false);
+setStatus("No response from " + method + " after 20 s.", true);
+}, 20000);
+function done() {
+WSForm.getVarValue("FX_vApiResult", function (value) {
+clearTimeout(timer);
+setBusy(false);
+setStatus("Done: " + method + " at " + new Date().toLocaleTimeString());
+result.textContent = value || "(empty)";
+});
+}
+if (arg === undefined) {
+WSForm.invoke(method, done);
+} else {
+WSForm.invoke(method, arg, done);
+}
+}
+
+Array.prototype.forEach.call(buttons, function (b) {
+b.addEventListener("click", function () {
+var argId = b.getAttribute("data-arg");
+call(b.getAttribute("data-method"), argId ? document.getElementById(argId).value.trim() : undefined);
+});
+});
+
+// Shipment list: pages through FX_ListShipments (serialkey, recordcount) and shows only these columns.
+var shipCols = ["orderkey", "externorderkey", "storerkey", "status", "type", "orderdate", "deliverydate", "openqty", "serialkey"];
+var shipBody = document.querySelector("#FX_ShipTable tbody");
+var shipStatus = document.getElementById("FX_ShipStatus");
+var shipFirst = document.getElementById("FX_BtnShipFirst");
+var shipNext = document.getElementById("FX_BtnShipNext");
+var shipAll = document.getElementById("FX_BtnShipAll");
+var shipSeen = {};
+var shipCount = 0;
+var nextSerial = 0;
+
+function setShipStatus(text, isError) {
+shipStatus.textContent = text;
+shipStatus.className = isError ? "FX_Error" : "";
+}
+
+function setShipBusy(busy) {
+shipFirst.disabled = busy;
+shipAll.disabled = busy;
+shipNext.disabled = busy || nextSerial === null;
+}
+
+function pageSize() {
+var n = parseInt(document.getElementById("FX_ShipPageSize").value, 10);
+return isNaN(n) ? 25 : Math.min(25, Math.max(1, n));
+}
+
+function findRows(data) {
+if (Array.isArray(data)) { return data; }
+if (data && typeof data === "object") {
+if (data.orderkey) { return [data]; }
+for (var k in data) {
+if (Array.isArray(data[k]) && data[k].length && data[k][0] && data[k][0].orderkey) { return data[k]; }
+}
+}
+return [];
+}
+
+function fetchPage(serial, size, cb) {
+var timer = setTimeout(function () { cb("No response after 20 s."); }, 20000);
+WSForm.invoke("FX_ListShipments", String(serial), String(size), function () {
+WSForm.getVarValue("FX_vApiResult", function (value) {
+clearTimeout(timer);
+var code = /Code: (\d+)/.exec(value || "");
+var at = (value || "").indexOf("Content: ");
+// Raw order JSON carries contact data; show only the header lines and the size. Error bodies are shown in full.
+var ok = code && code[1].charAt(0) === "2";
+result.textContent = at < 0 || !ok ? (value || "(empty)") : value.slice(0, at) + "Content: " + (value.length - at - 9) + " chars";
+// The list endpoint answers 404 for a serial-key range with no orders.
+if (code && code[1] === "404") { cb(null, []); return; }
+if (!code || code[1].charAt(0) !== "2" || at < 0) { cb("List call failed: " + (value || "(empty)").split("\n")[0]); return; }
+var data;
+try { data = JSON.parse(value.slice(at + 9)); } catch (e) { cb("Response is not complete JSON (" + e.message + ")."); return; }
+cb(null, findRows(data));
+});
+});
+}
+
+function addRows(rows) {
+var added = 0;
+rows.forEach(function (r) {
+var key = r.orderkey + "|" + r.serialkey;
+if (shipSeen[key]) { return; }
+shipSeen[key] = true;
+var tr = document.createElement("tr");
+shipCols.forEach(function (c) {
+var td = document.createElement("td");
+var v = r[c];
+td.textContent = v === null || v === undefined ? "" : (/date$/.test(c) ? String(v).slice(0, 10) : String(v));
+tr.appendChild(td);
+});
+shipBody.appendChild(tr);
+added++;
+});
+shipCount += added;
+return added;
+}
+
+// The API returns orders with serialkey in (serialkey, serialkey + recordcount], so a page can be
+// short or empty where orders were deleted. Step by the page size; the list ends after 3 empty pages.
+var emptyPages = 0;
+
+function loadPage(all, pagesLeft) {
+if (typeof WSForm === "undefined") { setShipStatus("Open this page inside the FX_ApiProbe Form.", true); return; }
+var size = pageSize();
+setShipBusy(true);
+setShipStatus("Loading serial keys " + (nextSerial + 1) + "-" + (nextSerial + size) + "... (" + shipCount + " so far)");
+fetchPage(nextSerial, size, function (err, rows) {
+if (err) { setShipBusy(false); setShipStatus(err + " Rows so far: " + shipCount + ".", true); return; }
+addRows(rows);
+nextSerial += size;
+emptyPages = rows.length ? 0 : emptyPages + 1;
+var done = emptyPages >= 3;
+if (done) { nextSerial = null; }
+if (all && !done && pagesLeft > 1) { loadPage(true, pagesLeft - 1); return; }
+setShipBusy(false);
+setShipStatus(shipCount + " orders loaded" + (done ? " (end of list)." : all ? " (stopped at the 400-page limit)." : "."));
+});
+}
+
+function reset() {
+shipBody.innerHTML = "";
+shipSeen = {};
+shipCount = 0;
+nextSerial = 0;
+emptyPages = 0;
+}
+
+shipFirst.addEventListener("click", function () { reset(); loadPage(false, 1); });
+shipNext.addEventListener("click", function () { if (nextSerial !== null) { loadPage(false, 1); } });
+shipAll.addEventListener("click", function () { reset(); loadPage(true, 400); });
+})();
+</script>
+</body>
+</html>

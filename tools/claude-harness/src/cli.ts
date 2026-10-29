@@ -21,6 +21,8 @@ import { registerShadowCommands } from "./shadow/cli.js";
 import { registerServiceCommands } from "./backend/cli.js";
 import { registerWorkerCommands } from "./adapters/claude/cli.js";
 import { ClaudeWorker } from "./adapters/claude/worker.js";
+import { loadConfig, resolvePaths } from "./config.js";
+import { collectUsage, renderUsage } from "./usage.js";
 
 const program = new Command();
 registerServiceCommands(program);
@@ -469,6 +471,19 @@ program
       show();
       await new Promise((r) => setTimeout(r, 5000));
     }
+  });
+
+program
+  .command("usage")
+  .description("Token usage of Claude worker/role tasks from their saved event logs (read-only; no services, no database)")
+  .option("--since <date>", "only task logs modified on or after this date (YYYY-MM-DD)")
+  .option("--tasks", "list every task")
+  .option("--json")
+  .action((o) => {
+    const since = o.since ? Date.parse(`${o.since}T00:00:00`) : 0;
+    if (Number.isNaN(since)) throw new Error(`Invalid --since date: ${o.since}`);
+    const report = collectUsage(resolvePaths(loadConfig(program.opts().config).config).dataDir, since);
+    console.log(o.json ? JSON.stringify(report, null, 2) : renderUsage(report, { tasks: !!o.tasks }));
   });
 
 program

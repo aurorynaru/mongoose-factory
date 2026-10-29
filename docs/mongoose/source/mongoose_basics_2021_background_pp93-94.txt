@@ -1,0 +1,96 @@
+SOURCE: Infor Mongoose Basics User Guide (Release 10.x), About Background Tasks
+Original PDF filename: CSI_Basics.pdf
+Page numbers below are the printed page numbers shown in the PDF.
+Text extraction: PyMuPDF; table layout/line wrapping may differ from the original.
+Source: supplied Infor documentation; consult the PDF for authoritative formatting.
+
+=== EXTRACTED PRINTED PAGES 93-94 ===
+
+================== PRINTED PAGE 93 (PDF PAGE 93) ==================
+About Background Tasks
+
+Chapter 9: About Background Tasks
+
+
+
+
+
+Many utilities, reports, and some activities can be scheduled to run daily, weekly, or monthly. After the
+process is scheduled, it runs automatically in the background at a set time, using your selection criteria
+and option settings.
+
+Note:
+•   Forms that can be scheduled to run in the background have the command Background in the
+   Actions menu.
+•   To schedule background tasks, you must have the Infor Framework Event Service configured and
+    running.
+
+Most reports are run as background tasks that are placed on a "queue" to be run in order. You can
+also set up other tasks to run in the background. The TaskMan service polls the list of active background
+tasks and executes any new task that is posted to the queue with a status of READY.
+
+Background tasks are set up using the Background Task Definitions form. They can be scheduled
+to run on a once-only or recurring basis using the Background Queue form.
+
+Background tasks must meet these requirements:
+
+•   The task name should match the form name, to make it easier to identify.
+•   Stored procedures must be written in SQL and reside in your SQL application database. Utility and
+     activity forms generally use the Executable Type: SP (stored procedure).
+•   Executable programs must reside in a directory available to the directory where TaskMan resides.
+•   These types of reports are supported as background tasks:
+    Note: To enable the Report Type options, you must select RPT (Report) as the Executable Type.
+     •  SSRS - Reports created using Microsoft SQL Server Reporting Services (SSRS).
+
+      The report output file must be placed in TaskMan's reports subdirectory on the server. Although
+        the report uses a stored procedure, its Executable Type must be set to RDL, since it requires
+        special handling through SSRS.
+
+     •  DATAVIEW - Reports can be created based on DataViews and their layouts.
+
+      When this report type is specified, the Executable Name field must contain the name of the
+        predefined DataView, followed by a dash and the name of the DataView layout to be used for
+        the report.
+
+       For example, you might have a predefined DataView named "Customer Orders" and a layout
+      named "Print" that you use to send the report output to a printer. In this case, you would specify
+        the Executable Name as Customer Orders-Print.
+
+        This report type supports output only to PDF or Excel formats.
+
+     •  FORM - Reports can be created using the Report form type. When using this report type, use
+        the form name (not caption) in the Executable Name field.
+
+
+                                                                     Infor Mongoose Basics User Guide | 93
+
+================== PRINTED PAGE 94 (PDF PAGE 94) ==================
+About Background Tasks
+
+
+        This report type supports output only to the PDF format.
+
+•  IDO methods specify a method name (in the format IDO.Method - for example,
+   MyProgID.SLSites.MyTestMethod) and use the Executable Type IDOMTH. When processing
+    tasks of this type, TaskMan requires a configuration with the same name as the site name. On the
+   machine where TaskMan is running (typically the utility server), you must create a configuration
+   where the configuration name matches the database site name, if one does not already exist.
+
+You can see which tasks are currently running using the Active Background Tasks form. The task
+name should be the same as the report form's or utility form's name. If the task status is WAITING, it
+is waiting for its scheduling requirements to occur. You can delete a WAITING task from the list. If the
+task is RUNNING, you must use a different procedure.
+
+After the task has run, even if it fails, you can view details about its execution using the Background
+Task History form. This form displays these details about the task:
+
+•   Task description
+•   Return status
+•   User who submitted the task
+•   Messages triggered by the task
+
+
+
+
+
+                                                                     Infor Mongoose Basics User Guide | 94

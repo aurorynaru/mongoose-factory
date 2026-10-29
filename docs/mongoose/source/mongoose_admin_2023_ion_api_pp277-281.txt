@@ -1,0 +1,288 @@
+SOURCE: Infor Mongoose Administration Guide (Release 2023.x), ION API administrative topics
+Original PDF filename: ism_2023.x_mgaug_op_servicemanagement_en-us.pdf
+Page numbers below are the printed page numbers shown in the PDF.
+Text extraction: PyMuPDF; table layout/line wrapping may differ from the original.
+Source: supplied Infor documentation; consult the PDF for authoritative formatting.
+
+=== EXTRACTED PRINTED PAGES 277-281 ===
+
+================== PRINTED PAGE 277 (PDF PAGE 277) ==================
+About integration with other applications
+
+Designating a form as a “widget” form
+
+1  Open the Widget Forms form, and initiate a new record.
+2   Provide this information:
+
+   Form Name
+    Select the name of the form that you want to designate and use as a widget.
+
+    Description
+    Optionally, provide a description of what the widget is intended to do.
+
+3   Select the Use as Widget check box.
+4   Save.
+
+Note: The Access As field contains the name of the environment where the currently selected record was
+created. If the current record has an Access As value that is different from the current environment’s Access
+As, that record is read-only.
+
+
+
+Infor ION API
+
+
+About Infor ION API
+
+ION API Gateway is an Infor product that aggregates APIs from various products into a single clearing house,
+with a common security model, monitoring, throttling, and so on. ION API also has a UI component that
+accompanies the gateway, where you can add and see APIs that are exposed by the gateway, set up authorized
+clients that can access the APIs, look at the logs, test the APIs, among other tasks.
+
+Mongoose includes functionality that allows administrators to set up a reference to the gateway by means
+of an ION API server; and then use an IDO method to make calls to APIs through that server. In the cloud, when
+a tenant is provisioned with an ION API app reference in their Mongoose-based application (done in CSP), the
+ION API server reference to the gateway in the cloud is set up automatically. Other servers can be set up
+manually; for example, in a cloud Mongoose instance referring to a gateway on-premises, or vice versa.
+
+The ION API Servers form contains some basic info needed to access the gateway by means of the ION API
+server. There are two modes of authenticating users to the gateway, referred to as “SSO” (Single Sign-On)
+and “non-SSO”. Using non-SSO authentication requires additional setup on the ION API side. At the end of
+that setup process an .ionapi file is produced. This .ionapi file must then be uploaded using the ION API
+servers form.
+
+Note: If you add a brand new server, the ION API servers form auto-fills some values for the URLs that are
+not correct. This is a known bug. It does not, however, interfere with existing values, assuming that they are
+correct.
+
+Use of the remaining ION API-related forms are not, strictly speaking, necessary to use the gateway through
+the IDO method. Their primary purpose is to enable easier no-code testing of the APIs. “ION API server suites”
+correspond roughly to the APIs exposed by the gateway. In each suite, then, there are individual methods
+
+
+                                                                    Infor Mongoose Administration Guide | 277
+
+================== PRINTED PAGE 278 (PDF PAGE 278) ==================
+About integration with other applications
+
+
+that can be called in the API. Those related forms describe the suites or methods you might want to access;
+but be aware that they do not have to be in the forms to be usable. The forms simply enable the drop-down
+functionality in the Test ION API Invoke form, so that you can choose the suite and method without typing
+them in. Also, those forms have buttons that can query the gateway for available suites and methods in the
+suite.
+
+
+Adding an ION API server
+
+To be able to access and use the resources of an ION API server, that server must first be "registered" in your
+base application.
+
+1  Open the ION API Servers form and initiate a new record.
+2   Provide this information:
+
+    Server ID
+    This field is automatically populated, but you can change it. Typically, this ID is a non-negative integer,
+    with zero (0) being reserved for the default ION API server.
+    Note: If you are using the server to enable the Data Lake IDO Wizard, you must designate the server as
+    the default ION API server. To do this, set this field to 0 (zero).
+
+    Description
+    Optionally, specify a helpful description for the server.
+
+    Server URL
+    Optionally, specify the URL of the ION API server.
+
+    This field is for documentation purposes only. The actual URL is derived from the .ionapi file.
+
+   STS URL
+    Specify the address of the WS-Trust STS (Security Token Service) endpoint. This is available from the
+    environment’s idp.properties file, under the property name idp.wstrust.sts.url.
+
+   Token URL
+    Specify the address of the OAuth token endpoint. This is available from the environment’s idp.properties
+      file, under the property name idp.oauth.token.url.
+
+    Import .ionapi file
+   Use this button to browse for an .ionapi file.
+
+   You can get the .ionapi file from the Infor ION API provisioning page.
+
+    Note: The .ionapi exists check box is automatically selected once the .ionapi file is imported.
+
+    Import Private Key
+   Use this button to browse for a private key, in .json format.
+
+   You must import a .ionapi first to enable this button.
+
+    Note: The Private Key Exist check box is automatically selected once the record is saved.
+
+    Import Suites
+    Optionally, use this button to search for and select an ION API server suite. When a suite is imported,
+    information about the suite displays in the Suites grid.
+
+
+
+                                                                    Infor Mongoose Administration Guide | 278
+
+================== PRINTED PAGE 279 (PDF PAGE 279) ==================
+About integration with other applications
+
+
+    Suites
+    Optionally, use this button to launch the ION API Suites form, in which you can define a suite (or group)
+    of ION API servers.
+
+   When you create a suite using that form and save it, it is automatically added to this form and information
+    about it displays in the Suites grid when you refresh the form.
+
+3   Save.
+
+
+Adding an ION API server suite
+
+Use this procedure to create your own API server suite. To import an existing server suite, see Importing an
+ION API server suite on page 281.
+1  Open the ION API Servers form.
+2   Select an entry where a suite is to be added.
+3   Click Suites.
+4   In the ION API Suites form, initiate a new record.
+5   Provide this information:
+
+   Name
+    Provide a name for the suite.
+
+    Description
+    Optionally, provide a helpful description for this suite.
+
+    Context
+    Specify the API context that is to be appended to the base URL when calling methods from this suite.
+
+6   Optionally, define or import one or more API methods to be used.
+7   Save.
+
+
+Adding an ION API method
+
+Use this procedure to create your own API method definition. To import an existing method definition, see
+Importing an ION API method on page 281.
+1  Open the ION API Servers form.
+2   Select the server profile to which you want to add the method.
+3   Click Suites.
+4   Select the suite to which you want to add the method.
+5   Click Methods.
+6   In the ION API Methods form, initiate a new record.
+7   Provide this information:
+
+
+
+
+                                                                    Infor Mongoose Administration Guide | 279
+
+================== PRINTED PAGE 280 (PDF PAGE 280) ==================
+About integration with other applications
+
+
+   HTTP Method
+    Select the HTTP method.
+
+   Method Name
+    Specify a name for this method.
+
+    Path
+    Specify the relative URL path for this method.
+
+    Description
+    Optionally, specify a short description for this method.
+
+8   Save.
+
+The application adds the method profile to the suite profile. If it does not display automatically in the ION
+API Suites form, refresh that form.
+
+
+Testing an ION API method
+
+Use this procedure to test an API method definition.
+1  Open the Test ION API Invoke form.
+2   Provide this information:
+
+    Server ID
+    Select the ION API server ID you want to test.
+
+    Suite
+    Select the ION API suite that has the method you want to test.
+
+   HTTP Method
+    Select the appropriate HTTP method.
+
+   Method
+    Select the method you want to test.
+
+    Parameters
+    Optionally, specify any parameters required by the selected method, in JSON format.
+
+    Content Type
+    Specify type if one of the parameters is of type "body" or "form."
+
+   Timeout
+    Specify the maximum length of time, in milliseconds, to wait for the result to be returned. The default
+     is 10000 ms.
+
+   Use SSO
+       If the invoke method needs to authenticate with the user's Infor OS Portal or Infor Ming.le SSO session
+    credentials, select this option.
+
+3   Click Invoke.
+
+
+                                                                    Infor Mongoose Administration Guide | 280
+
+================== PRINTED PAGE 281 (PDF PAGE 281) ==================
+About integration with other applications
+
+
+The application starts the test and returns any results to the Response section when the test is finished.
+
+
+Importing an ION API server suite
+
+1  Open the ION API Servers form.
+2   Select the server into which the suite is to be imported.
+3   Click Import Suites.
+4   In the ION API Search Criteria dialog box, specify the Search Criteria.
+
+   To authenticate the search with Infor OS Portal or Infor Ming.le SSO credentials, select the Use SSO
+    option.
+
+5   Click Search.
+6     If more than one suite is returned, select one from the list and then click OK.
+7   Save.
+
+The application imports the selected API server suite and adds it to the selected API server. You might need
+to refresh the ION API Servers form to see the new suite in the display.
+
+
+Importing an ION API method
+
+1  Open the ION API Server form.
+2   Select the server into which you want to import the API method.
+3   Click Suites.
+4   In the ION API Suites form, select the suite into which you want to import the method.
+5   Click Import Methods.
+6   In the ION API Search Criteria dialog box, specify the Search Criteria.
+    Note: To authenticate the search with Infor OS Portal or Infor Ming.le SSO credentials, select theUse SSO
+    option.
+
+7   Click Search.
+8     If more than one method is returned, select one from the list, and then click OK.
+9   Save.
+
+The application imports the selected API method and adds it to the selected API server suite. You might need
+to refresh the ION API Suites form to see the new method in the display.
+
+
+
+
+
+                                                                    Infor Mongoose Administration Guide | 281

@@ -1,0 +1,209 @@
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using Mongoose.IDO.Protocol;
+using Mongoose.Scripting;
+using Newtonsoft.Json;
+
+//<Ref>Newtonsoft.Json.dll</Ref>
+
+namespace Mongoose.FormScripts
+{
+// BLD-002 ASN Portal. Every public method writes one JSON result to FX_vAsnResult:
+// {"ok":true,...} or {"ok":false,"message":"..."}. The page reads it with WSForm.getVarValue.
+public class FX_ASNPortal : FormScript
+{
+const string AsnIdo = "FX_ASN";
+const string LookupIdo = "FX_ASNLookups";
+const string AsnProps = "FX_AsnId, FX_AsnNum, FX_VdrNum, FX_EnvCode, FX_ActivityType, FX_DeptCode, FX_DeliveryMode, FX_LocationCode, FX_DeliveryDate, FX_NeedByDate, FX_BoxQty, FX_TruckType, FX_PlateNum, FX_DriverName, FX_Helpers, FX_AsnStatus, FX_VdrStatus, FX_DocsPct, FX_CreatedDate";
+// Page field name -> FX_ASN property. Only these fields are ever written from the page.
+static readonly string[,] PageFields = {
+{ "ActivityType", "FX_ActivityType" }, { "DeptCode", "FX_DeptCode" }, { "DeliveryMode", "FX_DeliveryMode" },
+{ "LocationCode", "FX_LocationCode" }, { "DeliveryDate", "FX_DeliveryDate" }, { "NeedByDate", "FX_NeedByDate" },
+{ "BoxQty", "FX_BoxQty" }, { "TruckType", "FX_TruckType" }, { "PlateNum", "FX_PlateNum" },
+{ "DriverName", "FX_DriverName" }, { "Helpers", "FX_Helpers" }
+};
+static readonly string[] Required = { "ActivityType", "DeptCode", "DeliveryMode", "LocationCode", "DeliveryDate", "NeedByDate", "BoxQty", "TruckType", "Helpers" };
+
+public void FX_LoadAsnData()
+{
+try
+{
+var asns = new List<Dictionary<string, object>>();
+var response = IDOClient.LoadCollection(AsnIdo, AsnProps, "", "FX_AsnId DESC", 1000);
+string[] names = AsnProps.Split(',');
+for (int i = 0; i < response.Items.Count; i++)
+{
+var row = new Dictionary<string, object>();
+for (int p = 0; p < names.Length; p++)
+{
+row[names[p].Trim().Substring(3)] = response.Items[i].PropertyValues[p].Value;
+}
+asns.Add(row);
+}
+var lookups = new List<Dictionary<string, object>>();
+var lk = IDOClient.LoadCollection(LookupIdo, "FX_LookupType, FX_LookupValue", "", "FX_LookupType, FX_SortOrder", 500);
+for (int i = 0; i < lk.Items.Count; i++)
+{
+var row = new Dictionary<string, object>();
+row["Type"] = lk.Items[i].PropertyValues[0].Value;
+row["Value"] = lk.Items[i].PropertyValues[1].Value;
+lookups.Add(row);
+}
+var result = new Dictionary<string, object>();
+result["ok"] = true;
+result["asns"] = asns;
+result["lookups"] = lookups;
+FX_Result(result);
+}
+catch (Exception ex)
+{
+FX_Fail("Load failed. " + ex.GetType().Name + ": " + ex.Message);
+}
+}
+
+public void FX_SaveAsnDraft(string json)
+{
+FX_Save(json, false);
+}
+
+public void FX_GenerateAsn(string json)
+{
+FX_Save(json, true);
+}
+
+void FX_Save(string json, bool generate)
+{
+try
+{
+var data = JsonConvert.DeserializeObject<Dictionary<string, string>>(json ?? "") ?? new Dictionary<string, string>();
+string problem = FX_Check(data, generate);
+if (problem != null) { FX_Fail(problem); return; }
+
+string asnId = FX_Get(data, "AsnId");
+IDOUpdateItem item;
+if (asnId == "")
+{
+item = new IDOUpdateItem();
+item.Action = UpdateAction.Insert;
+item.ItemNumber = 1;
+item.Properties.Add("FX_EnvCode", "WAP");
+item.Properties.Add("FX_CreatedDate", FX_IdoDate(DateTime.Now));
+}
+else
+{
+var existing = IDOClient.LoadCollection(AsnIdo, "FX_AsnId, FX_AsnStatus", "FX_AsnId = " + asnId, "", 1);
+if (existing.Items.Count == 0) { FX_Fail("Draft " + asnId + " no longer exists. Reload the page and start again."); return; }
+if ((string)existing.Items[0].PropertyValues[1].Value != "Draft") { FX_Fail("ASN " + asnId + " is not a draft any more and can't be changed here."); return; }
+item = new IDOUpdateItem(UpdateAction.Update, existing.Items[0].ItemID);
+item.Properties.Add("FX_AsnId", asnId, false);
+}
+
+for (int f = 0; f < PageFields.GetLength(0); f++)
+{
+string value = FX_Get(data, PageFields[f, 0]);
+if (PageFields[f, 1].EndsWith("Date") && value != "") { value = FX_IdoDate(DateTime.ParseExact(value, "yyyy-MM-dd", null)); }
+item.Properties.Add(PageFields[f, 1], value, true);
+}
+
+string asnNum = "";
+if (generate)
+{
+asnNum = FX_NextAsnNum();
+item.Properties.Add("FX_AsnNum", asnNum, true);
+}
+item.Properties.Add("FX_AsnStatus", generate ? "Pending Approval" : "Draft", true);
+
+var request = new UpdateCollectionRequestData(AsnIdo);
+request.RefreshAfterUpdate = true;
+request.Items.Add(item);
+var response = IDOClient.UpdateCollection(request);
+
+// Insert: the new key is the highest FX_AsnId (single-user test build; not safe under concurrent inserts).
+string savedId = asnId;
+if (savedId == "")
+{
+var saved = IDOClient.LoadCollection(AsnIdo, "FX_AsnId", "", "FX_AsnId DESC", 1);
+savedId = saved.Items.Count > 0 ? (string)saved.Items[0].PropertyValues[0].Value : "";
+}
+var result = new Dictionary<string, object>();
+result["ok"] = true;
+result["asnId"] = savedId;
+result["asnNum"] = asnNum;
+result["message"] = generate ? "ASN " + asnNum + " generated." : "Draft saved.";
+FX_Result(result);
+}
+catch (Exception ex)
+{
+FX_Fail((generate ? "Generate" : "Save") + " failed. " + ex.GetType().Name + ": " + ex.Message);
+}
+}
+
+// Returns null when the data may be saved, otherwise a message for the page.
+string FX_Check(Dictionary<string, string> data, bool generate)
+{
+var missing = new List<string>();
+if (generate)
+{
+foreach (string name in Required) { if (FX_Get(data, name) == "") { missing.Add(name); } }
+if (missing.Count > 0) { return "Missing required fields: " + string.Join(", ", missing) + "."; }
+}
+if (!Regex.IsMatch(FX_Get(data, "AsnId"), @"^\d{0,9}$")) { return "Bad draft id."; }
+foreach (string name in new[] { "BoxQty", "Helpers" })
+{
+if (!Regex.IsMatch(FX_Get(data, name), @"^\d{0,6}$")) { return name + " must be a whole number."; }
+}
+if (FX_Get(data, "BoxQty") == "0") { return "Box Quantity must be at least 1."; }
+foreach (string name in new[] { "DeliveryDate", "NeedByDate" })
+{
+string v = FX_Get(data, name);
+DateTime d;
+if (v != "" && !DateTime.TryParseExact(v, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out d)) { return name + " must be a date (yyyy-MM-dd)."; }
+}
+for (int f = 0; f < PageFields.GetLength(0); f++)
+{
+if (FX_Get(data, PageFields[f, 0]).Length > 60) { return PageFields[f, 0] + " is longer than 60 characters."; }
+}
+return null;
+}
+
+// ASN No. = WAP + 9 digits, next after the highest existing one (operator decision, BLD-002).
+string FX_NextAsnNum()
+{
+var top = IDOClient.LoadCollection(AsnIdo, "FX_AsnNum", "FX_AsnNum LIKE 'WAP%'", "FX_AsnNum DESC", 1);
+long next = 1;
+if (top.Items.Count > 0)
+{
+string last = (string)top.Items[0].PropertyValues[0].Value ?? "";
+long n;
+if (last.Length == 12 && long.TryParse(last.Substring(3), out n)) { next = n + 1; }
+}
+return "WAP" + next.ToString("D9");
+}
+
+// Date text sent to UpdateCollection. Format still to be confirmed by the BLD-002 write probe.
+static string FX_IdoDate(DateTime d)
+{
+return d.ToString("yyyyMMdd HH:mm:ss.fff");
+}
+
+static string FX_Get(Dictionary<string, string> data, string key)
+{
+string v;
+return data.TryGetValue(key, out v) && v != null ? v.Trim() : "";
+}
+
+void FX_Fail(string message)
+{
+var result = new Dictionary<string, object>();
+result["ok"] = false;
+result["message"] = message;
+FX_Result(result);
+}
+
+void FX_Result(Dictionary<string, object> result)
+{
+ThisForm.Variables("FX_vAsnResult").Value = JsonConvert.SerializeObject(result);
+}
+}
+}

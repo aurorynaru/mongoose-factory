@@ -18,6 +18,7 @@ workflow. The playbooks in `playbooks/` hold the procedures. Load **only** the o
 - **Data:** never touch production data. Use fake test rows only.
 - **Credentials:** use the `SECRET_MONGOOSE_*` placeholders only. Never read the secrets file or show credentials.
 - **Mutations:** one at a time, with **Save after each small step**. Inspect before any retry, and never replay blindly.
+- **How code is written and facts are checked:** apply `.claude/skills/mongoose-dx/SKILL.md` (developer experience first, never guess identifiers or behavior, report verified / unknown / proposed).
 - **Done means proven.** "Done" requires Save → close/reopen readback → runtime check. No visible error is not proof.
 
 ## Workflow
@@ -28,7 +29,7 @@ workflow. The playbooks in `playbooks/` hold the procedures. Load **only** the o
    - acceptance checks;
    - approvals needed;
    - rollback.
-   Ask only what you can't infer.
+   Ask only what you can't infer. If the user sent a filled `templates/build-request-prompt.md`, copy its answers in; a blank there means ask, never default. A filled `templates/change-request-prompt.md` is a targeted change: show the exact diff first and change nothing outside it.
 2. **Design.** Pick the route per feature from the capability map below. Reuse existing FX_ objects (theme FX_HelloWorld, project FX_HelloWorldProject01, strings `FX_s*`) where they fit. List the objects to create or change.
 3. **Plan with gates.** Show the user the step list and mark:
    - (a) the non-FX_ approvals;
@@ -79,7 +80,7 @@ Not yet exercised here, so treat these as unverified:
 - Group/Site scope saves;
 - Gauge/Aggregate/DataView bindings;
 - REST/ION API wizards (calling ION from a C# script is observed);
-- background tasks: submitting and running them (the survey and the submit pattern are observed; see `api-calls-and-background-tasks.md`);
+- background tasks beyond one-off RPT+DATAVIEW submits: recurring schedules, IDOMTH/SP tasks, tasks that call APIs (one-off RPT submit is observed, EXP-145; see `api-calls-and-background-tasks.md`);
 - IDO extension classes (.NET);
 - FormSync/deployment;
 - form copy;

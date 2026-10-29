@@ -1,0 +1,5 @@
+[
+  { "Name": "warehouse", "Value": "<WH>", "Type": "path" },
+  { "Name": "serialkey", "Value": "0", "Type": "query" },
+  { "Name": "body", "Value": "<the ReceiptDTO JSON as a string>", "Type": "body" }
+]

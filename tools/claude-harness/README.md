@@ -850,6 +850,23 @@ another inspection is authorized. Browser state and all budgets carry over.
 | Reconnect the **Mongoose browser** | Not a controller operation. OpenCode's Playwright MCP owns it; a backend restart gives a fresh MCP on next use. Tab 1 can instruct the worker explicitly | The harness never drives Mongoose itself |
 | Fresh Mongoose **Designer / cache boundary** | Only by an explicit worker instruction (close/reopen, full reload…), decided by Tab 1 | Never implied by any of the above |
 
+## Token use
+
+Every Claude turn re-reads its whole session context (as cache reads), so a session that keeps growing
+across tasks or consultations costs more on every later turn. Measure it from the saved task logs:
+
+```powershell
+.\claude-harness.ps1 usage --since 2026-10-22          # per role totals, carried-over context, tool-result sizes
+.\claude-harness.ps1 usage --since 2026-10-22 --tasks  # plus one row per task
+```
+
+Two opt-in settings bound session growth (defaults keep the previous behaviour):
+
+| Setting | Values | Effect |
+|---|---|---|
+| `worker.freshSessionAboveTokens` | `null` (default), `0`, or a token count such as `150000` | When the previous task ended with at least this much context, the next `SEND_TO_OPENCODE` task starts a fresh worker session. The harness writes the handoff itself (brief scope, completed tasks, findings, evidence, limits and the latest worker report, clipped). `0` = every task. The browser is not reset. |
+| `chats.specialistSession` | `continue` (default), `per-run`, `per-consultation` | `per-run` opens a new Claude specialist session at the first consultation of each run. `per-consultation` opens one for every consultation and includes the run's last three consultations (clipped) in the message. |
+
 ## Safety properties (enforced in code)
 
 - **One run, one experiment**: `start` refuses while another run is running/paused; a run can never

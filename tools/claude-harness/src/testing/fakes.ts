@@ -139,7 +139,7 @@ export class FakeChat implements ChatPort {
 }
 
 export type WorkerSpec =
-  | { status: "completed"; text: string; files?: Record<string, string> }
+  | { status: "completed"; text: string; files?: Record<string, string>; transcript?: string }
   | { status: "failed"; error: string; text?: string }
   | { status: "stalled"; detail: string; aborted: boolean; text?: string; transcript?: string }
   | { status: "blocked"; kind: "permission" | "question"; detail: string }
@@ -214,7 +214,7 @@ export class FakeWorker implements WorkerPort {
           mkdirSync(dirname(abs), { recursive: true });
           writeFileSync(abs, content);
         }
-        return { status: "completed", text: spec.text, transcript: `### user ${messageId}\n...\n### assistant\n${spec.text}`, assistantMessageIds: [`${messageId}-reply`], touchedFiles: Object.keys(spec.files ?? {}), cost: 0, tokens: 0 };
+        return { status: "completed", text: spec.text, transcript: spec.transcript ?? `### user ${messageId}\n...\n### assistant\n${spec.text}`, assistantMessageIds: [`${messageId}-reply`], touchedFiles: Object.keys(spec.files ?? {}), cost: 0, tokens: 0 };
       case "failed":
         return { status: "failed", error: spec.error, text: spec.text ?? "", transcript: "", assistantMessageIds: [`${messageId}-reply`] };
       case "stalled":
