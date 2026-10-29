@@ -5,7 +5,7 @@ Knowledge state:
 - **observed:** everything else here (single accepted runs, same-session UI evidence).
 
 Forms are created in **User scope** (the Designer status bar shows `ScopeType: User / ScopeName: <operator>`).
-Editing an existing non-FX_ Form is covered in `extending-existing-forms.md`. Read it first and get approval.
+Editing an existing Form the factory doesn't own is covered in `extending-existing-forms.md`. Read it first and get approval.
 
 ## Verified recipes (use directly)
 - `recipes/forms/create-basic-form.md`: Build-from-Scratch form, no data source.
@@ -15,6 +15,8 @@ Editing an existing non-FX_ Form is covered in `extending-existing-forms.md`. Re
 
 ## Pick the wizard
 Designer → **New** → Form Wizard Selection. The New Form / Extend Form radios plus Category and Wizard (EXP-041-R2):
+
+**Default: Category Flex** (operator decision, 2026-10-29). Every new Form is a Flex Form unless the request says otherwise; the Flex create steps are in `portal-shell.md` §1. A Flex Form lets a web user control fill the form width; a Normal (Classic) form gave a fixed frame of about 730×540 px (BLD-002). The Classic rows below apply only when the request asks for Classic, or when the operator approves Classic because the needed wizard has no Flex equivalent. Whether a Flex category offers a data (grid + detail) wizard is **unverified**: check the Wizard list once and report what it shows.
 
 | Need | Category / Wizard | Notes |
 |---|---|---|

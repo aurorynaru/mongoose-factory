@@ -66,3 +66,32 @@ Sources:
 - **What to record:** for each decisive screenshot, note what it shows (identity, scope, values) and what it doesn't prove.
 - **Long editor content** (assets, scripts): save it with `browser_snapshot { target, filename }` instead of pasting it into the record, and compare it with `tools/compare-readback.js` (see `web-user-controls.md`).
 - **Credentials:** never capture them. If a screenshot shows a filled sign-in form, delete it unopened.
+
+## Evidence levels (operator decision, 2026-10-29)
+The request sets the level. When it says nothing, use **full**.
+
+- **full** (default; required for production-ready builds and for any build that gets a guide):
+  - everything in **light**, plus one screenshot for each user-visible step someone would need to repeat the build: each wizard page, each dialog, each Designer property change, each runtime state checked;
+  - name the files in step order (`NN-<what>.png`) so they can be used as guide pictures;
+  - for each screenshot, the build record notes what it shows.
+- **light** (only when the request says `Evidence: light`; for small or throwaway FX_ changes):
+  - only the AGENTS.md minimum: first entry into a new Designer workflow, the before state (rollback baseline) of anything being changed, right after create, after Save, after close/reopen, the runtime result, and every error;
+  - the text readbacks don't change: rollback baselines and `tools/compare-readback.js` checks are still required;
+  - a light build has no step pictures, so a pictured guide can't be made from it later without redoing the steps. Say this in the plan when a light build may go to production.
+
+## Build guide (PDF or Word, when the request asks for one)
+- **Source:** `docs/builds/BLD-NNN-<slug>/guide.md`, using the screenshots in `evidence/BLD-NNN/`. Export it to `guide.pdf` (pdf skill) or `guide.docx` (docx skill) in the same folder, whichever the request names.
+- **Contents:**
+  - purpose and who uses it;
+  - the objects (Form, IDO, table, asset, script, variables) and how they connect;
+  - prerequisites and approvals;
+  - numbered build steps, each with its screenshot;
+  - how to check it works (the acceptance checks);
+  - rollback;
+  - known limits and open questions.
+- **Pictures:**
+  - use only screenshots that were taken and opened (inspected) for this build;
+  - never describe a picture that wasn't looked at;
+  - if a step has no picture, say so in the guide.
+- **Sensitive content:** before a picture goes in, check it for emails, account names, warehouse/database IDs, tokens or credentials. Crop or mask it, or leave it out and say so. Name every masked or left-out picture in the build record.
+- **Accuracy:** the guide follows the build record. It marks steps by knowledge state (verified / observed / unverified) and doesn't present an observed step as verified.

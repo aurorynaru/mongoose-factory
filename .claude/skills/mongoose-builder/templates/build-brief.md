@@ -3,12 +3,14 @@
 Status: draft | approved | building | done | blocked
 Date: YYYY-MM-DD
 Account (checked at start): <Web Client header text> | Designer scope: <ScopeType / ScopeName>
+Evidence: full | light   Guide: none | PDF | Word (.docx)
+Build prefix: FX_ | <other, from the request>   Existing tenant objects already starting with it (not factory-owned): <none | list>
 
 ## Goal
 <What the user wants, in their words, plus the visible result that means "done".>
 
 ## Objects
-| Object | Type (Form / IDO / table / string / theme / asset / variable / image) | New FX_ or existing | Scope (User / Group / Site / tenant-wide) | Change |
+| Object | Type (Form / IDO / table / string / theme / asset / variable / image) | New (build prefix) / factory-owned / other (needs approval) | Scope (User / Group / Site / tenant-wide) | Change |
 |---|---|---|---|---|
 | | | | | |
 
@@ -16,7 +18,7 @@ Account (checked at start): <Web Client header text> | Designer scope: <ScopeTyp
 <IDO(s), properties, filters; test data to use (fake rows only).>
 
 ## Approvals required (fill before building)
-| Non-FX_ object or tenant-wide operation | Why | Rollback | Operator approval (quote + date) |
+| Object the factory doesn't own, or tenant-wide operation | Why | Rollback | Operator approval (quote + date) |
 |---|---|---|---|
 | | | | |
 

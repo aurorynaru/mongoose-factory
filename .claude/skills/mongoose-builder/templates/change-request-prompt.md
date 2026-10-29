@@ -1,5 +1,7 @@
 # Change request prompt (small, targeted changes)
 
+> Prefer a form? `cd assets && npm run preview`, then open http://127.0.0.1:8765/_request/index.html. It writes this same text for you (`assets/README.md` § Request builder). Keep `assets/_request/app.js` in step when this template changes.
+
 Use this when something already exists and you want **one specific thing changed**, not a rebuild.
 For new Forms, IDOs, portals or pages use `build-request-prompt.md` instead.
 
@@ -34,6 +36,6 @@ Done means: Load first page shows dates like 25/09/2026
 
 1. Reads the current version (repo copy, then a readback from the tenant) and records it as the rollback point.
 2. Shows the **exact lines or properties** it will change (a small diff) and asks if anything is unclear.
-3. Changes only those lines. No refactoring, renaming or restyling of nearby code (`mongoose-dx` §6).
+3. Changes only those lines. No refactoring, renaming or restyling of nearby code (`mongoose-dx` §6). Any new name it adds (a method, component, variable or string) uses the target's prefix, e.g. `FX_` for `FX_ApiPage`.
 4. Saves, reads back, checks your "Done means", and confirms the rest still works (e.g. the other buttons still respond).
 5. Reports what changed, what was verified, and anything it noticed but did **not** change (as a suggestion).

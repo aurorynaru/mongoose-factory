@@ -9,7 +9,7 @@ Two rules come before everything else:
 1. **Developer experience first.** Code someone else can read, run, debug and change without asking you.
 2. **Never guess.** If a fact isn't confirmed by this repo, the tenant, or the operator, it is **unknown**. Say so, and ask.
 
-This skill doesn't replace `AGENTS.md` or `mongoose-builder`. Their safety rules (FX_ prefix, approvals, account check, secrets, evidence) still apply in full. For a build, follow `mongoose-builder`'s workflow and apply this skill while doing it.
+This skill doesn't replace `AGENTS.md` or `mongoose-builder`. Their safety rules (build prefix, `FX_` by default; approvals, account check, secrets, evidence) still apply in full. For a build, follow `mongoose-builder`'s workflow and apply this skill while doing it.
 
 ## 1. Where facts come from (check in this order)
 
@@ -38,8 +38,8 @@ Don't reference anything you haven't found in one of the sources above:
 Before writing a name, find it: `grep` the repo, read the spec, or read it back in the tenant. Cite where it came from in the record (file and line, EXP number or screenshot).
 
 **New identifiers** follow the project conventions:
-- `FX_` prefix for every factory object, including methods, components, variables and strings added to existing objects;
-- the patterns already used: `FX_v…` (variables), `FX_s…` (strings), `FX_Btn…` (page buttons), `FX_…Control` (UserControl components), `FX_Call…` (C# methods called from a page).
+- the build prefix (`FX_` unless the request names another, AGENTS.md § Build prefix) for every factory object, including methods, components, variables and strings added to existing objects;
+- the patterns already used, with the build prefix in place of `FX_`: `FX_v…` (variables), `FX_s…` (strings), `FX_Btn…` (page buttons), `FX_…Control` (UserControl components), `FX_Call…` (C# methods called from a page).
 
 If the name, value or contract of a new identifier depends on a requirement nobody has stated, ask before creating it.
 
@@ -82,7 +82,9 @@ Don't ask about what the repo already answers. Check first, so questions stay fe
   - JS: a status line, never a silent failure. E.g. "Open this page inside the FX_ApiProbe Form to call the API.", "No response from FX_X after 20 s."
   - C#: catch, then return `ex.GetType().Name + ": " + ex.Message`, plus the HTTP code and Infobar for API calls.
   - TS: an error message naming the input or config key that was wrong.
-- **Easy to debug.** A timeout and a status line on every `WSForm.invoke`. Keep the response code and Infobar visible; don't swallow them. Comments explain *why* (a tenant quirk, an EXP number), not what the next line does.
+- **Separate files for web pages.** `index.html` (markup), `app.css` (styles), `app.js` (behaviour): never one file with everything inline. The layout of `app.js` (config → state → helpers → server bridge → features → wiring) is in `mongoose-builder/playbooks/web-user-controls.md` § File layout.
+- **Readable C#.** One file per form script, laid out top to bottom: header → config → page actions → feature helpers → outside services → results (`mongoose-builder/playbooks/web-user-controls.md` § C# form script layout). One public method per page action, named for it (`FX_GenerateAsn`, `FX_CheckSku`). Each one validates its input first and has one `try/catch` that reports the error through the result variable (as `FX_Fail` does in `assets/FX_ASNPortal/FX_ASNPortal.cs.txt`).
+- **Easy to debug.** A timeout and a status line on every `WSForm.invoke`, and one `log()` in `app.js` that records each server call (method, arguments, time taken, result or error) under `[FX_<App>]` in the browser console. Keep the response code and Infobar visible; don't swallow them. Comments explain *why* (a tenant quirk, an EXP number), not what the next line does.
 - **Easy to install and re-run.** Keep the repo copy as the source, and the flush-left `.flat` copy for pasting into the Designer. Update both together.
 - **Safe by default.** Hard-code verbs and paths in C# for API calls, validate page inputs (digits only, ranges), and keep tokens server side (SSO route). Show only the fields the page needs; personal data stays out of the UI and screenshots.
 

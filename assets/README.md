@@ -22,6 +22,10 @@ The browser console (F12) shows a `[FX_<App>]` line for every server call: metho
 With the preview running, open <http://127.0.0.1:8765/_request/index.html> (also linked from the home page).
 
 - **New build:** the build-request form, sections 1 to 9. Section 4 shows only the blocks for the build types you tick.
+- **Prefix** (section 3) is `FX_` unless you change it, e.g. to `ACME_`: a letter, letters or digits, then `_`. Every new
+  object name starts with it, and the labels and the prompt follow it. Picking an existing app takes that app's prefix.
+  Existing tenant objects that already start with your prefix but weren't built by the factory still need approval
+  (`AGENTS.md` § Build prefix).
 - **Targeted change:** pick an app and the page suggests Targets (its files, its form script) and Wheres (C# methods,
   page sections). These are read from the files in this folder, not from Mongoose, so the live version may differ.
 - The prompt on the right updates as you type. Red items are required. Orange items are worth a look but won't block you.
@@ -52,8 +56,8 @@ Which model for which job:
 | Fill in a request, edit `index.html` / `app.css` / `app.js` with the preview, `npm run flat`, small C# edits | any model |
 | Browser builds in the tenant (Designer saves, read-backs, installs) | your strongest model, with reasoning on |
 
-Build mode is long and strict: one change, read back, Save, check scope, never guess a name, stop before any non-FX_
-object. Heavily compressed or small models tend to skip read-backs or invent names. Watch the first few builds.
+Build mode is long and strict: one change, read back, Save, check scope, never guess a name, stop before any object
+the factory didn't build. Heavily compressed or small models tend to skip read-backs or invent names. Watch the first few builds.
 
 The safety rules are instructions to the agent, not enforced permissions. Keep agent permissions tight (for example,
 no `git push`), and check every Designer save until you trust the model.
@@ -89,7 +93,7 @@ Older apps (`FX_ASNPortal`, `FX_Inventory`, `FX_ApiPage`) still keep their CSS a
 
 ## Start a new app
 
-1. Copy `_template/` to `FX_<App>/` (the name must start with `FX_`).
+1. Copy `_template/` to `FX_<App>/` (the name must start with the build prefix, `FX_` by default; another prefix such as `ACME_` works the same way).
 2. Rename `FX_App.cs.txt` to `FX_<App>.cs.txt`, then replace `FX_App` / `FX_vAppResult` with your Form name and result variable in `FX_<App>.cs.txt`, `app.js` and `preview/stub.js`.
 3. Run `npm run preview` and open the app.
 4. For each new server action: add a public method to the C# script, call it from `app.js` with `callServer("FX_Method", [args], done)`, and add a matching fake method to `preview/stub.js`.
@@ -128,7 +132,7 @@ The full step-by-step procedure (Designer clicks, readback checks, evidence) is 
 
 ## Rules for everyone editing
 
-- Object names start with `FX_`. Never edit Mongoose's own assets (`$app`, `mongoose`, `soho*`).
+- Object names start with the build prefix (`FX_` unless the request names another). Never edit Mongoose's own assets (`$app`, `mongoose`, `soho*`).
 - **No secrets or tenant details in any file:** no passwords, tokens, emails, tenant IDs, server names or full warehouse database names.
   Assets are readable by any tenant user with asset access, and this folder is shared.
 - Stubs use made-up test data only. Never paste real customer or order data into `preview/stub.js`.

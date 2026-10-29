@@ -21,6 +21,7 @@ const ROOT = path.resolve(__dirname, "..");
 const PORT = Number(process.argv[2]) || 8765;
 const HOST = "127.0.0.1"; // this machine only
 const BRIDGE = "/$app/scripts/UserControl.js";
+const APP_PREFIX = /^[A-Za-z][A-Za-z0-9]+_/; // app folders start with a build prefix (AGENTS.md § Build prefix)
 const TYPES = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -82,7 +83,7 @@ function appFacts(app) {
     scriptFile,
     scriptClass: (script.match(/public class (\w+) : FormScript/) || [])[1] || "",
     scriptMethods: matches(script, /public (?:void|string) (\w+)\(/g),
-    resultVars: matches(script, /Variables\("(\w+)"\)/g).concat(matches(script, /const string \w+ = "(FX_v\w+)"/g)),
+    resultVars: matches(script, /Variables\("(\w+)"\)/g).concat(matches(script, /const string \w+ = "([A-Za-z][A-Za-z0-9]+_v\w+)"/g)),
     pageCalls: matches(page, /callServer\("(\w+)"/g),
     // "// ---- Part ----" comments in app.js / index.html / the C# script (see README § Code layout).
     sections: matches(page + "\n" + script, /\/\/ ---- ([^-\n][^\n]*?) ----/g),
@@ -105,8 +106,9 @@ const server = http.createServer((req, res) => {
   if (url === "/") { return send(res, 200, TYPES[".html"], homePage()); }
   if (url === "/api/apps") {
     // Change targets include script-only folders (e.g. FX_Login), not just previewable apps.
+    // Any build prefix counts (FX_, ACME_ ...); _request, _template and tools are skipped.
     const list = fs.readdirSync(ROOT, { withFileTypes: true })
-      .filter((d) => d.isDirectory() && /^FX_/.test(d.name))
+      .filter((d) => d.isDirectory() && APP_PREFIX.test(d.name))
       .filter((d) => fs.readdirSync(path.join(ROOT, d.name)).some((f) => f === "index.html" || f.endsWith(".cs.txt")))
       .map((d) => appFacts(d.name))
       .sort((a, b) => a.app.localeCompare(b.app));

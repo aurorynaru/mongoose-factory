@@ -27,4 +27,4 @@ Effects (EXP-050, 051, 072):
 - **Drill-down to the master record:** property-class extension (right-click Details).
 - **Required:** tick Required on the IDO property or in the wizard grid (Primary Key implies Required).
 
-All of these are **tenant-wide** global objects, so FX_ names only unless approved. Validators and component classes are saved with a Designer Save ("Global object(s) were saved.").
+All of these are **tenant-wide** global objects, so names with the build prefix (`FX_` by default) only, unless approved. Validators and component classes are saved with a Designer Save ("Global object(s) were saved.").

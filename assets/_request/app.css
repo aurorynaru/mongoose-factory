@@ -136,6 +136,10 @@ button { font: inherit; color: inherit; }
   outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring);
 }
 .FX_Form [aria-invalid="true"] { border-color: var(--error) !important; }
+.FX_PrefixRow { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 0 16px; align-items: end; margin-bottom: 10px; }
+.FX_PrefixRow input { font-family: var(--mono) !important; }
+.FX_PrefixRow .FX_Hint { margin: 0 0 2px; }
+@media (max-width: 640px) { .FX_PrefixRow { grid-template-columns: 1fr; } .FX_PrefixRow .FX_Hint { margin-top: 6px; } }
 .FX_Grid3 { display: grid; gap: 0 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: 640px) { .FX_Grid3 { grid-template-columns: 1fr; } }
 

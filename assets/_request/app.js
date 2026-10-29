@@ -12,6 +12,11 @@
 
   var FIELD_TYPES = ["text", "number", "decimal", "date", "yes-no"];
 
+  // Build prefix (AGENTS.md § Build prefix): a letter, at least one more letter or digit, then "_".
+  var DEFAULT_PREFIX = "FX_";
+  var PREFIX_RE = /^[A-Za-z][A-Za-z0-9]+_$/;
+  var APP_PREFIX_RE = /^[A-Za-z][A-Za-z0-9]+_/; // the prefix at the start of an app folder name
+
   // ---- State ----
   var state = {
     mode: "build",
@@ -93,6 +98,19 @@
       } else {
         input.value = value;
       }
+    });
+  }
+
+  // The prefix to show in labels: the typed one when valid, otherwise the default.
+  function shownPrefix(d) {
+    var p = (d.prefix || "").trim();
+    return PREFIX_RE.test(p) ? p : DEFAULT_PREFIX;
+  }
+
+  function applyPrefix(p) {
+    Array.prototype.forEach.call(document.querySelectorAll("[data-prefix]"), function (node) { node.textContent = p; });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-placeholder]"), function (input) {
+      input.placeholder = input.getAttribute("data-placeholder").replace("{p}", p);
     });
   }
 
@@ -223,10 +241,16 @@
     refresh();
   }
 
-  // Build mode: picking an existing app fills only the empty names in section 3.
+  // Build mode: picking an existing app sets the prefix to the app's own (a change keeps its build's prefix)
+  // and fills only the empty names in section 3.
   function prefillBuildNames() {
     var a = findApp(buildForm.elements.existingApp.value);
     if (!a) { return; }
+    var appPrefix = (a.app.match(APP_PREFIX_RE) || [])[0];
+    if (appPrefix && buildForm.elements.prefix.value !== appPrefix) {
+      buildForm.elements.prefix.value = appPrefix;
+      setStatus("Prefix set to " + appPrefix + " from " + a.app + ".");
+    }
     if (!buildForm.elements.formName.value && a.scriptClass) { buildForm.elements.formName.value = a.scriptClass; }
     if (!buildForm.elements.assetFolder.value && a.pageFiles.indexOf("index.html") >= 0) { buildForm.elements.assetFolder.value = a.app + "/index.html"; }
     refresh();
@@ -281,6 +305,7 @@
     var changing = data.type.indexOf("changeFx") >= 0;
     document.getElementById("FX_ExistingWrap").hidden = !changing;
     document.getElementById("FX_GuideWarn").hidden = !(data.guide !== "none" && data.evidence === "light");
+    applyPrefix(shownPrefix(data));
   }
 
   function shown(type, data) {
@@ -291,6 +316,7 @@
   function buildPrompt(d) {
     var out = ["/mongoose-builder", ""];
     var t = function (key) { return box(d.type.indexOf(key) >= 0); };
+    var p = shownPrefix(d);
 
     out.push("## 1. Goal (required)");
     out.push(line("What I want, in one or two sentences", d.goal));
@@ -299,16 +325,17 @@
 
     out.push("## 2. Build type (required, pick one or more)");
     out.push(t("form") + " new Form            " + t("ido") + " new IDO + SQL table     " + t("portal") + " new portal / shell (Flex) Form");
-    out.push(t("dashboard") + " dashboard / chart   " + t("webpage") + " web page (HTML/JS/CSS asset)   " + t("changeFx") + " change an existing FX_ object");
-    out.push(t("changeNonFx") + " change an existing non-FX_ object (name it in section 6)");
+    out.push(t("dashboard") + " dashboard / chart   " + t("webpage") + " web page (HTML/JS/CSS asset)   " + t("changeFx") + " change an existing factory object (built with this prefix)");
+    out.push(t("changeNonFx") + " change an existing object the factory didn't build (name it in section 6)");
     out.push(line('New Forms are built as Flex Forms. Write "Classic" here if you want a Classic Form instead', d.classic ? "Classic" : ""));
-    if (shown("changeFx", d) && d.existingApp) { out.push(line("Existing FX_ app to change", d.existingApp)); }
+    if (shown("changeFx", d) && d.existingApp) { out.push(line("Existing app to change", d.existingApp)); }
     out.push("");
 
     out.push("## 3. Names");
-    out.push(line("Form name(s) (FX_…)", d.formName));
-    out.push(line("IDO / table name (FX_…)", d.idoName));
-    out.push(line("Asset folder (FX_…/index.html)", d.assetFolder));
+    out.push(line("Prefix (every new object name starts with it; keep FX_ unless you want another)", d.prefix));
+    out.push(line("Form name(s) (" + p + "…)", d.formName));
+    out.push(line("IDO / table name (" + p + "…)", d.idoName));
+    out.push(line("Asset folder (" + p + "…/index.html)", d.assetFolder));
     out.push("Leave blank and Claude will propose names in the plan for you to approve.");
     out.push("");
 
@@ -368,12 +395,12 @@
 
     out.push("## 5. Look and feel");
     out.push(line("Mock screenshot / reference (attach or give a path)", d.mock));
-    out.push(line('Colors / theme / fonts (or "match FX_… ")', d.theme));
+    out.push(line('Colors / theme / fonts (or "match <an existing page>")', d.theme));
     out.push("Must work on: " + ["desktop", "tablet", "phone"].map(function (v) { return box(d.device.indexOf(v) >= 0) + " " + v; }).join("  "));
     out.push("");
 
     out.push("## 6. Approvals and limits");
-    out.push(line('Existing non-FX_ objects that may be changed (name each one, or "none")', d.nonFx));
+    out.push(line('Existing objects the factory didn\'t build that may be changed (name each one, or "none")', d.nonFx));
     out.push(line("Tenant-wide steps allowed (Group/Site save, FormSync, deployment, cache unload) — default none", d.tenantWide));
     out.push(line("Outbound calls allowed (exact endpoint + verb) — default none beyond those already approved", d.outbound));
     out.push(line("Data I must not touch", d.noTouch));
@@ -402,12 +429,17 @@
     if (!d.goal.trim()) { add("Section 1: say what you want.", "goal"); }
     if (d.type.length === 0) { add("Section 2: pick at least one build type.", "type"); }
     if (bullets(d.done).length === 0) { add("Section 7: list at least one thing you will check at runtime.", "done"); }
-    ["formName", "idoName", "assetFolder"].forEach(function (name) {
-      var value = d[name].trim();
-      if (value && !/^FX_/.test(value)) { add("Section 3: " + value + " doesn't start with FX_. Changing a non-FX_ object needs your approval in section 6.", name, true); }
-    });
-    if (shown("changeNonFx", d) && !d.nonFx.trim()) { add("Section 6: name the non-FX_ object(s) that may be changed.", "nonFx"); }
-    if (shown("changeFx", d) && !d.existingApp && !d.formName.trim() && !d.assetFolder.trim()) { add("Section 2/3: name the existing FX_ object to change.", "existingApp", true); }
+    var prefix = d.prefix.trim();
+    if (!PREFIX_RE.test(prefix)) {
+      add("Section 3: the prefix must be a letter, then letters or digits, then _ (for example FX_ or ACME_).", "prefix");
+    } else {
+      ["formName", "idoName", "assetFolder"].forEach(function (name) {
+        var value = d[name].trim();
+        if (value && value.indexOf(prefix) !== 0) { add("Section 3: " + value + " doesn't start with " + prefix + ". Changing an object the factory didn't build needs your approval in section 6.", name, true); }
+      });
+    }
+    if (shown("changeNonFx", d) && !d.nonFx.trim()) { add("Section 6: name the object(s) the factory didn't build that may be changed.", "nonFx"); }
+    if (shown("changeFx", d) && !d.existingApp && !d.formName.trim() && !d.assetFolder.trim()) { add("Section 2/3: name the existing factory object to change.", "existingApp", true); }
     if ((shown("dashboard", d) || shown("webpage", d)) && d.apiCalls.trim() && !d.outbound.trim()) {
       add("Section 6: the API calls in 4d run only if approved. List them under Outbound calls, or Claude will ask.", "outbound", true);
     }

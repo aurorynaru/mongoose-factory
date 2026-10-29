@@ -20,15 +20,18 @@ Two modes (operator decision, 2026-10-27):
   carry their knowledge states.
 - Record every build in `builds/BLD-NNN-<slug>.md` (brief, then build record), with
   evidence in `evidence/BLD-NNN/`.
-- FX_-prefixed objects may be created and modified freely. This includes Forms,
-  IDOs, SQL tables, property classes, validators, component classes, strings,
-  themes, images, variables and FX_ Web User Control Assets.
-- **Non-FX_ objects:** creating, altering or deleting any non-FX_ object (an
-  existing Form, IDO, table, global object, asset or data) needs the operator's
-  explicit approval **for that specific object in the current task**. Record the
-  approval in the build record. Approval does not carry over to other objects or
-  tasks. Prefer, in order:
-  1. an FX_ copy;
+- Every build has a **build prefix**: `FX_` unless the request names another
+  (see "Build prefix" below). In build mode, "FX_" in these rules, the skills
+  and the playbooks means the build prefix.
+- Factory-owned objects with the build prefix may be created and modified freely.
+  This includes Forms, IDOs, SQL tables, property classes, validators, component
+  classes, strings, themes, images, variables and Web User Control Assets.
+- **Other objects:** creating, altering or deleting any object that is not
+  factory-owned under the build prefix (an existing Form, IDO, table, global
+  object, asset or data) needs the operator's explicit approval **for that
+  specific object in the current task**. Record the approval in the build record.
+  Approval does not carry over to other objects or tasks. Prefer, in order:
+  1. a copy with the build prefix;
   2. a User-scope version;
   3. a Form extension.
 
@@ -37,13 +40,13 @@ Two modes (operator decision, 2026-10-27):
 - Before changing an existing object, record its current state (identity and
   version screenshot plus a readback of everything the change touches) so it can
   be rolled back. New components, handlers, variables and strings added to an
-  existing object still use the FX_ prefix.
+  existing object still use the build prefix.
 - Tenant-wide operations need explicit approval in the task:
   - metadata-cache unloading;
   - FormSync;
   - deployment;
   - Site- or Group-scope saves;
-  - schema changes on non-FX_ tables.
+  - schema changes on tables that are not factory-owned under the build prefix.
 - These rules still apply in build mode:
   - the Safety, Mongoose authentication and Browser automation sections;
   - the read-only Mock account rule;
@@ -52,6 +55,26 @@ Two modes (operator decision, 2026-10-27):
   - "Never disable security or authorization".
 - Steps that rely only on unverified knowledge run as small probe steps first: do
   one change, save, close/reopen and verify before building on it.
+
+## Build prefix (operator decision, 2026-10-29)
+
+- A build request may name its own prefix (the request builder's Prefix field).
+  When it names none, the prefix is `FX_`. Record the prefix in the build brief.
+- A valid prefix is a letter, then at least one more letter or digit, then `_`
+  (for example `FX_`, `ACME_`, `WH2_`). If the requested prefix doesn't match,
+  stop and ask; never fix it up silently.
+- An object counts as **factory-owned** only if its name begins with the build
+  prefix **and** the factory created it: a build or experiment record in this
+  repo lists it, or this build creates it. An existing object that merely begins
+  with the prefix (made by someone else, or by Infor) is not factory-owned and
+  needs per-object approval like any other existing object.
+- Before the first object with a new prefix is created, check the tenant for
+  existing objects of the types the build touches whose names begin with it.
+  Report them in the plan as not factory-owned.
+- Use one prefix per build. Changing an earlier build's objects keeps that
+  build's prefix.
+- Learning-mode experiments and the scope extensions below keep `FX_`. Existing
+  records, recipes and reference builds keep their `FX_` names.
 
 ## Technology scope
 
@@ -112,7 +135,10 @@ All factory-created artifacts must begin with:
 
 FX\_
 
-Never modify or delete an existing non-FX\_ artifact unless explicitly
+In build mode, with the build prefix instead, when the request names one (see
+"Build prefix").
+
+Never modify or delete an existing artifact that is not factory-owned unless explicitly
 authorized.
 
 Never modify production data.

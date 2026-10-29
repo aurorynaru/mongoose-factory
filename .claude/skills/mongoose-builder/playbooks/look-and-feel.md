@@ -1,7 +1,7 @@
 # Playbook: Look and feel (themes, theme classes, image library, pictures)
 
 Knowledge state: **observed**. Image upload ran twice (EXP-099, 101); theme edits ran twice (EXP-064, 100).
-Themes, classes and images are **tenant-wide**. Create them with an FX_ prefix only. The FX_ prefix must be in the
+Themes, classes and images are **tenant-wide**. Create them with the build prefix only (`FX_` by default). The prefix must be in the
 **image file name**, because the library takes the uploaded file's name.
 
 ## Themes and theme classes

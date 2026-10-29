@@ -4,8 +4,8 @@ Knowledge state: **observed** for every route below (single accepted runs, UI-le
 no database reads). Property-class creation ran three times (EXP-047-R2, EXP-048, EXP-060) and is a
 candidate recipe. No route here is replay-verified.
 
-All objects in this playbook are **tenant-wide**. FX_ names may be created under build mode.
-Changing a non-FX_ table or IDO needs explicit per-object operator approval (see SKILL.md).
+All objects in this playbook are **tenant-wide**. Names with the build prefix (`FX_` by default) may be created under build mode.
+Changing a table or IDO the factory doesn't own needs explicit per-object operator approval (see SKILL.md).
 
 ## Runtime admin Forms (open via Web Client toolbar Open → Select Form)
 

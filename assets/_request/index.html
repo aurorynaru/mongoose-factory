@@ -38,26 +38,30 @@
       <legend><span class="FX_Num">2</span>Build type <span class="FX_Req">Required, pick one or more</span></legend>
       <div class="FX_Tiles">
         <label class="FX_Tile"><input type="checkbox" name="type" value="form"><b>New Form</b><small>A Form in Web Designer. Flex unless you switch to Classic below.</small></label>
-        <label class="FX_Tile"><input type="checkbox" name="type" value="ido"><b>New IDO + SQL table</b><small>Stores new data: an FX_ table and the IDO that reads it.</small></label>
+        <label class="FX_Tile"><input type="checkbox" name="type" value="ido"><b>New IDO + SQL table</b><small>Stores new data: a table and the IDO that reads it, both named <span data-prefix>FX_</span>….</small></label>
         <label class="FX_Tile"><input type="checkbox" name="type" value="portal"><b>New portal / shell (Flex) Form</b><small>Several pages behind a menu, with or without sign-in.</small></label>
         <label class="FX_Tile"><input type="checkbox" name="type" value="dashboard"><b>Dashboard / chart</b><small>KPI cards, charts and tables over existing data.</small></label>
         <label class="FX_Tile"><input type="checkbox" name="type" value="webpage"><b>Web page</b><small>An HTML/JS/CSS asset shown inside a Form.</small></label>
-        <label class="FX_Tile"><input type="checkbox" name="type" value="changeFx"><b>Change an existing FX_ object</b><small>Something the factory already built.</small></label>
-        <label class="FX_Tile FX_Tile--wide"><input type="checkbox" name="type" value="changeNonFx"><b>Change an existing non-FX_ object</b><small>Needs your approval for each object. Name them in section 6.</small></label>
+        <label class="FX_Tile"><input type="checkbox" name="type" value="changeFx"><b>Change an existing factory object</b><small>Something the factory already built with this prefix.</small></label>
+        <label class="FX_Tile FX_Tile--wide"><input type="checkbox" name="type" value="changeNonFx"><b>Change an object the factory didn't build</b><small>Needs your approval for each object. Name them in section 6.</small></label>
       </div>
       <label class="FX_Switch"><input type="checkbox" name="classic" role="switch"><span>Build a Classic Form instead of Flex <small>(Flex is the default)</small></span></label>
-      <label id="FX_ExistingWrap" hidden>Existing FX_ app to change <small>Fills the empty names in section 3 from <code>assets/</code></small>
+      <label id="FX_ExistingWrap" hidden>Existing app to change <small>Fills the prefix and the empty names in section 3 from <code>assets/</code></small>
         <select name="existingApp" data-apps></select>
       </label>
     </fieldset>
 
     <fieldset id="FX_S3" data-nav="3|Names">
       <legend><span class="FX_Num">3</span>Names</legend>
-      <p class="FX_Hint">Leave blank and Claude will propose names in the plan for you to approve.</p>
+      <div class="FX_PrefixRow">
+        <label>Prefix<input name="prefix" value="FX_" spellcheck="false" autocapitalize="off"></label>
+        <p class="FX_Hint">Every new object name starts with it. Keep <code>FX_</code> or use your own, e.g. <code>ACME_</code>: a letter, letters or digits, then <code>_</code>. Existing objects that already start with it but weren't built by the factory still need your approval.</p>
+      </div>
+      <p class="FX_Hint">Leave the names blank and Claude will propose them in the plan for you to approve.</p>
       <div class="FX_Grid3">
-        <label>Form name(s)<input name="formName" data-fx placeholder="FX_…"></label>
-        <label>IDO / table name<input name="idoName" data-fx placeholder="FX_…"></label>
-        <label>Asset folder<input name="assetFolder" data-fx placeholder="FX_…/index.html"></label>
+        <label>Form name(s)<input name="formName" data-fx data-placeholder="{p}…" placeholder="FX_…"></label>
+        <label>IDO / table name<input name="idoName" data-fx data-placeholder="{p}…" placeholder="FX_…"></label>
+        <label>Asset folder<input name="assetFolder" data-fx data-placeholder="{p}…/index.html" placeholder="FX_…/index.html"></label>
       </div>
     </fieldset>
 
@@ -129,7 +133,7 @@
     <fieldset id="FX_S5" data-nav="5|Look and feel">
       <legend><span class="FX_Num">5</span>Look and feel</legend>
       <label>Mock screenshot / reference <small>A path, e.g. <code>mocks/asn-dashboard.png</code>. Paste the image into Claude Code with the prompt</small><input name="mock"></label>
-      <label>Colors / theme / fonts <small>Or "match FX_…"</small><input name="theme"></label>
+      <label>Colors / theme / fonts <small>Or "match" an existing page, e.g. "match FX_Inventory"</small><input name="theme"></label>
       <div class="FX_Group">
         <span class="FX_GroupLabel">Must work on</span>
         <div class="FX_Segment FX_Segment--multi">
@@ -142,8 +146,8 @@
 
     <fieldset id="FX_S6" data-nav="6|Approvals and limits">
       <legend><span class="FX_Num">6</span>Approvals and limits</legend>
-      <p class="FX_Hint">Non-FX_ objects, tenant-wide steps and new API calls stay blocked until you approve them here, for this task only.</p>
-      <label>Existing non-FX_ objects that may be changed <small>Name each one, or write "none"</small><input name="nonFx"></label>
+      <p class="FX_Hint">Objects the factory didn't build, tenant-wide steps and new API calls stay blocked until you approve them here, for this task only.</p>
+      <label>Existing objects the factory didn't build that may be changed <small>Name each one, or write "none"</small><input name="nonFx"></label>
       <label>Tenant-wide steps allowed <small>Group/Site save, FormSync, deployment, cache unload. Default none</small><input name="tenantWide"></label>
       <label>Outbound calls allowed <small>Exact endpoint + verb. Default none beyond those already approved</small><input name="outbound"></label>
       <label>Data I must not touch<input name="noTouch"></label>
@@ -164,7 +168,7 @@
       <label>Evidence
           <select name="evidence">
             <option value="full">Full (default; use for anything going to production)</option>
-            <option value="light">Light (small or throwaway FX_ changes)</option>
+            <option value="light">Light (small or throwaway changes)</option>
           </select>
         </label>
         <label>Guide with pictures

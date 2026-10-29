@@ -17,7 +17,7 @@ Reference implementations (copy these):
 | Inventory dashboard | `assets/FX_Inventory/index.html` (+ `index.flat.html` install copy) | `assets/FX_Inventory/FX_InventoryDashboard.cs.txt` | `FX_InventoryDashboard` / `FX_InventoryControl` (Size `100; 30`) / Global `FX_vInventoryJson` |
 | Login portal | `FX_Login/index.html` + `app.js` (in the tenant) | `assets/FX_Login/FX_LoginPortal.flat.cs.txt` | `FX_LoginPortal` / `FX_LoginControl` / Global `FX_vLoginResult` |
 
-Assets are **tenant-wide**. Name them with an `FX_` top-level folder. Never edit `$app`, `mongoose` or `soho*` assets, or `$app/scripts/UserControl.js`.
+Assets are **tenant-wide**. Name them with a top-level folder that starts with the build prefix (`FX_` by default; `FX_<App>` below means `<prefix><App>`). Never edit `$app`, `mongoose` or `soho*` assets, or `$app/scripts/UserControl.js`.
 
 ## Architecture: the proven bridge contract
 ```
@@ -35,8 +35,54 @@ WSForm.invoke("FX_Method", [args...,] function(){ ──►   public void/string
 - Guard the page: `if (typeof WSForm === "undefined")` shows a message (the page was opened outside its Form).
 - Add a timeout on the invoke (20 s in the dashboard) and a visible status line.
 
+## File layout: always three files (operator decision, 2026-10-29)
+Every page is split into three assets in its `FX_<App>/` folder, plus matching repo files in `assets/FX_<App>/`:
+
+| File | Holds | Never holds |
+|---|---|---|
+| `index.html` | markup only. In `<head>`: `../$app/scripts/UserControl.js` (from the template), then `<link rel="stylesheet" href="app.css">`. Last in `<body>`: `<script src="app.js"></script>` | `<style>` blocks, inline `<script>` code, `style="…"` or `onclick="…"` attributes |
+| `app.css` | all styles. Colours and sizes as `:root` custom properties at the top, then one commented section per page area | rules for markup that no longer exists |
+| `app.js` | all behaviour (layout below) | HTML strings longer than one element; build elements with a small `el()` helper |
+
+- Knowledge state:
+  - a separate `app.js` loaded by an FX_ page is **observed** (`FX_Login/index.html` + `app.js`);
+  - a relative `<link rel="stylesheet" href="…">` loading in a Web User Control is **observed** only in the read-only Mock app (`mocklogin/style/app.css`, EXP-128);
+  - an FX_ page loading its own `app.css` is **unverified**. In the first build that uses it, probe it: create `app.css` with one visible rule, Save, open the runtime, and confirm the style applied before building on it.
+- **Unknown:** whether the Web Client caches `app.js` / `app.css` after their content is replaced. After the first update of a split page, reopen the Form and check that the change is live. If it's stale, report it; don't work around it silently.
+- Install copies: flush-left `index.flat.html`, `app.flat.css` and `app.flat.js`, updated with their sources.
+- A change touches only the file it needs (a colour → `app.css` only), so an install replaces one asset, not the whole page.
+- Existing single-file pages (FX_Inventory, FX_ApiPage, FX_ASNPortal) are split only when the operator asks. Until then, change them in place.
+
+### `app.js` layout (easy to read and debug)
+In this order, each part under a `// ---- <part> ----` heading:
+1. `"use strict";` inside one IIFE, so nothing leaks into the iframe's globals.
+2. **Config:** named constants (method names, variable names, timeouts, limits), with a comment saying where each one comes from (build record, EXP).
+3. **State:** one `state` object, not loose variables.
+4. **Helpers:** `el()`, `setStatus()`, and one `log()` that writes `console.log("[FX_<App>]", …)` for every server call (method, arguments, ms taken, result or error). Turn it off with a `DEBUG` constant.
+5. **Server bridge:** one `callServer(method, args, cb)` that holds the `WSForm.invoke` + `getVarValue` contract, the timeout and the `typeof WSForm` guard. No other function calls `WSForm` directly.
+6. **Features:** one section per screen or card (load, render, validate, submit). Functions are short and named for what they do (`renderRecentAsns`, `validateLines`).
+7. **Wiring:** all `addEventListener` calls, then the start-up call inside `MG.onReady` (see Pitfalls).
+
+## C# form script layout: one file, easy to read and debug (operator decision, 2026-10-29)
+A Form has one script. Keep it as one file (`assets/FX_<App>/FX_<App>.cs.txt` + its `.flat.cs.txt` install copy), laid out so it reads top to bottom. Each part goes under a `// ---- <part> ----` comment:
+1. **Header:** `using` lines and `//<Ref>…</Ref>` lines, then the class comment: what the Form does, which page calls it, the result variable and its JSON shape (`{"ok":true,…}` / `{"ok":false,"message":"…"}`).
+2. **Config:** constants and lookup values, each with a comment naming its source (operator decision, EXP, spec). No magic strings or numbers further down.
+3. **Page actions:** one public method per thing the page asks for, named for it (`FX_GenerateAsn`, `FX_CheckSku`), in the order the page uses them. Each one:
+   - validates its input first and returns a message that names the bad field;
+   - keeps the main flow short by calling named helpers;
+   - has one `try/catch` that reports `ex.GetType().Name + ": " + ex.Message` through the result variable, never an empty catch.
+4. **Feature helpers:** private methods used by the actions, grouped by feature, in the same order as the actions.
+5. **Outside services:** one helper per service (e.g. `FX_WmInvoke` for WM over ION). It keeps the verb and path visible, and passes the HTTP code and Infobar back into error messages.
+6. **Results and parsing:** the result-variable writers (`FX_Result`, `FX_Fail`) and shared parsing helpers (`FX_ParseJson`, `FX_Get`).
+
+Easy to debug:
+- Every failure message says what failed and what to do. Include the action, the HTTP code and the Infobar for API calls, e.g. "WM item lookup answered HTTP 500. Infobar: …".
+- Results go back to the page, where `app.js`'s `log()` records them in the browser console, so one place shows the whole call.
+- Comments explain *why* (tenant quirk, operator decision, EXP number), not what the next line does.
+- Indent normally in the repo source; the `.flat.cs.txt` install copy is the same code made flush-left (`sed 's/^[ 	]*//'`), because indented sources overflowed the Script Editor's line storage (EXP-138). Update both together.
+
 ## Build steps
-1. **Form:** use the Classic BuildFromScratch recipe (`recipes/forms/create-basic-form.md`).
+1. **Form:** a **Flex** Form by default (`portal-shell.md` §1); Classic BuildFromScratch (`recipes/forms/create-basic-form.md`) only when the request asks for Classic.
    - Set Behavior › **Script Language = Visual C#** (option click + Tab).
    - For a full-page app, set the Form size large enough.
 2. **Asset:**
@@ -45,7 +91,7 @@ WSForm.invoke("FX_Method", [args...,] function(){ ──►   public void/string
    3. Select the file → Content row "Open Edit Property Dialog" → **Edit Browser File**. The template already includes `../$app/scripts/UserControl.js`. Keep that include.
    4. Replace the content with one full-text fill. Read it back before OK with the readback check (below).
    5. Click **Edit Browser File OK**, then **Global Objects OK** (EXP-131 T6).
-   6. Add more files (e.g. `FX_Login/app.js`) the same way.
+   6. Add `FX_<App>/app.css` and `FX_<App>/app.js` the same way (see File layout above).
    - Absence check: look at the Web Assets top level for the `FX_` folder.
 3. **Variable:** Edit › **Variable** → Global Objects → blue **+** → Name `FX_v<Name>` → OK → Global Objects OK.
    - The readback should show Persistent True and Global True (EXP-136 T11).
@@ -68,7 +114,7 @@ WSForm.invoke("FX_Method", [args...,] function(){ ──►   public void/string
 
 ## Replacing or updating an asset page (verified: EXP-139, BLD-001)
 1. Edit the file in `assets/FX_<App>/index.html` locally (version-controlled).
-2. Produce the flush-left install copy (`index.flat.html`).
+2. Produce the flush-left install copies: `cd assets && npm run flat -- FX_<App>`.
 3. Open FX_<Form> in the Designer (User scope) → Edit › Web User Control Assets → expand `FX_<App>` (click the folder, then ArrowRight) → select the file → Content row **Open Edit Property Dialog** → Edit Browser File.
 4. **Rollback baseline:** save the editor value with `browser_snapshot { target: <editor ref>, filename: "evidence/<ID>/baseline-editor-content.yml" }`. Compare it with the git version you expect to be live. A match proves which version is the rollback source.
 5. Click in the editor, press Ctrl+A, then do **one** full-content fill (`browser_type` with the whole file).
@@ -88,8 +134,12 @@ node .claude/skills/mongoose-builder/tools/compare-readback.js evidence/<ID>/<sn
 - It proves the content is the same, not the bytes (line breaks and indentation are not compared). That also makes it work for Form Scripts, where the Script Editor adds its own indentation. Applying it to the Script Editor is not exercised yet: check that the editor's snapshot exposes its value first.
 
 ## Local design loop (fast)
-- The HTML is a normal standalone page. Develop and preview it locally with mock JSON (the `typeof WSForm === "undefined"` branch), then install it.
-- Keep all CSS and JS inline, or as extra FX_ assets, so the tenant needs no external CDN.
+- Everything for local work is in `assets/` (meant to become its own shareable repo; how-to in `assets/README.md`):
+  - start a new app by copying `assets/_template/` (three files, C# script, stub) to `assets/FX_<App>/`;
+  - `cd assets && npm run preview` (Node 18+, no install) serves the real app folders at http://127.0.0.1:8765/. When a page asks for `../$app/scripts/UserControl.js`, the server answers with that app's `preview/stub.js` (a fake `WSForm` with test data; repo only, never installed);
+  - `npm run flat -- FX_<App>` writes every install copy (`index.flat.html`, `app.flat.css`, `app.flat.js`, `*.flat.cs.txt`). Never hand-edit a flat copy.
+- A local preview proves the layout and the page logic only. The tenant result is proven only at runtime in the Web Client.
+- No external CDN: every style and script is an asset in the page's own folder.
 - `assets/FX_Inventory/index.html` is the reference for the dark theme, KPI cards, filters, sort and the status line.
 
 ## Pitfalls

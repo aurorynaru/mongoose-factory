@@ -79,7 +79,7 @@ FX_ tables only, with fake rows. Values taken from the mock as-is:
   - `index.flat.html`: the install copy.
   - `FX_ASNPortal.cs.txt` and `.flat.cs.txt`: the C# form script, **not compiled yet**.
   - `preview/stub.js`: a fake `WSForm` with generated test data.
-  - `preview/build-preview.js`: builds `preview/index.preview.html`, which is served with `python -m http.server` (the browser blocks `file:`).
+  - `preview/build-preview.js`: built `preview/index.preview.html`, served with `python -m http.server` (the browser blocks `file:`). Replaced on 2026-10-29 by `assets/tools/serve.js` (`cd assets && npm run preview`), which serves the real `index.html` and answers its `UserControl.js` request with `preview/stub.js`; both old files were removed.
 - Evidence:
   - `evidence/BLD-002/02-preview-dashboard-full.png` (dashboard, preview data);
   - `03-preview-create.png` (Create ASN);
