@@ -60,24 +60,17 @@
       <p class="FX_Hint">Leave the names blank and Claude will propose them in the plan for you to approve.</p>
       <div class="FX_Grid3">
         <label>Form name(s) <small>Forms named in 4b are added</small><input name="formName" data-fx data-placeholder="e.g. {p}StockCounts" placeholder="e.g. FX_StockCounts"></label>
-        <label>IDO / table name<input name="idoName" data-fx data-placeholder="e.g. {p}StockCounts" placeholder="e.g. FX_StockCounts"></label>
+        <label>IDO / table name(s) <small>Tables named in 4a are added</small><input name="idoName" data-fx data-placeholder="e.g. {p}StockCounts" placeholder="e.g. FX_StockCounts"></label>
         <label>Asset folder<input name="assetFolder" data-fx data-placeholder="e.g. {p}StockCount/index.html" placeholder="e.g. FX_StockCount/index.html"></label>
       </div>
     </fieldset>
 
-    <fieldset id="FX_S4a" data-show-for="ido" data-nav="4a|IDO / table">
-      <legend><span class="FX_Num">4a</span>IDO / table</legend>
-      <label>Is the data in an existing IDO? <small>Name it, or write "new"</small><input name="idoExisting" placeholder="e.g. new  (or an existing IDO such as FX_Items)"></label>
-      <div class="FX_ListHead"><span>Fields</span><button type="button" class="FX_Small" data-add="fields">Add field</button></div>
-      <div class="FX_TableWrap">
-        <table class="FX_Rows" data-list="fields">
-          <thead><tr><th>Name</th><th>Type</th><th>Length / precision</th><th>Required</th><th>Key</th><th>Default</th><th><span class="FX_Sr">Remove</span></th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <label>Relations / lookups <small>Field → other table or IDO</small><textarea name="relations" rows="2" placeholder="e.g. ItemCode → FX_Items (shows the item description)"></textarea></label>
-      <label>Calculated fields <small>Formula in words</small><textarea name="calculated" rows="2" placeholder="e.g. Difference = CountedQty − SystemQty"></textarea></label>
-      <label>Test rows to create <small>Fake data only</small><textarea name="testRows" rows="2" placeholder="e.g. 3 rows: ITEM-001 counted 10, ITEM-002 counted 0, ITEM-003 counted 25"></textarea></label>
+    <fieldset id="FX_S4a" data-show-for="ido" data-nav="4a|IDOs / tables">
+      <legend><span class="FX_Num">4a</span>IDOs / tables</legend>
+      <p class="FX_Hint">One card per table. For an app with several tables, add a card for each and name the links between them under Relations.</p>
+      <div class="FX_FormCards" id="FX_TableCards" data-list="tables"></div>
+      <button type="button" class="FX_Small FX_AddForm" id="FX_AddTable">Add another table</button>
+      <datalist id="FX_TableNameList"></datalist>
     </fieldset>
 
     <fieldset id="FX_S4b" data-show-for="form" data-nav="4b|Forms">
@@ -253,6 +246,30 @@
   </aside>
 </main>
 
+<!-- One card in section 4a. app.js clones it per table and names the controls table1_name, table2_name, ... -->
+<template id="FX_TableCardTemplate">
+  <section class="FX_FormCard">
+    <div class="FX_FormCardHead">
+      <h3 data-card-title>Table 1</h3>
+      <button type="button" class="FX_Ghost FX_CardRemove" data-card-remove>Remove this table</button>
+    </div>
+    <div class="FX_Grid2">
+      <label>Table / IDO name<input data-key="name" data-placeholder="e.g. {p}StockCounts" spellcheck="false" autocapitalize="off"></label>
+      <label>Existing IDO? <small>Name it, or "new"</small><input data-key="existing" placeholder="e.g. new, or FX_Items"></label>
+    </div>
+    <div class="FX_ListHead"><span>Fields</span><button type="button" class="FX_Small" data-card-add-row>Add field</button></div>
+    <div class="FX_TableWrap">
+      <table class="FX_Rows" data-list="fields">
+        <thead><tr><th>Name</th><th>Type</th><th>Length / precision</th><th>Required</th><th>Key</th><th>Default</th><th><span class="FX_Sr">Remove</span></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <label>Relations / lookups <small>Field → other table or IDO</small><textarea data-key="relations" rows="2" placeholder="e.g. ItemCode → FX_Items (shows the item description)"></textarea></label>
+    <label>Calculated fields <small>Formula in words</small><textarea data-key="calculated" rows="2" placeholder="e.g. Difference = CountedQty − SystemQty"></textarea></label>
+    <label>Test rows to create <small>Fake data only</small><textarea data-key="testRows" rows="2" placeholder="e.g. 3 rows: ITEM-001 counted 10, ITEM-002 counted 0, ITEM-003 counted 25"></textarea></label>
+  </section>
+</template>
+
 <!-- One card in section 4b. app.js clones it per Form and names the controls form1_name, form2_name, ... -->
 <template id="FX_FormCardTemplate">
   <section class="FX_FormCard">
@@ -262,7 +279,7 @@
     </div>
     <div class="FX_Grid2">
       <label>Form name<input data-key="name" data-placeholder="e.g. {p}StockCounts" spellcheck="false" autocapitalize="off"></label>
-      <label>Data it shows <small>IDO</small><input data-key="ido" data-placeholder="e.g. {p}StockCounts" spellcheck="false" autocapitalize="off"></label>
+      <label>Data it shows <small>IDO</small><input data-key="ido" list="FX_TableNameList" data-placeholder="e.g. {p}StockCounts" spellcheck="false" autocapitalize="off"></label>
     </div>
     <label>How it connects
       <select data-key="connect">
@@ -291,7 +308,7 @@
     <label>Read-only fields<input data-key="readOnly" placeholder="e.g. Description, System quantity, Difference"></label>
     <label>Dropdowns / validation <small>Field → allowed values or source</small><textarea data-key="dropdowns" rows="2" placeholder="e.g. Status → Open, Counted, Recount&#10;Item → list from FX_Items"></textarea></label>
     <label>Second grid on this Form <small>Another IDO shown under the first, e.g. the selected row's lines</small><input data-key="secondGrid" placeholder="e.g. Count lines of the selected count: Item, Counted qty"></label>
-    <div class="FX_ListHead"><span>Buttons</span><button type="button" class="FX_Small" data-card-add-button>Add button</button></div>
+    <div class="FX_ListHead"><span>Buttons</span><button type="button" class="FX_Small" data-card-add-row>Add button</button></div>
     <div class="FX_TableWrap">
       <table class="FX_Rows" data-list="buttons">
         <thead><tr><th>Caption</th><th>What happens when clicked</th><th>What the user sees after</th><th><span class="FX_Sr">Remove</span></th></tr></thead>

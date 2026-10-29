@@ -142,7 +142,7 @@ button { font: inherit; color: inherit; }
 @media (max-width: 640px) { .FX_PrefixRow { grid-template-columns: 1fr; } .FX_PrefixRow .FX_Hint { margin-top: 6px; } }
 .FX_Grid3 { display: grid; gap: 0 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: 640px) { .FX_Grid3 { grid-template-columns: 1fr; } }
-.FX_Grid2 { display: grid; gap: 0 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.FX_Grid2 { display: grid; gap: 0 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; }   /* inputs line up when one label wraps */
 @media (max-width: 640px) { .FX_Grid2 { grid-template-columns: 1fr; } }
 
 .FX_Hint { margin: 6px 0 0; color: var(--ink-soft); font-size: 12.5px; }
@@ -236,6 +236,9 @@ button { font: inherit; color: inherit; }
 .FX_CardRemove { padding: 4px 10px; font-size: 12.5px; }
 .FX_CardRemove:hover { border-color: var(--error); background: var(--error-soft); color: var(--error); }
 .FX_AddForm { margin-top: 12px; }
+/* Narrower row inputs inside a card, so the fields table fits without hiding the remove button */
+.FX_FormCard .FX_Rows td input:not([type="checkbox"]), .FX_FormCard .FX_Rows td select { min-width: 72px; }
+.FX_FormCard .FX_Rows td:first-child input { min-width: 128px; }
 
 /* ---- Buttons ---- */
 .FX_Primary, .FX_Ghost, .FX_Small {

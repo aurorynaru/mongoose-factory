@@ -29,13 +29,15 @@ New Forms are built as Flex Forms. Write "Classic" here if you want a Classic Fo
 ## 3. Names
 Prefix (every new object name starts with it; keep FX_ unless you want another): FX_
 Form name(s) (FX_…):
-IDO / table name (FX_…):
+IDO / table name(s) (FX_…):
 Asset folder (FX_…/index.html):
 Leave blank and Claude will propose names in the plan for you to approve.
 
 ## 4. Details by type
 
-### 4a. IDO / table
+### 4a. IDOs / tables (one block per table)
+#### Table 1
+Table / IDO name (FX_…):
 Is the data in an existing IDO? (name it, or "new"):
 Fields — one per line: name | type (text / number / decimal / date / yes-no) | length or precision | required? | key? | default
 -
@@ -43,6 +45,8 @@ Fields — one per line: name | type (text / number / decimal / date / yes-no) |
 Relations / lookups (field → other table or IDO):
 Calculated fields (formula in words):
 Test rows to create (fake data only):
+
+(Copy the "#### Table" block for each further table.)
 
 ### 4b. Forms (one block per Form)
 #### Form 1
@@ -112,6 +116,7 @@ Guide with pictures: none / PDF / Word (.docx) (default none):
 | 1 Goal, 7 Done means | Claude can't tell when the build is finished, so acceptance checks are guessed. |
 | 3 Prefix | Leaving `FX_` is fine. Another prefix (letter, letters/digits, then `_`, e.g. `ACME_`) is checked against the tenant first; existing objects that already start with it are not the factory's and still need approval. |
 | 3 Names | Names are proposed and need a round of approval; renaming later means re-wiring handlers and components. |
+| 4a One block per table | Fields of several tables in one list can't be told apart. Name each link under Relations (field → other table) so keys and lookups are built in the right order. |
 | 4a Fields with type + length | Types and lengths become schema; changing them after rows exist is a schema change on the table. |
 | 4b One block per Form, "How it connects" | With several Forms in one block, Claude can't tell which fields and buttons belong where, or which Form must exist first. A Form is built before the Form that points to it. Tile in a grid is observed (EXP-115–118); opened by a button runs as a small probe; embedded in a region is **unverified**. |
 | 4b Buttons "what happens / what the user sees" | Event handlers, scripts and messages can't be written without it. |

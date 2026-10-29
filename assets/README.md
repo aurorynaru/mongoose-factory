@@ -26,6 +26,8 @@ With the preview running, open <http://127.0.0.1:8765/_request/index.html> (also
   object name starts with it, and the labels and the prompt follow it. Picking an existing app takes that app's prefix.
   Existing tenant objects that already start with your prefix but weren't built by the factory still need approval
   (`AGENTS.md` § Build prefix).
+- **IDOs / tables** (section 4a) has one card per table, each with its own fields, relations and test rows.
+  **Add another table** adds a card. Card names are added to section 3 and offered in the Form cards' "Data it shows".
 - **Forms** (section 4b) has one card per Form. **Add another form** adds a card; each card says how that Form
   connects to the others: on its own, a tile in another Form's grid, opened by a button on another Form, or embedded
   in another Form's region (the last one hasn't been tried in the tenant yet). Card names are added to section 3.
@@ -51,7 +53,10 @@ The prompt is plain text, so it works with any coding agent. In the factory repo
 (checked against the OpenCode docs, 2026-10-29; not yet run end to end in OpenCode):
 
 - **Rules:** OpenCode reads `AGENTS.md` (the safety rules and build mode).
-- **Skills:** it finds `.claude/skills/<name>/SKILL.md`, so `mongoose-builder` and `mongoose-dx` load as they do in Claude Code.
+- **Skills:** it finds `.claude/skills/<name>/SKILL.md`, so `mongoose-builder`, `mongoose-dx`, `frontend-design` and
+  `web-design-guidelines` load as they do in Claude Code. The folder name must match the skill's `name:` exactly,
+  lowercase included. `frontend-design` is a copy of the Claude Code plugin skill (Apache-2.0, its `LICENSE.txt`
+  kept beside it): plugin updates don't reach the copy.
 - **Browser:** `opencode.json` starts the same Playwright MCP server with the same `--secrets` file, so the
   `SECRET_MONGOOSE_*` placeholders work unchanged. Keep the secrets file outside the repo.
 - **Not shared:** Claude Code's own memory notes. The rules they hold are also written in the skills.

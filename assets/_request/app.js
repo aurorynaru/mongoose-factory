@@ -43,8 +43,8 @@
   var state = {
     mode: "build",
     apps: [],           // from /api/apps
-    rows: { fields: [] },
-    forms: []           // section 4b cards, read back from the page on every refresh
+    tables: [],         // section 4a cards, read back from the page on every refresh
+    forms: []           // section 4b cards, likewise
   };
 
   // ---- Helpers ----
@@ -172,7 +172,7 @@
   function saveDraft() {
     try {
       localStorage.setItem(DRAFT_KEY, JSON.stringify({
-        mode: state.mode, build: readForm(buildForm), change: readForm(changeForm), rows: state.rows, forms: state.forms
+        mode: state.mode, build: readForm(buildForm), change: readForm(changeForm), tables: state.tables, forms: state.forms
       }));
     } catch (e) { log("draft not saved", e); }
   }
@@ -182,18 +182,30 @@
       var draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null");
       if (!draft) { return; }
       state.mode = draft.mode === "change" ? "change" : "build";
-      state.rows = { fields: (draft.rows || {}).fields || [] };
-      state.forms = draft.forms || [cardFromOldDraft(draft)];
+      state.tables = draft.tables || [tableFromOldDraft(draft)];
+      state.forms = draft.forms || [formFromOldDraft(draft)];
       writeForm(buildForm, draft.build || {});
       writeForm(changeForm, draft.change || {});
       setStatus("Draft restored from this browser.");
     } catch (e) { log("draft not loaded", e); }
   }
 
-  // Drafts saved before section 4b had cards kept one Form's details in the build form and rows.buttons.
-  function cardFromOldDraft(draft) {
+  // Drafts saved before sections 4a and 4b had cards kept one table and one Form in the build form,
+  // with their rows in rows.fields and rows.buttons.
+  function tableFromOldDraft(draft) {
     var b = draft.build || {};
-    var card = emptyCard();
+    var card = emptyCard("tables");
+    card.existing = b.idoExisting || "";
+    card.relations = b.relations || "";
+    card.calculated = b.calculated || "";
+    card.testRows = b.testRows || "";
+    card.fields = (draft.rows || {}).fields || [];
+    return card;
+  }
+
+  function formFromOldDraft(draft) {
+    var b = draft.build || {};
+    var card = emptyCard("forms");
     card.layout = b.layout || "";
     card.layoutOther = b.layoutOther || "";
     card.fields = b.formFields || "";
@@ -203,7 +215,7 @@
     return card;
   }
 
-  // ---- Repeating rows: IDO fields and form buttons ----
+  // ---- Repeating rows: table fields (4a cards) and Form buttons (4b cards) ----
   // [property, control, example placeholder]. The examples follow the stock-count example used in index.html.
   var ROW_COLUMNS = {
     fields: [["name", "text", "e.g. CountedQty"], ["type", "select"], ["length", "text", "e.g. 18,2"], ["required", "check"], ["key", "check"], ["default", "text", "e.g. 0"]],
@@ -247,35 +259,16 @@
     return tr;
   }
 
-  // IDO fields (section 4a) live in state.rows.fields.
-  function renderRows(list) {
-    var body = document.querySelector('[data-list="' + list + '"] tbody');
-    body.innerHTML = "";
-    state.rows[list].forEach(function (row, index) {
-      body.appendChild(makeRow(list, row, function () {
-        state.rows[list].splice(index, 1);
-        renderRows(list);
-        refresh();
-      }));
-    });
-  }
+  // ---- Cards: one per table (section 4a) and one per Form (section 4b) ----
+  // The cards in the page are the source of truth: readCards() rebuilds state.tables / state.forms on every
+  // refresh, and renderCards() rebuilds the page from a list (start-up, add, remove, clear).
+  var CARDS = {
+    tables: { list: "FX_TableCards", template: "FX_TableCardTemplate", rows: "fields", name: "table", label: "Table", show: "ido" },
+    forms: { list: "FX_FormCards", template: "FX_FormCardTemplate", rows: "buttons", name: "form", label: "Form", show: "form" }
+  };
 
-  function addRow(list) {
-    state.rows[list].push({ type: FIELD_TYPES[0] });
-    renderRows(list);
-    var inputs = document.querySelectorAll('[data-list="' + list + '"] tbody tr:last-child input');
-    if (inputs.length) { inputs[0].focus(); }
-    refresh();
-  }
-
-  // ---- Form cards (section 4b): one per Form ----
-  // The cards in the page are the source of truth: readCards() rebuilds state.forms on every refresh,
-  // and renderCards() rebuilds the page from a list (start-up, add, remove, clear).
-  var cardList = document.getElementById("FX_FormCards");
-  var cardTemplate = document.getElementById("FX_FormCardTemplate");
-
-  function emptyCard() {
-    return { connect: "standalone", buttons: [] };
+  function emptyCard(kind) {
+    return kind === "forms" ? { connect: "standalone", buttons: [] } : { fields: [] };
   }
 
   function removeTableRow(tr) {
@@ -283,82 +276,98 @@
     refresh();
   }
 
-  function renderCards(cards) {
-    cardList.innerHTML = "";
+  function renderCards(kind, cards) {
+    var cfg = CARDS[kind];
+    var list = document.getElementById(cfg.list);
+    var template = document.getElementById(cfg.template);
+    list.innerHTML = "";
     cards.forEach(function (card, index) {
-      var node = cardTemplate.content.firstElementChild.cloneNode(true);
+      var node = template.content.firstElementChild.cloneNode(true);
       Array.prototype.forEach.call(node.querySelectorAll("[data-key]"), function (input) {
         var key = input.getAttribute("data-key");
-        input.name = "form" + (index + 1) + "_" + key; // unique per card, so problems can jump to it
+        input.name = cfg.name + (index + 1) + "_" + key; // unique per card, so problems can jump to it
         if (input.type === "radio") { input.checked = card[key] === input.value; } else if (key in card) { input.value = card[key]; }
       });
-      var body = node.querySelector('[data-list="buttons"] tbody');
-      (card.buttons || []).forEach(function (row) { body.appendChild(makeRow("buttons", row, removeTableRow)); });
-      node.querySelector("[data-card-add-button]").addEventListener("click", function () {
-        body.appendChild(makeRow("buttons", {}, removeTableRow));
+      var body = node.querySelector('[data-list="' + cfg.rows + '"] tbody');
+      (card[cfg.rows] || []).forEach(function (row) { body.appendChild(makeRow(cfg.rows, row, removeTableRow)); });
+      node.querySelector("[data-card-add-row]").addEventListener("click", function () {
+        body.appendChild(makeRow(cfg.rows, {}, removeTableRow));
         body.querySelector("tr:last-child input").focus();
         refresh();
       });
       var remove = node.querySelector("[data-card-remove]");
       remove.hidden = cards.length < 2;
       remove.addEventListener("click", function () {
-        var now = readCards();
+        var now = readCards(kind);
         now.splice(index, 1);
-        renderCards(now);
-        setStatus("Form " + (index + 1) + " removed.");
+        renderCards(kind, now);
+        setStatus(cfg.label + " " + (index + 1) + " removed.");
         refresh();
       });
-      cardList.appendChild(node);
+      list.appendChild(node);
     });
   }
 
-  function readCards() {
-    return Array.prototype.map.call(cardList.children, function (node) {
-      var card = { buttons: [] };
+  function readCards(kind) {
+    var cfg = CARDS[kind];
+    return Array.prototype.map.call(document.getElementById(cfg.list).children, function (node) {
+      var card = {};
+      card[cfg.rows] = [];
       Array.prototype.forEach.call(node.querySelectorAll("[data-key]"), function (input) {
         var key = input.getAttribute("data-key");
         if (input.type !== "radio") { card[key] = input.value; } else if (input.checked) { card[key] = input.value; } else if (!(key in card)) { card[key] = ""; }
       });
-      Array.prototype.forEach.call(node.querySelectorAll('[data-list="buttons"] tbody tr'), function (tr) {
+      Array.prototype.forEach.call(node.querySelectorAll('[data-list="' + cfg.rows + '"] tbody tr'), function (tr) {
         var row = {};
-        Array.prototype.forEach.call(tr.querySelectorAll("input"), function (input) { row[input.getAttribute("aria-label")] = input.value; });
-        card.buttons.push(row);
+        Array.prototype.forEach.call(tr.querySelectorAll("input, select"), function (input) {
+          row[input.getAttribute("aria-label")] = input.type === "checkbox" ? input.checked : input.value;
+        });
+        card[cfg.rows].push(row);
       });
       return card;
     });
   }
 
-  function addCard() {
-    var cards = readCards();
-    cards.push(emptyCard());
-    renderCards(cards);
+  function addCard(kind) {
+    var cards = readCards(kind);
+    cards.push(emptyCard(kind));
+    renderCards(kind, cards);
     refresh();
-    var name = cardList.lastElementChild.querySelector('[data-key="name"]');
+    var name = document.getElementById(CARDS[kind].list).lastElementChild.querySelector('[data-key="name"]');
     name.closest(".FX_FormCard").scrollIntoView({ behavior: "smooth", block: "start" });
     name.focus({ preventScroll: true });
   }
 
-  // Every Form name in the request: the cards (when 4b is shown) first, then section 3, without repeats.
-  function formNames(d) {
+  // Every name of one kind in the request: the cards (when their section is shown) first, then the
+  // section 3 field (formName / idoName), without repeats.
+  function cardNames(kind, d) {
     var names = [];
     var push = function (n) { n = (n || "").trim(); if (n && names.indexOf(n) < 0) { names.push(n); } };
-    if (shown("form", d)) { state.forms.forEach(function (f) { push(f.name); }); }
-    (d.formName || "").split(/[,\n]/).forEach(push);
+    if (shown(CARDS[kind].show, d)) { state[kind].forEach(function (c) { push(c.name); }); }
+    (d[kind === "forms" ? "formName" : "idoName"] || "").split(/[,\n]/).forEach(push);
     return names;
   }
 
-  // Card titles, the connection hint and fields, and the "Connects to" suggestions.
-  function updateCards(d) {
-    Array.prototype.forEach.call(cardList.children, function (node, i) {
-      var f = state.forms[i];
-      var connect = CONNECT[f.connect] ? f.connect : "standalone";
-      node.querySelector("[data-card-title]").textContent = "Form " + (i + 1) + (f.name.trim() ? ": " + f.name.trim() : "");
-      node.querySelector("[data-connect-hint]").textContent = CONNECT[connect].hint;
-      node.querySelector("[data-connect-detail]").hidden = connect === "standalone";
-    });
-    var list = document.getElementById("FX_FormNameList");
+  function fillNameList(id, names) {
+    var list = document.getElementById(id);
     list.innerHTML = "";
-    formNames(d).forEach(function (n) { var o = el("option"); o.value = n; list.appendChild(o); });
+    names.forEach(function (n) { var o = el("option"); o.value = n; list.appendChild(o); });
+  }
+
+  // Card titles, the Form connection hint and fields, and the name suggestions.
+  function updateCards(d) {
+    ["tables", "forms"].forEach(function (kind) {
+      Array.prototype.forEach.call(document.getElementById(CARDS[kind].list).children, function (node, i) {
+        var c = state[kind][i];
+        node.querySelector("[data-card-title]").textContent = CARDS[kind].label + " " + (i + 1) + (c.name.trim() ? ": " + c.name.trim() : "");
+        if (kind !== "forms") { return; }
+        var connect = CONNECT[c.connect] ? c.connect : "standalone";
+        node.querySelector("[data-connect-hint]").textContent = CONNECT[connect].hint;
+        node.querySelector("[data-connect-detail]").hidden = connect === "standalone";
+      });
+    });
+    fillNameList("FX_FormNameList", cardNames("forms", d));
+    fillNameList("FX_TableNameList", cardNames("tables", d));
   }
 
   // ---- Prefill from assets/ (GET /api/apps) ----
@@ -497,26 +506,16 @@
 
     out.push("## 3. Names");
     out.push(line("Prefix (every new object name starts with it; keep FX_ unless you want another)", d.prefix));
-    out.push(line("Form name(s) (" + p + "…)", formNames(d).join(", ")));
-    out.push(line("IDO / table name (" + p + "…)", d.idoName));
+    out.push(line("Form name(s) (" + p + "…)", cardNames("forms", d).join(", ")));
+    out.push(line("IDO / table name(s) (" + p + "…)", cardNames("tables", d).join(", ")));
     out.push(line("Asset folder (" + p + "…/index.html)", d.assetFolder));
     out.push("Leave blank and Claude will propose names in the plan for you to approve.");
     out.push("");
 
     var details = [];
     if (shown("ido", d)) {
-      details.push("### 4a. IDO / table");
-      details.push(line('Is the data in an existing IDO? (name it, or "new")', d.idoExisting));
-      details.push("Fields — one per line: name | type (text / number / decimal / date / yes-no) | length or precision | required? | key? | default");
-      var fields = state.rows.fields.filter(function (r) { return (r.name || "").trim(); });
-      if (fields.length === 0) { details.push("-", "-"); }
-      fields.forEach(function (r) {
-        details.push("- " + [r.name.trim(), r.type || "", (r.length || "").trim(), r.required ? "required" : "optional", r.key ? "key" : "not key", (r["default"] || "").trim()].join(" | "));
-      });
-      details.push(line("Relations / lookups (field → other table or IDO)", d.relations));
-      details.push(line("Calculated fields (formula in words)", d.calculated));
-      details.push(line("Test rows to create (fake data only)", d.testRows));
-      details.push("");
+      details.push("### 4a. IDOs / tables (one block per table)");
+      state.tables.forEach(function (t, i) { details.push.apply(details, tableBlock(t, i, p)); });
     }
     if (shown("form", d)) {
       details.push("### 4b. Forms (one block per Form)");
@@ -577,6 +576,25 @@
     return out.join("\n");
   }
 
+  // One "#### Table N" block of section 4a.
+  function tableBlock(t, index, p) {
+    var out = ["#### Table " + (index + 1)];
+    var text = function (v) { return (v || "").trim(); };
+    out.push(line("Table / IDO name (" + p + "…)", t.name));
+    out.push(line('Is the data in an existing IDO? (name it, or "new")', t.existing));
+    out.push("Fields — one per line: name | type (text / number / decimal / date / yes-no) | length or precision | required? | key? | default");
+    var fields = (t.fields || []).filter(function (r) { return text(r.name); });
+    if (fields.length === 0) { out.push("-", "-"); }
+    fields.forEach(function (r) {
+      out.push("- " + [text(r.name), r.type || "", text(r.length), r.required ? "required" : "optional", r.key ? "key" : "not key", text(r["default"])].join(" | "));
+    });
+    out.push(line("Relations / lookups (field → other table or IDO)", t.relations));
+    out.push(line("Calculated fields (formula in words)", t.calculated));
+    out.push(line("Test rows to create (fake data only)", t.testRows));
+    out.push("");
+    return out;
+  }
+
   // One "#### Form N" block of section 4b. "Connects to" and "Linked by" only appear for a connected Form,
   // so a blank there still means "ask me".
   function formBlock(f, index, p) {
@@ -606,24 +624,26 @@
     return out;
   }
 
-  // Section 4b checks: names, and that each connected Form points at a Form of this request.
-  function cardProblems(d, prefix, add) {
+  // Card checks: every name starts with the prefix and is used by one card only; each connected Form
+  // points at a Form of this request.
+  function cardProblems(kind, d, prefix, add) {
+    var cfg = CARDS[kind];
     var seen = {};
-    var names = formNames(d);
-    state.forms.forEach(function (f, i) {
-      var where = "Section 4b, Form " + (i + 1) + ": ";
-      var field = "form" + (i + 1) + "_";
-      var name = (f.name || "").trim();
-      var parent = (f.parent || "").trim();
+    var forms = cardNames("forms", d);
+    state[kind].forEach(function (c, i) {
+      var where = "Section " + (kind === "forms" ? "4b" : "4a") + ", " + cfg.label + " " + (i + 1) + ": ";
+      var field = cfg.name + (i + 1) + "_";
+      var name = (c.name || "").trim();
+      var parent = (c.parent || "").trim();
       if (name && prefix && name.indexOf(prefix) !== 0) { add(where + name + " doesn't start with " + prefix + ".", field + "name", true); }
-      if (name && seen[name]) { add(where + name + " is also the name of Form " + seen[name] + ".", field + "name", true); }
+      if (name && seen[name]) { add(where + name + " is also the name of " + cfg.label + " " + seen[name] + ".", field + "name", true); }
       if (name && !seen[name]) { seen[name] = i + 1; }
-      if (!f.connect || f.connect === "standalone") { return; }
+      if (kind !== "forms" || !c.connect || c.connect === "standalone") { return; }
       if (!parent) {
         add(where + "say which Form it connects to, or Claude will ask.", field + "parent", true);
       } else if (parent === name) {
         add(where + "it can't connect to itself.", field + "parent", true);
-      } else if (names.indexOf(parent) < 0) {
+      } else if (forms.indexOf(parent) < 0) {
         add(where + parent + " isn't a Form in this request. Adding a tile, button or region to an existing Form changes that Form (sections 2 and 6).", field + "parent", true);
       }
     });
@@ -645,7 +665,9 @@
         if (value && value.indexOf(prefix) !== 0) { add("Section 3: " + value + " doesn't start with " + prefix + ". Changing an object the factory didn't build needs your approval in section 6.", name, true); }
       });
     }
-    if (shown("form", d)) { cardProblems(d, PREFIX_RE.test(prefix) ? prefix : "", add); }
+    ["tables", "forms"].forEach(function (kind) {
+      if (shown(CARDS[kind].show, d)) { cardProblems(kind, d, PREFIX_RE.test(prefix) ? prefix : "", add); }
+    });
     scopeProblems(d, "Section 6: ", add);
     if (shown("changeNonFx", d) && !d.nonFx.trim()) { add("Section 6: name the object(s) the factory didn't build that may be changed.", "nonFx"); }
     if (shown("changeFx", d) && !d.existingApp && !d.formName.trim() && !d.assetFolder.trim()) { add("Section 2/3: name the existing factory object to change.", "existingApp", true); }
@@ -775,7 +797,8 @@
     var problems;
     if (state.mode === "build") {
       var d = readForm(buildForm);
-      state.forms = readCards();
+      state.tables = readCards("tables");
+      state.forms = readCards("forms");
       updateCards(d);
       updateSections(d);
       updateScope(buildForm, d);
@@ -880,9 +903,8 @@
     disarmReset();
     if (state.mode === "build") {
       buildForm.reset();
-      state.rows = { fields: [] };
-      renderRows("fields");
-      renderCards([emptyCard()]);
+      renderCards("tables", [emptyCard("tables")]);
+      renderCards("forms", [emptyCard("forms")]);
     } else {
       changeForm.reset();
       showFacts();
@@ -902,10 +924,8 @@
   });
   buildForm.elements.existingApp.addEventListener("change", prefillBuildNames);
   changeForm.elements.app.addEventListener("change", showFacts);
-  Array.prototype.forEach.call(document.querySelectorAll("[data-add]"), function (button) {
-    button.addEventListener("click", function () { addRow(button.getAttribute("data-add")); });
-  });
-  document.getElementById("FX_AddForm").addEventListener("click", addCard);
+  document.getElementById("FX_AddTable").addEventListener("click", function () { addCard("tables"); });
+  document.getElementById("FX_AddForm").addEventListener("click", function () { addCard("forms"); });
   copyButton.addEventListener("click", copyPrompt);
   document.getElementById("FX_Download").addEventListener("click", downloadPrompt);
   resetButton.addEventListener("click", resetForm);
@@ -916,8 +936,8 @@
     var saved = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null");
     if (saved) { pendingSelects = { existingApp: (saved.build || {}).existingApp, app: (saved.change || {}).app }; }
   } catch (e) { log("draft selects not read", e); }
-  renderRows("fields");
-  renderCards(state.forms.length ? state.forms : [emptyCard()]);
+  renderCards("tables", state.tables.length ? state.tables : [emptyCard("tables")]);
+  renderCards("forms", state.forms.length ? state.forms : [emptyCard("forms")]);
   setMode(state.mode);
   loadApps();
 })();
