@@ -4,6 +4,7 @@ Status: draft | approved | building | done | blocked
 Date: YYYY-MM-DD
 Account (checked at start): <Web Client header text> | Designer scope: <ScopeType / ScopeName>
 Evidence: full | light   Guide: none | PDF | Word (.docx)
+Final scope for Forms: User | Group <name> | Site   Group/Site save approved in the request: yes (quote) | no, ask first | n/a
 Build prefix: FX_ | <other, from the request>   Existing tenant objects already starting with it (not factory-owned): <none | list>
 
 ## Goal

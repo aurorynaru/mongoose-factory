@@ -16,6 +16,8 @@ Where:  <the part, e.g. "Shipment orders table", "FX_ListShipments method", "Sav
 Change: <what should be different, e.g. "add a Customer column after Storer">
 Why (optional):
 Don't touch: <anything that must not change, or "everything else">
+Scope (User / Group <name> / Site) — default User; Group or Site is saved only after the User-scope version passes: User
+Group/Site save approved: not needed (User scope)
 Done means: <what I'll see at runtime>
 ```
 
@@ -29,6 +31,8 @@ Target: FX_ApiPage/index.html
 Where:  Shipment orders table
 Change: show the order date as DD/MM/YYYY instead of YYYY-MM-DD
 Don't touch: the API calls, paging, other columns
+Scope (User / Group <name> / Site) — default User; Group or Site is saved only after the User-scope version passes: User
+Group/Site save approved: not needed (User scope)
 Done means: Load first page shows dates like 25/09/2026
 ```
 

@@ -17,11 +17,34 @@
   var PREFIX_RE = /^[A-Za-z][A-Za-z0-9]+_$/;
   var APP_PREFIX_RE = /^[A-Za-z][A-Za-z0-9]+_/; // the prefix at the start of an app folder name
 
+  // Final scope for Forms (AGENTS.md § Build mode). Group/Site steps are from docs/mongoose/guides/
+  // editing-scope-and-versions.md and web-designer.md and are unverified in this tenant.
+  var SCOPE_LATER = " Claude builds and checks it in User scope first, then saves it to this scope as a last, separate step." +
+    " That step needs Site Developer editing permission and hasn't been tried in this tenant yet, so it runs as a small probe first." +
+    " IDOs, tables, strings, themes and assets have no scope: they are tenant-wide either way.";
+  var SCOPE_HINTS = {
+    User: "Only your account sees the Form. Every build so far used User scope.",
+    Group: "Everyone in the group sees the Form." + SCOPE_LATER,
+    Site: "Every user on the site sees the Form." + SCOPE_LATER
+  };
+
+  // How a Form in section 4b connects to another Form, with its knowledge state:
+  // tile = mongoose-builder playbooks/portal-shell.md §4 (observed, EXP-115–118); button = Run Form, used in the
+  // portal work (events-and-scripts.md) but not checked on its own; embedded = not tried in this tenant.
+  var CONNECT_ORDER = ["standalone", "tile", "button", "embedded"];
+  var CONNECT = {
+    standalone: { text: "on its own", hint: "Opened from the Web Client like any other Form." },
+    tile: { text: "tile in another Form's grid", hint: "A small Form repeated once per row of the other Form's grid. This has worked once here (FX_ItemsTile in FX_CustomerPortal)." },
+    button: { text: "opened by a button on another Form", hint: "A button on the other Form opens this one, as a popup or in its place. Used in the portal work but not checked on its own here, so it runs as a small probe first." },
+    embedded: { text: "embedded in another Form's region", hint: "Shown live inside a region of the other Form. Not tried in this tenant: it runs as a small probe first, and Claude may suggest a tile or a button instead." }
+  };
+
   // ---- State ----
   var state = {
     mode: "build",
     apps: [],           // from /api/apps
-    rows: { fields: [], buttons: [] }
+    rows: { fields: [] },
+    forms: []           // section 4b cards, read back from the page on every refresh
   };
 
   // ---- Helpers ----
@@ -114,6 +137,32 @@
     });
   }
 
+  // Scope controls: group name only for Group, the approval switch only for Group or Site.
+  function updateScope(form, d) {
+    var scope = d.scope || "User";
+    form.querySelector("[data-scope-hint]").textContent = SCOPE_HINTS[scope];
+    form.querySelector("[data-scope-group]").hidden = scope !== "Group";
+    form.querySelector("[data-scope-approve]").hidden = scope === "User";
+  }
+
+  // Prompt text for the scope lines (same wording in both templates).
+  function scopeText(d) {
+    if (d.scope === "Group") { return "Group" + (d.scopeGroup.trim() ? " " + d.scopeGroup.trim() : " (group name:)"); }
+    return d.scope === "Site" ? "Site" : "User";
+  }
+
+  function scopeApprovalText(d) {
+    if (!d.scope || d.scope === "User") { return "not needed (User scope)"; }
+    return d.scopeApproved ? "yes" : "no, ask me first";
+  }
+
+  function scopeProblems(d, where, add) {
+    if (d.scope === "Group" && !d.scopeGroup.trim()) { add(where + "name the group for Group scope.", "scopeGroup"); }
+    if (d.scope === "Group" || d.scope === "Site") {
+      if (!d.scopeApproved) { add(where + "the " + d.scope + " save isn't approved, so Claude will stop and ask before that step.", "scopeApproved", true); }
+    }
+  }
+
   function findApp(name) {
     for (var i = 0; i < state.apps.length; i++) { if (state.apps[i].app === name) { return state.apps[i]; } }
     return null;
@@ -123,7 +172,7 @@
   function saveDraft() {
     try {
       localStorage.setItem(DRAFT_KEY, JSON.stringify({
-        mode: state.mode, build: readForm(buildForm), change: readForm(changeForm), rows: state.rows
+        mode: state.mode, build: readForm(buildForm), change: readForm(changeForm), rows: state.rows, forms: state.forms
       }));
     } catch (e) { log("draft not saved", e); }
   }
@@ -133,68 +182,183 @@
       var draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null");
       if (!draft) { return; }
       state.mode = draft.mode === "change" ? "change" : "build";
-      state.rows = draft.rows || state.rows;
+      state.rows = { fields: (draft.rows || {}).fields || [] };
+      state.forms = draft.forms || [cardFromOldDraft(draft)];
       writeForm(buildForm, draft.build || {});
       writeForm(changeForm, draft.change || {});
       setStatus("Draft restored from this browser.");
     } catch (e) { log("draft not loaded", e); }
   }
 
+  // Drafts saved before section 4b had cards kept one Form's details in the build form and rows.buttons.
+  function cardFromOldDraft(draft) {
+    var b = draft.build || {};
+    var card = emptyCard();
+    card.layout = b.layout || "";
+    card.layoutOther = b.layoutOther || "";
+    card.fields = b.formFields || "";
+    card.readOnly = b.readOnly || "";
+    card.dropdowns = b.dropdowns || "";
+    card.buttons = (draft.rows || {}).buttons || [];
+    return card;
+  }
+
   // ---- Repeating rows: IDO fields and form buttons ----
+  // [property, control, example placeholder]. The examples follow the stock-count example used in index.html.
   var ROW_COLUMNS = {
-    fields: [["name", "text"], ["type", "select"], ["length", "text"], ["required", "check"], ["key", "check"], ["default", "text"]],
-    buttons: [["caption", "text"], ["action", "text"], ["result", "text"]]
+    fields: [["name", "text", "e.g. CountedQty"], ["type", "select"], ["length", "text", "e.g. 18,2"], ["required", "check"], ["key", "check"], ["default", "text", "e.g. 0"]],
+    buttons: [["caption", "text", "e.g. Save count"], ["action", "text", "e.g. Saves the row"], ["result", "text", 'e.g. "Count saved"']]
   };
 
+  // One table row; each control's aria-label is its property name. onRemove(tr) runs when × is clicked.
+  function makeRow(list, row, onRemove) {
+    var tr = el("tr");
+    ROW_COLUMNS[list].forEach(function (col) {
+      var td = el("td");
+      var input;
+      if (col[1] === "select") {
+        input = el("select");
+        FIELD_TYPES.forEach(function (t) { var o = el("option", "", t); o.value = t; input.appendChild(o); });
+        input.value = row[col[0]] || FIELD_TYPES[0];
+      } else if (col[1] === "check") {
+        input = el("input");
+        input.type = "checkbox";
+        input.checked = !!row[col[0]];
+      } else {
+        input = el("input");
+        input.value = row[col[0]] || "";
+        if (col[2]) { input.placeholder = col[2]; }
+      }
+      input.setAttribute("aria-label", col[0]);
+      input.addEventListener(col[1] === "text" ? "input" : "change", function () {
+        row[col[0]] = col[1] === "check" ? input.checked : input.value;
+        refresh();
+      });
+      td.appendChild(input);
+      tr.appendChild(td);
+    });
+    var remove = el("button", "FX_Remove", "×");
+    remove.type = "button";
+    remove.title = "Remove this row";
+    remove.addEventListener("click", function () { onRemove(tr); });
+    var removeCell = el("td");
+    removeCell.appendChild(remove);
+    tr.appendChild(removeCell);
+    return tr;
+  }
+
+  // IDO fields (section 4a) live in state.rows.fields.
   function renderRows(list) {
     var body = document.querySelector('[data-list="' + list + '"] tbody');
     body.innerHTML = "";
     state.rows[list].forEach(function (row, index) {
-      var tr = el("tr");
-      ROW_COLUMNS[list].forEach(function (col) {
-        var td = el("td");
-        var input;
-        if (col[1] === "select") {
-          input = el("select");
-          FIELD_TYPES.forEach(function (t) { var o = el("option", "", t); o.value = t; input.appendChild(o); });
-          input.value = row[col[0]] || FIELD_TYPES[0];
-        } else if (col[1] === "check") {
-          input = el("input");
-          input.type = "checkbox";
-          input.checked = !!row[col[0]];
-        } else {
-          input = el("input");
-          input.value = row[col[0]] || "";
-        }
-        input.setAttribute("aria-label", col[0]);
-        input.addEventListener(col[1] === "text" ? "input" : "change", function () {
-          row[col[0]] = col[1] === "check" ? input.checked : input.value;
-          refresh();
-        });
-        td.appendChild(input);
-        tr.appendChild(td);
-      });
-      var remove = el("button", "FX_Remove", "×");
-      remove.type = "button";
-      remove.title = "Remove this row";
-      remove.addEventListener("click", function () {
+      body.appendChild(makeRow(list, row, function () {
         state.rows[list].splice(index, 1);
         renderRows(list);
         refresh();
-      });
-      var removeCell = el("td");
-      removeCell.appendChild(remove);
-      tr.appendChild(removeCell);
-      body.appendChild(tr);
+      }));
     });
   }
 
   function addRow(list) {
-    state.rows[list].push(list === "fields" ? { type: FIELD_TYPES[0] } : {});
+    state.rows[list].push({ type: FIELD_TYPES[0] });
     renderRows(list);
     var inputs = document.querySelectorAll('[data-list="' + list + '"] tbody tr:last-child input');
     if (inputs.length) { inputs[0].focus(); }
     refresh();
+  }
+
+  // ---- Form cards (section 4b): one per Form ----
+  // The cards in the page are the source of truth: readCards() rebuilds state.forms on every refresh,
+  // and renderCards() rebuilds the page from a list (start-up, add, remove, clear).
+  var cardList = document.getElementById("FX_FormCards");
+  var cardTemplate = document.getElementById("FX_FormCardTemplate");
+
+  function emptyCard() {
+    return { connect: "standalone", buttons: [] };
+  }
+
+  function removeTableRow(tr) {
+    tr.remove();
+    refresh();
+  }
+
+  function renderCards(cards) {
+    cardList.innerHTML = "";
+    cards.forEach(function (card, index) {
+      var node = cardTemplate.content.firstElementChild.cloneNode(true);
+      Array.prototype.forEach.call(node.querySelectorAll("[data-key]"), function (input) {
+        var key = input.getAttribute("data-key");
+        input.name = "form" + (index + 1) + "_" + key; // unique per card, so problems can jump to it
+        if (input.type === "radio") { input.checked = card[key] === input.value; } else if (key in card) { input.value = card[key]; }
+      });
+      var body = node.querySelector('[data-list="buttons"] tbody');
+      (card.buttons || []).forEach(function (row) { body.appendChild(makeRow("buttons", row, removeTableRow)); });
+      node.querySelector("[data-card-add-button]").addEventListener("click", function () {
+        body.appendChild(makeRow("buttons", {}, removeTableRow));
+        body.querySelector("tr:last-child input").focus();
+        refresh();
+      });
+      var remove = node.querySelector("[data-card-remove]");
+      remove.hidden = cards.length < 2;
+      remove.addEventListener("click", function () {
+        var now = readCards();
+        now.splice(index, 1);
+        renderCards(now);
+        setStatus("Form " + (index + 1) + " removed.");
+        refresh();
+      });
+      cardList.appendChild(node);
+    });
+  }
+
+  function readCards() {
+    return Array.prototype.map.call(cardList.children, function (node) {
+      var card = { buttons: [] };
+      Array.prototype.forEach.call(node.querySelectorAll("[data-key]"), function (input) {
+        var key = input.getAttribute("data-key");
+        if (input.type !== "radio") { card[key] = input.value; } else if (input.checked) { card[key] = input.value; } else if (!(key in card)) { card[key] = ""; }
+      });
+      Array.prototype.forEach.call(node.querySelectorAll('[data-list="buttons"] tbody tr'), function (tr) {
+        var row = {};
+        Array.prototype.forEach.call(tr.querySelectorAll("input"), function (input) { row[input.getAttribute("aria-label")] = input.value; });
+        card.buttons.push(row);
+      });
+      return card;
+    });
+  }
+
+  function addCard() {
+    var cards = readCards();
+    cards.push(emptyCard());
+    renderCards(cards);
+    refresh();
+    var name = cardList.lastElementChild.querySelector('[data-key="name"]');
+    name.closest(".FX_FormCard").scrollIntoView({ behavior: "smooth", block: "start" });
+    name.focus({ preventScroll: true });
+  }
+
+  // Every Form name in the request: the cards (when 4b is shown) first, then section 3, without repeats.
+  function formNames(d) {
+    var names = [];
+    var push = function (n) { n = (n || "").trim(); if (n && names.indexOf(n) < 0) { names.push(n); } };
+    if (shown("form", d)) { state.forms.forEach(function (f) { push(f.name); }); }
+    (d.formName || "").split(/[,\n]/).forEach(push);
+    return names;
+  }
+
+  // Card titles, the connection hint and fields, and the "Connects to" suggestions.
+  function updateCards(d) {
+    Array.prototype.forEach.call(cardList.children, function (node, i) {
+      var f = state.forms[i];
+      var connect = CONNECT[f.connect] ? f.connect : "standalone";
+      node.querySelector("[data-card-title]").textContent = "Form " + (i + 1) + (f.name.trim() ? ": " + f.name.trim() : "");
+      node.querySelector("[data-connect-hint]").textContent = CONNECT[connect].hint;
+      node.querySelector("[data-connect-detail]").hidden = connect === "standalone";
+    });
+    var list = document.getElementById("FX_FormNameList");
+    list.innerHTML = "";
+    formNames(d).forEach(function (n) { var o = el("option"); o.value = n; list.appendChild(o); });
   }
 
   // ---- Prefill from assets/ (GET /api/apps) ----
@@ -333,7 +497,7 @@
 
     out.push("## 3. Names");
     out.push(line("Prefix (every new object name starts with it; keep FX_ unless you want another)", d.prefix));
-    out.push(line("Form name(s) (" + p + "…)", d.formName));
+    out.push(line("Form name(s) (" + p + "…)", formNames(d).join(", ")));
     out.push(line("IDO / table name (" + p + "…)", d.idoName));
     out.push(line("Asset folder (" + p + "…/index.html)", d.assetFolder));
     out.push("Leave blank and Claude will propose names in the plan for you to approve.");
@@ -355,19 +519,8 @@
       details.push("");
     }
     if (shown("form", d)) {
-      details.push("### 4b. Form");
-      var layouts = ["grid + detail", "grid only", "detail only"].map(function (l) { return box(d.layout === l) + " " + l; });
-      details.push("Layout: " + layouts.join("   ") + "   " + box(d.layout === "other") + " other:" + ((d.layoutOther || "").trim() ? " " + d.layoutOther.trim() : ""));
-      details.push("Fields shown, in order (with captions as the user should see them):");
-      var shownFields = bullets(d.formFields);
-      details.push.apply(details, shownFields.length ? shownFields : ["-"]);
-      details.push(line("Read-only fields", d.readOnly));
-      details.push(line("Dropdowns / validation (field → allowed values or source)", d.dropdowns));
-      details.push("Buttons — one per line: caption | what happens when clicked | what the user sees after");
-      var buttons = state.rows.buttons.filter(function (r) { return (r.caption || "").trim(); });
-      if (buttons.length === 0) { details.push("-"); }
-      buttons.forEach(function (r) { details.push("- " + [r.caption.trim(), (r.action || "").trim(), (r.result || "").trim()].join(" | ")); });
-      details.push("");
+      details.push("### 4b. Forms (one block per Form)");
+      state.forms.forEach(function (f, i) { details.push.apply(details, formBlock(f, i, p)); });
     }
     if (shown("portal", d)) {
       details.push("### 4c. Portal / shell");
@@ -399,9 +552,11 @@
     out.push("Must work on: " + ["desktop", "tablet", "phone"].map(function (v) { return box(d.device.indexOf(v) >= 0) + " " + v; }).join("  "));
     out.push("");
 
-    out.push("## 6. Approvals and limits");
+    out.push("## 6. Scope, approvals and limits");
+    out.push(line("Final scope for Forms (User / Group <name> / Site) — default User; Group or Site is saved only after the User-scope version passes", scopeText(d)));
+    out.push(line("Group/Site save approved", scopeApprovalText(d)));
     out.push(line('Existing objects the factory didn\'t build that may be changed (name each one, or "none")', d.nonFx));
-    out.push(line("Tenant-wide steps allowed (Group/Site save, FormSync, deployment, cache unload) — default none", d.tenantWide));
+    out.push(line("Other tenant-wide steps allowed (FormSync, deployment, metadata cache unload) — default none", d.tenantWide));
     out.push(line("Outbound calls allowed (exact endpoint + verb) — default none beyond those already approved", d.outbound));
     out.push(line("Data I must not touch", d.noTouch));
     out.push("");
@@ -422,6 +577,58 @@
     return out.join("\n");
   }
 
+  // One "#### Form N" block of section 4b. "Connects to" and "Linked by" only appear for a connected Form,
+  // so a blank there still means "ask me".
+  function formBlock(f, index, p) {
+    var out = ["#### Form " + (index + 1)];
+    var connect = CONNECT[f.connect] ? f.connect : "standalone";
+    var text = function (v) { return (v || "").trim(); };
+    out.push(line("Form name (" + p + "…)", f.name));
+    out.push(line("Data it shows (IDO)", f.ido));
+    out.push(line("How it connects (" + CONNECT_ORDER.map(function (k) { return CONNECT[k].text; }).join(" / ") + ")", CONNECT[connect].text));
+    if (connect !== "standalone") {
+      out.push(line("Connects to (which Form)", f.parent));
+      out.push(line("Linked by (what it passes or filters on)", f.link));
+    }
+    var layouts = ["grid + detail", "grid only", "detail only"].map(function (l) { return box(f.layout === l) + " " + l; });
+    out.push("Layout: " + layouts.join("   ") + "   " + box(f.layout === "other") + " other:" + (text(f.layoutOther) ? " " + text(f.layoutOther) : ""));
+    out.push("Fields shown, in order (with captions as the user should see them):");
+    var shownFields = bullets(f.fields);
+    out.push.apply(out, shownFields.length ? shownFields : ["-"]);
+    out.push(line("Read-only fields", f.readOnly));
+    out.push(line("Dropdowns / validation (field → allowed values or source)", f.dropdowns));
+    out.push(line("Second grid on this Form (another IDO, e.g. the selected row's lines)", f.secondGrid));
+    out.push("Buttons — one per line: caption | what happens when clicked | what the user sees after");
+    var buttons = (f.buttons || []).filter(function (r) { return text(r.caption); });
+    if (buttons.length === 0) { out.push("-"); }
+    buttons.forEach(function (r) { out.push("- " + [text(r.caption), text(r.action), text(r.result)].join(" | ")); });
+    out.push("");
+    return out;
+  }
+
+  // Section 4b checks: names, and that each connected Form points at a Form of this request.
+  function cardProblems(d, prefix, add) {
+    var seen = {};
+    var names = formNames(d);
+    state.forms.forEach(function (f, i) {
+      var where = "Section 4b, Form " + (i + 1) + ": ";
+      var field = "form" + (i + 1) + "_";
+      var name = (f.name || "").trim();
+      var parent = (f.parent || "").trim();
+      if (name && prefix && name.indexOf(prefix) !== 0) { add(where + name + " doesn't start with " + prefix + ".", field + "name", true); }
+      if (name && seen[name]) { add(where + name + " is also the name of Form " + seen[name] + ".", field + "name", true); }
+      if (name && !seen[name]) { seen[name] = i + 1; }
+      if (!f.connect || f.connect === "standalone") { return; }
+      if (!parent) {
+        add(where + "say which Form it connects to, or Claude will ask.", field + "parent", true);
+      } else if (parent === name) {
+        add(where + "it can't connect to itself.", field + "parent", true);
+      } else if (names.indexOf(parent) < 0) {
+        add(where + parent + " isn't a Form in this request. Adding a tile, button or region to an existing Form changes that Form (sections 2 and 6).", field + "parent", true);
+      }
+    });
+  }
+
   // Each problem names the field it is about, so the list can jump there.
   function buildProblems(d) {
     var problems = [];
@@ -438,6 +645,8 @@
         if (value && value.indexOf(prefix) !== 0) { add("Section 3: " + value + " doesn't start with " + prefix + ". Changing an object the factory didn't build needs your approval in section 6.", name, true); }
       });
     }
+    if (shown("form", d)) { cardProblems(d, PREFIX_RE.test(prefix) ? prefix : "", add); }
+    scopeProblems(d, "Section 6: ", add);
     if (shown("changeNonFx", d) && !d.nonFx.trim()) { add("Section 6: name the object(s) the factory didn't build that may be changed.", "nonFx"); }
     if (shown("changeFx", d) && !d.existingApp && !d.formName.trim() && !d.assetFolder.trim()) { add("Section 2/3: name the existing factory object to change.", "existingApp", true); }
     if ((shown("dashboard", d) || shown("webpage", d)) && d.apiCalls.trim() && !d.outbound.trim()) {
@@ -458,6 +667,8 @@
       line("Change", d.change),
       line("Why (optional)", d.why),
       line("Don't touch", d.dontTouch),
+      line("Scope (User / Group <name> / Site) — default User; Group or Site is saved only after the User-scope version passes", scopeText(d)),
+      line("Group/Site save approved", scopeApprovalText(d)),
       line("Done means", d.done)
     ].join("\n");
   }
@@ -468,6 +679,7 @@
     if (!d.change.trim()) { problems.push({ text: "Change: say what should be different.", field: "change" }); }
     if (!d.done.trim()) { problems.push({ text: "Done means: say what you will see at runtime.", field: "done" }); }
     if (!d.dontTouch.trim()) { problems.push({ text: 'Don\'t touch is blank: Claude keeps everything else as it is, but naming what must not change (or "everything else") is clearer.', field: "dontTouch", warn: true }); }
+    scopeProblems(d, "Scope: ", function (text, field, warn) { problems.push({ text: text, field: field, warn: !!warn }); });
     return problems;
   }
 
@@ -490,8 +702,14 @@
     input.focus({ preventScroll: true });
   }
 
+  // Rebuilt only when the list changes: leaving a field fires "change", and rebuilding then would swallow
+  // the click on a problem that caused it.
+  var shownProblems = "";
   function renderProblems(problems) {
     var form = activeForm();
+    var key = state.mode + JSON.stringify(problems);
+    if (key === shownProblems) { return; }
+    shownProblems = key;
     problemList.innerHTML = "";
     problems.forEach(function (p) {
       var li = el("li", p.warn ? "is-warn" : "");
@@ -515,13 +733,14 @@
     }
   }
 
-  // A section counts as filled once any of its controls holds something other than its default.
+  // A section counts as filled once any of its controls holds something other than its default
+  // (so the pre-selected User scope and the FX_ prefix don't count).
   function sectionFilled(fieldset) {
     return Array.prototype.some.call(fieldset.querySelectorAll("input, textarea, select"), function (input) {
       if (input.closest("[hidden]")) { return false; }
-      if (input.type === "checkbox" || input.type === "radio") { return input.checked; }
+      if (input.type === "checkbox" || input.type === "radio") { return input.checked && !input.defaultChecked; }
       if (input.tagName === "SELECT") { return input.selectedIndex > 0; }
-      return input.value.trim() !== "";
+      return input.value.trim() !== "" && input.value !== input.defaultValue;
     });
   }
 
@@ -556,11 +775,15 @@
     var problems;
     if (state.mode === "build") {
       var d = readForm(buildForm);
+      state.forms = readCards();
+      updateCards(d);
       updateSections(d);
+      updateScope(buildForm, d);
       promptBox.textContent = buildPrompt(d);
       problems = buildProblems(d);
     } else {
       var c = readForm(changeForm);
+      updateScope(changeForm, c);
       promptBox.textContent = changePrompt(c);
       problems = changeProblems(c);
     }
@@ -657,9 +880,9 @@
     disarmReset();
     if (state.mode === "build") {
       buildForm.reset();
-      state.rows = { fields: [], buttons: [] };
+      state.rows = { fields: [] };
       renderRows("fields");
-      renderRows("buttons");
+      renderCards([emptyCard()]);
     } else {
       changeForm.reset();
       showFacts();
@@ -682,6 +905,7 @@
   Array.prototype.forEach.call(document.querySelectorAll("[data-add]"), function (button) {
     button.addEventListener("click", function () { addRow(button.getAttribute("data-add")); });
   });
+  document.getElementById("FX_AddForm").addEventListener("click", addCard);
   copyButton.addEventListener("click", copyPrompt);
   document.getElementById("FX_Download").addEventListener("click", downloadPrompt);
   resetButton.addEventListener("click", resetForm);
@@ -693,7 +917,7 @@
     if (saved) { pendingSelects = { existingApp: (saved.build || {}).existingApp, app: (saved.change || {}).app }; }
   } catch (e) { log("draft selects not read", e); }
   renderRows("fields");
-  renderRows("buttons");
+  renderCards(state.forms.length ? state.forms : [emptyCard()]);
   setMode(state.mode);
   loadApps();
 })();

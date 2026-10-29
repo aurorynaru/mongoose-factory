@@ -44,14 +44,24 @@ Relations / lookups (field → other table or IDO):
 Calculated fields (formula in words):
 Test rows to create (fake data only):
 
-### 4b. Form
+### 4b. Forms (one block per Form)
+#### Form 1
+Form name (FX_…):
+Data it shows (IDO):
+How it connects (on its own / tile in another Form's grid / opened by a button on another Form / embedded in another Form's region): on its own
 Layout: [ ] grid + detail   [ ] grid only   [ ] detail only   [ ] other:
 Fields shown, in order (with captions as the user should see them):
 -
 Read-only fields:
 Dropdowns / validation (field → allowed values or source):
+Second grid on this Form (another IDO, e.g. the selected row's lines):
 Buttons — one per line: caption | what happens when clicked | what the user sees after
 -
+
+(Copy the "#### Form" block for each further Form. A Form that isn't "on its own" also gets these two lines
+after "How it connects":
+Connects to (which Form):
+Linked by (what it passes or filters on):)
 
 ### 4c. Portal / shell
 Pages (e.g. sign-in, home, list, cart) and what each shows:
@@ -72,9 +82,11 @@ Mock screenshot / reference (attach or give a path):
 Colors / theme / fonts (or "match <an existing page>"):
 Must work on: [ ] desktop  [ ] tablet  [ ] phone
 
-## 6. Approvals and limits
+## 6. Scope, approvals and limits
+Final scope for Forms (User / Group <name> / Site) — default User; Group or Site is saved only after the User-scope version passes: User
+Group/Site save approved: not needed (User scope)
 Existing objects the factory didn't build that may be changed (name each one, or "none"):
-Tenant-wide steps allowed (Group/Site save, FormSync, deployment, cache unload) — default none:
+Other tenant-wide steps allowed (FormSync, deployment, metadata cache unload) — default none:
 Outbound calls allowed (exact endpoint + verb) — default none beyond those already approved:
 Data I must not touch:
 
@@ -101,9 +113,11 @@ Guide with pictures: none / PDF / Word (.docx) (default none):
 | 3 Prefix | Leaving `FX_` is fine. Another prefix (letter, letters/digits, then `_`, e.g. `ACME_`) is checked against the tenant first; existing objects that already start with it are not the factory's and still need approval. |
 | 3 Names | Names are proposed and need a round of approval; renaming later means re-wiring handlers and components. |
 | 4a Fields with type + length | Types and lengths become schema; changing them after rows exist is a schema change on the table. |
+| 4b One block per Form, "How it connects" | With several Forms in one block, Claude can't tell which fields and buttons belong where, or which Form must exist first. A Form is built before the Form that points to it. Tile in a grid is observed (EXP-115–118); opened by a button runs as a small probe; embedded in a region is **unverified**. |
 | 4b Buttons "what happens / what the user sees" | Event handlers, scripts and messages can't be written without it. |
 | 4c/4d Data source | Unknown IDO or property names are the most common blocker: Claude reads them back from the tenant first. |
 | 5 Mock screenshot | Without it the page gets the generic look of the existing FX_ pages. |
+| 6 Scope | Forms stay in User scope (only you see them). Group or Site makes Claude build and check in User scope first, then save to that scope as a last, separately approved step. That step is **unverified** here and needs Site Developer editing permission. Write `yes` after "Group/Site save approved", or `no, ask me first`. |
 | 6 Approvals | Objects the factory didn't build, tenant-wide steps and new API calls are **stopped**, not skipped around, until approved for this task (AGENTS.md). |
 | 9 Evidence and guide | Default is full evidence and no guide. A light build has no step pictures, so a pictured guide later means redoing the steps. |
 
@@ -133,7 +147,7 @@ Data shown: FX_InventoryItems, already loaded by the page (QuantityOnHand, Reord
 KPI card: count of items above 0 and at or below reorder level; total units short; most urgent item; count out of stock.
 Filters: clicking the card filters the table to low items, clicking again shows all. Add a "Low Stock" filter button.
 ## 6. Approvals and limits
-Existing objects the factory didn't build: none. Tenant-wide steps: none.
+Final scope for Forms: User. Existing objects the factory didn't build: none. Tenant-wide steps: none.
 ## 7. Done means
 - After Refresh data, the card shows 1 low item, 2 units short, FX-ITEM-002 most urgent, +1 out of stock.
 - Clicking the card shows only the low rows.

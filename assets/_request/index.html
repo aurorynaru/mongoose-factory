@@ -30,8 +30,8 @@
   <form id="FX_BuildForm" class="FX_Form" data-mode="build" autocomplete="off">
     <fieldset id="FX_S1" data-nav="1|Goal">
       <legend><span class="FX_Num">1</span>Goal <span class="FX_Req">Required</span></legend>
-      <label>What I want, in one or two sentences<textarea name="goal" rows="2"></textarea></label>
-      <label>Who uses it and for what<textarea name="users" rows="2"></textarea></label>
+      <label>What I want, in one or two sentences<textarea name="goal" rows="2" placeholder="e.g. A form where warehouse staff record stock counts per item and see the difference from the system quantity."></textarea></label>
+      <label>Who uses it and for what<textarea name="users" rows="2" placeholder="e.g. Warehouse team leads, once a week, to count shelves and flag items for a recount."></textarea></label>
     </fieldset>
 
     <fieldset id="FX_S2" data-nav="2|Build type">
@@ -54,20 +54,20 @@
     <fieldset id="FX_S3" data-nav="3|Names">
       <legend><span class="FX_Num">3</span>Names</legend>
       <div class="FX_PrefixRow">
-        <label>Prefix<input name="prefix" value="FX_" spellcheck="false" autocapitalize="off"></label>
+        <label>Prefix<input name="prefix" value="FX_" placeholder="e.g. FX_ or ACME_" spellcheck="false" autocapitalize="off"></label>
         <p class="FX_Hint">Every new object name starts with it. Keep <code>FX_</code> or use your own, e.g. <code>ACME_</code>: a letter, letters or digits, then <code>_</code>. Existing objects that already start with it but weren't built by the factory still need your approval.</p>
       </div>
       <p class="FX_Hint">Leave the names blank and Claude will propose them in the plan for you to approve.</p>
       <div class="FX_Grid3">
-        <label>Form name(s)<input name="formName" data-fx data-placeholder="{p}…" placeholder="FX_…"></label>
-        <label>IDO / table name<input name="idoName" data-fx data-placeholder="{p}…" placeholder="FX_…"></label>
-        <label>Asset folder<input name="assetFolder" data-fx data-placeholder="{p}…/index.html" placeholder="FX_…/index.html"></label>
+        <label>Form name(s) <small>Forms named in 4b are added</small><input name="formName" data-fx data-placeholder="e.g. {p}StockCounts" placeholder="e.g. FX_StockCounts"></label>
+        <label>IDO / table name<input name="idoName" data-fx data-placeholder="e.g. {p}StockCounts" placeholder="e.g. FX_StockCounts"></label>
+        <label>Asset folder<input name="assetFolder" data-fx data-placeholder="e.g. {p}StockCount/index.html" placeholder="e.g. FX_StockCount/index.html"></label>
       </div>
     </fieldset>
 
     <fieldset id="FX_S4a" data-show-for="ido" data-nav="4a|IDO / table">
       <legend><span class="FX_Num">4a</span>IDO / table</legend>
-      <label>Is the data in an existing IDO? <small>Name it, or write "new"</small><input name="idoExisting"></label>
+      <label>Is the data in an existing IDO? <small>Name it, or write "new"</small><input name="idoExisting" placeholder="e.g. new  (or an existing IDO such as FX_Items)"></label>
       <div class="FX_ListHead"><span>Fields</span><button type="button" class="FX_Small" data-add="fields">Add field</button></div>
       <div class="FX_TableWrap">
         <table class="FX_Rows" data-list="fields">
@@ -75,40 +75,24 @@
           <tbody></tbody>
         </table>
       </div>
-      <label>Relations / lookups <small>Field → other table or IDO</small><textarea name="relations" rows="2"></textarea></label>
-      <label>Calculated fields <small>Formula in words</small><textarea name="calculated" rows="2"></textarea></label>
-      <label>Test rows to create <small>Fake data only</small><textarea name="testRows" rows="2"></textarea></label>
+      <label>Relations / lookups <small>Field → other table or IDO</small><textarea name="relations" rows="2" placeholder="e.g. ItemCode → FX_Items (shows the item description)"></textarea></label>
+      <label>Calculated fields <small>Formula in words</small><textarea name="calculated" rows="2" placeholder="e.g. Difference = CountedQty − SystemQty"></textarea></label>
+      <label>Test rows to create <small>Fake data only</small><textarea name="testRows" rows="2" placeholder="e.g. 3 rows: ITEM-001 counted 10, ITEM-002 counted 0, ITEM-003 counted 25"></textarea></label>
     </fieldset>
 
-    <fieldset id="FX_S4b" data-show-for="form" data-nav="4b|Form">
-      <legend><span class="FX_Num">4b</span>Form</legend>
-      <div class="FX_Group">
-        <span class="FX_GroupLabel">Layout</span>
-        <div class="FX_Segment">
-          <label><input type="radio" name="layout" value="grid + detail"><span>Grid + detail</span></label>
-          <label><input type="radio" name="layout" value="grid only"><span>Grid only</span></label>
-          <label><input type="radio" name="layout" value="detail only"><span>Detail only</span></label>
-          <label><input type="radio" name="layout" value="other"><span>Other</span></label>
-        </div>
-      </div>
-      <label>Other layout<input name="layoutOther"></label>
-      <label>Fields shown, in order <small>One per line, with captions as the user should see them</small><textarea name="formFields" rows="3"></textarea></label>
-      <label>Read-only fields<input name="readOnly"></label>
-      <label>Dropdowns / validation <small>Field → allowed values or source</small><textarea name="dropdowns" rows="2"></textarea></label>
-      <div class="FX_ListHead"><span>Buttons</span><button type="button" class="FX_Small" data-add="buttons">Add button</button></div>
-      <div class="FX_TableWrap">
-        <table class="FX_Rows" data-list="buttons">
-          <thead><tr><th>Caption</th><th>What happens when clicked</th><th>What the user sees after</th><th><span class="FX_Sr">Remove</span></th></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
+    <fieldset id="FX_S4b" data-show-for="form" data-nav="4b|Forms">
+      <legend><span class="FX_Num">4b</span>Forms</legend>
+      <p class="FX_Hint">One card per Form. For an app with several Forms, add a card for each and say how it connects to the others. Claude builds a Form before the Form that points to it.</p>
+      <div class="FX_FormCards" id="FX_FormCards" data-list="forms"></div>
+      <button type="button" class="FX_Small FX_AddForm" id="FX_AddForm">Add another form</button>
+      <datalist id="FX_FormNameList"></datalist>
     </fieldset>
 
     <fieldset id="FX_S4c" data-show-for="portal" data-nav="4c|Portal / shell">
       <legend><span class="FX_Num">4c</span>Portal / shell</legend>
-      <label>Pages <small>One per line: page and what it shows</small><textarea name="pages" rows="3"></textarea></label>
-      <label>Menu / navigation items → which page<textarea name="menu" rows="2"></textarea></label>
-      <label>Header content <small>Title, logo, user name</small><input name="header"></label>
+      <label>Pages <small>One per line: page and what it shows</small><textarea name="pages" rows="3" placeholder="e.g. Sign-in: user name and password&#10;Home: a tile for each open count&#10;Count: the stock-count form"></textarea></label>
+      <label>Menu / navigation items → which page<textarea name="menu" rows="2" placeholder="e.g. Home → Home page, Counts → Count page&#10;Sign out → Sign-in page"></textarea></label>
+      <label>Header content <small>Title, logo, user name</small><input name="header" placeholder="e.g. Logo on the left, title &quot;Stock counts&quot;, signed-in user name on the right"></label>
       <div class="FX_Group">
         <span class="FX_GroupLabel">Sign-in needed?</span>
         <div class="FX_Segment">
@@ -116,24 +100,24 @@
           <label><input type="radio" name="signIn" value="yes"><span>Yes</span></label>
         </div>
       </div>
-      <label>Users come from<input name="signInSource"></label>
-      <label>Tiles / cards <small>Which data, which fields on a tile, click action</small><textarea name="tiles" rows="2"></textarea></label>
+      <label>Users come from<input name="signInSource" placeholder="e.g. FX_LoginUsers table (hashed passwords)"></label>
+      <label>Tiles / cards <small>Which data, which fields on a tile, click action</small><textarea name="tiles" rows="2" placeholder="e.g. One tile per open count: location, number of items, due date. Click opens the Count page."></textarea></label>
     </fieldset>
 
     <fieldset id="FX_S4d" data-show-for="dashboard webpage" data-nav="4d|Web page / dashboard">
       <legend><span class="FX_Num">4d</span>Web page / dashboard</legend>
-      <label>Data shown <small>Which IDO or API, which fields</small><textarea name="dataShown" rows="2"></textarea></label>
-      <label>KPI cards / charts / tables <small>What each one counts or shows</small><textarea name="widgets" rows="3"></textarea></label>
-      <label>Filters, sorting, refresh<input name="filters"></label>
-      <label>API calls <small>Endpoint + verb. Only approved calls run; new ones need approval in section 6</small><textarea name="apiCalls" rows="2"></textarea></label>
+      <label>Data shown <small>Which IDO or API, which fields</small><textarea name="dataShown" rows="2" placeholder="e.g. FX_InventoryItems: ItemCode, Description, QuantityOnHand, ReorderLevel"></textarea></label>
+      <label>KPI cards / charts / tables <small>What each one counts or shows</small><textarea name="widgets" rows="3" placeholder="e.g. KPI card: items at or below reorder level&#10;Chart: quantity on hand by location&#10;Table: all items, low ones highlighted"></textarea></label>
+      <label>Filters, sorting, refresh<input name="filters" placeholder="e.g. Filter by location, sort by quantity, a Refresh button"></label>
+      <label>API calls <small>Endpoint + verb. Only approved calls run; new ones need approval in section 6</small><textarea name="apiCalls" rows="2" placeholder="e.g. none  (or GET &lt;endpoint&gt; to list shipment orders)"></textarea></label>
     </fieldset>
 
     <p class="FX_Empty" id="FX_NoDetails">Section 4 asks about the build types you pick in section 2.</p>
 
     <fieldset id="FX_S5" data-nav="5|Look and feel">
       <legend><span class="FX_Num">5</span>Look and feel</legend>
-      <label>Mock screenshot / reference <small>A path, e.g. <code>mocks/asn-dashboard.png</code>. Paste the image into Claude Code with the prompt</small><input name="mock"></label>
-      <label>Colors / theme / fonts <small>Or "match" an existing page, e.g. "match FX_Inventory"</small><input name="theme"></label>
+      <label>Mock screenshot / reference <small>A path, e.g. <code>mocks/asn-dashboard.png</code>. Paste the image into Claude Code with the prompt</small><input name="mock" placeholder="e.g. mocks/stock-count.png"></label>
+      <label>Colors / theme / fonts <small>Or "match" an existing page, e.g. "match FX_Inventory"</small><input name="theme" placeholder="e.g. dark, match FX_Inventory"></label>
       <div class="FX_Group">
         <span class="FX_GroupLabel">Must work on</span>
         <div class="FX_Segment FX_Segment--multi">
@@ -144,23 +128,36 @@
       </div>
     </fieldset>
 
-    <fieldset id="FX_S6" data-nav="6|Approvals and limits">
-      <legend><span class="FX_Num">6</span>Approvals and limits</legend>
+    <fieldset id="FX_S6" data-nav="6|Scope and approvals">
+      <legend><span class="FX_Num">6</span>Scope, approvals and limits</legend>
       <p class="FX_Hint">Objects the factory didn't build, tenant-wide steps and new API calls stay blocked until you approve them here, for this task only.</p>
-      <label>Existing objects the factory didn't build that may be changed <small>Name each one, or write "none"</small><input name="nonFx"></label>
-      <label>Tenant-wide steps allowed <small>Group/Site save, FormSync, deployment, cache unload. Default none</small><input name="tenantWide"></label>
-      <label>Outbound calls allowed <small>Exact endpoint + verb. Default none beyond those already approved</small><input name="outbound"></label>
-      <label>Data I must not touch<input name="noTouch"></label>
+      <div class="FX_Scope">
+        <div class="FX_Group">
+          <span class="FX_GroupLabel">Final scope for Forms <small>Who sees the Form when it's done</small></span>
+          <div class="FX_Segment">
+            <label><input type="radio" name="scope" value="User" checked><span>User</span></label>
+            <label><input type="radio" name="scope" value="Group"><span>Group</span></label>
+            <label><input type="radio" name="scope" value="Site"><span>Site</span></label>
+          </div>
+        </div>
+        <p class="FX_Hint" data-scope-hint></p>
+        <label data-scope-group hidden>Group name <span class="FX_Req">Required for Group</span><input name="scopeGroup" placeholder="e.g. WarehouseLeads"></label>
+        <label class="FX_Switch" data-scope-approve hidden><input type="checkbox" name="scopeApproved" role="switch"><span>I approve saving to this scope once the User-scope version passes</span></label>
+      </div>
+      <label>Existing objects the factory didn't build that may be changed <small>Name each one, or write "none"</small><input name="nonFx" placeholder="e.g. none"></label>
+      <label>Other tenant-wide steps allowed <small>FormSync, deployment, metadata cache unload. Default none</small><input name="tenantWide" placeholder="e.g. none"></label>
+      <label>Outbound calls allowed <small>Exact endpoint + verb. Default none beyond those already approved</small><input name="outbound" placeholder="e.g. none  (or GET &lt;endpoint&gt;, the same one as in 4d)"></label>
+      <label>Data I must not touch<input name="noTouch" placeholder="e.g. real item and order data, the existing Items form"></label>
     </fieldset>
 
     <fieldset id="FX_S7" data-nav="7|Done means">
       <legend><span class="FX_Num">7</span>Done means <span class="FX_Req">Required</span></legend>
-      <label>I will accept it when <small>One per line: what I can see or do at runtime</small><textarea name="done" rows="3"></textarea></label>
+      <label>I will accept it when <small>One per line: what I can see or do at runtime</small><textarea name="done" rows="3" placeholder="e.g. After Save and reopen, the counted quantity is still there&#10;Difference shows −2 for ITEM-001&#10;The Save count button shows &quot;Count saved&quot;"></textarea></label>
     </fieldset>
 
     <fieldset id="FX_S8" data-nav="8|Anything else">
       <legend><span class="FX_Num">8</span>Anything else</legend>
-      <label>Known problems, deadlines, things to avoid<textarea name="other" rows="2"></textarea></label>
+      <label>Known problems, deadlines, things to avoid<textarea name="other" rows="2" placeholder="e.g. Needed by Friday. Keep it usable on a tablet in the warehouse."></textarea></label>
     </fieldset>
 
     <fieldset id="FX_S9" data-nav="9|Evidence and guide">
@@ -192,11 +189,11 @@
         <select name="app" data-apps></select>
       </label>
       <label>Target <span class="FX_Req">Required</span> <small>Object name, e.g. FX_ApiPage/index.html, FX_ApiProbe script</small>
-        <input name="target" list="FX_TargetList">
+        <input name="target" list="FX_TargetList" placeholder="e.g. FX_Inventory/index.html  (pick an app above for suggestions)">
       </label>
       <datalist id="FX_TargetList"></datalist>
       <label>Where <small>The part, e.g. "Shipment orders table", "FX_ListShipments method", "Save button"</small>
-        <input name="where" list="FX_WhereList">
+        <input name="where" list="FX_WhereList" placeholder="e.g. Low stock KPI card">
       </label>
       <datalist id="FX_WhereList"></datalist>
       <div class="FX_Facts" id="FX_Facts" hidden></div>
@@ -204,14 +201,27 @@
 
     <fieldset id="FX_C2" data-nav="|The change">
       <legend>The change</legend>
-      <label>Change <span class="FX_Req">Required</span> <small>What should be different</small><textarea name="change" rows="3"></textarea></label>
-      <label>Why <small>Optional</small><input name="why"></label>
+      <label>Change <span class="FX_Req">Required</span> <small>What should be different</small><textarea name="change" rows="3" placeholder="e.g. Show the units short next to the low-stock count, in red when more than 10."></textarea></label>
+      <label>Why <small>Optional</small><input name="why" placeholder="e.g. Team leads miss the big shortfalls."></label>
     </fieldset>
 
-    <fieldset id="FX_C3" data-nav="|Limits and done">
-      <legend>Limits and done</legend>
-      <label>Don't touch <small>Anything that must not change, or "everything else"</small><input name="dontTouch"></label>
-      <label>Done means <span class="FX_Req">Required</span> <small>What I'll see at runtime</small><textarea name="done" rows="2"></textarea></label>
+    <fieldset id="FX_C3" data-nav="|Scope, limits and done">
+      <legend>Scope, limits and done</legend>
+      <label>Don't touch <small>Anything that must not change, or "everything else"</small><input name="dontTouch" placeholder="e.g. everything else"></label>
+      <div class="FX_Scope">
+        <div class="FX_Group">
+          <span class="FX_GroupLabel">Final scope for Forms <small>Who sees the Form when it's done</small></span>
+          <div class="FX_Segment">
+            <label><input type="radio" name="scope" value="User" checked><span>User</span></label>
+            <label><input type="radio" name="scope" value="Group"><span>Group</span></label>
+            <label><input type="radio" name="scope" value="Site"><span>Site</span></label>
+          </div>
+        </div>
+        <p class="FX_Hint" data-scope-hint></p>
+        <label data-scope-group hidden>Group name <span class="FX_Req">Required for Group</span><input name="scopeGroup" placeholder="e.g. WarehouseLeads"></label>
+        <label class="FX_Switch" data-scope-approve hidden><input type="checkbox" name="scopeApproved" role="switch"><span>I approve saving to this scope once the User-scope version passes</span></label>
+      </div>
+      <label>Done means <span class="FX_Req">Required</span> <small>What I'll see at runtime</small><textarea name="done" rows="2" placeholder="e.g. After Refresh data, the card shows &quot;2 units short&quot; in red."></textarea></label>
     </fieldset>
   </form>
   </div>
@@ -242,6 +252,55 @@
     <p class="FX_Hint">Paste it into Claude Code in this repo. Your draft is kept in this browser only.</p>
   </aside>
 </main>
+
+<!-- One card in section 4b. app.js clones it per Form and names the controls form1_name, form2_name, ... -->
+<template id="FX_FormCardTemplate">
+  <section class="FX_FormCard">
+    <div class="FX_FormCardHead">
+      <h3 data-card-title>Form 1</h3>
+      <button type="button" class="FX_Ghost FX_CardRemove" data-card-remove>Remove this form</button>
+    </div>
+    <div class="FX_Grid2">
+      <label>Form name<input data-key="name" data-placeholder="e.g. {p}StockCounts" spellcheck="false" autocapitalize="off"></label>
+      <label>Data it shows <small>IDO</small><input data-key="ido" data-placeholder="e.g. {p}StockCounts" spellcheck="false" autocapitalize="off"></label>
+    </div>
+    <label>How it connects
+      <select data-key="connect">
+        <option value="standalone">On its own</option>
+        <option value="tile">Tile in another Form's grid</option>
+        <option value="button">Opened by a button on another Form</option>
+        <option value="embedded">Embedded in another Form's region</option>
+      </select>
+    </label>
+    <p class="FX_Hint" data-connect-hint></p>
+    <div class="FX_Grid2" data-connect-detail>
+      <label>Connects to <small>Which Form</small><input data-key="parent" list="FX_FormNameList" data-placeholder="e.g. {p}StockCounts" spellcheck="false" autocapitalize="off"></label>
+      <label>Linked by <small>What it passes or filters on</small><input data-key="link" placeholder="e.g. shows only the lines of the selected CountID"></label>
+    </div>
+    <div class="FX_Group">
+      <span class="FX_GroupLabel">Layout</span>
+      <div class="FX_Segment">
+        <label><input type="radio" data-key="layout" value="grid + detail"><span>Grid + detail</span></label>
+        <label><input type="radio" data-key="layout" value="grid only"><span>Grid only</span></label>
+        <label><input type="radio" data-key="layout" value="detail only"><span>Detail only</span></label>
+        <label><input type="radio" data-key="layout" value="other"><span>Other</span></label>
+      </div>
+    </div>
+    <label>Other layout<input data-key="layoutOther" placeholder="e.g. Two tabs: Count and History"></label>
+    <label>Fields shown, in order <small>One per line, with captions as the user should see them</small><textarea data-key="fields" rows="3" placeholder="e.g. Item&#10;Counted quantity&#10;Difference"></textarea></label>
+    <label>Read-only fields<input data-key="readOnly" placeholder="e.g. Description, System quantity, Difference"></label>
+    <label>Dropdowns / validation <small>Field → allowed values or source</small><textarea data-key="dropdowns" rows="2" placeholder="e.g. Status → Open, Counted, Recount&#10;Item → list from FX_Items"></textarea></label>
+    <label>Second grid on this Form <small>Another IDO shown under the first, e.g. the selected row's lines</small><input data-key="secondGrid" placeholder="e.g. Count lines of the selected count: Item, Counted qty"></label>
+    <div class="FX_ListHead"><span>Buttons</span><button type="button" class="FX_Small" data-card-add-button>Add button</button></div>
+    <div class="FX_TableWrap">
+      <table class="FX_Rows" data-list="buttons">
+        <thead><tr><th>Caption</th><th>What happens when clicked</th><th>What the user sees after</th><th><span class="FX_Sr">Remove</span></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</template>
+
 <script src="app.js"></script>
 </body>
 </html>

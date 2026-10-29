@@ -26,6 +26,13 @@ With the preview running, open <http://127.0.0.1:8765/_request/index.html> (also
   object name starts with it, and the labels and the prompt follow it. Picking an existing app takes that app's prefix.
   Existing tenant objects that already start with your prefix but weren't built by the factory still need approval
   (`AGENTS.md` § Build prefix).
+- **Forms** (section 4b) has one card per Form. **Add another form** adds a card; each card says how that Form
+  connects to the others: on its own, a tile in another Form's grid, opened by a button on another Form, or embedded
+  in another Form's region (the last one hasn't been tried in the tenant yet). Card names are added to section 3.
+- **Final scope for Forms** (section 6, and in Targeted change) is User unless you pick Group (name the group) or Site.
+  Claude still builds and checks in User scope first. The Group/Site save is the last step and runs only if you switch
+  on its approval; otherwise Claude asks first. It hasn't been tried in the tenant yet and needs Site Developer editing
+  permission.
 - **Targeted change:** pick an app and the page suggests Targets (its files, its form script) and Wheres (C# methods,
   page sections). These are read from the files in this folder, not from Mongoose, so the live version may differ.
 - The prompt on the right updates as you type. Red items are required. Orange items are worth a look but won't block you.

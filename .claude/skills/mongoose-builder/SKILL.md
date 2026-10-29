@@ -25,8 +25,10 @@ workflow. The playbooks in `playbooks/` hold the procedures. Load **only** the o
 ## Workflow
 1. **Intake.** Copy `templates/build-brief.md` to `builds/BLD-NNN-<slug>.md`, using the next free number (`ls builds`). Fill it in with the user:
    - goal;
+   - final scope for Forms (default User). Group or Site: the build still runs and is verified in User scope; the Group/Site save is the last step, needs the request's approval ("Group/Site save approved: yes") or the operator's, and runs as an **unverified** probe (`playbooks/forms.md` § Group or Site scope);
    - build prefix (default `FX_`). For a prefix other than `FX_`, list the tenant's existing objects that already start with it, for the object types this build touches; they are not factory-owned;
    - target objects, each marked new (build prefix), factory-owned, or existing other (needs approval);
+   - for several Forms, how each one connects (request section 4b: on its own / tile in another Form's grid / opened by a button / embedded in a region). Build a Form before the Form that points to it. Embedded is **unverified**, and opened by a button hasn't been checked on its own: run each as a small probe first;
    - data source;
    - acceptance checks;
    - approvals needed;
@@ -35,7 +37,7 @@ workflow. The playbooks in `playbooks/` hold the procedures. Load **only** the o
 2. **Design.** **New Forms are Flex Forms by default** (operator decision, 2026-10-29): Designer → New → Category **Flex** (`playbooks/portal-shell.md` §1). Use a Classic Form only when the request says so. If a feature needs a wizard that exists only under Classic (for example Multi-View grid + detail), say so in the plan and ask before switching. Web pages are always three files, `index.html` + `app.css` + `app.js`; C# form scripts are one file with a fixed, readable layout (`playbooks/web-user-controls.md` § File layout, § C# form script layout). Pick the route per feature from the capability map below. Reuse existing FX_ objects (theme FX_HelloWorld, project FX_HelloWorldProject01, strings `FX_s*`) where they fit; they are factory-owned under `FX_`, so reusing one in a build with another prefix is fine, but changing one keeps its `FX_` name. List the objects to create or change.
 3. **Plan with gates.** Show the user the step list and mark:
    - (a) the approvals for objects that are not factory-owned;
-   - (b) the tenant-wide operations;
+   - (b) the tenant-wide operations, including a Group/Site save as the last step;
    - (c) the steps marked **unverified** in the playbooks, which run as small probe steps first.
    Wait for approval.
 4. **Build.** Drive the browser (Playwright MCP, `playbooks/browser-and-session.md`):

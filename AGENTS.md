@@ -36,7 +36,11 @@ Two modes (operator decision, 2026-10-27):
   3. a Form extension.
 
   Use Group or Site scope only after the change is proven in User scope and
-  approved.
+  approved. A request that sets the final scope to Group (naming the group) or
+  Site and says "Group/Site save approved: yes" gives that approval for the
+  Forms the request names, in that task only. The save still comes last, after
+  the User-scope checks; any metadata-cache refresh it needs is approved
+  separately.
 - Before changing an existing object, record its current state (identity and
   version screenshot plus a readback of everything the change touches) so it can
   be rolled back. New components, handlers, variables and strings added to an

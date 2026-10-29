@@ -5,6 +5,13 @@ Knowledge state:
 - **observed:** everything else here (single accepted runs, same-session UI evidence).
 
 Forms are created in **User scope** (the Designer status bar shows `ScopeType: User / ScopeName: <operator>`).
+
+**Group or Site scope** (when the request's final scope says so). Knowledge state: **unverified**; no factory build has saved outside User scope. From the docs only (`docs/mongoose/guides/editing-scope-and-versions.md`, `web-designer.md`):
+- it needs **Site Developer** editing permission (check Help › About This Application);
+- the scope is set when the Designer opens, or later with Form › Definition › Impersonate;
+- before reopening the form under the new scope, close it and refresh the IDO metadata cache. The refresh is a tenant-wide step, so it needs approval too.
+
+Order: build and verify in User scope first. Then, only with the approval from the request or the operator, switch scope, save once, close/reopen, and check the status bar shows the new ScopeType/ScopeName before anything else. Record the steps actually seen, since these are docs-only.
 Editing an existing Form the factory doesn't own is covered in `extending-existing-forms.md`. Read it first and get approval.
 
 ## Verified recipes (use directly)
