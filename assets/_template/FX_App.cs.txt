@@ -1,0 +1,50 @@
+using System;
+using System.Collections.Generic;
+using Mongoose.IDO.Protocol;
+using Mongoose.Scripting;
+using Newtonsoft.Json;
+
+//<Ref>Newtonsoft.Json.dll</Ref>
+
+namespace Mongoose.FormScripts
+{
+    // ---- Header ----
+    // FX_App: <what the Form does>. Called by app.js through callServer(). Every public method writes one
+    // JSON result to the Global variable FX_vAppResult: {"ok":true,...} or {"ok":false,"message":"..."}.
+    // The class name must match the Form name (BLD-002).
+    public class FX_App : FormScript
+    {
+        // ---- Config ----
+        const string ResultVar = "FX_vAppResult";
+
+        // ---- Page actions ----
+        public void FX_Hello()
+        {
+            try
+            {
+                var result = new Dictionary<string, object>();
+                result["ok"] = true;
+                result["message"] = "Hello from the FX_App form script at " + DateTime.Now.ToString("HH:mm:ss") + ".";
+                FX_Result(result);
+            }
+            catch (Exception ex)
+            {
+                FX_Fail("FX_Hello failed. " + ex.GetType().Name + ": " + ex.Message);
+            }
+        }
+
+        // ---- Results ----
+        void FX_Fail(string message)
+        {
+            var result = new Dictionary<string, object>();
+            result["ok"] = false;
+            result["message"] = message;
+            FX_Result(result);
+        }
+
+        void FX_Result(Dictionary<string, object> result)
+        {
+            ThisForm.Variables(ResultVar).Value = JsonConvert.SerializeObject(result);
+        }
+    }
+}

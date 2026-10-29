@@ -1,0 +1,10 @@
+{
+  "name": "fx-mongoose-pages",
+  "private": true,
+  "description": "FX_ web pages and form scripts for Infor Mongoose, with a local preview (no dependencies).",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "preview": "node tools/serve.js",
+    "flat": "node tools/flat.js"
+  }
+}

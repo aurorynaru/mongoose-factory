@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FX App</title>
+<!-- Mongoose bridge (WSForm, MG). In the local preview, tools/serve.js answers this with preview/stub.js. -->
+<script type="text/javascript" src="../$app/scripts/UserControl.js"></script>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<main class="FX_Page">
+  <header class="FX_Head">
+    <h1>FX App</h1>
+    <button type="button" id="FX_Refresh">Refresh</button>
+  </header>
+  <p id="FX_Status" role="status"></p>
+  <section class="FX_Card">
+    <h2>Server says</h2>
+    <p id="FX_Message">Not loaded yet.</p>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

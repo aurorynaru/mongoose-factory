@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>FX Request Builder</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="FX_Top">
+  <div class="FX_TopText">
+    <h1>Mongoose request builder</h1>
+    <p>Fill in what you know. <b>A blank means "ask me":</b> Claude asks about it before building and never picks for you.</p>
+  </div>
+  <nav class="FX_Tabs" role="tablist" aria-label="Request type">
+    <button type="button" role="tab" data-mode="build" aria-selected="true">New build</button>
+    <button type="button" role="tab" data-mode="change" aria-selected="false">Targeted change</button>
+  </nav>
+</header>
+
+<main class="FX_Main">
+  <!-- ======================= Section rail (filled by app.js from the visible fieldsets) ======================= -->
+  <nav class="FX_Rail" aria-label="Sections">
+    <ol id="FX_Rail"></ol>
+  </nav>
+
+  <div class="FX_Forms">
+  <!-- ======================= New build (build-request-prompt.md) ======================= -->
+  <form id="FX_BuildForm" class="FX_Form" data-mode="build" autocomplete="off">
+    <fieldset id="FX_S1" data-nav="1|Goal">
+      <legend><span class="FX_Num">1</span>Goal <span class="FX_Req">Required</span></legend>
+      <label>What I want, in one or two sentences<textarea name="goal" rows="2"></textarea></label>
+      <label>Who uses it and for what<textarea name="users" rows="2"></textarea></label>
+    </fieldset>
+
+    <fieldset id="FX_S2" data-nav="2|Build type">
+      <legend><span class="FX_Num">2</span>Build type <span class="FX_Req">Required, pick one or more</span></legend>
+      <div class="FX_Tiles">
+        <label class="FX_Tile"><input type="checkbox" name="type" value="form"><b>New Form</b><small>A Form in Web Designer. Flex unless you switch to Classic below.</small></label>
+        <label class="FX_Tile"><input type="checkbox" name="type" value="ido"><b>New IDO + SQL table</b><small>Stores new data: an FX_ table and the IDO that reads it.</small></label>
+        <label class="FX_Tile"><input type="checkbox" name="type" value="portal"><b>New portal / shell (Flex) Form</b><small>Several pages behind a menu, with or without sign-in.</small></label>
+        <label class="FX_Tile"><input type="checkbox" name="type" value="dashboard"><b>Dashboard / chart</b><small>KPI cards, charts and tables over existing data.</small></label>
+        <label class="FX_Tile"><input type="checkbox" name="type" value="webpage"><b>Web page</b><small>An HTML/JS/CSS asset shown inside a Form.</small></label>
+        <label class="FX_Tile"><input type="checkbox" name="type" value="changeFx"><b>Change an existing FX_ object</b><small>Something the factory already built.</small></label>
+        <label class="FX_Tile FX_Tile--wide"><input type="checkbox" name="type" value="changeNonFx"><b>Change an existing non-FX_ object</b><small>Needs your approval for each object. Name them in section 6.</small></label>
+      </div>
+      <label class="FX_Switch"><input type="checkbox" name="classic" role="switch"><span>Build a Classic Form instead of Flex <small>(Flex is the default)</small></span></label>
+      <label id="FX_ExistingWrap" hidden>Existing FX_ app to change <small>Fills the empty names in section 3 from <code>assets/</code></small>
+        <select name="existingApp" data-apps></select>
+      </label>
+    </fieldset>
+
+    <fieldset id="FX_S3" data-nav="3|Names">
+      <legend><span class="FX_Num">3</span>Names</legend>
+      <p class="FX_Hint">Leave blank and Claude will propose names in the plan for you to approve.</p>
+      <div class="FX_Grid3">
+        <label>Form name(s)<input name="formName" data-fx placeholder="FX_…"></label>
+        <label>IDO / table name<input name="idoName" data-fx placeholder="FX_…"></label>
+        <label>Asset folder<input name="assetFolder" data-fx placeholder="FX_…/index.html"></label>
+      </div>
+    </fieldset>
+
+    <fieldset id="FX_S4a" data-show-for="ido" data-nav="4a|IDO / table">
+      <legend><span class="FX_Num">4a</span>IDO / table</legend>
+      <label>Is the data in an existing IDO? <small>Name it, or write "new"</small><input name="idoExisting"></label>
+      <div class="FX_ListHead"><span>Fields</span><button type="button" class="FX_Small" data-add="fields">Add field</button></div>
+      <div class="FX_TableWrap">
+        <table class="FX_Rows" data-list="fields">
+          <thead><tr><th>Name</th><th>Type</th><th>Length / precision</th><th>Required</th><th>Key</th><th>Default</th><th><span class="FX_Sr">Remove</span></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <label>Relations / lookups <small>Field → other table or IDO</small><textarea name="relations" rows="2"></textarea></label>
+      <label>Calculated fields <small>Formula in words</small><textarea name="calculated" rows="2"></textarea></label>
+      <label>Test rows to create <small>Fake data only</small><textarea name="testRows" rows="2"></textarea></label>
+    </fieldset>
+
+    <fieldset id="FX_S4b" data-show-for="form" data-nav="4b|Form">
+      <legend><span class="FX_Num">4b</span>Form</legend>
+      <div class="FX_Group">
+        <span class="FX_GroupLabel">Layout</span>
+        <div class="FX_Segment">
+          <label><input type="radio" name="layout" value="grid + detail"><span>Grid + detail</span></label>
+          <label><input type="radio" name="layout" value="grid only"><span>Grid only</span></label>
+          <label><input type="radio" name="layout" value="detail only"><span>Detail only</span></label>
+          <label><input type="radio" name="layout" value="other"><span>Other</span></label>
+        </div>
+      </div>
+      <label>Other layout<input name="layoutOther"></label>
+      <label>Fields shown, in order <small>One per line, with captions as the user should see them</small><textarea name="formFields" rows="3"></textarea></label>
+      <label>Read-only fields<input name="readOnly"></label>
+      <label>Dropdowns / validation <small>Field → allowed values or source</small><textarea name="dropdowns" rows="2"></textarea></label>
+      <div class="FX_ListHead"><span>Buttons</span><button type="button" class="FX_Small" data-add="buttons">Add button</button></div>
+      <div class="FX_TableWrap">
+        <table class="FX_Rows" data-list="buttons">
+          <thead><tr><th>Caption</th><th>What happens when clicked</th><th>What the user sees after</th><th><span class="FX_Sr">Remove</span></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </fieldset>
+
+    <fieldset id="FX_S4c" data-show-for="portal" data-nav="4c|Portal / shell">
+      <legend><span class="FX_Num">4c</span>Portal / shell</legend>
+      <label>Pages <small>One per line: page and what it shows</small><textarea name="pages" rows="3"></textarea></label>
+      <label>Menu / navigation items → which page<textarea name="menu" rows="2"></textarea></label>
+      <label>Header content <small>Title, logo, user name</small><input name="header"></label>
+      <div class="FX_Group">
+        <span class="FX_GroupLabel">Sign-in needed?</span>
+        <div class="FX_Segment">
+          <label><input type="radio" name="signIn" value="no"><span>No</span></label>
+          <label><input type="radio" name="signIn" value="yes"><span>Yes</span></label>
+        </div>
+      </div>
+      <label>Users come from<input name="signInSource"></label>
+      <label>Tiles / cards <small>Which data, which fields on a tile, click action</small><textarea name="tiles" rows="2"></textarea></label>
+    </fieldset>
+
+    <fieldset id="FX_S4d" data-show-for="dashboard webpage" data-nav="4d|Web page / dashboard">
+      <legend><span class="FX_Num">4d</span>Web page / dashboard</legend>
+      <label>Data shown <small>Which IDO or API, which fields</small><textarea name="dataShown" rows="2"></textarea></label>
+      <label>KPI cards / charts / tables <small>What each one counts or shows</small><textarea name="widgets" rows="3"></textarea></label>
+      <label>Filters, sorting, refresh<input name="filters"></label>
+      <label>API calls <small>Endpoint + verb. Only approved calls run; new ones need approval in section 6</small><textarea name="apiCalls" rows="2"></textarea></label>
+    </fieldset>
+
+    <p class="FX_Empty" id="FX_NoDetails">Section 4 asks about the build types you pick in section 2.</p>
+
+    <fieldset id="FX_S5" data-nav="5|Look and feel">
+      <legend><span class="FX_Num">5</span>Look and feel</legend>
+      <label>Mock screenshot / reference <small>A path, e.g. <code>mocks/asn-dashboard.png</code>. Paste the image into Claude Code with the prompt</small><input name="mock"></label>
+      <label>Colors / theme / fonts <small>Or "match FX_…"</small><input name="theme"></label>
+      <div class="FX_Group">
+        <span class="FX_GroupLabel">Must work on</span>
+        <div class="FX_Segment FX_Segment--multi">
+          <label><input type="checkbox" name="device" value="desktop"><span>Desktop</span></label>
+          <label><input type="checkbox" name="device" value="tablet"><span>Tablet</span></label>
+          <label><input type="checkbox" name="device" value="phone"><span>Phone</span></label>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset id="FX_S6" data-nav="6|Approvals and limits">
+      <legend><span class="FX_Num">6</span>Approvals and limits</legend>
+      <p class="FX_Hint">Non-FX_ objects, tenant-wide steps and new API calls stay blocked until you approve them here, for this task only.</p>
+      <label>Existing non-FX_ objects that may be changed <small>Name each one, or write "none"</small><input name="nonFx"></label>
+      <label>Tenant-wide steps allowed <small>Group/Site save, FormSync, deployment, cache unload. Default none</small><input name="tenantWide"></label>
+      <label>Outbound calls allowed <small>Exact endpoint + verb. Default none beyond those already approved</small><input name="outbound"></label>
+      <label>Data I must not touch<input name="noTouch"></label>
+    </fieldset>
+
+    <fieldset id="FX_S7" data-nav="7|Done means">
+      <legend><span class="FX_Num">7</span>Done means <span class="FX_Req">Required</span></legend>
+      <label>I will accept it when <small>One per line: what I can see or do at runtime</small><textarea name="done" rows="3"></textarea></label>
+    </fieldset>
+
+    <fieldset id="FX_S8" data-nav="8|Anything else">
+      <legend><span class="FX_Num">8</span>Anything else</legend>
+      <label>Known problems, deadlines, things to avoid<textarea name="other" rows="2"></textarea></label>
+    </fieldset>
+
+    <fieldset id="FX_S9" data-nav="9|Evidence and guide">
+      <legend><span class="FX_Num">9</span>Evidence and guide</legend>
+      <label>Evidence
+          <select name="evidence">
+            <option value="full">Full (default; use for anything going to production)</option>
+            <option value="light">Light (small or throwaway FX_ changes)</option>
+          </select>
+        </label>
+        <label>Guide with pictures
+          <select name="guide">
+            <option value="none">None (default)</option>
+            <option value="PDF">PDF</option>
+            <option value="Word (.docx)">Word (.docx)</option>
+          </select>
+        </label>
+      <p class="FX_Warn" id="FX_GuideWarn" hidden>A guide needs full evidence. With light evidence there are no step pictures.</p>
+    </fieldset>
+  </form>
+
+  <!-- ======================= Targeted change (change-request-prompt.md) ======================= -->
+  <form id="FX_ChangeForm" class="FX_Form" data-mode="change" autocomplete="off" hidden>
+    <p class="FX_Note">Anything not listed under Change stays exactly as it is.</p>
+
+    <fieldset id="FX_C1" data-nav="|What to change">
+      <legend>What to change</legend>
+      <label>App <small>Fills the suggestions below from <code>assets/</code></small>
+        <select name="app" data-apps></select>
+      </label>
+      <label>Target <span class="FX_Req">Required</span> <small>Object name, e.g. FX_ApiPage/index.html, FX_ApiProbe script</small>
+        <input name="target" list="FX_TargetList">
+      </label>
+      <datalist id="FX_TargetList"></datalist>
+      <label>Where <small>The part, e.g. "Shipment orders table", "FX_ListShipments method", "Save button"</small>
+        <input name="where" list="FX_WhereList">
+      </label>
+      <datalist id="FX_WhereList"></datalist>
+      <div class="FX_Facts" id="FX_Facts" hidden></div>
+    </fieldset>
+
+    <fieldset id="FX_C2" data-nav="|The change">
+      <legend>The change</legend>
+      <label>Change <span class="FX_Req">Required</span> <small>What should be different</small><textarea name="change" rows="3"></textarea></label>
+      <label>Why <small>Optional</small><input name="why"></label>
+    </fieldset>
+
+    <fieldset id="FX_C3" data-nav="|Limits and done">
+      <legend>Limits and done</legend>
+      <label>Don't touch <small>Anything that must not change, or "everything else"</small><input name="dontTouch"></label>
+      <label>Done means <span class="FX_Req">Required</span> <small>What I'll see at runtime</small><textarea name="done" rows="2"></textarea></label>
+    </fieldset>
+  </form>
+  </div>
+
+  <!-- ======================= Output ======================= -->
+  <aside class="FX_Out" aria-label="Prompt">
+    <div class="FX_OutHead">
+      <h2>Prompt</h2>
+      <span class="FX_Ready" id="FX_Ready" role="status"></span>
+    </div>
+    <div class="FX_OutButtons">
+      <button type="button" id="FX_Copy" class="FX_Primary">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5"/></svg>
+        <span>Copy prompt</span>
+      </button>
+      <button type="button" id="FX_Download" class="FX_Ghost">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8m-3.5-3.5L8 10l3.5-3.5M3 13h10"/></svg>
+        <span>Download .md</span>
+      </button>
+      <button type="button" id="FX_Reset" class="FX_Ghost FX_Danger"><span>Clear form</span></button>
+    </div>
+    <p class="FX_Hint" id="FX_Status" role="status"></p>
+    <ul class="FX_Problems" id="FX_Problems"></ul>
+    <div class="FX_Code">
+      <pre id="FX_Prompt" tabindex="0" aria-label="Prompt text"></pre>
+      <p class="FX_CodeMeta" id="FX_PromptMeta"></p>
+    </div>
+    <p class="FX_Hint">Paste it into Claude Code in this repo. Your draft is kept in this browser only.</p>
+  </aside>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

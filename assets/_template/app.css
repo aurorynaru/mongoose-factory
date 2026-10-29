@@ -1,0 +1,29 @@
+/* ---- Tokens: change colours and sizes here ---- */
+:root {
+  --bg: #f4f6fa;
+  --card: #ffffff;
+  --ink: #1b2430;
+  --ink-soft: #5b6676;
+  --line: #d9dee7;
+  --accent: #1e6fe6;
+  --error: #c62828;
+  --radius: 10px;
+}
+
+/* ---- Page ---- */
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 system-ui, sans-serif; }
+.FX_Page { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
+
+/* ---- Header ---- */
+.FX_Head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.FX_Head h1 { margin: 0; font-size: 22px; }
+.FX_Head button { padding: 8px 14px; border: 0; border-radius: 6px; background: var(--accent); color: #fff; font: inherit; cursor: pointer; }
+.FX_Head button:disabled { opacity: .6; cursor: default; }
+
+/* ---- Status line ---- */
+#FX_Status { min-height: 1.4em; color: var(--ink-soft); }
+#FX_Status.is-error { color: var(--error); }
+
+/* ---- Cards ---- */
+.FX_Card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
+.FX_Card h2 { margin: 0 0 8px; font-size: 16px; }

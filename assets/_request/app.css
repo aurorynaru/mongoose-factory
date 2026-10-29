@@ -1,0 +1,288 @@
+/* ---- Tokens: change colours and sizes here ---- */
+:root {
+  --bg: #edf0ee;
+  --card: #ffffff;
+  --field: #ffffff;
+  --ink: #172420;
+  --ink-soft: #5a6863;
+  --ink-faint: #8a9692;
+  --line: #d3dbd8;
+  --line-strong: #b5c1bd;
+  --accent: #0a6b60;
+  --accent-ink: #ffffff;
+  --accent-soft: #e2f0ec;
+  --accent-ring: rgba(10, 107, 96, .22);
+  --warn: #a86500;
+  --warn-soft: #fbf0dc;
+  --error: #b42318;
+  --error-soft: #fdecea;
+  --code-bg: #10201c;
+  --code-ink: #cfe3dc;
+  --code-faint: #7f9a92;
+  --sans: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "Cascadia Mono", "Cascadia Code", Consolas, ui-monospace, monospace;
+  --radius: 12px;      /* panels */
+  --radius-sm: 8px;    /* inputs, tiles, buttons */
+  --gap: 16px;
+  --shadow: 0 1px 2px rgba(23, 36, 32, .06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111a18;
+    --card: #18231f;
+    --field: #121c19;
+    --ink: #e4ece9;
+    --ink-soft: #a3b2ad;
+    --ink-faint: #74847f;
+    --line: #2a3833;
+    --line-strong: #3d4f49;
+    --accent: #3fb3a3;
+    --accent-ink: #0c1714;
+    --accent-soft: #1d3530;
+    --accent-ring: rgba(63, 179, 163, .3);
+    --warn: #e0a548;
+    --warn-soft: #33281a;
+    --error: #f0857a;
+    --error-soft: #3a1f1c;
+    --code-bg: #0b1311;
+    --shadow: none;
+  }
+}
+
+/* ---- Page ---- */
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }   /* the hidden attribute must win over display rules below */
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.5 var(--sans); -webkit-font-smoothing: antialiased; }
+code { font: 12.5px var(--mono); background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.FX_Sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---- Header and mode tabs ---- */
+.FX_Top {
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px;
+  max-width: 1640px; margin: 0 auto; padding: 28px 24px 20px;
+}
+.FX_TopText { flex: 1 1 420px; }
+.FX_Top h1 { margin: 0 0 4px; font-size: 26px; line-height: 1.2; font-weight: 650; letter-spacing: -.01em; }
+.FX_Top p { margin: 0; max-width: 68ch; color: var(--ink-soft); }
+.FX_Top p b { color: var(--ink); font-weight: 600; }
+.FX_Tabs { display: flex; gap: 2px; padding: 3px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; }
+.FX_Tabs button {
+  border: 0; background: transparent; padding: 8px 16px; border-radius: 7px; cursor: pointer;
+  color: var(--ink-soft); font-weight: 500; transition: background-color .15s, color .15s;
+}
+.FX_Tabs button:hover { color: var(--ink); }
+.FX_Tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
+
+/* ---- Layout: rail, form, prompt ---- */
+.FX_Main {
+  display: grid; grid-template-columns: 188px minmax(0, 1fr) minmax(380px, .85fr); gap: var(--gap);
+  max-width: 1640px; margin: 0 auto; padding: 0 24px 32px; align-items: start;
+}
+@media (max-width: 1280px) {
+  .FX_Main { grid-template-columns: minmax(0, 1fr) minmax(340px, .9fr); }
+  .FX_Rail { display: none; }
+}
+@media (max-width: 900px) {
+  .FX_Main { grid-template-columns: minmax(0, 1fr); padding: 0 16px 24px; }
+  .FX_Top { padding: 20px 16px 16px; }
+}
+
+/* ---- Section rail ---- */
+.FX_Rail { position: sticky; top: 16px; }
+.FX_Rail ol { list-style: none; margin: 0; padding: 0; }
+.FX_Rail a {
+  display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: var(--radius-sm);
+  color: var(--ink-soft); text-decoration: none; font-size: 13.5px; line-height: 1.3;
+}
+.FX_Rail a:hover { background: var(--card); color: var(--ink); }
+.FX_Rail .FX_Num { flex: none; }
+.FX_Rail a::after { content: ""; flex: none; width: 7px; height: 7px; margin-left: auto; border-radius: 50%; }
+.FX_Rail a.is-filled::after { background: var(--accent); }
+.FX_Rail a.is-missing::after { background: var(--error); }
+.FX_Rail a.is-warn::after { background: var(--warn); }
+.FX_Rail a.is-missing { color: var(--ink); }
+
+/* ---- Form panels ---- */
+.FX_Form fieldset {
+  min-width: 0; margin: 0 0 var(--gap); padding: 18px 20px 20px;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+  scroll-margin-top: 16px;
+}
+.FX_Form legend { float: left; width: 100%; display: flex; align-items: center; gap: 10px; padding: 0; margin: 0 0 6px; font-size: 16px; font-weight: 600; }
+.FX_Form legend + * { clear: both; }
+.FX_Num {
+  display: inline-grid; place-items: center; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 6px;
+  background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 650; font-variant-numeric: tabular-nums;
+}
+.FX_Req { padding: 1px 8px; border-radius: 999px; background: var(--warn-soft); color: var(--warn); font-size: 11.5px; font-weight: 600; }
+.FX_Note { margin: 0 0 var(--gap); padding: 10px 14px; border-radius: var(--radius-sm); background: var(--accent-soft); color: var(--ink); }
+
+/* Labels: caption on top, optional <small> hint after it, then the control */
+.FX_Form label { display: block; margin: 14px 0 0; color: var(--ink); font-size: 13px; font-weight: 500; }
+.FX_Form label > small { margin-left: 4px; color: var(--ink-faint); font-size: 12.5px; font-weight: 400; }
+.FX_Form label > .FX_Req { margin-left: 4px; }
+.FX_Form input:not([type="checkbox"]):not([type="radio"]), .FX_Form textarea, .FX_Form select {
+  display: block; width: 100%; margin-top: 6px; padding: 8px 11px;
+  border: 1px solid var(--line-strong); border-radius: var(--radius-sm); background: var(--field); color: var(--ink);
+  font: 14px/1.45 var(--sans); transition: border-color .15s, box-shadow .15s;
+}
+.FX_Form textarea { resize: vertical; min-height: 64px; }
+.FX_Form input::placeholder { color: var(--ink-faint); }
+.FX_Form input:not([type="checkbox"]):not([type="radio"]):hover, .FX_Form textarea:hover, .FX_Form select:hover { border-color: var(--ink-faint); }
+.FX_Form input:not([type="checkbox"]):not([type="radio"]):focus, .FX_Form textarea:focus, .FX_Form select:focus {
+  outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring);
+}
+.FX_Form [aria-invalid="true"] { border-color: var(--error) !important; }
+.FX_Grid3 { display: grid; gap: 0 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 640px) { .FX_Grid3 { grid-template-columns: 1fr; } }
+
+.FX_Hint { margin: 6px 0 0; color: var(--ink-soft); font-size: 12.5px; }
+.FX_Warn { margin: 12px 0 0; padding: 8px 12px; border-radius: var(--radius-sm); background: var(--warn-soft); color: var(--warn); font-size: 12.5px; }
+.FX_Empty {
+  margin: 0 0 var(--gap); padding: 16px 20px; border: 1.5px dashed var(--line-strong); border-radius: var(--radius);
+  color: var(--ink-soft); text-align: center;
+}
+
+/* ---- Build type tiles (checkboxes) ---- */
+.FX_Tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; margin-top: 10px; }
+.FX_Form .FX_Tile {
+  position: relative; display: grid; grid-template-columns: 18px 1fr; gap: 2px 10px; align-items: start; margin: 0;
+  padding: 11px 12px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); background: var(--field);
+  cursor: pointer; transition: border-color .15s, background-color .15s;
+}
+.FX_Tile--wide { grid-column: 1 / -1; }
+.FX_Tile:hover { border-color: var(--ink-faint); }
+.FX_Tile input { grid-row: 1 / span 2; }
+.FX_Tile b { font-weight: 600; font-size: 13.5px; }
+.FX_Form .FX_Tile small { grid-column: 2; margin: 0; color: var(--ink-soft); font-size: 12.5px; font-weight: 400; line-height: 1.4; }
+.FX_Tile:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent); }
+.FX_Tile:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Custom checkbox look, shared by tiles and table rows */
+.FX_Form input[type="checkbox"]:not([role="switch"]) {
+  appearance: none; flex: none; width: 18px; height: 18px; margin: 1px 0 0;
+  border: 1.5px solid var(--line-strong); border-radius: 5px; background: var(--field); cursor: pointer;
+  display: inline-grid; place-items: center; transition: background-color .15s, border-color .15s;
+}
+.FX_Form input[type="checkbox"]:not([role="switch"])::after {
+  content: ""; width: 5px; height: 9px; margin-top: -2px; border: solid var(--accent-ink); border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0); transition: transform .12s;
+}
+.FX_Form input[type="checkbox"]:not([role="switch"]):checked { background: var(--accent); border-color: var(--accent); }
+.FX_Form input[type="checkbox"]:not([role="switch"]):checked::after { transform: rotate(45deg) scale(1); }
+.FX_Tile input[type="checkbox"]:focus-visible { outline: none; }
+
+/* ---- Switch (Classic instead of Flex) ---- */
+.FX_Form .FX_Switch { display: inline-flex; align-items: center; gap: 10px; margin-top: 14px; cursor: pointer; font-weight: 400; }
+.FX_Switch small { color: var(--ink-faint); font-size: 12.5px; }
+.FX_Switch input {
+  appearance: none; flex: none; position: relative; width: 34px; height: 20px; margin: 0;
+  border-radius: 999px; background: var(--line-strong); cursor: pointer; transition: background-color .15s;
+}
+.FX_Switch input::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%;
+  background: #fff; transition: transform .15s;
+}
+.FX_Switch input:checked { background: var(--accent); }
+.FX_Switch input:checked::after { transform: translateX(14px); }
+
+/* ---- Segmented controls (radios, device checkboxes) ---- */
+.FX_Group { margin-top: 14px; }
+.FX_GroupLabel { display: block; font-size: 13px; font-weight: 500; }
+.FX_Segment { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; padding: 3px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); }
+.FX_Form .FX_Segment label { position: relative; margin: 0; font-weight: 500; }
+.FX_Segment input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.FX_Segment span { display: block; padding: 6px 14px; border-radius: 7px; color: var(--ink-soft); transition: background-color .15s, color .15s; }
+.FX_Segment label:hover span { color: var(--ink); }
+.FX_Segment input:checked + span { background: var(--card); color: var(--ink); box-shadow: 0 0 0 1px var(--line-strong); }
+.FX_Segment--multi input:checked + span { background: var(--accent); color: var(--accent-ink); box-shadow: none; }
+.FX_Segment input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* ---- Repeating rows (fields, buttons) ---- */
+.FX_ListHead { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; font-size: 13px; font-weight: 500; }
+.FX_TableWrap { position: relative; margin-top: 6px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.FX_Rows { width: 100%; border-collapse: collapse; }
+.FX_Rows th {
+  text-align: left; font-weight: 500; font-size: 12px; color: var(--ink-soft); padding: 7px 8px;
+  background: var(--bg); border-bottom: 1px solid var(--line); white-space: nowrap;
+}
+.FX_Rows td { padding: 5px 4px; vertical-align: middle; border-bottom: 1px solid var(--line); }
+.FX_Rows tr:last-child td { border-bottom: 0; }
+.FX_Rows td:first-child { padding-left: 8px; }
+.FX_Rows td input:not([type="checkbox"]), .FX_Rows td select { margin-top: 0 !important; min-width: 90px; padding: 6px 8px !important; }
+.FX_Rows td:has(input[type="checkbox"]) { text-align: center; }
+.FX_Rows tbody:empty::after { display: block; padding: 12px; color: var(--ink-soft); font-size: 12.5px; }
+.FX_Rows[data-list="fields"] tbody:empty::after { content: "No fields yet. Add one for each column the table needs."; }
+.FX_Rows[data-list="buttons"] tbody:empty::after { content: "No buttons yet."; }
+
+/* ---- Buttons ---- */
+.FX_Primary, .FX_Ghost, .FX_Small {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px; cursor: pointer;
+  border-radius: var(--radius-sm); font-weight: 500; transition: background-color .15s, border-color .15s, color .15s;
+}
+.FX_Primary { padding: 9px 16px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); }
+.FX_Primary:hover { filter: brightness(1.08); }
+.FX_Primary.is-done { background: var(--card); color: var(--accent); }
+.FX_Ghost { padding: 9px 14px; border: 1px solid var(--line-strong); background: transparent; color: var(--ink); }
+.FX_Ghost:hover { border-color: var(--ink-faint); background: var(--bg); }
+.FX_Danger.is-armed { border-color: var(--error); background: var(--error-soft); color: var(--error); }
+.FX_Small { padding: 4px 10px; border: 1px solid var(--line-strong); background: var(--field); font-size: 12.5px; }
+.FX_Small::before { content: "+"; font-size: 15px; line-height: 1; color: var(--accent); }
+.FX_Small:hover { border-color: var(--accent); color: var(--accent); }
+.FX_Remove {
+  width: 28px; height: 28px; border: 0; border-radius: 6px; background: none; color: var(--ink-faint);
+  cursor: pointer; font-size: 18px; line-height: 1;
+}
+.FX_Remove:hover { background: var(--error-soft); color: var(--error); }
+button svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---- Facts read from assets/ (change mode) ---- */
+.FX_Facts { margin-top: 14px; padding: 12px 14px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); font-size: 12.5px; }
+.FX_Facts > b { font-weight: 600; }
+.FX_Facts dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 8px 0 0; }
+.FX_Facts dt { color: var(--ink-soft); }
+.FX_Facts dd { margin: 0; font-family: var(--mono); font-size: 12px; word-break: break-word; }
+
+/* ---- Prompt output ---- */
+.FX_Out {
+  position: sticky; top: 16px; display: flex; flex-direction: column; max-height: calc(100vh - 32px);
+  padding: 18px 20px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+}
+@media (max-width: 900px) { .FX_Out { position: static; max-height: none; } }
+.FX_OutHead { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.FX_OutHead h2 { margin: 0; font-size: 16px; font-weight: 600; }
+.FX_Ready { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 600; }
+.FX_Ready::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.FX_Ready.is-missing { background: var(--error-soft); color: var(--error); }
+.FX_Ready.is-warn { background: var(--warn-soft); color: var(--warn); }
+.FX_Ready.is-ready { background: var(--accent-soft); color: var(--accent); }
+
+.FX_Problems { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 4px; }
+.FX_Problems:empty { display: none; }
+.FX_Problems button {
+  display: flex; gap: 8px; width: 100%; padding: 7px 10px; border: 0; border-radius: var(--radius-sm); text-align: left;
+  background: var(--error-soft); color: var(--error); font-size: 13px; line-height: 1.4; cursor: pointer;
+}
+.FX_Problems button::before { content: ""; flex: none; width: 6px; height: 6px; margin-top: 7px; border-radius: 50%; background: currentColor; }
+.FX_Problems li.is-warn button { background: var(--warn-soft); color: var(--warn); }
+.FX_Problems button:hover { text-decoration: underline; }
+
+.FX_Code { display: flex; flex-direction: column; min-height: 0; flex: 1; margin-top: 12px; border-radius: var(--radius-sm); background: var(--code-bg); overflow: hidden; }
+.FX_Code pre {
+  flex: 1; min-height: 160px; margin: 0; overflow: auto; padding: 14px 16px;
+  color: var(--code-ink); font: 12.5px/1.6 var(--mono); white-space: pre-wrap; word-break: break-word;
+}
+.FX_Code pre.is-flash { animation: FX_Flash .6s ease-out; }
+@keyframes FX_Flash { from { box-shadow: inset 0 0 0 2px var(--accent); } to { box-shadow: inset 0 0 0 2px transparent; } }
+.FX_CodeMeta { margin: 0; padding: 6px 16px; border-top: 1px solid rgba(255, 255, 255, .08); color: var(--code-faint); font: 11.5px var(--mono); }
+.FX_OutButtons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.FX_OutButtons .FX_Danger { margin-left: auto; }
+.FX_Out > .FX_Hint:empty { display: none; }
+.FX_Out > .FX_Hint:last-child { margin-top: 10px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
