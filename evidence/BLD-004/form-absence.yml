@@ -1,0 +1,23 @@
+- dialog "Select Form" [ref=e476]:
+  - button "Close Window" [ref=e478] [cursor=pointer]
+  - grid [ref=e479]:
+    - row [ref=e480]:
+      - columnheader "Caption" [ref=e481]
+      - columnheader "Name" [ref=e486]
+    - grid [ref=e491]
+  - generic [ref=e500]: "Filter:"
+  - textbox [active] [ref=e505]: FX_Slither
+  - generic [ref=e506]: "Filter By:"
+  - generic [ref=e509]:
+    - combobox [ref=e511]: Name
+    - generic [ref=e512] [cursor=pointer]
+  - generic [ref=e514]:
+    - checkbox "Case Sensitive" [ref=e515]
+    - generic [ref=e517]: Case Sensitive
+  - generic [ref=e519]:
+    - checkbox "Starts With" [ref=e520]
+    - generic [ref=e522]: Starts With
+  - toolbar [ref=e523]:
+    - button "OK" [ref=e524] [cursor=pointer]
+    - button "Cancel" [ref=e526] [cursor=pointer]
+    - button "Help" [ref=e528] [cursor=pointer]

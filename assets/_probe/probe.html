@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CS16 local probe</title>
+<style>
+  html, body { margin:0; height:100%; background:#111; color:#eee; font:14px system-ui; }
+  #bar { padding:8px 12px; background:#222; white-space:nowrap; overflow:hidden; }
+  #frame { width:100%; height:calc(100% - 37px); border:0; display:block; background:#000; }
+</style>
+</head>
+<body>
+<div id="bar">Status: <span id="status">starting…</span></div>
+<iframe id="frame" allow="autoplay; fullscreen; pointer-lock"></iframe>
+<script>
+"use strict";
+const GAME = "https://cdn.jsdelivr.net/gh/woahhcrackers/Global-Strike@main/sf-gs.html";
+const status = document.getElementById("status");
+const frame = document.getElementById("frame");
+async function start() {
+  try {
+    status.textContent = "fetching game page…";
+    const res = await fetch(GAME);
+    if (!res.ok) { throw new Error("HTTP " + res.status); }
+    const text = await res.text();
+    status.textContent = "fetched " + text.length + " chars; creating blob…";
+    const blob = new Blob([text], { type: "text/html" });
+    frame.src = URL.createObjectURL(blob);
+    status.textContent = "blob in iframe; waiting for game to boot…";
+  } catch (e) {
+    status.textContent = "FAILED: " + e.message;
+  }
+}
+start();
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "fx-slither-browser-build",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "node build.mjs", "test": "node --test test/*.test.mjs" },
+  "dependencies": { "peerjs": "1.5.5", "i18next": "26.5.11" },
+  "devDependencies": { "esbuild": "0.28.2" }
+}

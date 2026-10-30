@@ -27,6 +27,12 @@ Designer → New → Category **Flex** → Wizard **Basic** (EXP-102, 104):
 - Page 2: Save Template (unchecked).
 - Finish → one FlexLayout `flexlayoutPane_<Form>` with 3 regions (HorizontalBox, each 1 Flex Vertical).
 
+**Where to click New (BLD-003):** the embedded portal Designer's **New** button can stay disabled
+even in a clean state. Use the **standalone Designer** instead: in the portal Mongoose toolbar,
+click the wrench button immediately left of the Help `?` icon (tooltip **"Open designer in a new
+window"**, DOM id `#mgtoolbarbutton-1125`). It opens a standalone Designer tab where **New** is
+enabled. Create the Flex form there.
+
 Add collections in **Details › Collections**:
 - **+** creates a Secondary entry and raises an OK-only "You must regen this form…" prompt.
 - Set Collection = IDO; Primary is set the same way.
@@ -64,6 +70,27 @@ Add collections in **Details › Collections**:
   - Instead, type the string ID key by key and leave by clicking another Properties row (e.g. Description). Then click the ellipsis to create the string (EXP-106, 110-R3).
 - **Width trap:** a region can auto-stretch a new component's width (e.g. 29.559…). Re-entering the same displayed value doesn't register. Enter a different value (EXP-121, 122).
 - **Behavior group** expands on a double-click (Read-Only/Disable, Hidden, No Tab Stop…).
+
+## 3b. Host a Web User Control that fills the form (BLD-002, BLD-003)
+To make a WUC (HTML/JS/CSS asset) fill a Flex form:
+- Reduce the FlexLayout to a **single full-width region** (remove the extra regions in the
+  FlexLayout dialog). Evidence pattern: BLD-002 ASN Portal, BLD-003 CS16.
+- Place a **UserControl** component (Toolbox → UserControl + one canvas click). Rename it.
+- Set its **User Control Name** (Miscellaneous › Specific Attributes) via the ellipsis →
+  "Edit User Control References" → **Use Web Control** → **Control URL** = the WUC asset
+  (e.g. `FX_CS16/index.html`). OK raises an OK-only "regen this form (save + reopen)" prompt.
+- **Fill the region:**
+  - If `Unit` is editable, set it to **Pixel** and size the control to the region (BLD-002 used
+    `964×684`).
+  - If `Unit` is **read-only and locked to `Char`** (observed in BLD-003), fill with Char units
+    instead: measure the region in px, compute the Char values, and set **Size** `W; H`
+    (e.g. region `889×724 px` → `120; 40` Char → `885×720 px`). Double-click the **Size** cell to
+    expose the Width/Height sub-rows; set each and commit by clicking the next cell.
+- Save, close, reopen; read back `Name`, `Size`, and `User Control Name` to confirm persistence.
+- **Runtime:** open the form in the Web Client. The WUC iframe renders the asset; a nested
+  `blob:` iframe (e.g. a blob-injected game) runs inside it. A WUC iframe does **not** block the
+  engine from booting (download/unpack/run all worked in BLD-003); external relay failures are a
+  separate, non-WUC issue.
 
 ## 4. Grids and tiles
 - **Grid** in a region:
@@ -105,7 +132,12 @@ Add collections in **Details › Collections**:
 - Playwright `browser_drag` works for tile drag-and-drop.
 
 ## 7. Runtime check
-1. Open from the Web Client (Select Form: clear old filter text, type the name, double-click the row).
+1. Open from the Web Client (Form → **Open** → Select Form dialog):
+   - The filter box is pre-filled with the current form's name. Clear it, type the target name,
+     and **wait for the grid to refresh** before selecting.
+   - **Enter-trap (BLD-003):** pressing Enter in the filter box submits the dialog with the
+     currently-selected row (often the pre-filled one), not the filtered result. Instead, click the
+     target row, then click **OK**.
 2. Walk each page: sign-in → home (tiles) → cart.
 3. Verify the persisted rows through the data Form (FiP + F4).
 
