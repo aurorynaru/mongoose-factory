@@ -1,0 +1,8 @@
+{
+  "name": "fx-cs16-local-preview",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Loopback-only own-server CS 1.6 preview; keeps backend credentials out of the browser",
+  "engines": { "node": ">=22" },
+  "scripts": { "start": "node server.cjs", "test": "node --test *.test.cjs" }
+}

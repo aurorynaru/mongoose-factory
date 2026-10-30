@@ -1,0 +1,12 @@
+:root { font-family: system-ui, sans-serif; color: #183044; background: #f4f7fa; }
+body { margin: 0; }
+main { max-width: 760px; margin: 48px auto; padding: 28px; background: white; border-radius: 12px; }
+h1 { font-size: 1.8rem; }
+p { line-height: 1.6; }
+button { padding: 12px 18px; font: inherit; color: white; background: #1255a0; border: 0; border-radius: 6px; cursor: pointer; }
+button:disabled { opacity: .55; cursor: wait; }
+button:focus-visible { outline: 3px solid #e49b13; outline-offset: 3px; }
+pre { padding: 16px; background: #eef2f6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.pass { color: #176233; font-weight: 700; }
+.fail { color: #a51b25; font-weight: 700; }
+@media (max-width: 600px) { main { margin: 12px; padding: 18px; } h1 { font-size: 1.4rem; } }
