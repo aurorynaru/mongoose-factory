@@ -1,6 +1,0 @@
-evidence/EXP-029/t1-selectform-dialog-initial.yml:  - textbox [active] [ref=f3e402]: FX_ButtonCaptionLab02
-evidence/EXP-029/t1-selectform-dialog-initial.yml:    - button "Cancel" [ref=f3e423] [cursor=pointer]
-evidence/EXP-029/t1-preflight-notes.md:Inherited inputs re-read this task (statuses as recorded there):
-evidence/EXP-029/t1-preflight-notes.md:   Form-menu recent-forms reopen (`menuitem` entry click) ΓåÆ Name/Type equality recovery.
-evidence/EXP-029/t1-preflight-notes.md:   (readonly tree-picker input; refreshed post-reopen). EXP-027-R2 resolved that native
-evidence/EXP-029/t1-preflight-notes.md:   is silent (no dialog). Reopen via Form-menu recent-forms entry with no scope re-prompt.

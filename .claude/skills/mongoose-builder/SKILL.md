@@ -25,7 +25,7 @@ workflow. The playbooks in `playbooks/` hold the procedures. Load **only** the o
 ## Workflow
 1. **Intake.** Copy `templates/build-brief.md` to `builds/BLD-NNN-<slug>.md`, using the next free number (`ls builds`). Fill it in with the user:
    - goal;
-   - final scope for Forms (default User). Group or Site: the build still runs and is verified in User scope; the Group/Site save is the last step, needs the request's approval ("Group/Site save approved: yes") or the operator's, and runs as an **unverified** probe (`playbooks/forms.md` § Group or Site scope);
+   - final scope for Forms (default User). Group or Site: the build still runs and is verified in User scope; the Group/Site save is the last step, needs the request's approval ("Group/Site save approved: yes") or the operator's, and follows `playbooks/forms.md` § Group or Site scope (Site **observed**, BLD-017/018; Group **unverified**). Every asset and global variable the Form uses needs its own Site version;
    - build prefix (default `FX_`). For a prefix other than `FX_`, list the tenant's existing objects that already start with it, for the object types this build touches; they are not factory-owned;
    - target objects, each marked new (build prefix), factory-owned, or existing other (needs approval);
    - for several Forms, how each one connects (request section 4b: on its own / tile in another Form's grid / opened by a button / embedded in a region). Build a Form before the Form that points to it. Embedded is **unverified**, and opened by a button hasn't been checked on its own: run each as a small probe first;
@@ -34,7 +34,7 @@ workflow. The playbooks in `playbooks/` hold the procedures. Load **only** the o
    - approvals needed;
    - rollback.
    Ask only what you can't infer. If the user sent a filled `templates/build-request-prompt.md`, copy its answers in; a blank there means ask, never default. A filled `templates/change-request-prompt.md` is a targeted change: show the exact diff first and change nothing outside it.
-2. **Design.** **New Forms are Flex Forms by default** (operator decision, 2026-10-29): Designer → New → Category **Flex** (`playbooks/portal-shell.md` §1). Use a Classic Form only when the request says so. If a feature needs a wizard that exists only under Classic (for example Multi-View grid + detail), say so in the plan and ask before switching. Web pages are always three files, `index.html` + `app.css` + `app.js`; C# form scripts are one file with a fixed, readable layout (`playbooks/web-user-controls.md` § File layout, § C# form script layout). Pick the route per feature from the capability map below. Reuse existing FX_ objects (theme FX_HelloWorld, project FX_HelloWorldProject01, strings `FX_s*`) where they fit; they are factory-owned under `FX_`, so reusing one in a build with another prefix is fine, but changing one keeps its `FX_` name. List the objects to create or change.
+2. **Design.** **New Forms are Flex Forms by default** (operator decision, 2026-10-29): Designer → New → Category **Flex** (`playbooks/portal-shell.md` §1). Use a Classic Form only when the request says so. If a feature needs a wizard that exists only under Classic (for example Multi-View grid + detail), say so in the plan and ask before switching. Web pages are always three files, `index.html` + `app.css` + `app.js`. Their look comes from the `frontend-design` skill, they're reviewed with `web-design-guidelines` before install, and `app.css` has media queries (`playbooks/web-user-controls.md` § Local design loop). A Form that only hosts one page uses `playbooks/portal-shell.md` § Flex Form for one full-width web page; C# form scripts are one file with a fixed, readable layout (`playbooks/web-user-controls.md` § File layout, § C# form script layout). Pick the route per feature from the capability map below. Reuse existing FX_ objects (theme FX_HelloWorld, project FX_HelloWorldProject01, strings `FX_s*`) where they fit; they are factory-owned under `FX_`, so reusing one in a build with another prefix is fine, but changing one keeps its `FX_` name. List the objects to create or change.
 3. **Plan with gates.** Show the user the step list and mark:
    - (a) the approvals for objects that are not factory-owned;
    - (b) the tenant-wide operations, including a Group/Site save as the last step;
@@ -83,7 +83,7 @@ Not yet exercised here, so treat these as unverified:
 - extending/modifying forms the factory didn't build;
 - builds with a prefix other than `FX_` (the tenant check for existing objects with the new prefix has not been run yet);
 - Form Extensions / Extend Form wizard;
-- Group/Site scope saves;
+- Group scope saves (Site Default saves are observed: BLD-017, BLD-018);
 - Gauge/Aggregate/DataView bindings;
 - REST/ION API wizards (calling ION from a C# script is observed);
 - background tasks beyond one-off RPT+DATAVIEW submits: recurring schedules, IDOMTH/SP tasks, tasks that call APIs (one-off RPT submit is observed, EXP-145; see `api-calls-and-background-tasks.md`);
@@ -97,5 +97,8 @@ Not yet exercised here, so treat these as unverified:
 - **Chart:** FX_OrdersChart.
 - **Portal:** FX_CustomerPortal (Flex portal: header, menu, pages, tiles, drag-to-cart, checkout), with tile form FX_ItemsTile.
 - **Dashboard:** FX_InventoryDashboard (web-user-control dashboard over FX_InventoryItems; dark theme).
-- **Login:** FX_LoginPortal + FX_LoginUsers (hashed login).
+- **Login:** FX_LoginPortal + FX_LoginUsers (hashed login, demo-grade).
+- **Full web app at Site scope:** FX_ServiceDesk + FX_ServiceDeskLogin (Flex, three-file pages, C# writes, history,
+  dashboard, salted sign-in with session tokens; `assets/FX_ServiceDesk/README.md`, builds BLD-007…018). These two
+  Forms are Site Default versions, not User scope.
 - **API probe:** FX_ApiProbe (C# script calls the ION API through IONAPIMethods, and httpbin through HttpWebRequest).

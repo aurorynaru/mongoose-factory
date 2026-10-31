@@ -6,12 +6,36 @@ Knowledge state:
 
 Forms are created in **User scope** (the Designer status bar shows `ScopeType: User / ScopeName: <operator>`).
 
-**Group or Site scope** (when the request's final scope says so). Knowledge state: **unverified**; no factory build has saved outside User scope. From the docs only (`docs/mongoose/guides/editing-scope-and-versions.md`, `web-designer.md`):
-- it needs **Site Developer** editing permission (check Help › About This Application);
-- the scope is set when the Designer opens, or later with Form › Definition › Impersonate;
-- before reopening the form under the new scope, close it and refresh the IDO metadata cache. The refresh is a tenant-wide step, so it needs approval too.
+**Group or Site scope** (when the request's final scope says so). Knowledge state: **Site Default observed** (BLD-017
+FX_ServiceDesk, BLD-018 FX_ServiceDeskLogin + FX_ServiceDesk re-save; two Forms, persistence and runtime checked);
+**Group unverified**. A Site save and Unload All Global Form Objects are tenant-wide: approval first.
 
-Order: build and verify in User scope first. Then, only with the approval from the request or the operator, switch scope, save once, close/reopen, and check the status bar shows the new ScopeType/ScopeName before anything else. Record the steps actually seen, since these are docs-only.
+Order: build and verify in User scope first. Then, only with the approval from the request or the operator:
+1. Close the Form. Form › Definition › **Site Developer Impersonation** → "Identify Your Editing Scope" → Scope list
+   (*Site Default / User / Group*) → click **Site Default** (the User field disappears) → OK → notice "You may want to
+   unload all global objects…" → OK. Status bar `ScopeType: Site`.
+2. Form › Definition › **Unload All Global Form Objects**.
+3. Open the Form (Form menu recent list). "Warning: Form X is not locked… design anyway?" → Yes; on Save "…save
+   anyway?" → Yes (BLD-017). Properties › Version shows **Site Default version**.
+4. Make the change and Save. **Each scope version is its own copy:** a change made in User scope is not in the Site
+   version. Check everything at Site, including Details › Event Handlers (BLD-018: handlers added in User scope after
+   the first Site save were missing at Site and had to be added again).
+5. **Every global object the Form uses needs its own Site version:** Web User Control Assets (each file) and global
+   variables. The Form save doesn't carry them. Create each at Site (Edit › Web User Control Assets / Edit › Variable →
+   + → same name → fill → OK → Save). A Site Form whose asset is missing at runtime shows
+   `{"Success": false, "Message": "Error processing metadata request: path not found"}` in the page area (BLD-017,
+   BLD-018).
+6. Close → unload → reopen → read everything back at Site (Version, script, assets with `compare-readback.js`,
+   variables Persistent/Global True).
+7. **Back to User:** close the Form → Impersonation → Scope **User** → the User field comes up **empty**: type the
+   operator's account (`SECRET_MONGOOSE_USERNAME` placeholder) → Tab → OK → unload. Check `ScopeType: User` and that the
+   status bar's ScopeName matches the Web Client header (compare in code; don't print either).
+- After a Site save, the operator's own User version can disappear or stay; it overrides the Site version for them
+  only. Remove leftover User versions (approved) so the operator sees what everyone sees (`extending-existing-forms.md`
+  § Rollback options).
+- A Designer relaunch can inherit the last scope (BLD-017): check the status bar before any work.
+- Getting a User-only Form to open at Site the first time took the operator several rounds of scope switch + unload
+  (BLD-018, operator's report; the exact sequence is unverified).
 Editing an existing Form the factory doesn't own is covered in `extending-existing-forms.md`. Read it first and get approval.
 
 ## Verified recipes (use directly)
@@ -34,7 +58,10 @@ Designer → **New** → Form Wizard Selection. The New Form / Extend Form radio
 
 Multi-View wizard facts:
 - **Name** combobox: **one plain fill**. Key-event typing leaves it uncommitted, so "Value is required for Name" (EXP-041-R2/R3).
-- Page 2: pick the properties in order (Include checked). **Uncheck Save Template**, which is checked by default.
+- Page 2: pick the properties in order (Include checked). Every IDO property is pre-selected on the right; to leave
+  one out (e.g. a password hash or token on a temporary admin Form), click it in the right list (`li.x-list:visible`)
+  and press **`<`** (`[data-mgcompnamevalue="RemovePushButton"]`; there is a second `<` for groups) (BLD-018, observed).
+- Last page: **uncheck Save Template**, which is checked by default (click its label; read `aria-checked` back).
 - Finish gives "Process Completed Successfully". The Form opens in the Designer, clean, with no Save needed.
 - Re-running it on an existing name asks "Form X already exists--replace it?" **twice** (page-1 Next and after Finish). Answer promptly: a prompt left open times out (EXP-082).
 - What it generates (EXP-050, 072, 082):
@@ -93,5 +120,14 @@ Import button (EXP-062-R4):
 - **Reopen in the Designer:** use the **Form menu recent list** or the toolbar **Open** (`data-mgcompname="openButton"`). The Designer Form menu has no Open item. The Designer Select Form may miss a form created in the same session (EXP-072).
 - **Closing a dirty form** asks "Do you want to save the form definition?" with Yes (default focus), No, Cancel. Read the labels before clicking.
 - **Runtime:** a Web Client Form opened before a Designer Save keeps the old definition. Close it and reopen it, then **Refresh** or F4 (EXP-068-R2).
+- **A new Form** isn't listed in the Web Client's Select Form until the portal tab is reloaded (BLD-007, BLD-015,
+  BLD-018; observed many times). Accept the beforeunload prompt.
+- **Remove a User version** (factory-owned Form, or an approved one): Form › Definition › **Revert Form Definition** →
+  "Warning: found customized global object(s)… remove the User version for user … of form X?" → OK. The next scope's
+  version (Site/Vendor) shows again; a Form that exists **only** in User scope is gone (BLD-018, observed). Never use
+  the toolbar trash (Delete Form Definition).
+- **Delete data rows** (fake test data only, approved): Web Client → select the row → toolbar Delete → "Selected records
+  will be permanently deleted upon Save." → OK → Save → Refresh → check the count dropped by one; stop on any other
+  prompt. Save a before-readback as text first (BLD-017, BLD-018; observed).
 - **Runtime check:** captions, ComboBox lists, read-only greying (joined, derived and key fields grey out), values per record `(Object n of N)`.
 - **Validation:** a domain value outside the list is rejected at Save with "<value> is not a valid <caption>". Free typing is allowed until then (EXP-051).

@@ -1,4 +1,0 @@
-# EXP-031 T3 — network audit (corroboration only)
-
-Controlled-page network panel has RESET at the session navigation boundary (same limitation recorded in T1/T2 notes). Filtered non-static list retrievable now shows prior-session requests only:
-GetExplorerFolder #155; GetForm #213; GenerateServerEvent #215; GetAllForms #161/#179/#199/#221/#228/#256 (latest #256 = EXP-030 T1's recorded index). ZERO SaveChanges. No post-T2 request detail naturally available; response bodies for this task's Cancel/Open actions are NOT retrievable, so applied-query interpretation cannot be corroborated this task. Corroboration of clean state only (no mutation requests visible).

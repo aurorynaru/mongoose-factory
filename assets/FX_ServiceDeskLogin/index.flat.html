@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f4f6fa">
+<title>Sign in · Service Desk</title>
+<!-- Mongoose bridge (WSForm, MG). In the local preview, tools/serve.js answers this with preview/stub.js. -->
+<script type="text/javascript" src="../$app/scripts/UserControl.js"></script>
+<!-- ?v= changes with each install: the browser may keep an old copy otherwise (BLD-018). -->
+<link rel="stylesheet" href="app.css?v=bld018b">
+</head>
+<body>
+<svg class="FX_Sprite" aria-hidden="true" focusable="false">
+<symbol id="i-mark" viewBox="0 0 24 24"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></symbol>
+<symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M4 4l16 16M9.9 6A9.6 9.6 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a17 17 0 0 1-2.6 3.4M6.4 7.6A16.6 16.6 0 0 0 2.5 12S6 18.5 12 18.5a9 9 0 0 0 4.1-1"/><path d="M9.9 10a2.8 2.8 0 0 0 4 4"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4.5M12 16h.01"/></symbol>
+</svg>
+
+<div class="FX_Login">
+<main class="FX_Panel" id="FX_Main">
+<div class="FX_Card">
+<div class="FX_Brand"><svg class="FX_BrandMark" aria-hidden="true"><use href="#i-mark"/></svg><span>Service Desk</span></div>
+
+<!-- Already signed in in this tab (FX_SLCheck) -->
+<section class="FX_Resume" id="FX_Resume" hidden aria-labelledby="FX_ResumeTitle">
+<h1 id="FX_ResumeTitle">Welcome back</h1>
+<p class="FX_Sub">You're signed in as <b id="FX_ResumeName"></b>.</p>
+<button type="button" class="FX_Btn FX_Btn--primary" id="FX_ResumeOpen">Open Service Desk</button>
+<button type="button" class="FX_Btn FX_Btn--quiet" id="FX_ResumeOther">Sign in as someone else</button>
+<p class="FX_Note" id="FX_ResumeNote" role="status" aria-live="polite"></p>
+</section>
+
+<section id="FX_Forms" aria-labelledby="FX_Title">
+<h1 id="FX_Title">Welcome back</h1>
+<p class="FX_Sub" id="FX_Lead">Use your Service Desk username and password.</p>
+
+<div class="FX_Tabs" role="group" aria-label="Sign in or create an account">
+<button type="button" id="FX_TabIn" data-mode="signin" aria-pressed="true">Sign in</button>
+<button type="button" id="FX_TabUp" data-mode="signup" aria-pressed="false">Create account</button>
+</div>
+
+<div class="FX_Alert" id="FX_Alert" role="alert" hidden><svg aria-hidden="true"><use href="#i-alert"/></svg><span id="FX_AlertText"></span></div>
+
+<form id="FX_SignIn" class="FX_Form" novalidate>
+<div class="FX_Field">
+<label for="FX_InUser">Username</label>
+<input id="FX_InUser" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="30" required>
+</div>
+<div class="FX_Field">
+<label for="FX_InPass">Password</label>
+<div class="FX_PassWrap">
+<input id="FX_InPass" name="password" type="password" autocomplete="current-password" maxlength="128" required>
+<button type="button" class="FX_Reveal" data-reveal="FX_InPass" aria-label="Show password" aria-pressed="false"><svg aria-hidden="true"><use href="#i-eye"/></svg></button>
+</div>
+</div>
+<button type="submit" class="FX_Btn FX_Btn--primary" id="FX_InSubmit">Sign in</button>
+<p class="FX_Switch">New here? <button type="button" class="FX_Link" data-mode="signup">Create an account</button></p>
+</form>
+
+<form id="FX_SignUp" class="FX_Form" novalidate hidden>
+<div class="FX_Field">
+<label for="FX_UpUser">Username</label>
+<input id="FX_UpUser" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="30" required aria-describedby="FX_UpUser_hint">
+<small class="FX_Hint" id="FX_UpUser_hint">3–30 lowercase letters, digits and . _ -</small>
+</div>
+<div class="FX_Row">
+<div class="FX_Field">
+<label for="FX_UpName">Your name</label>
+<input id="FX_UpName" name="name" type="text" autocomplete="name" maxlength="60" required>
+</div>
+<div class="FX_Field">
+<label for="FX_UpTeam">Team <span class="FX_Opt">(optional)</span></label>
+<input id="FX_UpTeam" name="team" type="text" autocomplete="organization-title" maxlength="40">
+</div>
+</div>
+<div class="FX_Row">
+<div class="FX_Field">
+<label for="FX_UpPass">Password</label>
+<div class="FX_PassWrap">
+<input id="FX_UpPass" name="password" type="password" autocomplete="new-password" maxlength="128" required aria-describedby="FX_UpPass_hint">
+<button type="button" class="FX_Reveal" data-reveal="FX_UpPass" aria-label="Show password" aria-pressed="false"><svg aria-hidden="true"><use href="#i-eye"/></svg></button>
+</div>
+<div class="FX_Meter" aria-hidden="true"><span id="FX_MeterBar"></span></div>
+<small class="FX_Hint" id="FX_UpPass_hint">At least 10 characters.</small>
+</div>
+<div class="FX_Field">
+<label for="FX_UpPass2">Confirm password</label>
+<input id="FX_UpPass2" name="confirm" type="password" autocomplete="new-password" maxlength="128" required>
+</div>
+</div>
+<button type="submit" class="FX_Btn FX_Btn--primary" id="FX_UpSubmit">Create account</button>
+<p class="FX_Switch">Already have an account? <button type="button" class="FX_Link" data-mode="signin">Sign in</button></p>
+</form>
+</section>
+</div>
+</main>
+</div>
+<script src="app.js?v=bld018"></script>
+</body>
+</html>

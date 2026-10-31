@@ -47,5 +47,11 @@ Use the same playbooks as for factory-owned objects (forms.md, events-and-script
 
 ## Rollback options
 - **User-scope change:** revert the User version, or undo it component by component using the baseline.
+  - Observed route (BLD-018, on factory-owned Forms): Form › Definition › **Revert Form Definition** → warning that
+    names the User version and any customized global objects → OK → Properties › Version shows the next scope's
+    version. This replaces the docs' "Edit › Revert…".
+  - Global objects are separate: the User version of an asset or variable is removed with the trash button in Edit ›
+    Web User Control Assets / Edit › Variable **while in User scope**; it deletes only that scope's version. Save +
+    unload, then check the list shows "Site Default version".
 - **Prefixed copy or extension:** delete the copied form, or remove its Form Extensions entry.
 - **Schema change:** follow the recorded inverse steps. Data loss is possible, so it needs approval.

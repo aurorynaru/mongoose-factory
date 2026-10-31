@@ -1,0 +1,153 @@
+/* FX_ServiceDeskLogin: sign in / create account for the Service Desk (BLD-018). Tokens are FX_ServiceDesk/app.css's;
+layout guide mocks/service-desk/*.png. Sections: tokens, base, frame, brand panel, card, form, responsive. */
+
+/* ---- Tokens (same values as FX_ServiceDesk/app.css) ---- */
+:root {
+color-scheme: light;
+--bg: #f4f6fa;
+--surface: #ffffff;
+--sunken: #f8f9fc;
+--line: #e2e7ef;
+--line-strong: #cfd6e2;
+--ink: #172133;
+--ink-2: #3c4759;
+--muted: #5f6b7d;
+--accent: #2b5ce6;
+--accent-ink: #1f47bd;
+--accent-soft: #eaf0ff;
+--danger: #c7362f;
+--danger-soft: #fdeceb;
+--ok: #1d7a4f;
+--todo: #556274;   --todo-soft: #eef1f5;
+--doing: #2456d6;  --doing-soft: #e8efff;
+--wait: #9a5b00;   --wait-soft: #fff3df;
+--p-high: #e07b1a;
+--radius-s: 6px;
+--radius: 10px;
+--radius-l: 14px;
+--shadow: 0 1px 2px rgba(23, 33, 51, .05);
+--shadow-pop: 0 10px 30px rgba(23, 33, 51, .16);
+--font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---- Base ---- */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+margin: 0;
+background: var(--bg);
+color: var(--ink);
+font: 14px/1.45 var(--font);
+-webkit-font-smoothing: antialiased;
+}
+h1, p { margin: 0; }
+h1 { font-size: 26px; line-height: 1.2; font-weight: 680; letter-spacing: -.015em; text-wrap: balance; }
+button, input { font: inherit; color: inherit; }
+button, input, label { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.FX_Sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+[hidden] { display: none !important; }
+
+/* ---- Frame: one centered card ---- */
+.FX_Login { display: grid; min-height: 100vh; min-height: 100dvh; }
+
+.FX_Brand { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; font-weight: 680; font-size: 15px; letter-spacing: -.01em; }
+.FX_BrandMark { width: 28px; height: 28px; padding: 5px; border-radius: 8px; background: var(--accent); color: #fff; stroke-width: 2; }
+
+/* ---- Card ---- */
+.FX_Panel { display: grid; place-items: center; padding: 24px; overflow-y: auto; }
+.FX_Card {
+width: 100%; max-width: 420px;
+padding: 28px; background: var(--surface);
+border: 1px solid var(--line); border-radius: var(--radius-l); box-shadow: var(--shadow);
+}
+.FX_Sub { margin-top: 6px; color: var(--muted); }
+
+/* Sign in / Create account: a two-way switch (segmented control) */
+.FX_Tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 20px 0 16px; padding: 4px; background: var(--sunken); border: 1px solid var(--line); border-radius: var(--radius); }
+.FX_Tabs button {
+padding: 7px 10px; border: 0; border-radius: 7px; background: none; color: var(--muted);
+font-weight: 600; cursor: pointer;
+}
+.FX_Tabs button:hover { color: var(--ink); }
+.FX_Tabs button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(23, 33, 51, .1); }
+
+.FX_Alert {
+display: flex; gap: 8px; align-items: flex-start;
+margin-bottom: 14px; padding: 10px 12px;
+background: var(--danger-soft); color: var(--danger); border-radius: var(--radius-s);
+font-weight: 550;
+}
+.FX_Alert svg { margin-top: 1px; }
+
+/* ---- Form ---- */
+.FX_Form { display: grid; gap: 14px; }
+.FX_Row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.FX_Field { display: grid; gap: 5px; min-width: 0; align-content: start; }
+.FX_Field label { font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.FX_Opt { font-weight: 450; color: var(--muted); }
+.FX_Field input {
+width: 100%; height: 40px; padding: 0 12px;
+background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--radius-s);
+font-size: 14px;
+}
+.FX_Field input:hover { border-color: #b7c0cf; }
+.FX_Field input:focus-visible { outline: 2px solid var(--accent); outline-offset: -1px; border-color: var(--accent); border-radius: var(--radius-s); }
+.FX_Field input[aria-invalid="true"] { border-color: var(--danger); }
+.FX_Hint { color: var(--muted); font-size: 12px; }
+.FX_Err { color: var(--danger); font-size: 12px; font-weight: 550; }
+
+.FX_PassWrap { position: relative; }
+.FX_PassWrap input { padding-right: 44px; }
+.FX_Reveal {
+position: absolute; top: 4px; right: 4px; display: grid; place-items: center;
+width: 32px; height: 32px; border: 0; border-radius: var(--radius-s); background: none; color: var(--muted); cursor: pointer;
+}
+.FX_Reveal:hover { background: var(--sunken); color: var(--ink); }
+
+.FX_Meter { height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.FX_Meter span { display: block; width: 0; height: 100%; border-radius: 2px; background: var(--danger); transition: width .2s ease; }
+.FX_Meter span.is-fair { background: var(--wait); }
+.FX_Meter span.is-good { background: var(--ok); }
+
+.FX_Btn {
+display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+height: 42px; padding: 0 16px; border-radius: var(--radius-s); border: 1px solid transparent;
+font-weight: 620; cursor: pointer;
+}
+.FX_Btn--primary { margin-top: 4px; background: var(--accent); color: #fff; }
+.FX_Btn--primary:hover { background: var(--accent-ink); }
+.FX_Btn--primary:disabled { opacity: .65; cursor: progress; }
+.FX_Btn--quiet { background: none; color: var(--accent-ink); }
+.FX_Btn--quiet:hover { background: var(--accent-soft); }
+
+.FX_Switch { color: var(--muted); text-align: center; font-size: 13px; }
+.FX_Link { padding: 0; border: 0; background: none; color: var(--accent-ink); font-weight: 600; cursor: pointer; }
+.FX_Link:hover { text-decoration: underline; }
+
+.FX_Resume { display: grid; gap: 10px; }
+.FX_Resume .FX_Sub { margin: 0 0 10px; }
+.FX_Note { color: var(--muted); font-size: 13px; text-align: center; }
+.FX_Note:empty { display: none; }
+
+/* ---- Responsive ---- */
+/* Short panes (the Mongoose Form area on a 768px-high screen is about 560px): tighter card. */
+@media (max-height: 640px) {
+.FX_Panel { padding: 12px; }
+.FX_Card { padding: 20px 24px; }
+.FX_Brand { display: none; }
+h1 { font-size: 22px; }
+.FX_Tabs { margin: 14px 0 12px; }
+.FX_Form { gap: 10px; }
+.FX_Field input { height: 38px; }
+}
+@media (max-width: 480px) {
+.FX_Panel { padding: 16px; place-items: start center; }
+.FX_Card { padding: 22px 18px; }
+.FX_Row { grid-template-columns: 1fr; }
+h1 { font-size: 23px; }
+}
+@media (prefers-reduced-motion: reduce) {
+.FX_Meter span { transition: none; }
+}

@@ -1,1 +1,0 @@
-evidence\EXP-027-R2\t2-select-form-absence-notes.md:2. One native click on Web Client toolbar **Open** (`f3e23`, accessibility name "Open") ΓåÆ exactly one **"Select Form"** dialog appeared with grid columns Caption/Name, Filter textbox, Filter By combobox, Case Sensitive + Starts With checkboxes, OK/Cancel/Help.

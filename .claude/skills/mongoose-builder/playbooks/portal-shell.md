@@ -33,6 +33,34 @@ click the wrench button immediately left of the Help `?` icon (tooltip **"Open d
 window"**, DOM id `#mgtoolbarbutton-1125`). It opens a standalone Designer tab where **New** is
 enabled. Create the Flex form there.
 
+### Flex Form for one full-width web page (operator procedure, 2026-10-30)
+Use this for a Form that only hosts one web user control (a custom web app). It differs from the portal steps
+above: Unit **Pixel** instead of Char, and one Fill region instead of three.
+
+Knowledge state: **verified** (operator approved the upgrade, 2026-11-01): run twice with persistence and runtime
+checks (BLD-015 `FX_ServiceDesk`, BLD-018 `FX_ServiceDeskLogin`). After step 6 still read back Unit, the region
+count and Orientation, then Save and reopen.
+Observed details (BLD-015): in the Category list, click the option row (the label sat behind a tile graphic); Basic
+is the only Flex wizard; the wizard saves the Form itself (Save disabled on open). The FlexLayout adorner is
+`.mg-adorner-edit-flexlayout`; the Regions toolbar icons are add, delete (trash), up, down (no labels). Reopen
+showed Unit **Pixel** and one Flex/Fill region.
+
+Pick every value in steps 1, 2, 3 and 6 by **clicking the dropdown and its item. Never type into it**
+(`browser-and-session.md`).
+1. Designer → New → Category **Flex**.
+2. Wizard **Basic**.
+3. Unit **Pixel**.
+4. Click the Flex component (the FlexLayout), then its top-left adorner **Edit FlexLayout Attributes**.
+5. In the Regions grid, delete index **1** and index **2**.
+6. Click index **0** and set Orientation to **Fill**.
+
+Then place the UserControl in region 0 and point it at the page (§3b, `web-user-controls.md`).
+
+Choosing Pixel here at creation avoided the "Unit read-only and locked to Char" case in §3b (BLD-003): Unit read
+back as Pixel after reopen in both builds.
+
+The page's CSS **must have media queries**: the page has to adapt to whatever width the Form gives it.
+
 Add collections in **Details › Collections**:
 - **+** creates a Secondary entry and raises an OK-only "You must regen this form…" prompt.
 - Set Collection = IDO; Primary is set the same way.

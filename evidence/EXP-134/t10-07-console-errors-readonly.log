@@ -1,4 +1,0 @@
-Total messages: 2 (Errors: 2, Warnings: 0)
-
-[ERROR] Permissions policy violation: unload is not allowed in this document. @ https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/res/Designer/app.js?_dc=20261002150145:1
-[ERROR] Permissions policy violation: unload is not allowed in this document. @ https://mgapse1ap.mtmgf.se1.mongoosepaas.io/WSWebClient/Scripts/yggdrasil-core.js:1409

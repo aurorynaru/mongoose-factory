@@ -1,5 +1,0 @@
-Read-only network audit (T6, 2026-10-07): filter SaveChanges|DesignerSession on the Designer tab.
-Requests #19 Initialize, #21 GetSiteDevScopeInfo, #69 SetSiteDevScopeInfo (session plumbing).
-#115 POST DesignerSession/SaveChanges -> 200; req body {"formId":91}; resp {"Success":true,"Message":"Form [FX_ComponentRecoveryLab02] and global object(s) were saved.","Payload":[]} -- PRIOR save of inherited Lab02 (earlier experiment), NOT this task. No Lab02 action performed in T6.
-#157 POST DesignerSession/SaveChanges -> 200; req body {"formId":97}; resp {"Success":true,"Message":"Form [FX_ComponentRecoveryLab03] and global object(s) were saved.","Payload":[]} -- the ONLY SaveChanges issued in this task (one ordinary Save).
-Counts: this-task SaveChanges = 1. formId 97 assumed to be the Lab03 server instance (interpretation, not independently proven).

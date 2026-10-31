@@ -1,7 +1,0 @@
-evidence/EXP-029\t1-preflight-notes.md:   Select Form dialog does NOT re-render rows on filter-text change alone (header-only grid
-evidence/EXP-029\t1-preflight-notes.md:  T1's observation); no Select Form dialog; no alert/prompt; DEM badge, Portal 2026.09.00.
-evidence/EXP-029\t1-preflight-notes.md:## ┬ºE AC-1 read-only Select Form attempt (bounded)
-evidence/EXP-029\t1-preflight-notes.md:1. One native click on Web Client toolbar **Open** ΓåÆ exactly one "Select Form" dialog
-evidence/EXP-029\t1-preflight-notes.md:4. One Cancel click dismissed the dialog (`find "Select Form"` ΓåÆ none afterward); Web Client restored to
-evidence/EXP-029\t1-selectform-dialog-initial.yml:- dialog "Select Form" [ref=f3e79]:
-evidence/EXP-029\t1-selectform-positive-control-fill.yml:- dialog "Select Form" [ref=f3e79]:

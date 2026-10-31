@@ -1,3 +1,0 @@
-   Inherited filter state at open: textbox already contained `FX_ComponentRecoveryLab03`, Filter By=Name,
-   Case Sensitive + Starts With unchecked; grid rendered exactly ONE row (Caption/Name both
-   `FX_ComponentRecoveryLab03`) ΓÇö a visible live populated result. Screenshot t1-03 (inspected) shows this

@@ -1,5 +1,0 @@
-Total messages: 61 (Errors: 0, Warnings: 9)
-Returning 1 messages for level "error"
-
-ReferenceError: autofillAbortController is not defined
-    at https://mingle-sso.se1.inforcloudsuite.com/<secret>SECRET_MONGOOSE_TENANT</secret>/as/authorization.oauth2?client_id=infor~Xzd2alA7lZG3vOdB7VzIYHplGOnx7zdA-aV-LEb8JSI_OIDC&response_type=code&redirect_uri=https://mingle-portal.se1.inforcloudsuite.com/sso/callback&scope=openid&state=<secret>SECRET_MONGOOSE_TENANT</secret>~gFCswGbBRwslmd9ENWGxzpKU2uOelwJWbWcRNQ8ynDl-XygKOsBC6fUAk7oyDnhTwHMy4w78H7L7wIsH_vKyIqThFKyxWklSuYqTDUOsFeKsOthz53qndpnf7N2wvWoU&code_challenge=xMYh_EFZXmcrSTN9bZ_SZAQuXszw0444rkLvIJz_O2U&code_challenge_method=S256:314:13

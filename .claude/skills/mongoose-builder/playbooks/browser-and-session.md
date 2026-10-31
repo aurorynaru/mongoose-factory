@@ -33,6 +33,18 @@ Sources:
   - String-ID Caption comboboxes need key-by-key typing, then leave by clicking another row.
   - Checkboxes are often covered by a span. Click the **label**.
   - ExtJS combos aren't `<select>`: open the list and click the option.
+  - **Designer dropdowns with a fixed list** (operator rule, 2026-10-30): pick the value by **clicking the dropdown
+    and then the item. Never type the value.** This covers Category, Wizard, Unit, Orientation and similar fields.
+    Read the value back after picking it.
+- **Form Wizard Selection** (Designer New): the Category and Wizard lists render as tiles
+  (`.mg-tile.x-combo-list-item`, e.g. "Classic / WinStudio classic form wizards", "Multi-View / Multi-view (grid/detail)
+  form…"), not `.x-boundlist-item`. Click the field's trigger, then the tile (BLD-018).
+- **Menu bar:** `getByText('Form', { exact: true })` can hit the Properties panel's "Form" tab instead of the Designer
+  menu. Click the menu bar item itself (BLD-018).
+- **"New" name dialogs:** the first OK after Tab can be ignored. Check that the dialog closed; if not, click OK again
+  (BLD-018, observed several times).
+- **Web Client Form tabs:** close one by a real mouse click on its `.x-tab-close-btn` (a DOM `click()` does nothing)
+  (BLD-018).
 - **Filter in Place forms** (they open with an empty query, "Filter in Place" in the status bar): run the query with **Actions › Filter › Execute in Place**. Enter in an empty field did not run it (EXP-141).
 - **Auto-started rows:** some forms (Deployment, Object External APIs) open with an unsaved `*1` row. Closing the tab without Save leaves nothing behind (EXP-140/141).
 - **Open forms:**
@@ -56,6 +68,10 @@ Sources:
   3. Open Mongoose and keep the default config.
   - **Never sign in inside the embedded frame** (mingle-sso refuses to be framed).
   - If Playwright can't click Sign in, ask the operator to sign in manually.
+- **Observed recovery route (BLD-018):** accept the beforeunload dialog → navigate the top tab to the portal (SSO is
+  usually still valid, no sign-in) → open Mongoose → close the banner with × → configuration picker OK → launch a
+  fresh Designer from the Web Client. It opens in User scope with the scope dialog: check the scope before work.
+  Saves made before the expiry survived.
 - **Designer recovery:** a Designer loaded before the expiry stays broken. Reload the Designer tab (or open a fresh Designer from the Web Client). Unsaved work is lost.
 - **Before redoing anything, inspect.** Saves made before the expiry survive. Never blindly replay.
 - **Avoid losing work:** save after every small step and keep sessions short. Re-login proactively when the "Your session is about to expire" strip shows.
@@ -66,6 +82,19 @@ Sources:
 - **What to record:** for each decisive screenshot, note what it shows (identity, scope, values) and what it doesn't prove.
 - **Long editor content** (assets, scripts): save it with `browser_snapshot { target, filename }` instead of pasting it into the record, and compare it with `tools/compare-readback.js` (see `web-user-controls.md`).
 - **Credentials:** never capture them. If a screenshot shows a filled sign-in form, delete it unopened.
+- **Mask the account before any screenshot.** In the Web Client the user's email is inside the Mongoose iframe, not
+  only the top page: blur `page.frameLocator('<mongoose iframe>').locator('text=/@/')` **and** `page.locator('text=/@/')`.
+  In the Designer blur `text=/ScopeName/`, `text=/@/` and `text=/User version for/`. Check the saved image; delete it if
+  the account still shows (BLD-017, BLD-018). In Markdown and readbacks write "[operator]".
+- **Readbacks of data** that holds account IDs: mask them in code before printing (e.g. map each ID to `[other <len>]`),
+  and leave secret columns off the admin Form entirely (`forms.md` § Multi-View).
+
+## Cleaning up after a build
+- Stop what the build started. On Windows, stopping `npm run preview` ends only the npm wrapper; its child
+  `node tools/serve.js` keeps port 8765. Check `netstat -ano | grep ":8765 "`, confirm the PID's command line, then
+  `taskkill //PID <pid> //F` (BLD-018).
+- Only stop processes this session started (check the parent process). Other sessions' Playwright servers and
+  browsers are not yours to stop.
 
 ## Evidence levels (operator decision, 2026-10-29)
 The request sets the level. When it says nothing, use **full**.

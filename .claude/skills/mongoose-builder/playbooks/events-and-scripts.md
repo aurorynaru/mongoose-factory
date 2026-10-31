@@ -34,6 +34,12 @@ and Part 6 sequences are each complete end to end at runtime.
   | Set Values | `SETVARVALUES(FX_VarTest=P(FX_Description))` | EXP-056/057 |
   | Form Script Method | `CalcOrderTotal(P(FX_Count),P(FX_ItmsCost))` | EXP-095 |
   | Run Form / Set values / Generate event | used in portal work; see portal-shell.md | EXP-110–126 |
+  | Run Form | Event Handler Parameters › Form = target → grid `FX_OpenServiceDesk 0 Run Form false FX_ServiceDesk( )`; opens the Form in a **new tab** | BLD-018 |
+  | Goto Form | same dialog; grid `FX_OpenLogin 0 Goto Form false FX_ServiceDeskLogin( )`; **replaces** the current Form in its tab (use this to move between two app Forms) | BLD-018 |
+
+- Fire a custom event from a web page with `WSForm.generate("<event>", cb)` (BLD-018, observed).
+- In the Event Handlers grid, expand a group row with a click on it, then ArrowRight. Save collapses Details; reopen it
+  before the next step (BLD-018).
 
 - The Parameters dialog's General tab holds: Error/Success Message, Only When Current Collection Is, Only When Platform Is, Keep, Ignore Failure, Message as Toast, Disabled. It also has Prompt When and "Stop event handlers if expression is true".
 - Several actions on one event run in **sequence** order (0, 1, …).

@@ -1,7 +1,8 @@
 # Service desk, phase 2 of 4: tickets, comments and the ticket Form
 
-Needs phase 1 accepted (the four setup tables and their test rows). Screenshot: `mocks/service-desk/ticket-list.png`.
-Paste the text block below as one message, and attach the screenshot.
+Needs phase 1 accepted (the four setup tables and their test rows). This is the Classic data Form: the ticket
+list from `mocks/service-desk/ticket-list.png` is built as a web page in phase 3. Paste the text block below as
+one message.
 
 ```text
 /mongoose-builder
@@ -90,7 +91,7 @@ Buttons — one per line: caption | what happens when clicked | what the user se
 - Reopen | sets Status to OPEN and clears Resolved on and Resolution, then saves | Status shows Open and the ticket is saved
 
 ## 5. Look and feel
-Mock screenshot / reference (attach or give a path): mocks/service-desk/ticket-list.png (layout guide for the list and the detail; keep within what a Classic Form can do)
+Mock screenshot / reference (attach or give a path): none (standard Mongoose look; the mocked ticket screens are phase 3's web page)
 Colors / theme / fonts (or "match <an existing page>"): default Mongoose theme
 Must work on: [x] desktop  [ ] tablet  [ ] phone
 
@@ -111,7 +112,7 @@ I will accept it when (list what I can see or do at runtime):
 - Saving a ticket without a Summary, Project or Reporter is refused with a message.
 
 ## 8. Anything else
-Known problems, deadlines, things to avoid: Ticket numbering is new here: run it as a small probe first (one test ticket), and if it can't be done safely, say so and propose another way before building on it. Keep the table, column and Form names exactly as written: phases 3 and 4 rely on them. Use the system created date for "Posted"; don't add your own date columns. The screenshot is for layout only: no other product's name, logo or icons. Put the IDOs in FX_ServiceDeskProject (from phase 1). Test data is fake only.
+Known problems, deadlines, things to avoid: Ticket numbering is new here: run it as a small probe first (one test ticket), and if it can't be done safely, say so and propose another way before building on it. Keep the table, column and Form names exactly as written: phases 3 and 4 rely on them. Use the system created date for "Posted"; don't add your own date columns. Put the IDOs in FX_ServiceDeskProject (from phase 1). Test data is fake only.
 
 ## 9. Evidence and guide
 Evidence: full

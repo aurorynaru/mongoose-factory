@@ -16,6 +16,8 @@ Reference implementations (copy these):
 |---|---|---|---|
 | Inventory dashboard | `assets/FX_Inventory/index.html` (+ `index.flat.html` install copy) | `assets/FX_Inventory/FX_InventoryDashboard.cs.txt` | `FX_InventoryDashboard` / `FX_InventoryControl` (Size `100; 30`) / Global `FX_vInventoryJson` |
 | Login portal | `FX_Login/index.html` + `app.js` (in the tenant) | `assets/FX_Login/FX_LoginPortal.flat.cs.txt` | `FX_LoginPortal` / `FX_LoginControl` / Global `FX_vLoginResult` |
+| Service Desk app (three files, writes, sessions, Site scope) | `assets/FX_ServiceDesk/` (README there) | `assets/FX_ServiceDesk/FX_ServiceDesk.cs.txt` | `FX_ServiceDesk` (Flex) / `FX_ServiceDeskControl` / Global `FX_vSDResult` |
+| Service Desk sign-in (salted PBKDF2, session token) | `assets/FX_ServiceDeskLogin/` | `assets/FX_ServiceDeskLogin/FX_ServiceDeskLogin.cs.txt` | `FX_ServiceDeskLogin` (Flex) / Global `FX_vSDLoginResult` |
 
 Assets are **tenant-wide**. Name them with a top-level folder that starts with the build prefix (`FX_` by default; `FX_<App>` below means `<prefix><App>`). Never edit `$app`, `mongoose` or `soho*` assets, or `$app/scripts/UserControl.js`.
 
@@ -47,8 +49,13 @@ Every page is split into three assets in its `FX_<App>/` folder, plus matching r
 - Knowledge state:
   - a separate `app.js` loaded by an FX_ page is **observed** (`FX_Login/index.html` + `app.js`);
   - a relative `<link rel="stylesheet" href="…">` loading in a Web User Control is **observed** only in the read-only Mock app (`mocklogin/style/app.css`, EXP-128);
-  - an FX_ page loading its own `app.css` is **unverified**. In the first build that uses it, probe it: create `app.css` with one visible rule, Save, open the runtime, and confirm the style applied before building on it.
-- **Unknown:** whether the Web Client caches `app.js` / `app.css` after their content is replaced. After the first update of a split page, reopen the Form and check that the change is live. If it's stale, report it; don't work around it silently.
+  - an FX_ page loading its own `app.css` is **observed** many times (FX_ServiceDesk BLD-015–018, FX_ServiceDeskLogin
+    BLD-018), at User and Site scope.
+- **Caching (observed, BLD-015, BLD-018):** the browser keeps serving the old `app.js` / `app.css` after the asset is
+  replaced, even after closing and reopening the Form. Load them with a version query
+  (`<link rel="stylesheet" href="app.css?v=bld018b">`, `<script src="app.js?v=bld018c">`) and bump it in
+  `index.html` with every change to that file; then reinstall `index.html` too. Runtime check: the page's
+  `document.scripts` show the new `?v=`.
 - Install copies: flush-left `index.flat.html`, `app.flat.css` and `app.flat.js`, updated with their sources.
 - A change touches only the file it needs (a colour → `app.css` only), so an install replaces one asset, not the whole page.
 - Existing single-file pages (FX_Inventory, FX_ApiPage, FX_ASNPortal) are split only when the operator asks. Until then, change them in place.
@@ -124,6 +131,16 @@ Easy to debug:
 9. Runtime: in the Web Client, Open › Select Form opens the Form with the new asset. No portal reload was needed in BLD-001. Click Refresh data and exercise the changed feature.
 - The frame exposed accessibility refs in EXP-139 T6 and in BLD-001, but not in EXP-139 T7/T8. Use refs when present. Coordinates are the fallback.
 - When finding refs, never use a regex that matches `textbox`: the editor's full content comes back in the result.
+- **Baseline by length** works when the installed content is known: before the fill, check the editor value's length
+  equals the length of the last installed copy and stop without a change if not. Then fill, `compare-readback.js`
+  before OK, Save after each file, unload, read back. Helper scripts: `evidence/BLD-018/app-asset-fill.js`,
+  `app-asset-readback.js`, `asset-ok.js` (BLD-018).
+- The editor snapshot can be taken by CSS target: `browser_snapshot { target: '.x-window:has-text("Edit Browser File")
+  textarea:visible', filename: … }` (BLD-018).
+- **At Site scope:** the same steps after Impersonation › Site Default + unload (`forms.md` § Group or Site scope).
+  The tree shows each file's "Site Default version" / "User version for user …"; check it before filling. The trash
+  button deletes **only the current scope's version** of an asset or variable; after Save + unload the next scope's
+  version shows (BLD-018, observed).
 
 ## Readback check (`tools/compare-readback.js`)
 ```
@@ -140,15 +157,47 @@ node .claude/skills/mongoose-builder/tools/compare-readback.js evidence/<ID>/<sn
   - `npm run flat -- FX_<App>` writes every install copy (`index.flat.html`, `app.flat.css`, `app.flat.js`, `*.flat.cs.txt`). Never hand-edit a flat copy.
 - A local preview proves the layout and the page logic only. The tenant result is proven only at runtime in the Web Client.
 - No external CDN: every style and script is an asset in the page's own folder.
+- **Design and review (operator rule, 2026-10-30):**
+  - Make the visual choices with `.claude/skills/frontend-design/SKILL.md`. A mock or screenshot from the
+    request wins where it is specific. The skill decides what the mock leaves open: type scale, spacing, states, and
+    empty/error copy.
+  - Before installing, review `index.html`, `app.css` and `app.js` with
+    `.claude/skills/web-design-guidelines/SKILL.md` and fix the findings in the local preview. The skill fetches its
+    rules from GitHub; if it can't, report that instead of guessing the rules.
+  - `app.css` **must have media queries**, so the page fits the width the Form gives it (check desktop and tablet
+    widths in the preview).
+  - Fonts: system font stacks only, since there is no CDN. Icons and charts: inline SVG.
 - `assets/FX_Inventory/index.html` is the reference for the dark theme, KPI cards, filters, sort and the status line.
 
 ## Pitfalls
 - **Wait for the Form before the first `WSForm.invoke` (BLD-002, observed).** An invoke sent from the page's startup code never reached the server (no event after `forminit`), and the page timed out. Wrap the first load in `MG.onReady(function () { load(); })`, guarded with `typeof MG !== "undefined"` so the local preview still runs. See `assets/FX_ASNPortal/index.html` (end of script) and `docs/mongoose/guides/user-control.md`.
 - **UserControl Size (BLD-002, observed):** typing "100; 30" into Layout › Size did not commit. Set Width and Height separately, committing each by clicking another cell.
 - **Control URL change:** after picking the Control URL, an info dialog about regeneration appears and blocks clicks until OK is pressed.
-- **Control frame size (BLD-002):** on a Normal form with Size 100; 30, the page renders in a fixed frame of about 730×540 px. On a **Flex** form (operator's ASNPORTAL, UserControl in Pixel units with Flex attributes), the page filled the form width (observed).
+- **Control frame size (BLD-002):** on a Normal form with Size 100; 30, the page renders in a fixed frame of about 730×540 px. On a **Flex** form (operator's ASNPORTAL, UserControl in Pixel units with Flex attributes), the page filled the form width (observed). To create such a Form, follow `portal-shell.md` § Flex Form for one full-width web page.
 - **Form script class name = form name (BLD-002, observed):** the C# template for form ASNPORTAL is `public class ASNPORTAL : FormScript`. When the same script is used on another form, rename only the class line, or the editor may refuse it with "class name has changed".
 - Designer sessions expire about hourly. A stale Designer gives "server event processing returned an error". Stop, re-login at the top-level portal and reload (browser-and-session.md).
+- **First invoke can arrive without its argument (BLD-018, observed on both Service Desk pages).** The first
+  `WSForm.invoke` from a just-opened Form (Run Form or Goto Form) reached the C# method without its argument
+  ("…no default value" error box) even inside `MG.onReady`. Fix: give the parameter a default
+  (`public void FX_SDLoad(string token = null)`) and have the page retry the first call after 1.5 s and 3 s before
+  showing an error or the sign-in gate (`START_RETRY_MS` in `assets/FX_ServiceDesk/app.js`). Preview switch
+  `?dropfirst=1` simulates it.
+- **Writes from the C# script (observed, BLD-009/015/016):** `IDOClient.UpdateCollection` updates and inserts work;
+  the script re-reads the row afterwards to prove it. DateTime properties take `yyyyMMdd HH:mm:ss.fff`, and `""`
+  clears one. `AUTONUMBER()` is filled by the client Form only, not on a script insert: the script sets the key
+  (max + 1).
+- **Dates are UTC (observed, BLD-015).** The tenant clock is UTC: `CreateDate` and `DateTime.Now` in a form script both
+  read UTC, and the text goes to the page without an offset. Mark every server stamp as UTC in the page (append `Z`
+  before parsing; `markStamps` in `assets/FX_ServiceDesk/app.js`) so the browser shows local time. Don't convert
+  calendar dates from a date picker (due dates): store and show them as the picked day. BLD-018 found a stamp
+  (`resolvedOn`) that had been treated as a calendar date and showed the previous day before 08:00 at UTC+8.
+- **Two pages, one session (observed, BLD-018):** pages of different Forms are served from the same origin, so
+  `sessionStorage` written by one (e.g. a session token) is readable by the other in the same browser tab.
+- **Open another Form from a page (observed, BLD-018):** a Form event handler of type **Goto Form** (Parameters: Form
+  = target), fired from the page with `WSForm.generate("<event>", cb)`. Goto Form replaces the current Form in its tab;
+  **Run Form** opens another tab each time (app → login → app left duplicate tabs).
+- **A missing asset at the current scope** shows `Error processing metadata request: path not found` in the page area
+  (`forms.md` § Group or Site scope).
 - A positional `PropertyValues[i]` mapping must match the property list order in `LoadCollection`.
 - Escape `'` in filter strings (`Replace("'", "''")`), as in `FX_LoginPortal`.
 - Never put secrets or real credentials in assets. They are readable by any tenant user with asset access.

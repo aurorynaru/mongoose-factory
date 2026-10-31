@@ -1,0 +1,96 @@
+using System;
+using Mongoose.IDO.Protocol;
+using Mongoose.Scripting;
+
+namespace Mongoose.FormScripts
+{
+public class FX_Tickets : FormScript
+{
+// ---- Header ----
+// FX_Tickets: the ticket Form, Classic Multi-View (requests/service-desk/phase-2-tickets.md).
+// FX_AssignTicketNo numbers a new ticket when its project is picked:
+// TicketID = <ProjectKey>-<NextTicketNo>, then the project's NextTicketNo goes up by 1.
+// Wiring: handler FX_NumberNewTicket (Form Script Method,
+//   FX_AssignTicketNo(P(TicketID),P(ProjectKey))) on Data Change of ProjectKeyCombobox
+//   and ProjectKeyGridCol.
+// Not on StdFormSave: Save checks the required TicketID (StdFormGetBoundValues) before any
+// Save handler runs (BLD-009, 2026-10-30).
+// A ticket that is never saved still uses up its number (operator accepted, 2026-10-31).
+// A ticket that has a number keeps it, even if its project is changed afterwards.
+// Status changes only in the Service Desk app, under its rules (BLD-016): the Resolve and
+// Reopen buttons and their methods were removed, and Status is read-only on this Form.
+// Returns 0. A failure throws a message naming the step.
+// Lines stay short: the flat install copy must fit ActiveXScriptLines.CodeLine (EXP-138).
+
+// ---- Config ----
+const string ProjectsIdo = "FX_Projects";   // phase 1 (BLD-007)
+const string ProjectKeyProp = "ProjectKey"; // FX_Projects key
+const string NextNoProp = "NextTicketNo";   // the next ticket of the project gets this number
+const string TicketIdProp = "TicketID";     // FX_Tickets key (BLD-009 step 3)
+const int FirstTicketNo = 1;                // used when NextTicketNo is empty
+// Fully qualified: a new using line made the editor refuse the script (BLD-002).
+static readonly System.Globalization.CultureInfo Invariant =
+System.Globalization.CultureInfo.InvariantCulture;
+
+// ---- Form actions ----
+public int FX_AssignTicketNo(string ticketId, string projectKey)
+{
+// Existing ticket, or a new one that already has its number: keep the number.
+if (!string.IsNullOrEmpty(ticketId)) { return 0; }
+// No project: leave TicketID empty; the built-in Save refuses the row.
+if (string.IsNullOrEmpty(projectKey)) { return 0; }
+try
+{
+int number = FX_TakeNextNo(projectKey);
+string newId = projectKey + "-" + number.ToString(Invariant);
+var tickets = ThisForm.PrimaryIDOCollection;
+tickets.SetCurrentObjectPropertyPlusModifyRefresh(TicketIdProp, newId);
+return 0;
+}
+catch (Exception ex)
+{
+string why = ex.GetType().Name + ": " + ex.Message;
+throw new InvalidOperationException(
+"No ticket number for project " + projectKey + ". " + why, ex);
+}
+}
+
+// ---- Feature helpers ----
+// Reads the project's NextTicketNo and writes NextTicketNo + 1 back.
+// The update carries the loaded ItemID, so a change by someone else in between
+// makes it fail instead of handing out the same number twice.
+int FX_TakeNextNo(string projectKey)
+{
+string props = ProjectKeyProp + ", " + NextNoProp;
+string filter = FX_Eq(ProjectKeyProp, projectKey);
+var found = IDOClient.LoadCollection(ProjectsIdo, props, filter, "", 1);
+if (found.Items.Count == 0)
+{
+throw new InvalidOperationException(ProjectsIdo + " has no project " + projectKey);
+}
+string current = found.Items[0].PropertyValues[1].Value;
+int number = FirstTicketNo;
+var integer = System.Globalization.NumberStyles.Integer;
+if (!string.IsNullOrEmpty(current)
+&& !int.TryParse(current, integer, Invariant, out number))
+{
+throw new InvalidOperationException(NextNoProp + " '" + current + "' isn't a number");
+}
+
+var request = new UpdateCollectionRequestData(ProjectsIdo);
+var item = new IDOUpdateItem(UpdateAction.Update, found.Items[0].ItemID);
+item.Properties.Add(ProjectKeyProp, projectKey, false);
+string next = (number + 1).ToString(Invariant);
+item.Properties.Add(NextNoProp, next, true);
+request.Items.Add(item);
+IDOClient.UpdateCollection(request);
+return number;
+}
+
+// ---- Results and parsing ----
+static string FX_Eq(string prop, string value)
+{
+return prop + " = '" + (value ?? "").Replace("'", "''") + "'";
+}
+}
+}

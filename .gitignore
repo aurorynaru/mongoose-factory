@@ -1,3 +1,7 @@
+# This repo keeps what is needed to build Mongoose projects: AGENTS.md, the skills (.claude/), assets/ (page
+# sources, template, preview tools), builds/ and experiments/ records, recipes/, docs/, requests/, mocks/.
+# Everything below stays on disk but out of git.
+
 # --- never commit -----------------------------------------------------------
 # Harness runtime state: full ChatGPT conversation text, logs, backend PIDs
 tools/learning-harness/data/
@@ -6,6 +10,7 @@ tools/learning-harness/harness.config.json
 # Build output and dependencies
 tools/learning-harness/node_modules/
 tools/learning-harness/dist/
+node_modules/
 # Playwright MCP page snapshots / console logs (hundreds of files that may contain page content)
 evidence/playwright/
 .playwright-mcp/
@@ -22,3 +27,44 @@ Thumbs.db
 .idea/
 
 .claude/settings.local.json
+
+# --- evidence: screenshots and readbacks stay local ---------------------------
+# Kept: rollback copies of installed versions and the browser helper scripts the README and playbooks name.
+evidence/**
+!evidence/**/
+!evidence/*/rollback/**
+!evidence/BLD-*/*.js
+
+# --- side projects (not needed to build Mongoose projects) --------------------
+# CS 1.6 game
+assets/FX_CS16/
+assets/FX_CS16Local/
+tools/FX_CS16*/
+builds/BLD-003-cs16-portal.md
+builds/BLD-005-cs16-railway-probe.md
+builds/BLD-006-cs16-railway-backend.md
+builds/BLD-008-cs16-local-client.md
+builds/BLD-010-cs16-native-timeout-fix.md
+builds/BLD-011-cs16-custom-maps.md
+builds/BLD-012-cs16-railway-mongoose.md
+builds/BLD-013-cs16-direct-player-token.md
+builds/BLD-014-cs16-fullscreen-button.md
+# Slither game
+assets/FX_Slither/
+builds/BLD-004/
+builds/BLD-004-slither-portal.md
+
+# --- factory leftovers --------------------------------------------------------
+.swarm/
+New folder/
+claims/
+misc/
+docs/prompts/
+docs/IMPLEMENTATION_STATUS.md
+docs/QA_EVIDENCE.md
+# Un-prefixed duplicates of the image-library pictures (the FX_ copies are kept)
+assets/customericon.png
+assets/customersignin.png
+assets/dumbbell.png
+assets/eggs.png
+assets/guitar.png

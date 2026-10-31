@@ -1,0 +1,420 @@
+using System;
+using Mongoose.IDO.Protocol;
+using Mongoose.Scripting;
+
+namespace Mongoose.FormScripts
+{
+public class FX_ServiceDeskLogin : FormScript
+{
+//<Ref>Newtonsoft.Json.dll</Ref>
+// ---- Header ----
+// FX_ServiceDeskLogin: sign in / create account for the Service Desk app (BLD-018).
+// Called by FX_ServiceDeskLogin/app.js. Every public method writes one JSON result to
+// the Global variable FX_vSDLoginResult:
+// {"ok":true,...} or {"ok":false,"message":"...","errors":{field: message}}.
+//   FX_SLSignIn(username, password) -> {ok, token, agent}
+//   FX_SLSignUp(username, displayName, team, password) -> {ok, token, agent}
+//   FX_SLCheck(token) -> {ok, agent} while the session is valid
+// agent = {id, name}. The token goes to the page once and is kept in its
+// sessionStorage; the server keeps only its SHA-256 (FX_AgentSessions).
+// Passwords: PBKDF2 (Rfc2898DeriveBytes, SHA-256) with a random salt per account
+// (FX_AgentAccounts); the password itself is never stored, logged or returned.
+// This is an app-level login on top of Mongoose sign-in, not a replacement for it.
+// FX_ServiceDesk.cs.txt resolves the same sessions (FX_SessionAgent there).
+// Lines 1-7 stay exactly as the Script Editor's C# template (BLD-002, BLD-009).
+// The type name on line 7 must equal the Form name (BLD-002).
+// Lines stay short: the flat install copy must fit ActiveXScriptLines.CodeLine (EXP-138).
+// UNVERIFIED (BLD-018 probe B): Rfc2898DeriveBytes with HashAlgorithmName here.
+
+class JsonObject : System.Collections.Generic.Dictionary<string, object> { }
+class Fields : System.Collections.Generic.Dictionary<string, string> { }
+class FieldsList : System.Collections.Generic.List<Fields> { }
+
+// ---- Config ----
+const string ResultVar = "FX_vSDLoginResult";
+const string AgentsIdo = "FX_Agents";      // AgentID 30, DisplayName 60, Team 40 (BLD-007)
+const string AccountsIdo = "FX_AgentAccounts";
+const string AccountProps = "AgentID, PasswordHash, PasswordSalt, Iterations";
+const string SessionsIdo = "FX_AgentSessions";
+const string NewAgentRole = "Agent";       // operator: anyone can sign up, active at once
+const int Iterations = 100000;
+const int SaltBytes = 16;                  // 32 hex characters (PasswordSalt nvarchar 32)
+const int HashBytes = 32;                  // 64 hex characters (PasswordHash nvarchar 64)
+const int TokenBytes = 32;
+const int SessionHours = 12;
+const int UsernameMin = 3;
+const int UsernameMax = 30;
+const int NameMax = 60;
+const int TeamMax = 40;
+const int PasswordMin = 10;
+const int PasswordMax = 128;
+const string BadSignIn = "Username or password is incorrect. Check both and try again.";
+const string IdoDateFormat = "yyyyMMdd HH:mm:ss.fff"; // observed, BLD-015
+static readonly System.Globalization.CultureInfo Invariant =
+System.Globalization.CultureInfo.InvariantCulture;
+
+// ---- Page actions ----
+public void FX_SLSignIn(string username, string password)
+{
+try
+{
+username = (username ?? "").Trim().ToLowerInvariant();
+password = password ?? "";
+if (username.Length == 0 || password.Length == 0)
+{
+FX_Fail("Enter your username and password.");
+return;
+}
+var rows = FX_Load(AccountsIdo, AccountProps, FX_Eq("AgentID", username), "");
+if (rows.Count == 0)
+{
+// Same work as a real check, so the answer time doesn't reveal the name.
+FX_Hash(password, FX_RandomBytes(SaltBytes), Iterations);
+FX_Fail(BadSignIn);
+return;
+}
+var account = rows[0];
+int iterations = FX_Int(account["Iterations"]);
+byte[] salt = FX_FromHex(account["PasswordSalt"]);
+byte[] stored = FX_FromHex(account["PasswordHash"]);
+byte[] given = FX_Hash(password, salt, iterations > 0 ? iterations : Iterations);
+if (!FX_SameBytes(stored, given))
+{
+FX_Fail(BadSignIn);
+return;
+}
+var agent = FX_ActiveAgent(username);
+if (agent == null)
+{
+FX_Fail("This account is switched off. Ask a lead to turn it back on.");
+return;
+}
+var changes = new Fields();
+changes["LastSignIn"] = DateTime.Now.ToString(IdoDateFormat, Invariant);
+FX_UpdateRow(AccountsIdo, "AgentID", username, changes);
+FX_SignedIn(agent);
+}
+catch (Exception ex)
+{
+FX_Fail("Signing in failed. " + FX_Why(ex));
+}
+}
+
+public void FX_SLSignUp(string username, string displayName, string team,
+string password)
+{
+try
+{
+username = (username ?? "").Trim().ToLowerInvariant();
+displayName = (displayName ?? "").Trim();
+team = (team ?? "").Trim();
+password = password ?? "";
+var errors = new JsonObject();
+if (!FX_ValidUsername(username))
+{
+errors["username"] = "Use " + UsernameMin + "-" + UsernameMax
++ " lowercase letters, digits, dots, dashes or underscores.";
+}
+if (displayName.Length == 0) { errors["name"] = "Enter your name."; }
+else if (displayName.Length > NameMax)
+{
+errors["name"] = "Use at most " + NameMax + " characters.";
+}
+if (team.Length > TeamMax)
+{
+errors["team"] = "Use at most " + TeamMax + " characters.";
+}
+if (password.Length < PasswordMin)
+{
+errors["password"] = "Use at least " + PasswordMin + " characters.";
+}
+else if (password.Length > PasswordMax)
+{
+errors["password"] = "Use at most " + PasswordMax + " characters.";
+}
+if (!errors.ContainsKey("username") && FX_NameTaken(username))
+{
+errors["username"] = "This username is taken. Pick another.";
+}
+if (errors.Count > 0)
+{
+FX_FailFields("Check the highlighted fields.", errors);
+return;
+}
+
+var agentRow = new Fields();
+agentRow["AgentID"] = username;
+agentRow["DisplayName"] = displayName;
+agentRow["Team"] = team;
+agentRow["Role"] = NewAgentRole;
+agentRow["Active"] = "1";
+FX_InsertRow(AgentsIdo, agentRow);
+
+byte[] salt = FX_RandomBytes(SaltBytes);
+var accountRow = new Fields();
+accountRow["AgentID"] = username;
+accountRow["PasswordSalt"] = FX_Hex(salt);
+accountRow["PasswordHash"] = FX_Hex(FX_Hash(password, salt, Iterations));
+accountRow["Iterations"] = Iterations.ToString(Invariant);
+accountRow["LastSignIn"] = DateTime.Now.ToString(IdoDateFormat, Invariant);
+FX_InsertRow(AccountsIdo, accountRow);
+
+var agent = new JsonObject();
+agent["id"] = username;
+agent["name"] = displayName;
+FX_SignedIn(agent);
+}
+catch (Exception ex)
+{
+FX_Fail("Creating the account failed. " + FX_Why(ex));
+}
+}
+
+// The first call from a just-opened Form can arrive without its argument (BLD-018).
+// The default turns that into "No session." for the page to retry, not an error box.
+public void FX_SLCheck(string token = null)
+{
+try
+{
+var agent = FX_SessionAgent(token);
+if (agent == null) { FX_Fail("No session."); return; }
+var result = new JsonObject();
+result["ok"] = true;
+result["agent"] = agent;
+FX_Result(result);
+}
+catch (Exception ex)
+{
+FX_Fail("Checking the session failed. " + FX_Why(ex));
+}
+}
+
+// ---- Feature helpers: accounts ----
+static bool FX_ValidUsername(string name)
+{
+if (name.Length < UsernameMin || name.Length > UsernameMax) { return false; }
+foreach (char c in name)
+{
+bool ok = (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')
+|| c == '.' || c == '_' || c == '-';
+if (!ok) { return false; }
+}
+return true;
+}
+
+// Taken when an agent or an account has the name: an agent without an account
+// can't be claimed by signing up with its name.
+bool FX_NameTaken(string username)
+{
+string filter = FX_Eq("AgentID", username);
+return FX_Load(AgentsIdo, "AgentID", filter, "").Count > 0
+|| FX_Load(AccountsIdo, "AgentID", filter, "").Count > 0;
+}
+
+// {id, name} of an active agent, or null.
+JsonObject FX_ActiveAgent(string agentId)
+{
+if (string.IsNullOrEmpty(agentId)) { return null; }
+var rows = FX_Load(AgentsIdo, "AgentID, DisplayName, Active",
+FX_Eq("AgentID", agentId), "");
+if (rows.Count == 0 || !FX_Bool(rows[0]["Active"])) { return null; }
+var agent = new JsonObject();
+agent["id"] = rows[0]["AgentID"];
+agent["name"] = rows[0]["DisplayName"];
+return agent;
+}
+
+// ---- Feature helpers: sessions ----
+// Starts a session and answers {ok, token, agent}.
+void FX_SignedIn(JsonObject agent)
+{
+string token = FX_Hex(FX_RandomBytes(TokenBytes));
+var row = new Fields();
+row["TokenHash"] = FX_Sha256Hex(token);
+row["AgentID"] = (string)agent["id"];
+row["ExpiresOn"] = DateTime.Now.AddHours(SessionHours)
+.ToString(IdoDateFormat, Invariant);
+FX_InsertRow(SessionsIdo, row);
+var result = new JsonObject();
+result["ok"] = true;
+result["token"] = token;
+result["agent"] = agent;
+FX_Result(result);
+}
+
+// The session's active agent, or null (no token, unknown, ended, expired, agent off).
+JsonObject FX_SessionAgent(string token)
+{
+if (string.IsNullOrEmpty(token) || token.Length != TokenBytes * 2) { return null; }
+var rows = FX_Load(SessionsIdo, "AgentID, ExpiresOn, EndedOn",
+FX_Eq("TokenHash", FX_Sha256Hex(token)), "");
+if (rows.Count == 0 || !string.IsNullOrEmpty(rows[0]["EndedOn"])) { return null; }
+DateTime expires;
+if (!FX_ParseDate(rows[0]["ExpiresOn"], out expires) || expires <= DateTime.Now)
+{
+return null;
+}
+return FX_ActiveAgent(rows[0]["AgentID"]);
+}
+
+// ---- Feature helpers: crypto ----
+static byte[] FX_Hash(string password, byte[] salt, int iterations)
+{
+using (var kdf = new System.Security.Cryptography.Rfc2898DeriveBytes(password, salt,
+iterations, System.Security.Cryptography.HashAlgorithmName.SHA256))
+{
+return kdf.GetBytes(HashBytes);
+}
+}
+
+static byte[] FX_RandomBytes(int count)
+{
+var bytes = new byte[count];
+using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
+{
+rng.GetBytes(bytes);
+}
+return bytes;
+}
+
+static string FX_Sha256Hex(string text)
+{
+using (var sha = System.Security.Cryptography.SHA256.Create())
+{
+return FX_Hex(sha.ComputeHash(System.Text.Encoding.UTF8.GetBytes(text)));
+}
+}
+
+// Compares every byte, so the time taken doesn't show where they differ.
+static bool FX_SameBytes(byte[] a, byte[] b)
+{
+if (a == null || b == null || a.Length != b.Length) { return false; }
+int diff = 0;
+for (int i = 0; i < a.Length; i++) { diff |= a[i] ^ b[i]; }
+return diff == 0;
+}
+
+static string FX_Hex(byte[] bytes)
+{
+var text = new System.Text.StringBuilder(bytes.Length * 2);
+foreach (byte b in bytes) { text.Append(b.ToString("x2", Invariant)); }
+return text.ToString();
+}
+
+static byte[] FX_FromHex(string hex)
+{
+hex = hex ?? "";
+if (hex.Length % 2 != 0) { return new byte[0]; }
+var bytes = new byte[hex.Length / 2];
+for (int i = 0; i < bytes.Length; i++)
+{
+bytes[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
+}
+return bytes;
+}
+
+// ---- Feature helpers: IDO access (same routes as FX_ServiceDesk.cs.txt) ----
+FieldsList FX_Load(string ido, string props, string filter, string order)
+{
+var names = props.Split(',');
+for (int n = 0; n < names.Length; n++) { names[n] = names[n].Trim(); }
+var response = IDOClient.LoadCollection(ido, props, filter, order, 1);
+var rows = new FieldsList();
+for (int i = 0; i < response.Items.Count; i++)
+{
+var row = new Fields();
+for (int n = 0; n < names.Length; n++)
+{
+row[names[n]] = response.Items[i].PropertyValues[n].Value;
+}
+rows.Add(row);
+}
+return rows;
+}
+
+void FX_UpdateRow(string ido, string keyProp, string keyValue, Fields changes)
+{
+var found = IDOClient.LoadCollection(ido, keyProp, FX_Eq(keyProp, keyValue), "", 1);
+if (found.Items.Count == 0)
+{
+throw new InvalidOperationException(ido + " row " + keyValue + " wasn't found.");
+}
+var request = new UpdateCollectionRequestData(ido);
+var item = new IDOUpdateItem(UpdateAction.Update, found.Items[0].ItemID);
+item.Properties.Add(keyProp, keyValue, false);
+foreach (var change in changes) { item.Properties.Add(change.Key, change.Value, true); }
+request.Items.Add(item);
+IDOClient.UpdateCollection(request);
+}
+
+void FX_InsertRow(string ido, Fields values)
+{
+var request = new UpdateCollectionRequestData(ido);
+var item = new IDOUpdateItem();
+item.Action = UpdateAction.Insert;
+item.ItemNumber = 1; // used by Mongoose for error reporting
+foreach (var value in values) { item.Properties.Add(value.Key, value.Value); }
+request.Items.Add(item);
+IDOClient.UpdateCollection(request);
+}
+
+// ---- Results and parsing ----
+void FX_Fail(string message)
+{
+var result = new JsonObject();
+result["ok"] = false;
+result["message"] = message;
+FX_Result(result);
+}
+
+void FX_FailFields(string message, JsonObject errors)
+{
+var result = new JsonObject();
+result["ok"] = false;
+result["message"] = message;
+result["errors"] = errors;
+FX_Result(result);
+}
+
+void FX_Result(JsonObject result)
+{
+string json = Newtonsoft.Json.JsonConvert.SerializeObject(result);
+ThisForm.Variables(ResultVar).Value = json;
+}
+
+static string FX_Why(Exception ex)
+{
+return ex.GetType().Name + ": " + ex.Message;
+}
+
+// A filter "Prop = 'value'" with the value's quotes doubled.
+static string FX_Eq(string prop, string value)
+{
+return prop + " = '" + (value ?? "").Replace("'", "''") + "'";
+}
+
+static bool FX_Bool(string value)
+{
+return value == "1"
+|| string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
+}
+
+static int FX_Int(string value)
+{
+decimal number;
+var style = System.Globalization.NumberStyles.Number;
+return decimal.TryParse(value, style, Invariant, out number) ? (int)number : 0;
+}
+
+// Date texts LoadCollection may return (FX_ServiceDesk.cs.txt ReadDateFormats).
+static bool FX_ParseDate(string value, out DateTime date)
+{
+string[] formats = {
+"yyyyMMdd HH:mm:ss.fff", "yyyyMMdd HH:mm:ss", "yyyyMMdd",
+"yyyy-MM-ddTHH:mm:ss", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd" };
+var none = System.Globalization.DateTimeStyles.None;
+return DateTime.TryParseExact(value ?? "", formats, Invariant, none, out date)
+|| DateTime.TryParse(value ?? "", Invariant, none, out date);
+}
+}
+}

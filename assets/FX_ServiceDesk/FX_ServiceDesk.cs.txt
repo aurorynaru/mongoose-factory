@@ -1,0 +1,986 @@
+using System;
+using Mongoose.IDO.Protocol;
+using Mongoose.Scripting;
+
+namespace Mongoose.FormScripts
+{
+    public class FX_ServiceDesk : FormScript
+    {
+        //<Ref>Newtonsoft.Json.dll</Ref>
+        // ---- Header ----
+        // FX_ServiceDesk: the Service Desk web app (requests/service-desk/phase-3-web-app.md,
+        // phase-4-workflow-dashboard.md). Called by app.js through callServer(). Every public
+        // method writes one JSON result to the Global variable FX_vSDResult:
+        // {"ok":true,...} or {"ok":false,"message":"...","errors":{field: message}}.
+        //   FX_SDLoad(token) -> {ok, me, agents, projects, statuses, priorities, transitions,
+        //     types, categories, resolutions, tickets, comments, history}
+        //   FX_SDSetStatus(ticketId, status, resolution, token) -> {ok, ticket, history, warning}
+        //   FX_SDUpdateTicket(ticketId, fieldsJson, token) -> {ok, ticket, history, warning}
+        //   FX_SDCreateTicket(fieldsJson, token) -> {ok, ticket, projects}
+        //   FX_SDAddComment(ticketId, text, internal, token) -> {ok, comments} (that ticket's)
+        //   FX_SDSignOut(token) -> {ok}
+        // fieldsJson is a JSON object of texts, e.g. {"summary":"...","due":"2026-11-03"}.
+        // token is the session from FX_ServiceDeskLogin (BLD-018); the server works out who is
+        // signed in from it. No valid session: {"ok":false,"signin":true,"message":"..."}.
+        // Rules (phase 4): a status move must be a row in FX_StatusTransitions; RESOLVED
+        // needs a Resolution; leaving Done clears ResolvedOn and Resolution. Each change to
+        // Status, Assignee or Priority adds one FX_TicketHistory row (no row on create).
+        // Dates go to the page as ISO text (yyyy-MM-ddTHH:mm:ss); the page formats them.
+        // Lines 1-7 stay exactly as the Script Editor's C# template: an extra using line moves
+        // the FormScript line and the editor refuses the script with "the class name has
+        // changed" (BLD-002, BLD-009, BLD-015). Other namespaces are written out in full.
+        // The type name on line 7 must equal the Form name (BLD-002).
+        // Lines stay short: the flat install copy must fit ActiveXScriptLines.CodeLine (EXP-138).
+        // UNVERIFIED (BLD-016 probes): the history insert (key set by the script, max + 1 read
+        // with a DESC order), the ticket insert, and Newtonsoft's DeserializeObject here.
+
+        // Short names for the shapes passed around. JsonObject/JsonList serialize to the
+        // page's JSON; Fields is one IDO row as property name -> text, FieldsList several.
+        class JsonObject : System.Collections.Generic.Dictionary<string, object> { }
+        class JsonList : System.Collections.Generic.List<JsonObject> { }
+        class Fields : System.Collections.Generic.Dictionary<string, string> { }
+        class FieldsList : System.Collections.Generic.List<Fields> { }
+
+        // ---- Config ----
+        const string ResultVar = "FX_vSDResult";
+        const int MaxRows = 2000; // the whole service desk is read at once
+
+        // IDOs and properties from phase 1-2 (BLD-007, BLD-009) and phase 4 (BLD-016). The
+        // system columns CreateDate, RecordDate, CreatedBy, UpdatedBy exist on every table
+        // (BLD-007 AC-1).
+        const string AgentsIdo = "FX_Agents";
+        const string AgentProps = "AgentID, DisplayName, Team, Role, Active";
+        const string ProjectsIdo = "FX_Projects";
+        const string ProjectProps =
+            "ProjectKey, ProjectName, Description, LeadAgent, NextTicketNo, Active";
+        const string StatusesIdo = "FX_Statuses";
+        const string StatusProps = "StatusCode, StatusName, Category, SortOrder, IsClosed";
+        const string PrioritiesIdo = "FX_Priorities";
+        const string PriorityProps =
+            "PriorityCode, PriorityName, SortOrder, ResponseHours, ResolveHours";
+        const string TicketsIdo = "FX_Tickets";
+        const string TicketProps =
+            "TicketID, ProjectKey, TicketType, Summary, Description, Status, Priority, "
+            + "Reporter, Assignee, Category, Labels, DueDate, ResolvedOn, Resolution, "
+            + "CreateDate, RecordDate, CreatedBy, UpdatedBy";
+        const string CommentsIdo = "FX_TicketComments";
+        const string CommentProps =
+            "CommentID, TicketID, Author, CommentText, IsInternal, CreateDate";
+        const string TransitionsIdo = "FX_StatusTransitions";
+        const string TransitionProps = "TransitionID, FromStatus, ToStatus";
+        const string HistoryIdo = "FX_TicketHistory";
+        const string HistoryProps =
+            "HistoryID, TicketID, FieldName, OldValue, NewValue, ChangedBy, CreateDate";
+        // Sessions written by FX_ServiceDeskLogin (BLD-018): the token's SHA-256 is the key.
+        const string SessionsIdo = "FX_AgentSessions";
+        const int TokenLength = 64; // 32 random bytes as hex
+        const string SignInAgain = "Your session has ended. Sign in again.";
+
+        const string DoneCategory = "Done"; // FX_Statuses.Category of resolved/closed statuses
+        const string NewTicketStatus = "OPEN";      // FX_Tickets.Status default (BLD-009)
+        const string NewTicketPriority = "MEDIUM";  // FX_Tickets.Priority default
+        const string NewTicketType = "Incident";    // FX_Tickets.TicketType default
+        const string ResolvedStatus = "RESOLVED";   // the move that needs a Resolution
+        // Inline lists of the FX_Tickets Form (BLD-009); the page offers the same.
+        static readonly string[] TicketTypes = {
+            "Incident", "Service request", "Problem", "Change", "Task" };
+        static readonly string[] Categories = {
+            "Hardware", "Software", "Access", "Network", "Facilities", "Other" };
+        static readonly string[] Resolutions = {
+            "Fixed", "Workaround", "Duplicate", "Won't do", "Cannot reproduce" };
+        // Column lengths (BLD-009 step 3, BLD-016 step 3).
+        const int SummaryMax = 200;
+        const int DescriptionMax = 2000;
+        const int LabelsMax = 200;
+        const int CommentMaxLength = 2000;
+        const int HistoryValueMax = 200;
+        // History field names, as stored in FX_TicketHistory.FieldName.
+        const string HistStatus = "Status";
+        const string HistAssignee = "Assignee";
+        const string HistPriority = "Priority";
+
+        // Date text written through UpdateCollection; "" clears a date (observed, BLD-015).
+        const string IdoDateFormat = "yyyyMMdd HH:mm:ss.fff";
+        const string PageDayFormat = "yyyy-MM-dd"; // due dates from the page's date inputs
+        // Date texts LoadCollection may return; anything else falls back to DateTime.TryParse.
+        static readonly string[] ReadDateFormats = {
+            "yyyyMMdd HH:mm:ss.fff", "yyyyMMdd HH:mm:ss", "yyyyMMdd",
+            "yyyy-MM-ddTHH:mm:ss", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd" };
+        // AUTONUMBER() defaults are filled in by the client only: an insert without the key
+        // was refused with "CommentID ... cannot be null" (BLD-009 step 8). So the script
+        // sends max + 1 itself for comments and history rows.
+        // Fully qualified: a new using line made the editor refuse the script (BLD-002).
+        static readonly System.Globalization.CultureInfo Invariant =
+            System.Globalization.CultureInfo.InvariantCulture;
+
+        // ---- Page actions ----
+        // The first call from a just-opened Form can arrive without its argument (BLD-018).
+        // The default turns that into a "sign in" answer the page retries, not an error box.
+        public void FX_SDLoad(string token = null)
+        {
+            try
+            {
+                string me = FX_Me(token);
+                if (me == null) { FX_FailSignIn(); return; }
+                var result = new JsonObject();
+                result["ok"] = true;
+                result["me"] = me;
+                result["agents"] = FX_LoadAgents();
+                result["projects"] = FX_LoadProjects();
+                result["statuses"] = FX_LoadStatuses();
+                result["priorities"] = FX_LoadPriorities();
+                result["transitions"] = FX_LoadTransitions();
+                result["types"] = TicketTypes;
+                result["categories"] = Categories;
+                result["resolutions"] = Resolutions;
+                result["tickets"] = FX_LoadTickets("");
+                result["comments"] = FX_LoadComments("");
+                result["history"] = FX_LoadHistory("");
+                FX_Result(result);
+            }
+            catch (Exception ex)
+            {
+                FX_Fail("Loading the service desk failed. " + FX_Why(ex));
+            }
+        }
+
+        public void FX_SDSetStatus(string ticketId, string status, string resolution,
+            string token)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(ticketId)) { FX_Fail("Ticket is missing."); return; }
+                if (string.IsNullOrEmpty(status)) { FX_Fail("Status is missing."); return; }
+                string me = FX_Me(token);
+                if (me == null) { FX_FailSignIn(); return; }
+                var newStatus = FX_FindStatus(status);
+                if (newStatus == null)
+                {
+                    FX_Fail("Status " + status + " doesn't exist in FX_Statuses.");
+                    return;
+                }
+                var ticket = FX_FindTicket(ticketId);
+                if (ticket == null)
+                {
+                    FX_Fail("Ticket " + ticketId + " wasn't found. Refresh and try again.");
+                    return;
+                }
+                string from = (string)ticket["status"];
+                if (from == status)
+                {
+                    FX_Fail(ticketId + " is already " + newStatus["name"] + ".");
+                    return;
+                }
+                string refusal = FX_CheckMove(from, status);
+                if (refusal != null) { FX_Fail(refusal); return; }
+
+                resolution = (resolution ?? "").Trim();
+                if (status == ResolvedStatus && !FX_InList(Resolutions, resolution))
+                {
+                    var errors = new JsonObject();
+                    errors["resolution"] = "Pick a resolution.";
+                    FX_FailFields("Moving to " + newStatus["name"] + " needs a resolution.",
+                        errors);
+                    return;
+                }
+
+                var changes = new Fields();
+                changes["Status"] = status;
+                // ResolvedOn follows the status category: set when a ticket moves into
+                // Done, cleared with the Resolution when it leaves (phase 2's Reopen).
+                var oldStatus = FX_FindStatus(from);
+                bool wasDone = oldStatus != null
+                    && (string)oldStatus["category"] == DoneCategory;
+                bool isDone = (string)newStatus["category"] == DoneCategory;
+                if (isDone && !wasDone)
+                {
+                    changes["ResolvedOn"] = DateTime.Now.ToString(IdoDateFormat, Invariant);
+                }
+                if (!isDone && wasDone)
+                {
+                    changes["ResolvedOn"] = "";
+                    changes["Resolution"] = "";
+                }
+                if (status == ResolvedStatus) { changes["Resolution"] = resolution; }
+                FX_UpdateRow(TicketsIdo, "TicketID", ticketId, changes);
+
+                var saved = FX_FindTicket(ticketId);
+                if (saved == null || (string)saved["status"] != status)
+                {
+                    string got = saved == null ? "missing" : (string)saved["status"];
+                    FX_Fail("Ticket " + ticketId + " was saved but reads back as " + got + ".");
+                    return;
+                }
+                var history = new FieldsList();
+                history.Add(FX_Change(HistStatus, from, status));
+                FX_SavedResult(ticketId, saved, FX_AddHistory(ticketId, history, me));
+            }
+            catch (Exception ex)
+            {
+                FX_Fail("Changing the status of " + ticketId + " failed. " + FX_Why(ex));
+            }
+        }
+
+        // Edits the fields the page sends; Status is not editable here (FX_SDSetStatus).
+        public void FX_SDUpdateTicket(string ticketId, string fieldsJson, string token)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(ticketId)) { FX_Fail("Ticket is missing."); return; }
+                string me = FX_Me(token);
+                if (me == null) { FX_FailSignIn(); return; }
+                var input = FX_ParseFields(fieldsJson);
+                var ticket = FX_FindTicket(ticketId);
+                if (ticket == null)
+                {
+                    FX_Fail("Ticket " + ticketId + " wasn't found. Refresh and try again.");
+                    return;
+                }
+
+                var errors = new JsonObject();
+                var values = FX_CheckTicketFields(input, errors, false);
+                if (errors.Count > 0)
+                {
+                    FX_FailFields("Check the highlighted fields.", errors);
+                    return;
+                }
+
+                // Only what differs from the stored row is written.
+                var changes = new Fields();
+                var history = new FieldsList();
+                foreach (var value in values)
+                {
+                    string page = FX_PageKey(value.Key);
+                    string old = FX_Text(ticket[page]);
+                    if (value.Key == "DueDate")
+                    {
+                        string oldDay = old.Length >= 10 ? old.Substring(0, 10) : old;
+                        if (oldDay == input["due"]) { continue; }
+                    }
+                    else if (old == value.Value) { continue; }
+                    changes[value.Key] = value.Value;
+                    if (value.Key == HistAssignee || value.Key == HistPriority)
+                    {
+                        history.Add(FX_Change(value.Key, old, value.Value));
+                    }
+                }
+                if (changes.Count == 0)
+                {
+                    var same = new JsonObject();
+                    same["ok"] = true;
+                    same["ticket"] = ticket;
+                    same["message"] = "Nothing changed.";
+                    FX_Result(same);
+                    return;
+                }
+                FX_UpdateRow(TicketsIdo, "TicketID", ticketId, changes);
+
+                var saved = FX_FindTicket(ticketId);
+                if (saved == null)
+                {
+                    FX_Fail("Ticket " + ticketId + " was saved but can't be read back.");
+                    return;
+                }
+                FX_SavedResult(ticketId, saved, FX_AddHistory(ticketId, history, me));
+            }
+            catch (Exception ex)
+            {
+                FX_Fail("Saving " + ticketId + " failed. " + FX_Why(ex));
+            }
+        }
+
+        // Creates a ticket numbered as in phase 2: TicketID = <ProjectKey>-<NextTicketNo>,
+        // then NextTicketNo + 1. The number is taken first; a failed insert wastes it.
+        public void FX_SDCreateTicket(string fieldsJson, string token)
+        {
+            try
+            {
+                string me = FX_Me(token);
+                if (me == null) { FX_FailSignIn(); return; }
+                var input = FX_ParseFields(fieldsJson);
+                if (!input.ContainsKey("reporter") || input["reporter"].Trim() == "")
+                {
+                    input["reporter"] = me;
+                }
+
+                var errors = new JsonObject();
+                var values = FX_CheckTicketFields(input, errors, true);
+                string projectKey = FX_Get(input, "project");
+                if (projectKey == "") { errors["project"] = "Pick a project."; }
+                else
+                {
+                    var found = FX_Load(ProjectsIdo, "ProjectKey, Active",
+                        FX_Eq("ProjectKey", projectKey), "");
+                    if (found.Count == 0) { errors["project"] = "Project doesn't exist."; }
+                    else if (!FX_Bool(found[0]["Active"]))
+                    {
+                        errors["project"] = "Project isn't active.";
+                    }
+                }
+                if (errors.Count > 0)
+                {
+                    FX_FailFields("Check the highlighted fields.", errors);
+                    return;
+                }
+
+                int number = FX_TakeNextNo(projectKey);
+                string ticketId = projectKey + "-" + number.ToString(Invariant);
+                values["TicketID"] = ticketId;
+                values["ProjectKey"] = projectKey;
+                values["Status"] = NewTicketStatus;
+                // Optional fields left empty are not sent, so the columns stay NULL.
+                var insert = new Fields();
+                foreach (var value in values)
+                {
+                    if (value.Value != "") { insert[value.Key] = value.Value; }
+                }
+                FX_InsertRow(TicketsIdo, insert);
+
+                var saved = FX_FindTicket(ticketId);
+                if (saved == null)
+                {
+                    FX_Fail("Ticket " + ticketId + " was saved but can't be read back.");
+                    return;
+                }
+                var result = new JsonObject();
+                result["ok"] = true;
+                result["ticket"] = saved;
+                result["projects"] = FX_LoadProjects();
+                FX_Result(result);
+            }
+            catch (Exception ex)
+            {
+                FX_Fail("Creating the ticket failed. " + FX_Why(ex));
+            }
+        }
+
+        public void FX_SDAddComment(string ticketId, string text, string internalFlag,
+            string token)
+        {
+            try
+            {
+                text = (text ?? "").Trim();
+                if (string.IsNullOrEmpty(ticketId)) { FX_Fail("Ticket is missing."); return; }
+                if (text.Length == 0) { FX_Fail("Comment is empty."); return; }
+                if (text.Length > CommentMaxLength)
+                {
+                    FX_Fail("Comment is longer than " + CommentMaxLength + " characters.");
+                    return;
+                }
+                string author = FX_Me(token);
+                if (author == null) { FX_FailSignIn(); return; }
+                if (FX_FindTicket(ticketId) == null)
+                {
+                    FX_Fail("Ticket " + ticketId + " wasn't found. Refresh and try again.");
+                    return;
+                }
+
+                var values = new Fields();
+                values["CommentID"] = FX_NextId(CommentsIdo, "CommentID").ToString(Invariant);
+                values["TicketID"] = ticketId;
+                values["Author"] = author;
+                values["CommentText"] = text;
+                values["IsInternal"] = internalFlag == "1" ? "1" : "0";
+                FX_InsertRow(CommentsIdo, values);
+
+                var result = new JsonObject();
+                result["ok"] = true;
+                result["comments"] = FX_LoadComments(FX_Eq("TicketID", ticketId));
+                FX_Result(result);
+            }
+            catch (Exception ex)
+            {
+                FX_Fail("Adding a comment to " + ticketId + " failed. " + FX_Why(ex));
+            }
+        }
+
+        // Ends the session (sets EndedOn). Signing out twice is fine.
+        public void FX_SDSignOut(string token)
+        {
+            try
+            {
+                var row = FX_FindSession(token);
+                if (row != null && string.IsNullOrEmpty(row["EndedOn"]))
+                {
+                    var changes = new Fields();
+                    changes["EndedOn"] = DateTime.Now.ToString(IdoDateFormat, Invariant);
+                    FX_UpdateRow(SessionsIdo, "TokenHash", row["TokenHash"], changes);
+                }
+                var result = new JsonObject();
+                result["ok"] = true;
+                FX_Result(result);
+            }
+            catch (Exception ex)
+            {
+                FX_Fail("Signing out failed. " + FX_Why(ex));
+            }
+        }
+
+        // ---- Feature helpers: who is using the page ----
+        // The AgentID of the session's active agent; null when the token is missing,
+        // unknown, ended or expired, or the agent is switched off (same rules as
+        // FX_ServiceDeskLogin.FX_SessionAgent).
+        string FX_Me(string token)
+        {
+            var row = FX_FindSession(token);
+            if (row == null || !string.IsNullOrEmpty(row["EndedOn"])) { return null; }
+            DateTime expires;
+            if (!FX_ParseDate(row["ExpiresOn"], out expires) || expires <= DateTime.Now)
+            {
+                return null;
+            }
+            return FX_IsActiveAgent(row["AgentID"]) ? row["AgentID"] : null;
+        }
+
+        Fields FX_FindSession(string token)
+        {
+            if (string.IsNullOrEmpty(token) || token.Length != TokenLength) { return null; }
+            var rows = FX_Load(SessionsIdo, "TokenHash, AgentID, ExpiresOn, EndedOn",
+                FX_Eq("TokenHash", FX_Sha256Hex(token)), "");
+            return rows.Count == 0 ? null : rows[0];
+        }
+
+        static string FX_Sha256Hex(string text)
+        {
+            using (var sha = System.Security.Cryptography.SHA256.Create())
+            {
+                var hash = sha.ComputeHash(System.Text.Encoding.UTF8.GetBytes(text));
+                var hex = new System.Text.StringBuilder(hash.Length * 2);
+                foreach (byte b in hash) { hex.Append(b.ToString("x2", Invariant)); }
+                return hex.ToString();
+            }
+        }
+
+        // ---- Feature helpers: rules ----
+        // null when FX_StatusTransitions has the move; otherwise the refusal naming the
+        // allowed moves, e.g. "OPEN can move to: In progress, Waiting for customer."
+        string FX_CheckMove(string from, string to)
+        {
+            var allowed = new System.Collections.Generic.List<string>();
+            foreach (var t in FX_LoadTransitions())
+            {
+                if ((string)t["from"] != from) { continue; }
+                if ((string)t["to"] == to) { return null; }
+                var s = FX_FindStatus((string)t["to"]);
+                allowed.Add(s == null ? (string)t["to"] : (string)s["name"]);
+            }
+            var fromStatus = FX_FindStatus(from);
+            string name = fromStatus == null ? from : (string)fromStatus["name"];
+            var target = FX_FindStatus(to);
+            string toName = target == null ? to : (string)target["name"];
+            string moves = allowed.Count == 0
+                ? name + " has no allowed moves."
+                : name + " can move to: " + string.Join(", ", allowed.ToArray()) + ".";
+            return "Can't move from " + name + " to " + toName + ". " + moves;
+        }
+
+        // Checks the editable ticket fields present in the page's input and returns them
+        // as FX_Tickets property -> text. Problems go into errors under the page's key.
+        // forCreate: Summary and Reporter are required and defaults fill Type/Priority.
+        Fields FX_CheckTicketFields(Fields input, JsonObject errors, bool forCreate)
+        {
+            var values = new Fields();
+            if (forCreate || input.ContainsKey("summary"))
+            {
+                string summary = FX_Get(input, "summary");
+                if (summary == "") { errors["summary"] = "Summary is required."; }
+                else if (summary.Length > SummaryMax)
+                {
+                    errors["summary"] = "Keep it under " + SummaryMax + " characters.";
+                }
+                values["Summary"] = summary;
+            }
+            if (forCreate || input.ContainsKey("description"))
+            {
+                string text = FX_Get(input, "description");
+                if (text.Length > DescriptionMax)
+                {
+                    errors["description"] = "Keep it under " + DescriptionMax + " characters.";
+                }
+                values["Description"] = text;
+            }
+            if (forCreate)
+            {
+                string type = FX_Get(input, "type");
+                if (type == "") { type = NewTicketType; }
+                if (!FX_InList(TicketTypes, type)) { errors["type"] = "Pick a type."; }
+                values["TicketType"] = type;
+
+                string reporter = FX_Get(input, "reporter");
+                if (!FX_IsActiveAgent(reporter))
+                {
+                    errors["reporter"] = "Pick an active agent.";
+                }
+                values["Reporter"] = reporter;
+            }
+            if (forCreate || input.ContainsKey("priority"))
+            {
+                string priority = FX_Get(input, "priority");
+                if (priority == "" && forCreate) { priority = NewTicketPriority; }
+                if (FX_Load(PrioritiesIdo, "PriorityCode", FX_Eq("PriorityCode", priority),
+                    "").Count == 0)
+                {
+                    errors["priority"] = "Pick a priority.";
+                }
+                values["Priority"] = priority;
+            }
+            if (forCreate || input.ContainsKey("assignee"))
+            {
+                string assignee = FX_Get(input, "assignee");
+                if (assignee != "" && !FX_IsActiveAgent(assignee))
+                {
+                    errors["assignee"] = "Pick an active agent or Unassigned.";
+                }
+                values["Assignee"] = assignee;
+            }
+            if (forCreate || input.ContainsKey("due"))
+            {
+                string due = FX_Get(input, "due");
+                input["due"] = due;
+                DateTime day;
+                if (due == "") { values["DueDate"] = ""; }
+                else if (DateTime.TryParseExact(due, PageDayFormat, Invariant,
+                    System.Globalization.DateTimeStyles.None, out day))
+                {
+                    values["DueDate"] = day.ToString(IdoDateFormat, Invariant);
+                }
+                else { errors["due"] = "Use a date like 2026-11-03."; }
+            }
+            if (forCreate || input.ContainsKey("category"))
+            {
+                string category = FX_Get(input, "category");
+                if (category != "" && !FX_InList(Categories, category))
+                {
+                    errors["category"] = "Pick a category.";
+                }
+                values["Category"] = category;
+            }
+            if (forCreate || input.ContainsKey("labels"))
+            {
+                string labels = FX_Get(input, "labels");
+                if (labels.Length > LabelsMax)
+                {
+                    errors["labels"] = "Keep it under " + LabelsMax + " characters.";
+                }
+                values["Labels"] = labels;
+            }
+            return values;
+        }
+
+        // FX_Tickets property -> the page's ticket key (FX_LoadTickets).
+        static string FX_PageKey(string prop)
+        {
+            switch (prop)
+            {
+                case "DueDate": return "due";
+                case "TicketType": return "type";
+                default: return prop.ToLowerInvariant();
+            }
+        }
+
+        // ---- Feature helpers: history ----
+        static Fields FX_Change(string field, string oldValue, string newValue)
+        {
+            var change = new Fields();
+            change["FieldName"] = field;
+            change["OldValue"] = oldValue ?? "";
+            change["NewValue"] = newValue ?? "";
+            return change;
+        }
+
+        // Inserts one FX_TicketHistory row per change, after the ticket update. Returns
+        // null, or a warning when a row couldn't be saved (the ticket change stays).
+        string FX_AddHistory(string ticketId, FieldsList changes, string me)
+        {
+            if (changes.Count == 0) { return null; }
+            try
+            {
+                int id = FX_NextId(HistoryIdo, "HistoryID");
+                foreach (var change in changes)
+                {
+                    var values = new Fields();
+                    values["HistoryID"] = (id++).ToString(Invariant);
+                    values["TicketID"] = ticketId;
+                    values["FieldName"] = change["FieldName"];
+                    values["OldValue"] = FX_Cut(change["OldValue"], HistoryValueMax);
+                    values["NewValue"] = FX_Cut(change["NewValue"], HistoryValueMax);
+                    values["ChangedBy"] = me;
+                    FX_InsertRow(HistoryIdo, values);
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return "The change was saved, but its history row wasn't. " + FX_Why(ex);
+            }
+        }
+
+        void FX_SavedResult(string ticketId, JsonObject ticket, string warning)
+        {
+            var result = new JsonObject();
+            result["ok"] = true;
+            result["ticket"] = ticket;
+            result["history"] = FX_LoadHistory(FX_Eq("TicketID", ticketId));
+            if (warning != null) { result["warning"] = warning; }
+            FX_Result(result);
+        }
+
+        // ---- Feature helpers: numbering ----
+        // Reads the project's NextTicketNo and writes NextTicketNo + 1 back (the route of
+        // FX_Tickets.FX_TakeNextNo, BLD-009). The update carries the loaded ItemID.
+        int FX_TakeNextNo(string projectKey)
+        {
+            var found = IDOClient.LoadCollection(ProjectsIdo, "ProjectKey, NextTicketNo",
+                FX_Eq("ProjectKey", projectKey), "", 1);
+            if (found.Items.Count == 0)
+            {
+                throw new InvalidOperationException(ProjectsIdo + " has no " + projectKey);
+            }
+            int number = FX_Int(found.Items[0].PropertyValues[1].Value);
+            if (number < 1) { number = 1; }
+            var request = new UpdateCollectionRequestData(ProjectsIdo);
+            var item = new IDOUpdateItem(UpdateAction.Update, found.Items[0].ItemID);
+            item.Properties.Add("ProjectKey", projectKey, false);
+            item.Properties.Add("NextTicketNo", (number + 1).ToString(Invariant), true);
+            request.Items.Add(item);
+            IDOClient.UpdateCollection(request);
+            return number;
+        }
+
+        // The highest key + 1 (1 for an empty table).
+        int FX_NextId(string ido, string keyProp)
+        {
+            var top = IDOClient.LoadCollection(ido, keyProp, "", keyProp + " DESC", 1);
+            if (top.Items.Count == 0) { return 1; }
+            return FX_Int(top.Items[0].PropertyValues[0].Value) + 1;
+        }
+
+        // ---- Feature helpers: reading ----
+        JsonList FX_LoadAgents()
+        {
+            var list = new JsonList();
+            foreach (var row in FX_Load(AgentsIdo, AgentProps, "", "DisplayName"))
+            {
+                var a = new JsonObject();
+                a["id"] = row["AgentID"];
+                a["name"] = row["DisplayName"];
+                a["team"] = row["Team"];
+                a["role"] = row["Role"];
+                a["active"] = FX_Bool(row["Active"]);
+                list.Add(a);
+            }
+            return list;
+        }
+
+        JsonList FX_LoadProjects()
+        {
+            var list = new JsonList();
+            foreach (var row in FX_Load(ProjectsIdo, ProjectProps, "", "ProjectKey"))
+            {
+                var p = new JsonObject();
+                p["key"] = row["ProjectKey"];
+                p["name"] = row["ProjectName"];
+                p["description"] = row["Description"];
+                p["lead"] = row["LeadAgent"];
+                p["nextNo"] = FX_Int(row["NextTicketNo"]);
+                p["active"] = FX_Bool(row["Active"]);
+                list.Add(p);
+            }
+            return list;
+        }
+
+        JsonList FX_LoadStatuses()
+        {
+            var list = new JsonList();
+            foreach (var row in FX_Load(StatusesIdo, StatusProps, "", "SortOrder"))
+            {
+                var s = new JsonObject();
+                s["code"] = row["StatusCode"];
+                s["name"] = row["StatusName"];
+                s["category"] = row["Category"];
+                s["order"] = FX_Int(row["SortOrder"]);
+                s["closed"] = FX_Bool(row["IsClosed"]);
+                list.Add(s);
+            }
+            return list;
+        }
+
+        JsonList FX_LoadPriorities()
+        {
+            var list = new JsonList();
+            foreach (var row in FX_Load(PrioritiesIdo, PriorityProps, "", "SortOrder"))
+            {
+                var p = new JsonObject();
+                p["code"] = row["PriorityCode"];
+                p["name"] = row["PriorityName"];
+                p["order"] = FX_Int(row["SortOrder"]);
+                p["responseHours"] = FX_Int(row["ResponseHours"]);
+                p["resolveHours"] = FX_Int(row["ResolveHours"]);
+                list.Add(p);
+            }
+            return list;
+        }
+
+        JsonList FX_LoadTransitions()
+        {
+            var list = new JsonList();
+            foreach (var row in FX_Load(TransitionsIdo, TransitionProps, "", "TransitionID"))
+            {
+                var t = new JsonObject();
+                t["from"] = row["FromStatus"];
+                t["to"] = row["ToStatus"];
+                list.Add(t);
+            }
+            return list;
+        }
+
+        JsonList FX_LoadTickets(string filter)
+        {
+            var list = new JsonList();
+            foreach (var row in FX_Load(TicketsIdo, TicketProps, filter, "TicketID"))
+            {
+                var t = new JsonObject();
+                t["id"] = row["TicketID"];
+                t["project"] = row["ProjectKey"];
+                t["type"] = row["TicketType"];
+                t["summary"] = row["Summary"];
+                t["description"] = row["Description"];
+                t["status"] = row["Status"];
+                t["priority"] = row["Priority"];
+                t["reporter"] = row["Reporter"];
+                t["assignee"] = row["Assignee"];
+                t["category"] = row["Category"];
+                t["labels"] = row["Labels"];
+                t["due"] = FX_IsoDate(row["DueDate"]);
+                t["resolvedOn"] = FX_IsoDate(row["ResolvedOn"]);
+                t["resolution"] = row["Resolution"];
+                t["created"] = FX_IsoDate(row["CreateDate"]);
+                t["updated"] = FX_IsoDate(row["RecordDate"]);
+                t["createdBy"] = row["CreatedBy"];
+                t["updatedBy"] = row["UpdatedBy"];
+                list.Add(t);
+            }
+            return list;
+        }
+
+        JsonList FX_LoadComments(string filter)
+        {
+            var list = new JsonList();
+            foreach (var row in FX_Load(CommentsIdo, CommentProps, filter, "CommentID"))
+            {
+                var c = new JsonObject();
+                c["id"] = FX_Int(row["CommentID"]);
+                c["ticket"] = row["TicketID"];
+                c["author"] = row["Author"];
+                c["text"] = row["CommentText"];
+                c["internal"] = FX_Bool(row["IsInternal"]);
+                c["created"] = FX_IsoDate(row["CreateDate"]);
+                list.Add(c);
+            }
+            return list;
+        }
+
+        JsonList FX_LoadHistory(string filter)
+        {
+            var list = new JsonList();
+            foreach (var row in FX_Load(HistoryIdo, HistoryProps, filter, "HistoryID"))
+            {
+                var h = new JsonObject();
+                h["id"] = FX_Int(row["HistoryID"]);
+                h["ticket"] = row["TicketID"];
+                h["field"] = row["FieldName"];
+                h["oldValue"] = row["OldValue"];
+                h["newValue"] = row["NewValue"];
+                h["by"] = row["ChangedBy"];
+                h["created"] = FX_IsoDate(row["CreateDate"]);
+                list.Add(h);
+            }
+            return list;
+        }
+
+        JsonObject FX_FindTicket(string ticketId)
+        {
+            var rows = FX_LoadTickets(FX_Eq("TicketID", ticketId));
+            return rows.Count == 0 ? null : rows[0];
+        }
+
+        JsonObject FX_FindStatus(string code)
+        {
+            foreach (var s in FX_LoadStatuses())
+            {
+                if ((string)s["code"] == code) { return s; }
+            }
+            return null;
+        }
+
+        bool FX_IsActiveAgent(string agentId)
+        {
+            if (string.IsNullOrEmpty(agentId)) { return false; }
+            var rows = FX_Load(AgentsIdo, "AgentID, Active", FX_Eq("AgentID", agentId), "");
+            return rows.Count > 0 && FX_Bool(rows[0]["Active"]);
+        }
+
+        // ---- Feature helpers: IDO access ----
+        // Reads rows as property name -> text. PropertyValues come back in the order of
+        // the property list (observed, FX_InventoryDashboard).
+        FieldsList FX_Load(string ido, string props, string filter, string order)
+        {
+            var names = props.Split(',');
+            for (int n = 0; n < names.Length; n++) { names[n] = names[n].Trim(); }
+            var response = IDOClient.LoadCollection(ido, props, filter, order, MaxRows);
+            var rows = new FieldsList();
+            for (int i = 0; i < response.Items.Count; i++)
+            {
+                var row = new Fields();
+                for (int n = 0; n < names.Length; n++)
+                {
+                    row[names[n]] = response.Items[i].PropertyValues[n].Value;
+                }
+                rows.Add(row);
+            }
+            return rows;
+        }
+
+        // Updates one row found by its key. The update carries the loaded ItemID, the same
+        // route as FX_Tickets.FX_TakeNextNo (observed on FX_Projects, BLD-009 step 10).
+        void FX_UpdateRow(string ido, string keyProp, string keyValue,
+            Fields changes)
+        {
+            var found = IDOClient.LoadCollection(ido, keyProp, FX_Eq(keyProp, keyValue), "", 1);
+            if (found.Items.Count == 0)
+            {
+                throw new InvalidOperationException(ido + " row " + keyValue + " wasn't found.");
+            }
+            var request = new UpdateCollectionRequestData(ido);
+            var item = new IDOUpdateItem(UpdateAction.Update, found.Items[0].ItemID);
+            item.Properties.Add(keyProp, keyValue, false);
+            foreach (var change in changes) { item.Properties.Add(change.Key, change.Value, true); }
+            request.Items.Add(item);
+            IDOClient.UpdateCollection(request);
+        }
+
+        // Inserts one row with every value given (observed for FX_TicketComments, BLD-015).
+        void FX_InsertRow(string ido, Fields values)
+        {
+            var request = new UpdateCollectionRequestData(ido);
+            var item = new IDOUpdateItem();
+            item.Action = UpdateAction.Insert;
+            item.ItemNumber = 1; // used by Mongoose for error reporting
+            foreach (var value in values) { item.Properties.Add(value.Key, value.Value); }
+            request.Items.Add(item);
+            IDOClient.UpdateCollection(request);
+        }
+
+        // ---- Results and parsing ----
+        void FX_Fail(string message)
+        {
+            var result = new JsonObject();
+            result["ok"] = false;
+            result["message"] = message;
+            FX_Result(result);
+        }
+
+        // No valid session: the page shows its sign-in prompt.
+        void FX_FailSignIn()
+        {
+            var result = new JsonObject();
+            result["ok"] = false;
+            result["signin"] = true;
+            result["message"] = SignInAgain;
+            FX_Result(result);
+        }
+
+        // A refusal with a message per field, keyed like the page's form fields.
+        void FX_FailFields(string message, JsonObject errors)
+        {
+            var result = new JsonObject();
+            result["ok"] = false;
+            result["message"] = message;
+            result["errors"] = errors;
+            FX_Result(result);
+        }
+
+        void FX_Result(JsonObject result)
+        {
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(result);
+            ThisForm.Variables(ResultVar).Value = json;
+        }
+
+        // The page's fields as key -> trimmed text. Dates stay text (DateParseHandling.None).
+        static Fields FX_ParseFields(string json)
+        {
+            var settings = new Newtonsoft.Json.JsonSerializerSettings();
+            settings.DateParseHandling = Newtonsoft.Json.DateParseHandling.None;
+            var parsed = Newtonsoft.Json.JsonConvert.DeserializeObject<
+                System.Collections.Generic.Dictionary<string, string>>(json ?? "{}", settings);
+            var fields = new Fields();
+            if (parsed == null) { return fields; }
+            foreach (var pair in parsed) { fields[pair.Key] = (pair.Value ?? "").Trim(); }
+            return fields;
+        }
+
+        static string FX_Get(Fields fields, string key)
+        {
+            string value;
+            return fields.TryGetValue(key, out value) && value != null ? value.Trim() : "";
+        }
+
+        static string FX_Text(object value)
+        {
+            return value == null ? "" : value.ToString();
+        }
+
+        static string FX_Cut(string value, int max)
+        {
+            return value.Length <= max ? value : value.Substring(0, max);
+        }
+
+        static bool FX_InList(string[] list, string value)
+        {
+            return Array.IndexOf(list, value) >= 0;
+        }
+
+        static string FX_Why(Exception ex)
+        {
+            return ex.GetType().Name + ": " + ex.Message;
+        }
+
+        // A filter "Prop = 'value'" with the value's quotes doubled, so page input can't
+        // change the filter.
+        static string FX_Eq(string prop, string value)
+        {
+            return prop + " = '" + (value ?? "").Replace("'", "''") + "'";
+        }
+
+        static bool FX_Bool(string value)
+        {
+            return value == "1"
+                || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
+        }
+
+        static int FX_Int(string value)
+        {
+            decimal number;
+            var style = System.Globalization.NumberStyles.Number;
+            return decimal.TryParse(value, style, Invariant, out number) ? (int)number : 0;
+        }
+
+        static bool FX_ParseDate(string value, out DateTime date)
+        {
+            var none = System.Globalization.DateTimeStyles.None;
+            return DateTime.TryParseExact(value ?? "", ReadDateFormats, Invariant, none, out date)
+                || DateTime.TryParse(value ?? "", Invariant, none, out date);
+        }
+
+        static string FX_IsoDate(string value)
+        {
+            if (string.IsNullOrEmpty(value)) { return ""; }
+            DateTime date;
+            if (FX_ParseDate(value, out date))
+            {
+                return date.ToString("yyyy-MM-ddTHH:mm:ss", Invariant);
+            }
+            return value; // unknown format: pass it on, so the page's console shows it
+        }
+    }
+}

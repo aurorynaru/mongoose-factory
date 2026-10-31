@@ -5,11 +5,11 @@ workflow rules. It's built in four phases. Each phase is one request in the `mon
 (`.claude/skills/mongoose-builder/templates/build-request-prompt.md`), so each one gets its own build record
 in `builds/`.
 
-Written 2026-10-29. Prefix `FX_`, User scope, fake test data only.
+Written 2026-10-29, updated 2026-10-30 for the UI mocks. Prefix `FX_`, User scope, fake test data only.
 
 ## How to use these files
 
-1. Save your UI screenshots in `mocks/service-desk/` under the names in [Screenshots](#screenshots).
+1. The UI mocks are in `mocks/service-desk/` (see [Screenshots](#screenshots)).
 2. Paste `phase-1-setup.md`'s text block into OpenCode (or Claude Code) in this repo, together with its screenshots.
 3. Let it finish: plan → your approval → build → close/reopen checks → build record. Check section 7 ("Done
    means") yourself before starting the next phase. Later phases rely on the earlier tables and names.
@@ -21,10 +21,13 @@ To change something before sending, edit the text block directly. A blank after 
 
 | Phase | File | Builds | Knowledge state of the main steps |
 |---|---|---|---|
-| 1 | `phase-1-setup.md` | 4 lookup tables + a maintenance Form for each | Observed (Maintenance wizard + Classic Multi-View Form) |
-| 2 | `phase-2-tickets.md` | Tickets and comments tables, the ticket Form (comments under it), Resolve/Reopen, ticket numbers | Observed, except ticket numbering (runs as a probe) |
-| 3 | `phase-3-portal-board.md` | The Flex shell with menu and pages, ticket tiles for "My work", the board web page | Observed; dragging a card to change Status is a probe |
-| 4 | `phase-4-workflow-dashboard.md` | History and allowed status moves, the rules on the ticket Form, a History Form, the dashboard page | Observed; the History button and the rule checks are probes |
+| 1 | `phase-1-setup.md` | 4 setup tables + a Classic maintenance Form for each | Observed (Maintenance wizard + Classic Multi-View Form) |
+| 2 | `phase-2-tickets.md` | Tickets and comments tables, the Classic ticket Form (comments under it), Resolve/Reopen, ticket numbers | Observed, except ticket numbering (probe) |
+| 3 | `phase-3-web-app.md` | The Service Desk web app in a full-width Flex Form: My work, Projects, Issues (list + detail, comments), Board; changes status and adds comments | Page and reads observed; the full-width Flex steps, IDO writes from the C# script and the signed-in user name are probes |
+| 4 | `phase-4-workflow-dashboard.md` | Allowed status moves, history, create and edit tickets in the app, activity feed, Dashboard view | Rules and inserts run as probes on top of phase 3's write route |
+
+The Classic Forms from phases 1 and 2 stay as the setup screens and as a fallback ticket editor. From phase 4 on,
+ticket status changes only in the web app, so its rules can't be bypassed.
 
 Not in these phases (each is a later, separate request): email notifications, SLA timers (background tasks),
 attachments, real Mongoose user lookup, and Group/Site scope for the team. All are untried in this tenant.
@@ -47,40 +50,41 @@ its own "created on" columns.
 
 Fixed lists (dropdown values, no table): ticket type, category, resolution, agent role, status category.
 
-## Forms and pages (9 Forms, 2 web pages)
+## Forms and the web app (7 Forms, 1 web app)
 
 | Object | Phase | What it is | Connects |
 |---|---|---|---|
-| `FX_Projects`, `FX_Agents`, `FX_Statuses`, `FX_Priorities` | 1 | Maintenance Forms (grid + detail) | On their own; buttons on the Admin page open them (phase 3) |
-| `FX_Tickets` | 2 | Ticket list + detail, comments grid under it, Resolve / Reopen | On its own; opened from the shell (phase 3) |
-| `FX_ServiceDesk` | 3 | Flex shell: header, menu, pages Home / Board / Tickets / Admin (+ Dashboard in phase 4) | The app's start Form |
-| `FX_TicketTile` | 3 | One ticket as a small tile | Tile in the Home page grid of `FX_ServiceDesk` |
-| `FX_SDBoard/index.html` | 3 | Board web page: a column per status, a card per ticket | Shown on the Board page |
-| `FX_TicketHistory` | 4 | History rows of one ticket (read only) | Opened by the History button on `FX_Tickets`, filtered by TicketID |
-| `FX_StatusTransitions` | 4 | Allowed status moves (maintenance Form) | On its own; a button on the Admin page opens it |
-| `FX_SDDashboard/index.html` | 4 | Dashboard web page: KPIs, charts, oldest open tickets | Shown on the Dashboard page |
+| `FX_Projects`, `FX_Agents`, `FX_Statuses`, `FX_Priorities` | 1 | Classic maintenance Forms (grid + detail) | On their own |
+| `FX_Tickets` | 2 | Classic ticket list + detail, comments grid under it | On its own (fallback editor; Status read-only from phase 4) |
+| `FX_ServiceDesk` | 3 | Flex Form with one full-width UserControl | The app's start Form |
+| `FX_ServiceDesk/` (web app) | 3, 4 | `index.html`, `app.css`, `app.js`, C# script, `preview/stub.js`. Views: My work, Projects, Issues, Board, Dashboard (phase 4) | Shown in `FX_ServiceDesk` |
+| `FX_StatusTransitions` | 4 | Classic maintenance Form for the allowed status moves | On its own |
 
 ## Screenshots
 
-Save them here so the prompts can point at them. Missing ones are fine: Claude asks or uses the standard look.
-
 | File | Used in | Shows |
 |---|---|---|
-| `mocks/service-desk/ticket-list.png` | Phase 2 | The ticket list and the ticket detail |
-| `mocks/service-desk/home.png` | Phase 3 | The shell: header, menu, "My work" tiles |
-| `mocks/service-desk/board.png` | Phase 3 | The board columns and cards |
-| `mocks/service-desk/dashboard.png` | Phase 4 | KPIs and charts |
+| `mocks/service-desk/home.png` | Phase 3 | App frame (sidebar, top bar) and My work |
+| `mocks/service-desk/ticket-list.png` | Phases 3, 4 | Issues: list and detail pane |
+| `mocks/service-desk/board.png` | Phase 3 | Board columns and cards |
+| `mocks/service-desk/dashboard.png` | Phase 4 | Dashboard KPIs and charts |
 
-Screenshots of another product are used for **layout only**. The app uses its own name ("Service Desk"),
-colours and icons, never another product's name or logo. Each prompt says so in section 8.
+The mocks are a **guide, not a 1:1 copy**. Each prompt's section 8 lists what is kept, what changes and what is
+left out. Left out: the workspace switcher, Calendar, sprints and story points, Board settings, Quick filters,
+Attach, Export, the notifications bell, the help card and the "…" menus. The app is called "Service Desk", with
+no "nexa" or other product branding.
+
+**Design:** the web app is designed with the `frontend-design` skill and reviewed with `web-design-guidelines`
+before each install (`.claude/skills/`). Its CSS has media queries. It uses system fonts and inline SVG only
+(no CDN). The review downloads its rules from GitHub, so the agent needs web access for that step.
 
 ## Decisions you can still change
 
 - **Prefix:** `FX_` (the proven path). To use your own, e.g. `SD_`, change section 3's Prefix in every phase and
   every `FX_` name in the prompts. Claude then checks the tenant for existing `SD_` objects first.
-- **Classic Forms in phases 1 and 2:** the data Forms use the Classic Multi-View wizard, the route that has worked
-  here. The shell in phase 3 is Flex. Remove "Classic" in section 2 to ask for Flex (whether Flex has a data
-  wizard is untested).
+- **Classic Forms in phases 1, 2 and 4:** the data Forms use the Classic Multi-View wizard, the route that has
+  worked here. `FX_ServiceDesk` is Flex, created with the operator's full-width procedure
+  (`playbooks/portal-shell.md` § Flex Form for one full-width web page).
 - **Agents instead of Mongoose users:** `FX_Agents` is a list the app owns. Its AgentID should equal each person's
   Mongoose user name, so "assigned to me" works in phase 3. Add your own user name as an agent yourself before
   phase 3; the prompts don't type it for you.
