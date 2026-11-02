@@ -17,6 +17,12 @@ Order: build and verify in User scope first. Then, only with the approval from t
 2. Form › Definition › **Unload All Global Form Objects**.
 3. Open the Form (Form menu recent list). "Warning: Form X is not locked… design anyway?" → Yes; on Save "…save
    anyway?" → Yes (BLD-017). Properties › Version shows **Site Default version**.
+   - **BLD-020 observation:** `ScopeType: Site` did not ensure the opened Form was the Site version. With the
+     operator's User copy still present, both Select Form and the recent list opened "User version for user …",
+     even after an approved unload and a fresh Designer start. Inspect the Form's **Version before filling**;
+     stop on a mismatch. Only after those User copies were absent did the Site version open. Their disappearance
+     was not performed by the factory, so do not infer a removal procedure or approval from that observation
+     (`builds/BLD-020-feed-picture-convert.md` §§5–6; existing approved reversion route below).
 4. Make the change and Save. **Each scope version is its own copy:** a change made in User scope is not in the Site
    version. Check everything at Site, including Details › Event Handlers (BLD-018: handlers added in User scope after
    the first Site save were missing at Site and had to be added again).
@@ -130,4 +136,27 @@ Import button (EXP-062-R4):
   will be permanently deleted upon Save." → OK → Save → Refresh → check the count dropped by one; stop on any other
   prompt. Save a before-readback as text first (BLD-017, BLD-018; observed).
 - **Runtime check:** captions, ComboBox lists, read-only greying (joined, derived and key fields grey out), values per record `(Object n of N)`.
+- **Narrow grids (BLD-020 cleanup, observed):** the row-number pane can cover data cells. Select by the row-number
+  cell, then verify the row key/user in the detail fields before an approved data action; a timed-out cell click
+  is not proof that the intended row was selected (`builds/BLD-020-feed-picture-convert.md` §7).
 - **Validation:** a domain value outside the list is rejected at Save with "<value> is not a valid <caption>". Free typing is allowed until then (EXP-051).
+
+## Inspect existing data through a runtime Form
+
+**Observed, BLD-020 follow-up** (`evidence/BLD-020/refs-check.json` and its inspected screenshots):
+- For a Form-level check, open the requested Form, verify its selected tab and visible panel, then click
+  `[data-mgcompname="refreshButton"]`. Inspect the row keys and relevant user fields. Use exact username tokens
+  for stale-reference checks. Record each matching Form, row key, column and token, masking emails in evidence.
+- FX_Tickets and FX_Projects each displayed only a blue-star new-row placeholder after Refresh. Their keys and
+  user fields were blank; default values such as Incident/OPEN/MEDIUM or Next ticket number 1/Active Yes did not
+  make those placeholders saved records. Save and Get More Rows were disabled. Do not save or delete a placeholder.
+- Report this as **"no saved rows displayed after Refresh"**. `(Object 1 of 1)` can describe the placeholder;
+  it does not independently prove a saved row exists. Conversely, a blank Form does not prove the underlying
+  IDO/table is empty: collection filters, authorization and hidden CreatedBy/UpdatedBy columns remain untested.
+- Respect the requested evidence level. A direct Form check can finish with that UI-level result and its limits;
+  do not expand it into an IDO audit unless stronger coverage is required or requested. The built-in `IdoDataViewer`
+  was opened and its Select Properties dialog inspected in this follow-up, but **no collection was loaded**;
+  its query and cleanup workflows remain **unverified**.
+- Keep inspection and cleanup authorization distinct. A report-only request permits no row changes; if cleanup
+  is later requested, establish which confirmed test rows it covers before applying the approved deletion procedure
+  above. Preserve the never-modify-production-data rule in AGENTS.md.

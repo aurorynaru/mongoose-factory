@@ -14,9 +14,19 @@ Sources:
   - Web Client header: `<user> | <config>`.
   - Designer status bar: `[ ScopeType: User / ScopeName: <user> ]`.
   - If it is the read-only Mock account and the task mutates anything, stop.
+  - **BLD-020 follow-up (observed):** the Web Client header displayed the configured username and configuration;
+    the portal had a workspace tab titled "System Administrator". A workspace title does not establish account
+    identity. Honor any task-specific identity requirement; if the operator explicitly confirms the current account
+    despite a display-name difference, record that confirmation and continue within the authorized task. This
+    task's confirmation does not authorize a different account or later task.
 
 ## Tooling
 - **Preferred:** Playwright MCP with the secrets file (`.mcp.json`) for login placeholders. Claude in Chrome is the fallback, using the operator's own signed-in Chrome.
+- Check that browser tools are exposed to the active client before diagnosing a login failure. A project MCP
+  configuration file alone does not prove the connection is active. In the BLD-020 follow-up, Playwright tools
+  became available after the operator registered the server with the active client, and placeholder-based login
+  succeeded (**observed**, `evidence/BLD-020/login-retry.json`). A shell workaround failed before any browser action;
+  do not describe that as a Mongoose authentication failure or keep repairing tooling past the task's retry limit.
 - **Selector order:** role/name, then label, then visible text, then component name (`data-mgcompname`), then generated IDs. Coordinates are a last resort.
   - Coordinates are needed for: canvas adorners, Select File buttons, grid scroll arrows, and controls inside Web User Control iframes.
 - **One browser action at a time.** Read-only calls can run in parallel.
@@ -95,6 +105,9 @@ Sources:
   `taskkill //PID <pid> //F` (BLD-018).
 - Only stop processes this session started (check the parent process). Other sessions' Playwright servers and
   browsers are not yours to stop.
+- **BLD-020 follow-up (observed):** Ctrl+C also left a directly launched `node tools/serve.js` listening after its
+  execution session ended. Verify port 8765 after shutdown; if it remains open, confirm process ownership and the
+  server command before stopping it, then verify the port is closed (`evidence/BLD-020/preview-race-results.json`).
 
 ## Evidence levels (operator decision, 2026-10-29)
 The request sets the level. When it says nothing, use **full**.

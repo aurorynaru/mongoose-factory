@@ -5,6 +5,10 @@ description: Build or change Infor Mongoose applications through the browser usi
 
 # Mongoose builder
 
+For a concise single-document creation reference from an application's final implementation, use
+[mongoose-developer-guide](../mongoose-developer-guide/SKILL.md). It owns documentation generation;
+it does not authorize a tenant build, metadata unload or publication.
+
 This skill turns the factory's learning (EXP-001…139, `recipes/`, `docs/mongoose/guides/`) into a build
 workflow. The playbooks in `playbooks/` hold the procedures. Load **only** the ones the request needs.
 
@@ -65,6 +69,7 @@ workflow. The playbooks in `playbooks/` hold the procedures. Load **only** the o
 | a portal / app shell with header, menu, pages, sign-in, tiles, cart, navigation | `playbooks/portal-shell.md` |
 | a dashboard / chart / KPI page | `playbooks/dashboards-and-charts.md` (+ `web-user-controls.md` for rich custom pages) |
 | a custom HTML/JS/CSS page inside Mongoose that reads/writes IDOs | `playbooks/web-user-controls.md` |
+| upload, convert, compress or save pictures in a Web User Control | `playbooks/web-user-controls.md` § Save uploaded feed pictures |
 | a login page / user table / roles | `playbooks/login-and-security.md` |
 | dropdowns from another table, validators, drill-downs, component classes | `playbooks/validation-and-classes.md` |
 | colours, fonts, themes, images, logos | `playbooks/look-and-feel.md` |

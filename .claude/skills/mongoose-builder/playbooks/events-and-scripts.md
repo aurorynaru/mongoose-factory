@@ -80,6 +80,21 @@ and Part 6 sequences are each complete end to end at runtime.
 
 C# form scripts are used by the web-user-control bridge. See web-user-controls.md (`assets/FX_Inventory/FX_InventoryDashboard.cs.txt`, `assets/FX_Login/FX_LoginPortal.cs.txt`).
 
+## C# editor readback and compile probes (BLD-019/020, observed)
+- Reopening the Script Editor can leave stale Monaco models alongside the live editor. BLD-019 initially read an
+  old 988-line model; BLD-020 also found stale 5 px editors. Identify the widest **visible** editor, confirm the
+  target Form/version, then hash/read that editor's model. A remembered model URI or the first model in a list is
+  not proof of current content. Compare the same normalization before save and after reopen (BLD-020: LF, rtrim;
+  `evidence/BLD-020/user-install-readback.json` and `u4-script-reopened.png`). Do not treat editor width alone as
+  identity when several genuine editors are visible.
+- Locate Compile from the current Script Editor window; BLD-020's fixed page coordinate missed after the window
+  moved. Prefer a semantic control; if coordinates are unavoidable, anchor them to the inspected current window.
+  Read the compile result and then verify the saved/reopened source separately.
+- BLD-020's unsaved User-scope probe compiled `System.Drawing`, but did **not** execute it at runtime. WPF
+  `System.Windows.Media.Imaging` failed CS0234 and `SkiaSharp` failed CS0246 in that environment. These are
+  environment-specific compile observations, not proof that a server image converter works. The original script
+  was reopened unchanged; browser conversion was the implemented route (BLD-020 Phase A).
+
 ## Pitfalls
 - Runtime prompts block everything. Expect the Prompt handlers you add (e.g. Hello World on every refresh) and dismiss them.
 - Before Save, verify with Properties readback. After Save + reopen, verify with the Components grid and Event Handlers grid.

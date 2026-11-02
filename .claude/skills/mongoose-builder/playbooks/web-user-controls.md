@@ -127,6 +127,9 @@ Easy to debug:
 5. Click in the editor, press Ctrl+A, then do **one** full-content fill (`browser_type` with the whole file).
 6. **Readback before OK:** snapshot the editor to a file again, then run the readback check against the install copy. It must say `equal true`.
 7. Edit Browser File OK → Global Objects OK → Designer Save. Expected notice: "Global object(s) were saved."
+   - BLD-020 showed no readable Save notice. Save becoming disabled supported the action, but the close/reopen
+     content comparison below established persistence; neither an absent toast nor a disabled button alone is a
+     success/failure verdict (`builds/BLD-020-feed-picture-convert.md`, User install and Knowledge notes).
 8. Close the Form tab (no prompt expected), reopen it from the Form menu recent list, and open the asset again. Run the readback check a third time, then Cancel both dialogs.
 9. Runtime: in the Web Client, Open › Select Form opens the Form with the new asset. No portal reload was needed in BLD-001. Click Refresh data and exercise the changed feature.
 - The frame exposed accessibility refs in EXP-139 T6 and in BLD-001, but not in EXP-139 T7/T8. Use refs when present. Coordinates are the fallback.
@@ -156,6 +159,13 @@ node .claude/skills/mongoose-builder/tools/compare-readback.js evidence/<ID>/<sn
   - `cd assets && npm run preview` (Node 18+, no install) serves the real app folders at http://127.0.0.1:8765/. When a page asks for `../$app/scripts/UserControl.js`, the server answers with that app's `preview/stub.js` (a fake `WSForm` with test data; repo only, never installed);
   - `npm run flat -- FX_<App>` writes every install copy (`index.flat.html`, `app.flat.css`, `app.flat.js`, `*.flat.cs.txt`). Never hand-edit a flat copy.
 - A local preview proves the layout and the page logic only. The tenant result is proven only at runtime in the Web Client.
+- **Async preview assertions (BLD-020 follow-up, observed in two consecutive runs):** wait for the result's text,
+  not just its container. In `evidence/BLD-018/preview-test.js`, the visible gate could precede the session-expired
+  message. Before asserting, wait for visible `#FX_GateText` containing "Your session has ended. Sign in again."
+  (the test uses `locator('#FX_GateText').filter({ hasText: message }).waitFor({ state: 'visible' })`). App code was
+  unchanged. The current suite passed **25/25 twice**, with zero page errors; the handoff's 18/18 count was stale.
+  Report actual counts and preserve each run's output (`evidence/BLD-020/preview-race-results.json` and its run logs).
+  This validates that local test change, not tenant session behavior or a general absence of timing bugs.
 - No external CDN: every style and script is an asset in the page's own folder.
 - **Design and review (operator rule, 2026-10-30):**
   - Make the visual choices with `.claude/skills/frontend-design/SKILL.md`. A mock or screenshot from the
@@ -168,6 +178,37 @@ node .claude/skills/mongoose-builder/tools/compare-readback.js evidence/<ID>/<sn
     widths in the preview).
   - Fonts: system font stacks only, since there is no CDN. Icons and charts: inline SVG.
 - `assets/FX_Inventory/index.html` is the reference for the dark theme, KPI cards, filters, sort and the status line.
+
+## Save uploaded feed pictures (BLD-019/020 reference)
+
+**Observed** in FX_ServiceDesk at User scope and with a Site runtime spot check. Sources:
+`assets/FX_ServiceDesk/README.md`, `app.js` (`CONVERT`, `convertPicture`, `sendPictureData`),
+`FX_ServiceDesk.cs.txt` (picture methods), `builds/BLD-020-feed-picture-convert.md`, and
+`evidence/BLD-020/convert-results.json` / `runtime-results.json`. These are this app's settings, not platform limits.
+
+1. **Convert before upload in the browser.** Refuse empty files, originals over 26,214,400 bytes (25 MiB),
+   non-images and formats the browser cannot decode (HEIC was refused in the tested Chrome). JPG, PNG, WebP,
+   GIF first frame and BMP were exercised. Decode with EXIF orientation, redraw on a white canvas, preserve aspect
+   ratio without upscaling, long edge at most 2048 px; export JPG, dropping original EXIF/GPS metadata.
+2. **Shrink and preview.** Try qualities `[0.85, 0.78, 0.7, 0.62, 0.55]`, stopping when at most 1,048,576 bytes or
+   when the list is exhausted. The 1 MiB value is a target, not a guaranteed ceiling; reject converted images over
+   5,242,880 bytes (5 MiB). Also make a JPG thumbnail, long edge at most 640 px, quality 0.75; use a `.jpg` filename.
+3. **Store through the authenticated Form-script bridge.** `FX_FeedAttachments.Data` holds base64 text in
+   `nvarchar(max)`; nullable `Thumb` holds thumbnail base64 (server limit: 349,528 base64 characters, corresponding
+   to 256 KiB decoded). BLD-019 observed MIME line wrapping on binary-property readback, so this implementation
+   uses text. For this schema, Sql Columns uses Data Type `nvarchar`, Length `-1`; expose a bound IDO property.
+4. **Transfer converted data in chunks.** Use 1,048,576 base64 characters per part. Call
+   `FX_FeedPictureStart(postId, fileName, sizeBytes, thumb, firstPart, token)`, then `FX_FeedPicturePart` for remaining
+   parts, then `FX_FeedPictureFinish`. Copy exact Part/Finish signatures from the source. Keep client/server
+   signatures aligned: BLD-020 added the `thumb` argument. The server validates the session, JPG signature,
+   extension, declared/decoded size and thumbnail; browser conversion does not replace those checks.
+5. **Load previews first.** Load one `FX_FeedPictureThumb` result per feed tile; fetch the full picture with
+   `FX_FeedPictureGet` when the viewer opens. Fall back to full-picture loading for older rows without `Thumb`.
+   The bridge queue permits one server call at a time and prioritizes user actions over background picture loads.
+6. **Verify the saved result.** Compare downloaded full-picture bytes/length against the converted JPG, check
+   thumbnails and viewer behavior, refusals and older-picture fallback, then test navigation while pictures load.
+   BLD-020 recorded three pictures posting in 3.6 seconds and a navigation response in 63 ms; these are observations,
+   not performance guarantees. Keep the existing install/readback and scope-approval workflow for tenant changes.
 
 ## Pitfalls
 - **Wait for the Form before the first `WSForm.invoke` (BLD-002, observed).** An invoke sent from the page's startup code never reached the server (no event after `forminit`), and the page timed out. Wrap the first load in `MG.onReady(function () { load(); })`, guarded with `typeof MG !== "undefined"` so the local preview still runs. See `assets/FX_ASNPortal/index.html` (end of script) and `docs/mongoose/guides/user-control.md`.

@@ -45,6 +45,11 @@ Route (EXP-040, 044, 049, 071-R2, 134, 137):
    - An active cell editor can intercept the next cell click. Re-snapshot and continue.
    - Escape on an open lookup **commits the highlighted item**. Always select explicitly and read back.
    - AUTONUMBER() works as a default for an int key (EXP-071-R2).
+   - **BLD-019 observations:** leave Property Class blank for generic typed columns; `General` was rejected with
+     "The property Id has an invalid Property Class." For its yes/no flag, the wizard offered no Boolean type:
+     `ListYesNo` supplied Byte / ListYesNoType, with default `0`. Reuse classes only after confirming they exist.
+   - Tabbing past the last Default Value cell raised `doAutoInsert` undefined. Use the wizard's **Add Row** button
+     for the next property instead; read back each row before Next (`builds/BLD-019-community-feed.md`, Tables 2–5).
 4. Next → page 2 → **Finish** once. The message is "Table and IDO created."
 5. "Create Form?" → answer **No**, then build the Form with the Classic Multi-View wizard (see forms.md). This keeps naming and scope under control (EXP-137 A1).
 6. The IDO is created **checked out**. Check In once (the "Source control integration is currently disabled" notice → OK). Revision goes 1 → 2.
@@ -56,6 +61,9 @@ Inheritance facts (EXP-044, 049):
 - Property-class types flow into the SQL column types.
 - The IDO grid shows **blank** Data Type/Length for class-bound properties. This is normal.
 - A property-class Default Value does **not** become a SQL default.
+- `AUTONUMBER()` is a client Form default, not a SQL identity/default for server-script inserts. BLD-019's clean
+  Sql Columns readback accepted a blank SQL default for Id; the script supplies its key. Its max-plus-one allocator
+  has a known concurrency limitation; do not silently install AUTONUMBER() as a SQL default to address it.
 - New property classes are usable while still checked out, **with no metadata unload** (observed in 3 runs).
 
 ## Property class (IdoPropertyClasses)
@@ -73,6 +81,25 @@ Sql Tables → criteria row → F4 → **Columns…** → New → set the column
 - Is Nullable: click the **label**, not the checkbox.
 
 No DDL or confirmation is shown. System Data Type fills in, and a Column Id appears after a reopen. "Update Current Table" is not needed.
+- **`nvarchar(max)` (observed, BLD-019 Data / BLD-020 Thumb):** choose Data Type `nvarchar`, Length `-1`.
+  The column still needs a bound IDO property and Check In before use. BLD-020's Thumb was nullable; do not assume
+  that nullability for another column. Evidence: `evidence/BLD-020/t6-thumb-after-refresh.png` and the build record.
+
+## Add a unique index through Sql Tables
+
+**Observed, BLD-019, UI persistence only** (`builds/BLD-019-community-feed.md`, Unique constraints):
+1. Query the exact approved factory-owned table in the Web Client runtime, then **New Constraint…**.
+2. In "Sql Tables Constraint", choose Constraint Type **Index**, read the generated name, click **Unique**,
+   leave Clustered Index off when a non-clustered index is intended, then Next.
+3. Select each column and **Add >>** in the required key order, then **Finish**. Finish commits here; toolbar Save
+   remained disabled and no DDL/confirmation was shown. Inspect the result before retrying.
+4. Close/reopen Sql Tables and query the table again; read back the listed index, key columns and flags.
+   BLD-019 recovered `FX_FeedReactionsIX1` (PostId, CommentId, AgentId) and `FX_FeedMentionsIX1`
+   (PostId, CommentId, MentionedUser), Unique checked / Clustered unchecked. Evidence:
+   `evidence/BLD-019/53-reactions-constraints-after-reopen.png`, `54-mentions-constraints-after-reopen.png`.
+
+Duplicate rejection and NULL-key behavior were **not runtime-tested**: script checks prevented that test. The listed
+index is not proof of those behaviors. Apply AGENTS.md ownership/schema-change approval rules to any new use.
 
 ## Add a bound property to an IDO
 IDOs → exact query → **Check Out** (no prompt; revision unchanged) → **New Property** → page 1 Bound (default) → page 2 → **Finish** (EXP-061, 075). Finish commits; no Save needed.
@@ -103,6 +130,10 @@ The grid then shows it first, with sequence 0 and the expression in Property Val
 ## After metadata changes: does the Designer see them?
 - New properties on an IDO may **not** appear in the Designer binding picker until **Unload All Global Form Objects** is run, in both the Web Client and the Designer (EXP-076).
 - That unload is tenant-wide and needs explicit approval. Ask before running it.
+- **Runtime also caches IDO properties (observed, BLD-019):** the new bound Data property was checked in, but a
+  picture upload returned "Property Data not found on FX_FeedAttachments IDO". An explicitly approved unload
+  cleared the failure. Diagnose schema/property readback and cache state before recreating a property; recording
+  this recovery does not authorize another unload (`builds/BLD-019-community-feed.md`, Runtime acceptance).
 
 ## Data entry and verification at runtime
 - Open the Form, then New → fill → one toolbar **Save** → close/reopen → **Refresh** → read back (EXP-042-R3, 077).
@@ -110,3 +141,13 @@ The grid then shows it first, with sequence 0 and the expression in Property Val
 - Clipped grid cells can be intercepted by the splitter. Select rows by the row-number cell.
 - Status bar `(Object n of N)` needs View › User Preferences › Layout › Display Status Bar plus a browser refresh. In add mode, N counts the placeholder.
 - Uncaptioned inputs mean the IDO properties have no Label String IDs. Use Edit › Find Value in Collection to identify the bound property.
+
+## Remove an approved temporary probe IDO/table
+
+**Observed once, BLD-019 FX_FeedProbe cleanup** (Storage probe section; evidence `96`–`103` in
+`evidence/BLD-019/`). Use only for the exact temporary artifacts whose removal the current task authorizes;
+this is not a Form-removal procedure or permission to remove other objects.
+- Query the exact IDO, verify its identity, **Check Out**, toolbar Delete → "Selected records will be permanently
+  deleted upon Save." → OK → Save. Stop on a different prompt. Re-query to verify that IDO is absent.
+- Then query the exact SQL table in Sql Tables, verify its identity, Delete → same prompt → OK → Save;
+  re-query to verify absence. BLD-019's final queries listed the six intended FX_Feed IDOs/tables without the probe.

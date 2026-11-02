@@ -5,6 +5,10 @@ description: Developer-experience and no-guessing rules for any code or config w
 
 # Mongoose factory: developer experience, no guessing
 
+For beginner-friendly application developer documentation, use
+[mongoose-developer-guide](../mongoose-developer-guide/SKILL.md), which owns source reconciliation,
+final object definitions and documentation validation. Continue applying this skill's no-guessing rules.
+
 Two rules come before everything else:
 1. **Developer experience first.** Code someone else can read, run, debug and change without asking you.
 2. **Never guess.** If a fact isn't confirmed by this repo, the tenant, or the operator, it is **unknown**. Say so, and ask.
@@ -56,6 +60,9 @@ When something essential is missing or ambiguous:
 Options are welcome when you **label them as suggestions**: put the recommended one first, marked "(Recommended)". Never pick one silently. No default values (timeouts, page sizes, limits, colors, captions) are invented and shipped without saying so: either reuse a value already in the repo (e.g. 20 s invoke timeout, page size 25) and cite it, or propose it and get a yes.
 
 Don't ask about what the repo already answers. Check first, so questions stay few and specific.
+Record an explicit operator clarification and use it for subsequent steps in the same task; do not ask again
+about the same account or action unless the account, scope or relevant state changes. Confirmation of identity
+does not broaden mutation permissions or replace the next task's account check.
 
 ## 4. Verify before implementing
 
@@ -72,6 +79,13 @@ Don't ask about what the repo already answers. Check first, so questions stay fe
 7. Report what was verified and what wasn't (section 7).
 
 **Never claim a compile, test or runtime check passed unless you ran it and read the result.** No visible error is not success. If a step was skipped, say it was skipped.
+
+- Diagnose failures at the layer actually reached. Missing browser tools or a failed execution helper establishes
+  a tooling blocker, not a failed Mongoose login. A configuration file's presence alone does not establish that
+  the active client has connected its tools. See `mongoose-builder/playbooks/browser-and-session.md`.
+- For asynchronous UI tests, wait for the result being asserted. A visible container can precede its final message.
+  Record actual assertion counts from the current run; when a handoff's count is stale, explain the difference.
+  BLD-020 evidence: `evidence/BLD-020/preview-race-results.json` (25/25 twice; local preview only).
 
 ## 5. Write for the next developer
 
@@ -91,6 +105,10 @@ Don't ask about what the repo already answers. Check first, so questions stay fe
 ## 6. Keep changes scoped
 
 - Change only what the task asks for. Don't refactor or restyle unrelated code, and don't rename existing identifiers without a reason the operator accepts.
+- Match verification to the requested outcome. When the operator requests a Form-level check, use the Form and
+  report its limits; an independent IDO/database audit is additional work unless required by the acceptance
+  criteria. If the operator redirects the approach, inspect the current state before continuing and honor that
+  direction. Do not turn an optional deeper check into a blocker for the narrower authorized result.
 - Don't change existing behavior (including another FX_ object's) without saying so and getting a yes.
 - Prefer existing utilities and patterns to new ones. Keep backward compatibility. For example, an existing page button still calls the same method.
 - Notice something else worth fixing (e.g. the old BG buttons overlapping FX_ApiProbe)? Report it as a suggestion; don't fix it on the side.
@@ -104,6 +122,12 @@ Every report, record and plan sorts its claims into three groups, and never mixe
 - **Proposed:** your recommendation, waiting for approval.
 
 Use the repo's knowledge states (`unverified` / `observed` / `verified` / `superseded`) in playbooks, recipes and experiment records, and don't upgrade a state without the evidence `AGENTS.md` requires.
+
+State what the evidence covers. In the BLD-020 follow-up, both Forms displayed only blank new-row placeholders
+after Refresh: report **"no saved rows displayed"**, not **"the IDOs are empty"**. Zero observed references in
+visible fields does not prove absence in hidden audit columns or filtered records. Keep the final completion claim
+at that same level and distinguish a required check left incomplete from an optional deeper audit. See
+`mongoose-builder/playbooks/forms.md` and `evidence/BLD-020/refs-check.json` for the observation and its limits.
 
 ## Final rule
 

@@ -1,4 +1,3 @@
-/assets/
 # This repo keeps what is needed to build Mongoose projects: AGENTS.md, the skills (.claude/), assets/ (page
 # sources, template, preview tools), builds/ and experiments/ records, recipes/, docs/, requests/, mocks/.
 # Everything below stays on disk but out of git.
@@ -35,10 +34,12 @@ evidence/**
 !evidence/**/
 !evidence/*/rollback/**
 !evidence/BLD-*/*.js
-/evidence/
 
 # --- side projects (not needed to build Mongoose projects) --------------------
 # CS 1.6 game
+builds/
+assets/
+evidence/
 assets/FX_CS16/
 assets/FX_CS16Local/
 tools/FX_CS16*/
@@ -70,3 +71,15 @@ assets/customersignin.png
 assets/dumbbell.png
 assets/eggs.png
 assets/guitar.png
+
+
+docs/guides
+docs/Api-Gateway/
+native
+mocks
+environments/
+
+config.go
+runtime.go
+server.go
+builds/
