@@ -34,6 +34,7 @@ evidence/**
 !evidence/**/
 !evidence/*/rollback/**
 !evidence/BLD-*/*.js
+/evidence/
 
 # --- side projects (not needed to build Mongoose projects) --------------------
 # CS 1.6 game
