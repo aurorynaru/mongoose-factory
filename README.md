@@ -43,6 +43,7 @@ artifacts, evidence for every claim. The rules for the agents are in [AGENTS.md]
 | [builds/](builds)                                 | One record per build-mode task (`BLD-NNN-…md`)                                                   |
 | [environments/](environments)                     | What is known about the target Mongoose environment                                              |
 | [claims/](claims)                                 | Reserved for knowledge claims                                                                    |
+| [reference/](reference)                           | Imported middleware reference (IDOs, IDO REST API, background tasks, events, caches); every claim starts **unverified** |
 | [opencode.json](opencode.json)                    | OpenCode worker config: local model provider, Playwright MCP, permissions                        |
 | [tools/learning-harness/](tools/learning-harness) | The harness (TypeScript), its protocols, experiment briefs and coordinator context               |
 
