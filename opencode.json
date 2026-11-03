@@ -1,7 +1,11 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    ".opencode/playwright-tools.md",
+    ".opencode/tool-calling.md"
+  ],
 
-  "model": "strata/qwen3.8-flash-next-coder-iq1_m",
+  "model": "strata/qwen3.8-flash-next-iq2_xs",
 
   "provider": {
     "deepseek": {
@@ -62,58 +66,43 @@
       "name": "Local Strata",
 
       "options": {
-        "baseURL": "http://127.0.0.1:8080/v1"
+        "baseURL": "http://127.0.0.1:8081/v1"
       },
 
       "models": {
         "qwen3.8-flash-next-iq2_xs": {
-          "name": "Qwen3.8 Flash Next IQ2_XS (Strata)",
-
-          "options": {
-            "reasoningEffort": "none"
-          },
-
-          "reasoning": true,
+          "name": "Qwen3.8-Flash-Next IQ2_XS (Strata, 128K)",
           "tool_call": true,
+          "reasoning": true,
           "attachment": true,
-
-          "interleaved": {
-            "field": "reasoning_content"
-          },
-
           "modalities": {
             "input": ["text", "image"],
             "output": ["text"]
           },
-
-          "limit": {
-            "context": 196608,
-            "output": 16384
-          }
-        },
-        "qwen3.8-flash-next-coder-iq1_m": {
-          "name": "Qwen3.8 Flash Next Coder IQ1_M (Strata)",
-
-          "options": {
-            "reasoningEffort": "none"
-          },
-
-          "reasoning": true,
-          "tool_call": true,
-          "attachment": true,
-
           "interleaved": {
             "field": "reasoning_content"
           },
-
-          "modalities": {
-            "input": ["text", "image"],
-            "output": ["text"]
+          "options": {
+            "reasoningEffort": "high"
           },
-
+          "variants": {
+            "none": {
+              "reasoningEffort": "none"
+            },
+            "low": {
+              "reasoningEffort": "low"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            }
+          },
           "limit": {
-            "context": 196608,
-            "output": 16384
+            "context": 200704,
+            "input": 151552,
+            "output": 49152
           }
         }
       }
@@ -159,6 +148,6 @@
   "compaction": {
     "auto": true,
     "prune": true,
-    "reserved": 48000
+    "reserved": 32768
   }
 }

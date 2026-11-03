@@ -78,6 +78,9 @@ Sources:
   3. Open Mongoose and keep the default config.
   - **Never sign in inside the embedded frame** (mingle-sso refuses to be framed).
   - If Playwright can't click Sign in, ask the operator to sign in manually.
+  - Use this route when an approved metadata-cache unload did not change what the current Web Client session shows
+    (stale value list or validator) — the open page keeps its own cached copy; see `data-layer.md`. `F5` on the
+    portal tab does not reload it.
 - **Observed recovery route (BLD-018):** accept the beforeunload dialog → navigate the top tab to the portal (SSO is
   usually still valid, no sign-in) → open Mongoose → close the banner with × → configuration picker OK → launch a
   fresh Designer from the Web Client. It opens in User scope with the scope dialog: check the scope before work.

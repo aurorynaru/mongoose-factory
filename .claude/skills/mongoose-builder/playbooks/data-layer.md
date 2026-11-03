@@ -40,6 +40,8 @@ Route (EXP-040, 044, 049, 071-R2, 134, 137):
    - Leave Site Split unchecked. Table Name then becomes read-only and is **derived from the IDO name** (`dbo.<IDO name>`).
 3. Property grid, one row per business column:
    - Name, Property Class (lookup) or Data Type/Length/Column Type, Label String ID, Default.
+   - **Data Type uses Mongoose names, not SQL names.** Use the mappings below; `int` and `datetime`
+     belong in **SQL Data Type**, not **Data Type**. Read back both fields before Next.
    - Ticking Primary Key also ticks Required.
    - The grid always keeps one blank starred row. Use it; don't delete it.
    - An active cell editor can intercept the next cell click. Re-snapshot and continue.
@@ -56,6 +58,25 @@ Route (EXP-040, 044, 049, 071-R2, 134, 137):
 7. Verify:
    - Sql Tables → Columns shows the types and the PK. System columns are added automatically.
    - The IDOs query shows the project, the alias and the properties.
+
+### Wizard type mappings (observed)
+
+| Purpose | Mongoose Data Type | SQL Data Type | Recorded examples |
+|---|---|---|---|
+| Text | `String` | `nvarchar` (set the required length) | AgentID, Summary, PasswordHash |
+| Whole numbers | `Long Integer` | `int` | CommentID, SortOrder, NextTicketNo |
+| Dates and timestamps | `Date` | `datetime` (includes time) | DueDate, ResolvedOn, ExpiresOn |
+| Yes/no | `Byte`, supplied by property class `ListYesNo` | `ListYesNoType` (system type `tinyint`) | Active, IsInternal |
+
+Sources: [BLD-007](../../../../builds/BLD-007-service-desk-setup.md) and
+[BLD-009](../../../../builds/BLD-009-service-desk-tickets.md) record the wizard values and SQL Columns
+readbacks; [BLD-018](../../../../builds/BLD-018-service-desk-login.md) records the login table creation;
+[BLD-019](../../../../builds/BLD-019-community-feed.md) records further wizard mappings.
+These are observed mappings, not an exhaustive list of supported types. Inspect the current list and
+probe any other mapping before relying on it. Select the Mongoose type explicitly from its list:
+BLD-009 observed that selecting it filled SQL Data Type, while typing `String` + Tab left that field blank.
+Using `Long Integer` / `Date` with SQL `int` / `datetime` follows the established wizard route;
+these different names alone do not require switching to Sql Tables.
 
 Inheritance facts (EXP-044, 049):
 - Property-class types flow into the SQL column types.
@@ -134,6 +155,16 @@ The grid then shows it first, with sequence 0 and the expression in Property Val
   picture upload returned "Property Data not found on FX_FeedAttachments IDO". An explicitly approved unload
   cleared the failure. Diagnose schema/property readback and cache state before recreating a property; recording
   this recovery does not authorize another unload (`builds/BLD-019-community-feed.md`, Runtime acceptance).
+- **The Web Client page keeps its own cached copy (observed, BLD-022):** after `Unload All Global Form Objects` in
+  both the Web Client and the Designer, the session that was already open can still show the pre-change value list
+  and still reject the new value on Save. Pressing `F5` on the portal tab does not reload the page. Sign out and
+  sign in again at the top-level portal (fresh session), then open the Form and read back. In BLD-022 the same
+  session still showed `Agent, Lead, Admin` and `Requester is not a valid Role` after both unloads; the operator's
+  re-login showed `Requester` in the `Role` dropdown, and in that fresh session one fixture-row Save with
+  `Role = Requester` was accepted and persisted after Refresh (`builds/BLD-022-service-desk-roles-admin-recovery.md`).
+  Mark as verified only after a repeatable run.
+- The dropdown showing the new value is not proof that `ININLINELIST()` accepts it: prove it with one Save of a fake
+  fixture row carrying the new value, in the fresh session, then delete the fixture row.
 
 ## Data entry and verification at runtime
 - Open the Form, then New → fill → one toolbar **Save** → close/reopen → **Refresh** → read back (EXP-042-R3, 077).

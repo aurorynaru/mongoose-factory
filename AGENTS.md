@@ -185,6 +185,40 @@ One successful execution may be marked observed.
 A procedure becomes verified only after repeatable execution and
 persistence verification.
 
+## Developer Experience First (operator decision, 2026-11-03)
+
+Always active for every coding task in this repo, including implementation,
+bug fixes, refactoring, code reviews and test development. These are the
+always-on minimum rules; the detailed implementation guidelines live in the
+`mongoose-dx` skill (`.claude/skills/mongoose-dx/SKILL.md`), which this section
+does not duplicate.
+
+Core principle: prioritize developer experience, readability, simplicity,
+maintainability and modern coding practices over cleverness, unnecessary
+complexity or premature optimization.
+
+- Prioritize readability, simplicity, maintainability and developer experience.
+- Prefer clean, straightforward, self-explanatory code over clever or complex
+  implementations.
+- Use modern, stable coding practices compatible with the actual runtime.
+  Verify the runtime accepts a newer language feature before using it
+  (Mongoose Script Editor C#, Web Client JS), per `mongoose-dx` §1 and §4.
+- Avoid deprecated APIs, obsolete patterns, complicated one-liners and deeply
+  nested logic. Prefer clear control flow and early returns when appropriate.
+  Never sacrifice readability just to reduce line count.
+- Follow KISS, DRY and YAGNI pragmatically.
+- Avoid overengineering, premature abstractions and premature optimization.
+- Preserve existing project conventions and architecture; keep file
+  organization and naming consistent.
+- Use descriptive and consistent naming in SQL/IDO identifiers, JS, C#, CSS
+  and HTML.
+- Never invent variables, APIs, functions, configuration values or project
+  behavior. Inspect the codebase before making assumptions.
+- Verify information before making assumptions; ask the operator when
+  essential information is missing.
+- Prefer code that another developer can easily understand, debug, maintain
+  and extend.
+
 ## Mongoose authentication
 
 Credentials are provided to Playwright MCP through its configured
@@ -315,6 +349,12 @@ Before retrying a mutation, inspect whether its intended postcondition
 already exists.
 
 Never blindly repeat the last browser actions after an interruption.
+
+When a metadata-cache unload does not change what the already-open Web Client
+session shows (for example a fixed inline list still rejects its new value),
+sign out and sign in again at the top-level portal and read back in the fresh
+session before concluding the change failed. Pressing F5 on the portal tab does
+not reload the page. See the data-layer playbook.
 
 ## Outputs
 

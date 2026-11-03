@@ -30,13 +30,14 @@ This skill doesn't replace `AGENTS.md` or `mongoose-builder`. Their safety rules
 
 Other models' answers (for example the ChatGPT specialist) and your own memory are **unverified** too.
 
-## 2. Never invent identifiers
+## 2. Never invent identifiers or behavior
 
 Don't reference anything you haven't found in one of the sources above:
 - IDO, property, method and table names; SQL columns;
 - Form, component, variable, event-handler and string names;
 - API paths, query parameters, `MethodParams` entries, JSON response fields, status-code meanings;
 - config keys, environment variables, file paths, CLI flags, npm scripts;
+- functions, APIs and project behavior the repo or a tenant readback hasn't demonstrated;
 - server IDs, suite names, warehouse names; credentials of any kind.
 
 Before writing a name, find it: `grep` the repo, read the spec, or read it back in the tenant. Cite where it came from in the record (file and line, EXP number or screenshot).
@@ -90,8 +91,10 @@ does not broaden mutation permissions or replace the next task's account check.
 ## 5. Write for the next developer
 
 - **Match the surrounding code.** The same idioms, naming and comment density as the nearest existing file. For example, a new page section copies `FX_ApiPage/index.html`'s status line, busy state and timeout pattern. A new C# method reuses existing helpers (`FX_Show`, `FX_Clip`, `FX_WmInvoke`) instead of a second copy.
-- **Simple over clever.** No abstraction until there's a second real use. No new dependency or assembly reference unless the task needs it and it's confirmed to be available (e.g. `Newtonsoft.Json.dll` is proven in this sandbox; others aren't).
-- **Clear names.** Say what the thing is or does (`FX_ListShipments`, `FX_BtnShipAll`), not `doIt` or `tmp2`.
+- **Simple over clever.** No abstraction until there's a second real use. No unnecessary wrappers, dependencies or design patterns. Keep functions focused, one clear responsibility each. KISS, DRY and YAGNI, pragmatically: the smallest change that fully solves the job (§4), no premature abstraction or premature optimization.
+- **Clear, descriptive, consistent names.** Say what the thing is or does (`FX_ListShipments`, `FX_BtnShipAll`, `renderRecentAsns`), not `doIt` or `tmp2`, in SQL/IDO, JS, C#, CSS and HTML alike. Keep naming consistent across a page, its script and its build record.
+- **Readable control flow.** No complicated one-liners, no deeply nested logic. Clear control flow; validate inputs and return early when appropriate. Never sacrifice readability just to reduce line count.
+- **Modern practices, runtime-checked.** Use modern, stable, widely accepted language features only after confirming the runtime that actually executes them accepts them — the Script Editor's C# and the Web Client's browser JS. Prove it by compiling or a small probe (§4); what C# or JS "should" support is unverified until shown here (e.g. `using System.IO` was rejected by the Script Editor, BLD-002). Avoid deprecated APIs, obsolete patterns and experimental technologies. Improve an existing convention only when the improvement is justified and flagged (§6).
 - **Actionable errors.** Every failure path tells the reader what happened and what to do next:
   - JS: a status line, never a silent failure. E.g. "Open this page inside the FX_ApiProbe Form to call the API.", "No response from FX_X after 20 s."
   - C#: catch, then return `ex.GetType().Name + ": " + ex.Message`, plus the HTTP code and Infobar for API calls.
